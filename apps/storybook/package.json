@@ -16,6 +16,7 @@
     "@codedazur/react-components": "^22.0.0",
     "@codedazur/react-date-picker": "*",
     "@codedazur/react-essentials": "*",
+    "@codedazur/react-notifications": "*",
     "@codedazur/react-pagination": "*",
     "@codedazur/react-parallax": "*",
     "react": "^18.2.0",

@@ -1,5 +1,4 @@
 import { Button, ButtonProps } from "@codedazur/react-components";
-import React from "react";
 import { story } from "../utilities/story";
 
 export default {
@@ -7,9 +6,7 @@ export default {
   component: Button,
 };
 
-const Template = story<ButtonProps>((args) => <Button {...args} />);
-
-export const Default = story(Template, {
+export const Default = story<ButtonProps>((args) => <Button {...args} />, {
   args: {
     children: "Boop",
   },

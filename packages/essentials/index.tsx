@@ -8,3 +8,4 @@ export * from "./utilities/math/rad2deg";
 export * from "./utilities/math/sequence";
 export * from "./utilities/object/omit";
 export * from "./utilities/object/pick";
+export * from "./utilities/timing/Timer";
