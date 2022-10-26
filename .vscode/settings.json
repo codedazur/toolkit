@@ -1,0 +1,3 @@
+{
+  "conventionalCommits.scopes": ["timer", "use-timer", "notification-provider"]
+}

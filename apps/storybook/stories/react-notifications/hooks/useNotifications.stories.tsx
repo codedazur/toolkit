@@ -14,7 +14,7 @@ import {
   useNotifications,
 } from "@codedazur/react-notifications";
 import { faker } from "@faker-js/faker";
-import { FunctionComponent } from "react";
+import { FunctionComponent, ReactNode } from "react";
 import { meta } from "../../../utilities/meta";
 import { story } from "../../../utilities/story";
 import docs from "./useNotifications.docs.mdx";
@@ -34,12 +34,60 @@ export const Default = story(() => (
   </NotificationsProvider>
 ));
 
-const AddNotificationButton = () => {
-  const { addNotification } = useNotifications();
+export const Persistent = story(() => (
+  <NotificationsProvider autoDismiss={false}>
+    <AddNotificationButton />
+    <NotificationList />
+  </NotificationsProvider>
+));
+
+export const MixedDurations = story(() => (
+  <NotificationsProvider>
+    <Row gap="1rem">
+      <AddNotificationButton autoDismiss={2500}>
+        Add Fast Notification
+      </AddNotificationButton>
+      <AddNotificationButton>Add Normal Notification</AddNotificationButton>
+      <AddNotificationButton autoDismiss={10000}>
+        Add Slow Notification
+      </AddNotificationButton>
+      <AddNotificationButton autoDismiss={false}>
+        Add Persistent Notification
+      </AddNotificationButton>
+    </Row>
+    <NotificationList />
+  </NotificationsProvider>
+));
+
+export const Groups = story(() => (
+  <NotificationsProvider>
+    <Column gap="1rem">
+      <Banners />
+      <Row gap="1rem">
+        <AddBannerButton />
+        <AddSnackbarButton />
+      </Row>
+    </Column>
+    <Snackbars />
+  </NotificationsProvider>
+));
+
+const AddNotificationButton = ({
+  group,
+  autoDismiss,
+  children = "Add Notification",
+}: {
+  group?: string;
+  autoDismiss?: number | false;
+  children?: ReactNode;
+}) => {
+  const { addNotification } = useNotifications(group);
 
   return (
-    <Button onClick={() => addNotification(faker.lorem.sentence())}>
-      Add Notification
+    <Button
+      onClick={() => addNotification(faker.lorem.sentence(), { autoDismiss })}
+    >
+      {children}
     </Button>
   );
 };
@@ -68,8 +116,8 @@ const Notification: FunctionComponent<NotificationProps> = ({
 }) => (
   <Placeholder
     width="auto"
-    onMouseEnter={timer.pause}
-    onMouseLeave={timer.resume}
+    onMouseEnter={timer?.pause}
+    onMouseLeave={timer?.resume}
   >
     <Column width="100%">
       <EdgeInset all="0.5rem" left="1rem">
@@ -78,7 +126,7 @@ const Notification: FunctionComponent<NotificationProps> = ({
           <Button onClick={dismiss}>Dismiss</Button>
         </Row>
       </EdgeInset>
-      <NotificationProgress useProgress={useProgress} />
+      {timer && <NotificationProgress useProgress={useProgress} />}
     </Column>
   </Placeholder>
 );
@@ -89,4 +137,60 @@ const NotificationProgress = ({
   const { progress } = useProgress();
 
   return <LinearProgress progress={progress} height="2px" shape="square" />;
+};
+
+const AddBannerButton = () => {
+  const { addNotification } = useNotifications("banners");
+
+  return (
+    <Button
+      onClick={() =>
+        addNotification(faker.lorem.sentence(), { autoDismiss: false })
+      }
+    >
+      Add Banner
+    </Button>
+  );
+};
+
+const AddSnackbarButton = () => {
+  const { addNotification } = useNotifications("snackbars");
+
+  return (
+    <Button onClick={() => addNotification(faker.lorem.sentence())}>
+      Add Snackbar
+    </Button>
+  );
+};
+
+const Snackbars = () => {
+  const { notifications } = useNotifications("snackbars");
+
+  return (
+    <Portal>
+      <Positioned bottom="1rem" right="1rem">
+        <Column gap="1rem" align="flex-end">
+          {notifications.map((notification) => (
+            <Notification key={notification.id} {...notification} />
+          ))}
+        </Column>
+      </Positioned>
+    </Portal>
+  );
+};
+
+const Banners = () => {
+  const { notifications } = useNotifications("banners");
+
+  if (notifications.length <= 0) {
+    return null;
+  }
+
+  return (
+    <Column gap="0.5rem">
+      {notifications.map((notification) => (
+        <Notification key={notification.id} {...notification} />
+      ))}
+    </Column>
+  );
 };

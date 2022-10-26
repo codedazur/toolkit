@@ -1,5 +1,5 @@
 import { Timer } from "@codedazur/essentials";
-import { useTimerProgress } from "@codedazur/react-essentials";
+import { useTimerProgress as timerProgressHook } from "@codedazur/react-essentials";
 import {
   createContext,
   FunctionComponent,
@@ -13,7 +13,10 @@ export interface NotificationsContext {
   readonly notifications: Notifications;
   readonly addNotification: (
     group: string,
-    children: ReactNode
+    children: ReactNode,
+    options?: {
+      autoDismiss?: number | false;
+    }
   ) => NotificationProps;
   readonly removeNotification: (group: string, id: number) => void;
 }
@@ -25,8 +28,8 @@ type NotificationGroup = Record<number, NotificationProps>;
 export interface NotificationProps {
   readonly id: number;
   readonly children: ReactNode;
-  readonly timer: Timer;
   readonly dismiss: () => void;
+  readonly timer?: Timer;
   readonly useProgress: (options?: { targetFps?: number }) => {
     progress: number;
     elapsed: number;
@@ -59,38 +62,73 @@ interface RemoveAction {
 type Actions = AddAction | RemoveAction;
 
 interface NotificationsProviderProps {
+  autoDismiss?: number | false;
   children?: ReactNode;
 }
 
 /**
- * @todo Support customizing the auto-dismiss behavior. It should be possible to
- * change the duration, as well as disable this behavior altogether, for the
- * entire provider, as well as per notification.
+ * @todo Using multiple groups works, but configuring the provider _per_ group
+ * is currently not possible. We could simply make all of the options a
+ * `T | Record<string, T>`.
+ * ```
+ * <NotificationsProvider autoDismiss={{ banners: false, snackbars: 5000 }}>
+ * ```
+ * Alternatively, maybe we can somehow use multiple providers without them
+ * overriding each other's contexts?
+ * ```
+ * <NotificationsProvider id="banners" autoDismiss={false}>
+ *   <NotificationsProvider id="snackbars" autoDismiss={5000}>
+ * ```
+ * This _should_ be possible, since a provider can consume and augment the
+ * context and re-provide that updated context. To improve the DX, we could also
+ * include a `NotificationsProviders` which can be configured with multiple
+ * groups.
+ * ```
+ * <NotificationsProviders groups={{
+ *   banners: { autoDismiss: false },
+ *   snackbars: { autoDismiss: 5000 },
+ * }}>
+ * ```
+ * Although this last addition doesn't really seem to add much over the first
+ * suggestion. 🤔
+ *
+ * Another suggestion: maybe we shouldn't allow configuration on the provider
+ * level at all. We could say that devs can make their own hook for providing
+ * default values:
+ * ```
+ * const useSnackbars = () => {
+ *   const { notifications, add: addNotification, enqueue, remove } =
+ *     useNotifications("snackbars");
+ *
+ *   const add = useCallback(
+ *     (element, { autoDismiss = 5000 }) => {
+ *       notifications.length > 3
+ *         ? enqueue(element, { autoDismiss })
+ *         : addNotification(element, { autoDismiss })
+ *     },
+ *     [addNotification, enqueue, notifications]
+ *   );
+ *
+ *   return {
+ *     snackbars: notifications,
+ *     add,
+ *     remove,
+ *   }
+ * }
+ * ```
  *
  * @todo Add an optional `limit` to the number of simultaneous notifications,
  * offloading superfluous notifications to a queue.
- *
- * @todo Support a render function as the parameter for `addNotification`. That
- * way the user has full control over how to render each individual notification
- * without us having to support some way of passing additional metadata.
- * ```
- * addNotification((props) => (
- *   <MyNotification {...props}>
- *     Hello World!
- *   </Notification>
- * )
- * ```
- *
- * @todo In light of the above todo, consider renaming the `children` prop back
- * to `element` or perhaps `node` or something.
  */
 export const NotificationsProvider: FunctionComponent<
   NotificationsProviderProps
-> = ({ children }) => {
+> = ({ autoDismiss: autoDismissAll = 5000, children }) => {
   const [notifications, dispatch] = useReducer<Reducer<Notifications, Actions>>(
     (state, action) => {
       switch (action.operation) {
         case "add":
+          action.notification.timer?.start();
+
           return {
             ...state,
             [action.group]: {
@@ -101,35 +139,41 @@ export const NotificationsProvider: FunctionComponent<
         case "remove":
           delete state[action.group][action.id];
           return { ...state };
-        default:
-          throw new Error();
       }
     },
     {}
   );
 
-  const removeNotification = useCallback(
-    (group: string, id: number) => {
-      dispatch({
-        operation: "remove",
-        group,
-        id,
-      });
-    },
-    [dispatch]
-  );
+  const removeNotification = useCallback((group: string, id: number) => {
+    dispatch({
+      operation: "remove",
+      group,
+      id,
+    });
+  }, []);
 
   const addNotification = useCallback(
-    (group: string, children: ReactNode) => {
+    (
+      group: string,
+      children: ReactNode,
+      { autoDismiss = autoDismissAll }: { autoDismiss?: number | false } = {}
+    ) => {
       const id = Date.now();
 
       const dismiss = () => removeNotification(group, id);
 
-      const timer = new Timer(dismiss, 5000);
+      const timer = autoDismiss ? new Timer(dismiss, autoDismiss) : undefined;
 
-      const useProgress = (options: { targetFps?: number } = {}) => {
-        return useTimerProgress(timer, { ...options, immediately: true });
-      };
+      const useProgress = timer
+        ? function useProgress(options: { targetFps?: number } = {}) {
+            return timerProgressHook(timer, {
+              ...options,
+              immediately: !!autoDismiss,
+            });
+          }
+        : function useProgress() {
+            return { progress: 0, elapsed: 0, remaining: 0 };
+          };
 
       const notification = {
         id,
@@ -145,11 +189,9 @@ export const NotificationsProvider: FunctionComponent<
         notification,
       });
 
-      timer.start();
-
       return notification;
     },
-    [dispatch, removeNotification]
+    [autoDismissAll, removeNotification]
   );
 
   return (
@@ -164,143 +206,3 @@ export const NotificationsProvider: FunctionComponent<
     </notificationsContext.Provider>
   );
 };
-
-// import React, {
-//     cloneElement,
-//     ComponentType,
-//     createContext,
-//     FunctionComponent,
-//     ReactElement,
-//     ReactNode,
-//     useCallback,
-//     useEffect,
-//     useRef,
-//     useState,
-//   } from "react";
-//   import { v4 as uuid } from "uuid";
-//   import { SnackbarContainer } from "../components/SnackbarContainer";
-//   import { Timer } from "../utils/timing/Timer";
-
-//   type SnackbarElement = ReactElement<SnackbarComponentProps>;
-
-//   export interface SnackbarComponentProps {
-//     id?: string;
-//     timer?: Timer;
-//   }
-
-//   export interface SnackbarEntry {
-//     id: string;
-//     snackbar: SnackbarElement;
-//     timer?: Timer;
-//   }
-
-//   export interface AddSnackbarOptions {
-//     id?: string;
-//     autoDismiss?: number | false;
-//   }
-
-//   export type AddSnackbarFn = (
-//     snackbar: SnackbarElement | ((parameters: { id: string }) => SnackbarElement),
-//     options?: AddSnackbarOptions,
-//   ) => string;
-
-//   export type RemoveSnackbarFn = (id: string) => void;
-
-//   export interface SnackbarContext {
-//     addSnackbar: AddSnackbarFn;
-//     removeSnackbar: RemoveSnackbarFn;
-//   }
-
-//   export const SnackbarContext = createContext<SnackbarContext>({
-//     addSnackbar: () => {
-//       throw new Error("addSnackbar was called without a <SnackbarProvider>.");
-//     },
-//     removeSnackbar: () => {
-//       throw new Error("removeSnackbar was called without a <SnackbarProvider>.");
-//     },
-//   });
-
-//   export interface SnackbarProviderProps {
-//     autoDismiss?: number | false;
-//     container?: ComponentType<{ children?: ReactNode }>;
-//     children?: ReactNode;
-//   }
-
-//   export const SnackbarProvider: FunctionComponent<SnackbarProviderProps> = ({
-//     autoDismiss = 5000,
-//     container: Container = SnackbarContainer,
-//     children,
-//   }) => {
-//     const [snackbars, setSnackbars] = useState<SnackbarEntry[]>([]);
-//     const snackbarsRef = useRef(snackbars);
-
-//     useEffect(() => {
-//       snackbarsRef.current = snackbars;
-//     }, [snackbars]);
-
-//     const removeSnackbar: RemoveSnackbarFn = useCallback((id) => {
-//       setSnackbars((snackbars) =>
-//         snackbars.filter((entry) => {
-//           if (entry.id === id && entry.timer) {
-//             entry.timer.stop();
-//           }
-
-//           return entry.id !== id;
-//         }),
-//       );
-//     }, []);
-
-//     const addSnackbar: AddSnackbarFn = useCallback(
-//       (snackbar, options) => {
-//         const id = options?.id ?? uuid();
-//         const entryAutoDismiss = options?.autoDismiss ?? autoDismiss;
-
-//         const timer =
-//           entryAutoDismiss !== false
-//             ? new Timer(() => {
-//                 removeSnackbar(id);
-//               }, entryAutoDismiss)
-//             : undefined;
-//         timer?.start();
-
-//         setSnackbars((snackbars) => [
-//           ...snackbars,
-//           {
-//             id,
-//             snackbar:
-//               typeof snackbar === "function" ? snackbar({ id }) : snackbar,
-//             timer,
-//           },
-//         ]);
-
-//         return id;
-//       },
-//       [autoDismiss, removeSnackbar],
-//     );
-
-//     useEffect(
-//       () => () => {
-//         for (const { timer } of snackbarsRef.current) {
-//           timer?.stop();
-//         }
-//       },
-//       [],
-//     );
-
-//     return (
-//       <SnackbarContext.Provider value={{ addSnackbar, removeSnackbar }}>
-//         <Container>
-//           {snackbars.map((entry) =>
-//             cloneElement(entry.snackbar, {
-//               key: entry.id,
-//               id: entry.id,
-//               timer: entry.timer,
-//             }),
-//           )}
-//         </Container>
-//         {children}
-//       </SnackbarContext.Provider>
-//     );
-//   };
-
-//   export const SnackbarConsumer = SnackbarContext.Consumer;
