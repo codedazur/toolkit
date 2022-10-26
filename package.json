@@ -11,7 +11,8 @@
     "dev": "turbo run dev --parallel",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "audit": "npm audit --omit dev"
+    "audit": "npm audit --omit dev",
+    "storybook": "npm run dev -w apps/storybook"
   },
   "devDependencies": {
     "eslint-config-custom": "*",

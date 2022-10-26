@@ -1,10 +1,10 @@
-import { Button } from "@codedazur/components";
+import { Button, Page, Text } from "@codedazur/react-components";
 
-export default function Web() {
+export default function Home() {
   return (
-    <div>
-      <h1>Web</h1>
+    <Page>
+      <Text>Web</Text>
       <Button />
-    </div>
+    </Page>
   );
 }

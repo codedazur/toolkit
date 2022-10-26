@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useSynchronizedRef } from "./useSynchronizedRef";
 
 export interface Frame {
   index: number;
@@ -20,6 +21,8 @@ export const useUpdateLoop = ({
   timeScale?: number;
   targetFps?: number;
 }) => {
+  const onUpdateRef = useSynchronizedRef(onUpdate);
+
   const [status, setStatus] = useState<Status>("stopped");
   const isUpdating = useRef(false);
 
@@ -46,6 +49,10 @@ export const useUpdateLoop = ({
   }, [targetFps]);
 
   /**
+   * @todo There is a bug in this hook, where updating the `onUpdate` prop does
+   * not stop the current loop, or replace the callback _of_ the current loop,
+   * but starts a new loop in _addition_ to the current loop.
+   *
    * @todo This method could use some abstraction for readability's sake.
    */
   const step = useCallback(() => {
@@ -84,7 +91,7 @@ export const useUpdateLoop = ({
         scaledElapsedTime.current =
           (scaledElapsedTime.current ?? 0) + scaledDeltaTime.current;
 
-        onUpdate({
+        onUpdateRef.current?.({
           index: frame.current ?? 0,
           time: scaledElapsedTime.current ?? 0,
           deltaTime: scaledDeltaTime.current ?? 0,
@@ -96,7 +103,7 @@ export const useUpdateLoop = ({
 
       step();
     });
-  }, [onUpdate]);
+  }, [onUpdateRef]);
 
   const _start = useCallback(() => {
     isUpdating.current = true;

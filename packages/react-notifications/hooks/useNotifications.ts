@@ -6,8 +6,8 @@ export const useNotifications = (group: string = "default") => {
 
   return {
     notifications: Object.values(context.notifications[group] ?? {}),
-    addNotification: (element: ReactNode) =>
-      context.addNotification(group, element),
+    addNotification: (children: ReactNode) =>
+      context.addNotification(group, children),
     removeNotification: (id: number) => context.removeNotification(group, id),
   };
 };

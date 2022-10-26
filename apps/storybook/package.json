@@ -19,6 +19,7 @@
     "@codedazur/react-notifications": "*",
     "@codedazur/react-pagination": "*",
     "@codedazur/react-parallax": "*",
+    "@faker-js/faker": "^7.6.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

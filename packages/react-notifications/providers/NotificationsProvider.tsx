@@ -1,3 +1,5 @@
+import { Timer } from "@codedazur/essentials";
+import { useTimerProgress } from "@codedazur/react-essentials";
 import {
   createContext,
   FunctionComponent,
@@ -6,12 +8,14 @@ import {
   useCallback,
   useReducer,
 } from "react";
-import { Timer } from "../../essentials/utilities/timing/Timer";
 
 export interface NotificationsContext {
-  notifications: Notifications;
-  addNotification: (group: string, element: ReactNode) => NotificationProps;
-  removeNotification: (group: string, id: number) => void;
+  readonly notifications: Notifications;
+  readonly addNotification: (
+    group: string,
+    children: ReactNode
+  ) => NotificationProps;
+  readonly removeNotification: (group: string, id: number) => void;
 }
 
 type Notifications = Record<string, NotificationGroup>;
@@ -19,10 +23,15 @@ type Notifications = Record<string, NotificationGroup>;
 type NotificationGroup = Record<number, NotificationProps>;
 
 export interface NotificationProps {
-  id: number;
-  timer: Timer;
-  element: ReactNode;
-  dismiss: () => void;
+  readonly id: number;
+  readonly children: ReactNode;
+  readonly timer: Timer;
+  readonly dismiss: () => void;
+  readonly useProgress: (options?: { targetFps?: number }) => {
+    progress: number;
+    elapsed: number;
+    remaining: number;
+  };
 }
 
 const error = () => {
@@ -40,6 +49,7 @@ interface AddAction {
   group: string;
   notification: NotificationProps;
 }
+
 interface RemoveAction {
   operation: "remove";
   group: string;
@@ -52,6 +62,28 @@ interface NotificationsProviderProps {
   children?: ReactNode;
 }
 
+/**
+ * @todo Support customizing the auto-dismiss behavior. It should be possible to
+ * change the duration, as well as disable this behavior altogether, for the
+ * entire provider, as well as per notification.
+ *
+ * @todo Add an optional `limit` to the number of simultaneous notifications,
+ * offloading superfluous notifications to a queue.
+ *
+ * @todo Support a render function as the parameter for `addNotification`. That
+ * way the user has full control over how to render each individual notification
+ * without us having to support some way of passing additional metadata.
+ * ```
+ * addNotification((props) => (
+ *   <MyNotification {...props}>
+ *     Hello World!
+ *   </Notification>
+ * )
+ * ```
+ *
+ * @todo In light of the above todo, consider renaming the `children` prop back
+ * to `element` or perhaps `node` or something.
+ */
 export const NotificationsProvider: FunctionComponent<
   NotificationsProviderProps
 > = ({ children }) => {
@@ -59,8 +91,6 @@ export const NotificationsProvider: FunctionComponent<
     (state, action) => {
       switch (action.operation) {
         case "add":
-          action.notification.timer.start();
-
           return {
             ...state,
             [action.group]: {
@@ -90,16 +120,23 @@ export const NotificationsProvider: FunctionComponent<
   );
 
   const addNotification = useCallback(
-    (group: string, element: ReactNode) => {
+    (group: string, children: ReactNode) => {
       const id = Date.now();
 
       const dismiss = () => removeNotification(group, id);
 
+      const timer = new Timer(dismiss, 5000);
+
+      const useProgress = (options: { targetFps?: number } = {}) => {
+        return useTimerProgress(timer, { ...options, immediately: true });
+      };
+
       const notification = {
         id,
-        timer: new Timer(dismiss, 5000),
-        element,
+        timer,
+        children,
         dismiss,
+        useProgress,
       };
 
       dispatch({
@@ -107,6 +144,8 @@ export const NotificationsProvider: FunctionComponent<
         group,
         notification,
       });
+
+      timer.start();
 
       return notification;
     },

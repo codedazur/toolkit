@@ -1,88 +1,164 @@
+import { clamp } from "../math/clamp";
+
+type TimerEvent = "start" | "stop" | "resume" | "pause" | "extend";
+
 export class Timer {
   private id?: number;
   private callback: () => void;
-  private _delay: number;
-  private _startedAt: number;
+  private _duration: number;
+  private _startedAt?: number;
+  private _shiftedStartedAt?: number;
+  private _timeoutStartedAt?: number;
+  private _pausedAt?: number;
   private _remaining: number;
 
-  private pauseHandlers: Record<string, () => void> = {};
-  private resumeHandlers: Record<string, () => void> = {};
+  private eventListeners: Record<TimerEvent, Array<() => void>> = {
+    start: [],
+    stop: [],
+    resume: [],
+    pause: [],
+    extend: [],
+  };
 
-  constructor(callback: () => void, delay: number) {
+  constructor(callback: () => void, duration: number) {
     this.callback = callback;
-    this._delay = delay;
-    this._remaining = delay;
-    this._startedAt = Date.now();
+    this._duration = duration;
+    this._remaining = duration;
   }
 
-  public get delay(): number {
-    return this._delay;
+  public get duration(): number {
+    return this._duration;
   }
 
-  public get remaining(): number {
-    return this._remaining;
-  }
-
-  public get startedAt(): number {
+  public get startedAt(): number | undefined {
     return this._startedAt;
   }
 
   public get progress(): number {
-    return (Date.now() - this.startedAt) / this.delay;
+    return clamp(
+      this.isRunning()
+        ? (Date.now() - this._shiftedStartedAt!) / this._duration
+        : 1 - this._remaining / this._duration,
+      0,
+      1
+    );
   }
 
-  public start(): void {
-    this._remaining = this.delay;
-    this.resume();
+  public get elapsed(): number {
+    return this.progress * this.duration;
   }
 
-  public pause(): void {
+  public get remaining(): number {
+    return this.duration - this.elapsed;
+  }
+
+  private hasTimeout = (): boolean => !!this.id;
+
+  private clearTimeout = (): void => {
+    if (!this.hasTimeout()) {
+      return;
+    }
+
     window.clearTimeout(this.id);
     this.id = undefined;
-    this._remaining -= Date.now() - this.startedAt;
-    Object.values(this.pauseHandlers).forEach((handler) => handler());
-  }
 
-  public onPause(callback: () => void): () => void {
-    return this.addHandler(this.pauseHandlers, callback);
-  }
+    this.runEventListeners("pause");
+  };
 
-  public resume(): void {
-    this._startedAt = Date.now();
-    window.clearTimeout(this.id);
-    this.id = window.setTimeout(this.callback, this.remaining);
-    Object.values(this.resumeHandlers).forEach((handler) => handler());
-  }
+  private setTimeout = (): void => {
+    if (this.hasTimeout()) {
+      throw new Error(
+        "Cannot start a new timeout while a timeout is still running."
+      );
+    }
 
-  public onResume(callback: () => void): () => void {
-    return this.addHandler(this.resumeHandlers, callback);
-  }
+    this.id = window.setTimeout(() => {
+      this.reset();
+      this.callback();
+    }, this._remaining);
 
-  public stop(): void {
-    this.pause();
-    this._remaining = 0;
-  }
+    this._timeoutStartedAt = Date.now();
 
-  public reset(): void {
-    this.stop();
-    this.start();
-  }
+    this.runEventListeners("resume");
+  };
 
-  public extend(delay: number): void {
-    this._delay = this.remaining + delay;
-    this.start();
-  }
+  private reset = (): void => {
+    this.clearTimeout();
 
-  private addHandler(
-    handlers: Record<string, () => void>,
+    this._startedAt = this._shiftedStartedAt = Date.now();
+    this._pausedAt = undefined;
+    this._remaining = this._duration;
+  };
+
+  private runEventListeners = (event: TimerEvent): void => {
+    this.eventListeners[event].forEach((handler) => handler());
+  };
+
+  public addEventListener = (event: TimerEvent, handler: () => void): void => {
+    this.eventListeners[event].push(handler);
+  };
+
+  public removeEventListener = (
+    event: TimerEvent,
     handler: () => void
-  ): () => void {
-    const id = Date.now();
+  ): void => {
+    this.eventListeners[event] = this.eventListeners[event].filter(
+      (entry) => entry !== handler
+    );
+  };
 
-    handlers[id] = handler;
+  public isRunning = (): boolean => this.hasTimeout();
 
-    return () => {
-      delete handlers[id];
-    };
-  }
+  public isPaused = (): boolean => !this.hasTimeout();
+
+  public start = (): void => {
+    this.reset();
+    this.setTimeout();
+    this.runEventListeners("start");
+  };
+
+  public stop = () => {
+    this.reset();
+    this.runEventListeners("stop");
+  };
+
+  public pause = (): void => {
+    if (this.isPaused()) {
+      return;
+    }
+
+    this.clearTimeout();
+
+    this._pausedAt = Date.now();
+    this._remaining -= Date.now() - this._timeoutStartedAt!;
+  };
+
+  public resume = (): void => {
+    if (this.isRunning()) {
+      return;
+    }
+
+    if (!this._pausedAt) {
+      return this.start();
+    }
+
+    this._shiftedStartedAt! += Date.now() - this._pausedAt;
+    this._pausedAt = undefined;
+
+    this.setTimeout();
+  };
+
+  public extend = (by: number): void => {
+    const wasRunning = this.isRunning();
+
+    this.pause();
+    this._duration += by;
+    this._remaining += by;
+
+    if (wasRunning) {
+      this.resume();
+    }
+
+    this.runEventListeners("extend");
+  };
 }
