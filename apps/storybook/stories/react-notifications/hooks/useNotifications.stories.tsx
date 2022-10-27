@@ -28,21 +28,21 @@ export default meta({
 });
 
 export const Default = story(() => (
-  <NotificationsProvider>
+  <NotificationsProvider limit={3}>
     <AddNotificationButton />
     <NotificationList />
   </NotificationsProvider>
 ));
 
 export const Persistent = story(() => (
-  <NotificationsProvider autoDismiss={false}>
+  <NotificationsProvider autoDismiss={false} limit={3}>
     <AddNotificationButton />
     <NotificationList />
   </NotificationsProvider>
 ));
 
 export const MixedDurations = story(() => (
-  <NotificationsProvider>
+  <NotificationsProvider limit={3}>
     <Row gap="1rem">
       <AddNotificationButton autoDismiss={2500}>
         Add Fast Notification
@@ -56,19 +56,6 @@ export const MixedDurations = story(() => (
       </AddNotificationButton>
     </Row>
     <NotificationList />
-  </NotificationsProvider>
-));
-
-export const Groups = story(() => (
-  <NotificationsProvider>
-    <Column gap="1rem">
-      <Banners />
-      <Row gap="1rem">
-        <AddBannerButton />
-        <AddSnackbarButton />
-      </Row>
-    </Column>
-    <Snackbars />
   </NotificationsProvider>
 ));
 
@@ -139,39 +126,84 @@ const NotificationProgress = ({
   return <LinearProgress progress={progress} height="2px" shape="square" />;
 };
 
+enum NotificationGroup {
+  banners = "banners",
+  snackbars = "snackbars",
+}
+
+export const Groups = story(() => (
+  <NotificationsProvider
+    limit={{ [NotificationGroup.snackbars]: 3 }}
+    autoDismiss={{ [NotificationGroup.banners]: false }}
+  >
+    <Column gap="1rem">
+      <Banners />
+      <Row gap="1rem">
+        <AddBannerButton />
+        <AddSnackbarButton />
+      </Row>
+    </Column>
+    <Snackbars />
+  </NotificationsProvider>
+));
+
+function useSnackbars() {
+  const {
+    notifications: snackbars,
+    addNotification: addSnackbar,
+    removeNotification: removeSnackbar,
+  } = useNotifications(NotificationGroup.snackbars);
+
+  return {
+    snackbars,
+    addSnackbar,
+    removeSnackbar,
+  };
+}
+
+function useBanners() {
+  const {
+    notifications: banners,
+    addNotification: addBanner,
+    removeNotification: removeBanner,
+  } = useNotifications(NotificationGroup.banners);
+
+  return {
+    banners,
+    addBanner,
+    removeBanner,
+  };
+}
+
 const AddBannerButton = () => {
-  const { addNotification } = useNotifications("banners");
+  const { addBanner } = useBanners();
 
   return (
-    <Button
-      onClick={() =>
-        addNotification(faker.lorem.sentence(), { autoDismiss: false })
-      }
-    >
+    <Button onClick={() => addBanner(faker.lorem.sentence())}>
       Add Banner
     </Button>
   );
 };
 
 const AddSnackbarButton = () => {
-  const { addNotification } = useNotifications("snackbars");
+  const { addSnackbar } = useSnackbars();
 
   return (
-    <Button onClick={() => addNotification(faker.lorem.sentence())}>
+    <Button onClick={() => addSnackbar(faker.lorem.sentence())}>
       Add Snackbar
     </Button>
   );
 };
 
 const Snackbars = () => {
-  const { notifications } = useNotifications("snackbars");
+  const { snackbars } = useSnackbars();
 
   return (
     <Portal>
       <Positioned bottom="1rem" right="1rem">
         <Column gap="1rem" align="flex-end">
-          {notifications.map((notification) => (
-            <Notification key={notification.id} {...notification} />
+          {snackbars.map((snackbar) => (
+            <Notification key={snackbar.id} {...snackbar} />
           ))}
         </Column>
       </Positioned>
@@ -180,16 +212,16 @@ const Snackbars = () => {
 };
 
 const Banners = () => {
-  const { notifications } = useNotifications("banners");
+  const { banners } = useBanners();
 
-  if (notifications.length <= 0) {
+  if (banners.length <= 0) {
     return null;
   }
 
   return (
     <Column gap="0.5rem">
-      {notifications.map((notification) => (
-        <Notification key={notification.id} {...notification} />
+      {banners.map((banner) => (
+        <Notification key={banner.id} {...banner} />
       ))}
     </Column>
   );

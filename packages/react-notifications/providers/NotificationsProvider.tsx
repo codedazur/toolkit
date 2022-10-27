@@ -15,7 +15,7 @@ export interface NotificationsContext {
     group: string,
     children: ReactNode,
     options?: {
-      autoDismiss?: number | false;
+      autoDismiss?: AutoDismiss;
     }
   ) => NotificationProps;
   readonly removeNotification: (group: string, id: number) => void;
@@ -62,52 +62,35 @@ interface RemoveAction {
 type Actions = AddAction | RemoveAction;
 
 interface NotificationsProviderProps {
-  autoDismiss?: number | false;
+  autoDismiss?: MaybeGrouped<AutoDismiss>;
+  limit?: MaybeGrouped<Limit>;
   children?: ReactNode;
 }
+
+type MaybeGrouped<T> = T | Record<string, T>;
+
+type Option = AutoDismiss | Limit;
+type AutoDismiss = number | false;
+type Limit = number | false;
 
 /**
  * @todo Using multiple groups works, but configuring the provider _per_ group
  * is currently not possible. We could simply make all of the options a
  * `T | Record<string, T>`.
  * ```
- * <NotificationsProvider autoDismiss={{ banners: false, snackbars: 5000 }}>
+ * <NotificationsProvider
+ *   autoDismiss={{ banners: false }}
+ *   limit={{ snackbars: 3, banners: 1 }}
+ * >
  * ```
- * Alternatively, maybe we can somehow use multiple providers without them
- * overriding each other's contexts?
- * ```
- * <NotificationsProvider id="banners" autoDismiss={false}>
- *   <NotificationsProvider id="snackbars" autoDismiss={5000}>
- * ```
- * This _should_ be possible, since a provider can consume and augment the
- * context and re-provide that updated context. To improve the DX, we could also
- * include a `NotificationsProviders` which can be configured with multiple
- * groups.
- * ```
- * <NotificationsProviders groups={{
- *   banners: { autoDismiss: false },
- *   snackbars: { autoDismiss: 5000 },
- * }}>
- * ```
- * Although this last addition doesn't really seem to add much over the first
- * suggestion. 🤔
  *
- * Another suggestion: maybe we shouldn't allow configuration on the provider
- * level at all. We could say that devs can make their own hook for providing
- * default values:
+ * @todo Create a Storybook example of abstracting the hook for a specific
+ * group.
  * ```
  * const useSnackbars = () => {
- *   const { notifications, add: addNotification, enqueue, remove } =
- *     useNotifications("snackbars");
+ *   const { notifications, add, remove } = useNotifications("snackbars");
  *
- *   const add = useCallback(
- *     (element, { autoDismiss = 5000 }) => {
- *       notifications.length > 3
- *         ? enqueue(element, { autoDismiss })
- *         : addNotification(element, { autoDismiss })
- *     },
- *     [addNotification, enqueue, notifications]
- *   );
+ *   // Optional custom logic, e.g. overwriting the `add` method.
  *
  *   return {
  *     snackbars: notifications,
@@ -122,7 +105,7 @@ interface NotificationsProviderProps {
  */
 export const NotificationsProvider: FunctionComponent<
   NotificationsProviderProps
-> = ({ autoDismiss: autoDismissAll = 5000, children }) => {
+> = ({ autoDismiss, limit, children }) => {
   const [notifications, dispatch] = useReducer<Reducer<Notifications, Actions>>(
     (state, action) => {
       switch (action.operation) {
@@ -144,6 +127,30 @@ export const NotificationsProvider: FunctionComponent<
     {}
   );
 
+  const getGroupOption = useCallback(
+    (
+      group: string,
+      option: MaybeGrouped<Option> | undefined
+    ): Option | undefined => {
+      return isGrouped(option) ? option?.[group] ?? option?.default : option;
+    },
+    []
+  );
+
+  const getGroupAutoDismiss = useCallback(
+    (group: string): AutoDismiss => {
+      return getGroupOption(group, autoDismiss) ?? 5000;
+    },
+    [autoDismiss, getGroupOption]
+  );
+
+  const getGroupLimit = useCallback(
+    (group: string): Limit => {
+      return getGroupOption(group, limit) ?? false;
+    },
+    [limit, getGroupOption]
+  );
+
   const removeNotification = useCallback((group: string, id: number) => {
     dispatch({
       operation: "remove",
@@ -156,7 +163,9 @@ export const NotificationsProvider: FunctionComponent<
     (
       group: string,
       children: ReactNode,
-      { autoDismiss = autoDismissAll }: { autoDismiss?: number | false } = {}
+      {
+        autoDismiss = getGroupAutoDismiss(group),
+      }: { autoDismiss?: AutoDismiss } = {}
     ) => {
       const id = Date.now();
 
@@ -191,7 +200,7 @@ export const NotificationsProvider: FunctionComponent<
 
       return notification;
     },
-    [autoDismissAll, removeNotification]
+    [getGroupAutoDismiss, removeNotification]
   );
 
   return (
@@ -206,3 +215,9 @@ export const NotificationsProvider: FunctionComponent<
     </notificationsContext.Provider>
   );
 };
+
+function isGrouped(
+  option: MaybeGrouped<Option> | undefined
+): option is Record<string, Option> {
+  return typeof option === "object";
+}
