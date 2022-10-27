@@ -19,8 +19,8 @@ import {
 } from "@codedazur/react-notifications";
 import { faker } from "@faker-js/faker";
 import { FunctionComponent, ReactNode } from "react";
-import { meta } from "../../../utilities/meta";
-import { story } from "../../../utilities/story";
+import { meta } from "../../utilities/meta";
+import { story } from "../../utilities/story";
 import docs from "./useNotifications.docs.mdx";
 
 export default meta({

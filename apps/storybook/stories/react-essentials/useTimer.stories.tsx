@@ -14,8 +14,8 @@ import {
 } from "@codedazur/react-components";
 import { useTimer } from "@codedazur/react-essentials";
 import { action } from "@storybook/addon-actions";
-import { meta } from "../../../utilities/meta";
-import { story } from "../../../utilities/story";
+import { meta } from "../../utilities/meta";
+import { story } from "../../utilities/story";
 import docs from "./useTimer.docs.mdx";
 
 export default meta({

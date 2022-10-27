@@ -1,8 +1,8 @@
 import { Timer } from "@codedazur/essentials";
 import { Button, Center, Row } from "@codedazur/react-components";
 import { action } from "@storybook/addon-actions";
-import { meta } from "../../../utilities/meta";
-import { story } from "../../../utilities/story";
+import { meta } from "../../utilities/meta";
+import { story } from "../../utilities/story";
 import docs from "./Timer.docs.mdx";
 
 export default meta({
