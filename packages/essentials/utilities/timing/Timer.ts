@@ -106,12 +106,20 @@ export class Timer {
   public isPaused = (): boolean => !this.hasTimeout();
 
   public start = (): void => {
+    if (this.isRunning()) {
+      return;
+    }
+
     this.reset();
     this.setTimeout();
     this.runEventListeners("start");
   };
 
   public stop = () => {
+    if (this.isPaused() && this._remaining === this._duration) {
+      return;
+    }
+
     this.reset();
     this.runEventListeners("stop");
   };
