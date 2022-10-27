@@ -1,4 +1,4 @@
-import { Timer } from "@codedazur/essentials";
+import { revalueObject, Timer } from "@codedazur/essentials";
 import { useTimerProgress as timerProgressHook } from "@codedazur/react-essentials";
 import {
   createContext,
@@ -6,24 +6,27 @@ import {
   ReactNode,
   Reducer,
   useCallback,
+  useEffect,
   useReducer,
+  useState,
 } from "react";
 
 export interface NotificationsContext {
-  readonly notifications: Notifications;
-  readonly addNotification: (
+  readonly entries: Notifications;
+  readonly queue: Notifications;
+  readonly add: (
     group: string,
     children: ReactNode,
     options?: {
       autoDismiss?: AutoDismiss;
     }
   ) => NotificationProps;
-  readonly removeNotification: (group: string, id: number) => void;
+  readonly remove: (group: string, id: number) => void;
 }
 
 type Notifications = Record<string, NotificationGroup>;
 
-type NotificationGroup = Record<number, NotificationProps>;
+type NotificationGroup = Array<NotificationProps>;
 
 export interface NotificationProps {
   readonly id: number;
@@ -42,9 +45,10 @@ const error = () => {
 };
 
 export const notificationsContext = createContext<NotificationsContext>({
-  notifications: {},
-  addNotification: error,
-  removeNotification: error,
+  entries: {},
+  queue: {},
+  add: error,
+  remove: error,
 });
 
 interface AddAction {
@@ -74,58 +78,70 @@ type AutoDismiss = number | false;
 type Limit = number | false;
 
 /**
- * @todo Using multiple groups works, but configuring the provider _per_ group
- * is currently not possible. We could simply make all of the options a
- * `T | Record<string, T>`.
+ * @todo Explore an alternative for working with groups. How about a provider
+ * that takes an array of hook returns? Is that crazy?
  * ```
- * <NotificationsProvider
- *   autoDismiss={{ banners: false }}
- *   limit={{ snackbars: 3, banners: 1 }}
- * >
+ * <NotificationGroupsProvider groups={{
+ *   snackbars: useNotifications({ limit: 3 }),
+ *   banners: useNotifications({ autoDismiss: false })
+ * }}>
+ *
+ * const groups = useNotificationGroups();
+ * const snackbars = useNotificationGroup("snackbars");
+ *
+ * const localNotifications = useNotifications();
  * ```
- *
- * @todo Create a Storybook example of abstracting the hook for a specific
- * group.
- * ```
- * const useSnackbars = () => {
- *   const { notifications, add, remove } = useNotifications("snackbars");
- *
- *   // Optional custom logic, e.g. overwriting the `add` method.
- *
- *   return {
- *     snackbars: notifications,
- *     add,
- *     remove,
- *   }
- * }
- * ```
- *
- * @todo Add an optional `limit` to the number of simultaneous notifications,
- * offloading superfluous notifications to a queue.
  */
 export const NotificationsProvider: FunctionComponent<
   NotificationsProviderProps
 > = ({ autoDismiss, limit, children }) => {
-  const [notifications, dispatch] = useReducer<Reducer<Notifications, Actions>>(
+  const [groups, dispatch] = useReducer<Reducer<Notifications, Actions>>(
     (state, action) => {
       switch (action.operation) {
         case "add":
-          action.notification.timer?.start();
-
           return {
             ...state,
-            [action.group]: {
-              ...state[action.group],
-              [action.notification.id]: action.notification,
-            },
+            [action.group]: [
+              ...(state[action.group] ?? []),
+              action.notification,
+            ],
           };
         case "remove":
-          delete state[action.group][action.id];
-          return { ...state };
+          return {
+            ...state,
+            [action.group]: [
+              ...(state[action.group] ?? []).filter(
+                ({ id }) => id !== action.id
+              ),
+            ],
+          };
       }
     },
     {}
   );
+
+  const [entries, setEntries] = useState<Notifications>({});
+  const [queue, setQueue] = useState<Notifications>({});
+
+  useEffect(() => {
+    setEntries(
+      revalueObject(groups, ([group, all]) => {
+        const groupLimit = getGroupLimit(group);
+        const entries = groupLimit !== false ? all.slice(0, groupLimit) : all;
+
+        entries.forEach((entry) => entry.timer?.resume());
+
+        return entries;
+      })
+    );
+
+    setQueue(
+      revalueObject(groups, ([group, all]) => {
+        const groupLimit = getGroupLimit(group);
+        return groupLimit !== false ? all.slice(groupLimit) : [];
+      })
+    );
+  }, [groups, limit]);
 
   const getGroupOption = useCallback(
     (
@@ -151,7 +167,7 @@ export const NotificationsProvider: FunctionComponent<
     [limit, getGroupOption]
   );
 
-  const removeNotification = useCallback((group: string, id: number) => {
+  const remove = useCallback((group: string, id: number) => {
     dispatch({
       operation: "remove",
       group,
@@ -159,7 +175,7 @@ export const NotificationsProvider: FunctionComponent<
     });
   }, []);
 
-  const addNotification = useCallback(
+  const add = useCallback(
     (
       group: string,
       children: ReactNode,
@@ -169,7 +185,7 @@ export const NotificationsProvider: FunctionComponent<
     ) => {
       const id = Date.now();
 
-      const dismiss = () => removeNotification(group, id);
+      const dismiss = () => remove(group, id);
 
       const timer = autoDismiss ? new Timer(dismiss, autoDismiss) : undefined;
 
@@ -200,15 +216,16 @@ export const NotificationsProvider: FunctionComponent<
 
       return notification;
     },
-    [getGroupAutoDismiss, removeNotification]
+    [getGroupAutoDismiss, remove]
   );
 
   return (
     <notificationsContext.Provider
       value={{
-        notifications,
-        addNotification,
-        removeNotification,
+        entries,
+        queue,
+        add,
+        remove,
       }}
     >
       {children}

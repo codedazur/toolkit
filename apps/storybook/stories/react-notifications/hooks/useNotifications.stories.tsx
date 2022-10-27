@@ -1,5 +1,8 @@
 import {
+  AbsorbPointer,
+  Badge,
   Button,
+  Center,
   Column,
   EdgeInset,
   LinearProgress,
@@ -7,6 +10,7 @@ import {
   Portal,
   Positioned,
   Row,
+  UnfoldLessIcon,
 } from "@codedazur/react-components";
 import {
   NotificationProps,
@@ -28,33 +32,44 @@ export default meta({
 });
 
 export const Default = story(() => (
+  <NotificationsProvider>
+    <Center>
+      <AddNotificationButton />
+    </Center>
+    <NotificationList />
+  </NotificationsProvider>
+));
+
+export const Limited = story(() => (
   <NotificationsProvider limit={3}>
-    <AddNotificationButton />
+    <Center>
+      <AddNotificationButton />
+    </Center>
     <NotificationList />
   </NotificationsProvider>
 ));
 
 export const Persistent = story(() => (
-  <NotificationsProvider autoDismiss={false} limit={3}>
-    <AddNotificationButton />
+  <NotificationsProvider autoDismiss={false}>
+    <Center>
+      <AddNotificationButton />
+    </Center>
     <NotificationList />
   </NotificationsProvider>
 ));
 
 export const MixedDurations = story(() => (
-  <NotificationsProvider limit={3}>
-    <Row gap="1rem">
-      <AddNotificationButton autoDismiss={2500}>
-        Add Fast Notification
-      </AddNotificationButton>
-      <AddNotificationButton>Add Normal Notification</AddNotificationButton>
-      <AddNotificationButton autoDismiss={10000}>
-        Add Slow Notification
-      </AddNotificationButton>
-      <AddNotificationButton autoDismiss={false}>
-        Add Persistent Notification
-      </AddNotificationButton>
-    </Row>
+  <NotificationsProvider>
+    <Center>
+      <Row gap="1rem">
+        <AddNotificationButton autoDismiss={2500}>Short</AddNotificationButton>
+        <AddNotificationButton autoDismiss={5000}>Medium</AddNotificationButton>
+        <AddNotificationButton autoDismiss={10000}>Long</AddNotificationButton>
+        <AddNotificationButton autoDismiss={false}>
+          Persistent
+        </AddNotificationButton>
+      </Row>
+    </Center>
     <NotificationList />
   </NotificationsProvider>
 ));
@@ -68,29 +83,38 @@ const AddNotificationButton = ({
   autoDismiss?: number | false;
   children?: ReactNode;
 }) => {
-  const { addNotification } = useNotifications(group);
+  const { add } = useNotifications(group);
 
   return (
-    <Button
-      onClick={() => addNotification(faker.lorem.sentence(), { autoDismiss })}
-    >
+    <Button onClick={() => add(faker.lorem.sentence(), { autoDismiss })}>
       {children}
     </Button>
   );
 };
 
 const NotificationList = () => {
-  const { notifications } = useNotifications();
+  const { entries, queue } = useNotifications();
 
   return (
     <Portal>
-      <Positioned bottom="1rem" right="1rem">
-        <Column gap="1rem" align="flex-end">
-          {notifications.map((notification) => (
-            <Notification key={notification.id} {...notification} />
-          ))}
-        </Column>
-      </Positioned>
+      <AbsorbPointer>
+        <Positioned bottom="1rem" right="1rem">
+          <Column gap="1rem" align="flex-end">
+            {entries.map((notification) => (
+              <AbsorbPointer key={notification.id} absorbing={false}>
+                <Notification {...notification} />
+              </AbsorbPointer>
+            ))}
+            {queue.length > 0 && (
+              <Badge count={queue.length}>
+                <Placeholder width="2.5rem" height="2.5rem">
+                  <UnfoldLessIcon />
+                </Placeholder>
+              </Badge>
+            )}
+          </Column>
+        </Positioned>
+      </AbsorbPointer>
     </Portal>
   );
 };
@@ -123,106 +147,111 @@ const NotificationProgress = ({
 }: Pick<NotificationProps, "useProgress">) => {
   const { progress } = useProgress();
 
-  return <LinearProgress progress={progress} height="2px" shape="square" />;
+  return <LinearProgress progress={1 - progress} height="2px" shape="square" />;
 };
-
-enum NotificationGroup {
-  banners = "banners",
-  snackbars = "snackbars",
-}
 
 export const Groups = story(() => (
   <NotificationsProvider
-    limit={{ [NotificationGroup.snackbars]: 3 }}
-    autoDismiss={{ [NotificationGroup.banners]: false }}
+    autoDismiss={{ banners: false }}
+    limit={{ banners: 1, snackbars: 3 }}
   >
-    <Column gap="1rem">
+    <Column gap="1rem" height="100%">
       <Banners />
-      <Row gap="1rem">
-        <AddBannerButton />
-        <AddSnackbarButton />
-      </Row>
+      <Center>
+        <Row gap="1rem">
+          <AddBannerButton />
+          <AddSnackbarButton />
+        </Row>
+      </Center>
     </Column>
     <Snackbars />
   </NotificationsProvider>
 ));
 
 function useSnackbars() {
-  const {
-    notifications: snackbars,
-    addNotification: addSnackbar,
-    removeNotification: removeSnackbar,
-  } = useNotifications(NotificationGroup.snackbars);
+  const { entries, ...notifications } = useNotifications("snackbars");
 
   return {
-    snackbars,
-    addSnackbar,
-    removeSnackbar,
+    snackbars: entries,
+    ...notifications,
   };
 }
 
 function useBanners() {
-  const {
-    notifications: banners,
-    addNotification: addBanner,
-    removeNotification: removeBanner,
-  } = useNotifications(NotificationGroup.banners);
+  const { entries, ...notifications } = useNotifications("banners");
 
   return {
-    banners,
-    addBanner,
-    removeBanner,
+    banners: entries,
+    ...notifications,
   };
 }
 
 const AddBannerButton = () => {
-  const { addBanner } = useBanners();
+  const { add } = useBanners();
 
   return (
-    <Button onClick={() => addBanner(faker.lorem.sentence())}>
-      Add Banner
-    </Button>
+    <Button onClick={() => add(faker.lorem.sentence())}>Add Banner</Button>
   );
 };
 
 const AddSnackbarButton = () => {
-  const { addSnackbar } = useSnackbars();
+  const { add } = useSnackbars();
 
   return (
-    <Button onClick={() => addSnackbar(faker.lorem.sentence())}>
-      Add Snackbar
-    </Button>
+    <Button onClick={() => add(faker.lorem.sentence())}>Add Snackbar</Button>
   );
 };
 
 const Snackbars = () => {
-  const { snackbars } = useSnackbars();
+  const { snackbars, queue } = useSnackbars();
 
   return (
     <Portal>
-      <Positioned bottom="1rem" right="1rem">
-        <Column gap="1rem" align="flex-end">
-          {snackbars.map((snackbar) => (
-            <Notification key={snackbar.id} {...snackbar} />
-          ))}
-        </Column>
-      </Positioned>
+      <AbsorbPointer>
+        <Positioned bottom="1rem" right="1rem">
+          <Column gap="1rem" align="flex-end">
+            {snackbars.map((snackbar) => (
+              <AbsorbPointer key={snackbar.id} absorbing={false}>
+                <Notification {...snackbar} />
+              </AbsorbPointer>
+            ))}
+            {queue.length > 0 && (
+              <Placeholder width="2.5rem" height="2.5rem">
+                +{queue.length}
+              </Placeholder>
+            )}
+          </Column>
+        </Positioned>
+      </AbsorbPointer>
     </Portal>
   );
 };
 
 const Banners = () => {
-  const { banners } = useBanners();
+  const { banners, queue } = useBanners();
 
   if (banners.length <= 0) {
     return null;
   }
 
   return (
-    <Column gap="0.5rem">
-      {banners.map((banner) => (
-        <Notification key={banner.id} {...banner} />
-      ))}
-    </Column>
+    <Portal>
+      <AbsorbPointer>
+        <Positioned top="1rem" left="1rem" right="1rem">
+          <Column reverse gap="0.5rem">
+            {banners.map((banner) => (
+              <AbsorbPointer key={banner.id} absorbing={false}>
+                <Notification {...banner} />
+              </AbsorbPointer>
+            ))}
+            {queue.length > 0 && (
+              <Placeholder width="2.5rem" height="2.5rem">
+                +{queue.length}
+              </Placeholder>
+            )}
+          </Column>
+        </Positioned>
+      </AbsorbPointer>
+    </Portal>
   );
 };

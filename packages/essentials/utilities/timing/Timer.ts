@@ -1,6 +1,6 @@
 import { clamp } from "../math/clamp";
 
-type TimerEvent = "start" | "stop" | "resume" | "pause" | "extend";
+type TimerEvent = "start" | "stop" | "pause" | "resume" | "extend" | "end";
 
 export class Timer {
   private id?: number;
@@ -15,9 +15,10 @@ export class Timer {
   private eventListeners: Record<TimerEvent, Array<() => void>> = {
     start: [],
     stop: [],
-    resume: [],
     pause: [],
+    resume: [],
     extend: [],
+    end: [],
   };
 
   constructor(callback: () => void, duration: number) {
@@ -61,8 +62,6 @@ export class Timer {
 
     window.clearTimeout(this.id);
     this.id = undefined;
-
-    this.runEventListeners("pause");
   };
 
   private setTimeout = (): void => {
@@ -72,14 +71,9 @@ export class Timer {
       );
     }
 
-    this.id = window.setTimeout(() => {
-      this.reset();
-      this.callback();
-    }, this._remaining);
+    this.id = window.setTimeout(this.end, this._remaining);
 
     this._timeoutStartedAt = Date.now();
-
-    this.runEventListeners("resume");
   };
 
   private reset = (): void => {
@@ -131,6 +125,8 @@ export class Timer {
 
     this._pausedAt = Date.now();
     this._remaining -= Date.now() - this._timeoutStartedAt!;
+
+    this.runEventListeners("pause");
   };
 
   public resume = (): void => {
@@ -146,6 +142,8 @@ export class Timer {
     this._pausedAt = undefined;
 
     this.setTimeout();
+
+    this.runEventListeners("resume");
   };
 
   public extend = (by: number): void => {
@@ -160,5 +158,12 @@ export class Timer {
     }
 
     this.runEventListeners("extend");
+  };
+
+  public end = (): void => {
+    this.reset();
+    this.runEventListeners("end");
+
+    this.callback();
   };
 }

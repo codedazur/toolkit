@@ -5,11 +5,10 @@ export const useNotifications = (group: string = "default") => {
   const context = useContext(notificationsContext);
 
   return {
-    notifications: Object.values(context.notifications[group] ?? {}),
-    addNotification: (
-      children: ReactNode,
-      options?: { autoDismiss?: number | false }
-    ) => context.addNotification(group, children, options),
-    removeNotification: (id: number) => context.removeNotification(group, id),
+    entries: context.entries[group] ?? [],
+    queue: context.queue[group] ?? [],
+    add: (children: ReactNode, options?: { autoDismiss?: number | false }) =>
+      context.add(group, children, options),
+    remove: (id: number) => context.remove(group, id),
   };
 };

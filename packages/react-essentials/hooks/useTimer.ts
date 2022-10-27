@@ -56,6 +56,11 @@ export function useTimer(callback: () => void, duration: number) {
     [duration]
   );
 
+  const end = useCallback(() => {
+    timer.current.end();
+    setStatus("stopped");
+  }, []);
+
   const useProgress = useCallback(function useProgress({
     targetFps,
   }: { targetFps?: number } = {}) {
@@ -69,6 +74,7 @@ export function useTimer(callback: () => void, duration: number) {
     pause,
     resume,
     extend,
+    end,
     isRunning: status === "running",
     isPaused: status !== "running",
     duration: _duration,
@@ -90,16 +96,22 @@ export function useTimerProgress(
   const { start, stop } = useUpdateLoop({ onUpdate, ...options });
 
   useEffect(() => {
+    timer.addEventListener("start", start);
     timer.addEventListener("resume", start);
     timer.addEventListener("pause", stop);
+    timer.addEventListener("stop", stop);
     timer.addEventListener("stop", onUpdate);
     timer.addEventListener("extend", onUpdate);
+    timer.addEventListener("end", onUpdate);
 
     return () => {
+      timer.removeEventListener("start", start);
       timer.removeEventListener("resume", start);
       timer.removeEventListener("pause", stop);
+      timer.removeEventListener("stop", stop);
       timer.removeEventListener("stop", onUpdate);
       timer.removeEventListener("extend", onUpdate);
+      timer.removeEventListener("end", onUpdate);
     };
   }, [onUpdate, start, stop, timer]);
 
@@ -107,5 +119,6 @@ export function useTimerProgress(
     progress: progress,
     elapsed: timer.elapsed,
     remaining: timer.remaining,
+    duration: timer.duration,
   };
 }
