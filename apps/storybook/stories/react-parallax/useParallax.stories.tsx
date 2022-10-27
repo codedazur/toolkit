@@ -1,3 +1,4 @@
+import { Vector2 } from "@codedazur/essentials";
 import {
   Center,
   Image,
@@ -8,7 +9,7 @@ import {
   Text,
   Transform,
 } from "@codedazur/react-components";
-import { useParallax } from "@codedazur/react-parallax";
+import { ParallaxFactor, useParallax } from "@codedazur/react-parallax";
 import { faker } from "@faker-js/faker";
 import { Meta, Story } from "@storybook/react";
 import { ReactNode } from "react";
@@ -19,7 +20,7 @@ export default {
 
 export const Default: Story = () => (
   <>
-    <Center>
+    <Placeholder>
       <Row gap="1rem">
         {[-0.5, 0, 0.5, 1, 1.5].map((factor, index) => (
           <Parallax key={index} factor={factor}>
@@ -29,7 +30,7 @@ export const Default: Story = () => (
           </Parallax>
         ))}
       </Row>
-    </Center>
+    </Placeholder>
     <SizedBox width="200vw" height="200vh" />
   </>
 );
@@ -38,13 +39,13 @@ const Parallax = ({
   factor,
   children,
 }: {
-  factor: number;
+  factor: ParallaxFactor;
   children?: ReactNode;
 }) => {
-  const { translation } = useParallax({ factor });
+  const { x, y } = useParallax({ factor });
 
   return (
-    <Transform translateX={translation.x} translateY={translation.y}>
+    <Transform x={x} y={y}>
       {children}
     </Transform>
   );
@@ -56,7 +57,7 @@ export const Hero: Story = () => (
   <>
     <Stack>
       <Parallax factor={0.5}>
-        <Placeholder height="40rem" shape="square" crossed />
+        <Placeholder height="40rem" crossed />
       </Parallax>
       <Center>
         <Text>{title}</Text>
@@ -91,5 +92,38 @@ export const Diorama: Story = () => (
       </Stack>
     </Center>
     <SizedBox height="200vh" />
+  </>
+);
+
+export const NonLinear: Story = () => (
+  <>
+    <Placeholder>
+      <Parallax
+        factor={({ x, y }) =>
+          new Vector2(10 * Math.sqrt(x), 0.0001 * Math.pow(y, 2))
+        }
+      >
+        <Placeholder width="10rem" height="10rem">
+          <Text style={{ fontFamily: "system-ui" }}>10⋅√x</Text>
+          <Text style={{ fontFamily: "system-ui" }}>0.001⋅y²</Text>
+        </Placeholder>
+      </Parallax>
+    </Placeholder>
+    <SizedBox width="200vw" height="100vh" />
+  </>
+);
+
+export const Dynamic: Story = () => (
+  <>
+    <Placeholder>
+      <Parallax
+        factor={({ x, y }) =>
+          new Vector2(0, y < 200 ? y : y > 400 ? y - 200 : 200)
+        }
+      >
+        <Placeholder width="10rem" height="10rem" />
+      </Parallax>
+    </Placeholder>
+    <SizedBox width="200vw" height="100vh" />
   </>
 );
