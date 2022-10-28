@@ -4,81 +4,71 @@ import { useDelta } from "./useDelta";
 import { useSynchronizedRef } from "./useSynchronizedRef";
 import { useUpdateLoop } from "./useUpdateLoop";
 
+type Status = "running" | "paused" | "stopped";
+
 export function useTimer(callback: () => void, duration: number) {
   const callbackRef = useSynchronizedRef(callback);
 
   const dynamicCallback = useCallback(() => {
-    setStatus("stopped");
     callbackRef.current?.();
   }, [callbackRef]);
 
+  const timerRef = useRef<Timer>(new Timer(dynamicCallback, duration));
+
+  const [_status, setStatus] = useState<Status>("stopped");
+  const [_duration, setDuration] = useState<number>(duration);
+
   const deltaDuration = useDelta(duration);
 
-  const timer = useRef<Timer>(new Timer(dynamicCallback, duration));
+  useEffect(() => {
+    const timer = timerRef.current;
 
-  const [status, setStatus] = useState<"running" | "paused" | "stopped">(
-    "stopped"
-  );
-  const [_duration, setDuration] = useState<number>(timer.current.duration);
+    const reflectStatus = () => setStatus(timer.status);
+    const reflectDuration = () => setDuration(timer.duration);
+
+    timer.addEventListener("start", reflectStatus);
+    timer.addEventListener("stop", reflectStatus);
+    timer.addEventListener("pause", reflectStatus);
+    timer.addEventListener("resume", reflectStatus);
+    timer.addEventListener("end", reflectStatus);
+    timer.addEventListener("extend", reflectDuration);
+
+    return () => {
+      timer.removeEventListener("start", reflectStatus);
+      timer.removeEventListener("stop", reflectStatus);
+      timer.removeEventListener("pause", reflectStatus);
+      timer.removeEventListener("resume", reflectStatus);
+      timer.removeEventListener("end", reflectStatus);
+      timer.removeEventListener("extend", reflectDuration);
+    };
+  }, [timerRef]);
 
   useEffect(() => {
     if (deltaDuration > 0) {
-      timer.current.extend(deltaDuration);
-      setDuration(timer.current.duration);
+      timerRef.current.extend(deltaDuration);
     }
   }, [deltaDuration]);
-
-  const start = useCallback(() => {
-    timer.current.start();
-    setStatus("running");
-  }, []);
-
-  const stop = useCallback(() => {
-    timer.current.stop();
-    setStatus("stopped");
-  }, []);
-
-  const pause = useCallback(() => {
-    timer.current.pause();
-    setStatus("paused");
-  }, []);
-
-  const resume = useCallback(() => {
-    timer.current.resume();
-    setStatus("running");
-  }, []);
-
-  const extend = useCallback(
-    (by: number) => {
-      timer.current.extend(by);
-      setDuration(duration + by);
-    },
-    [duration]
-  );
-
-  const end = useCallback(() => {
-    timer.current.end();
-    setStatus("stopped");
-  }, []);
 
   const useProgress = useCallback(function useProgress({
     targetFps,
   }: { targetFps?: number } = {}) {
-    return useTimerProgress(timer.current, { targetFps });
+    return useTimerProgress(timerRef.current, { targetFps });
   },
   []);
 
   return {
-    start,
-    stop,
-    pause,
-    resume,
-    extend,
-    end,
-    isRunning: status === "running",
-    isPaused: status !== "running",
+    status: _status,
+    isRunning: _status === "running",
+    isPaused: _status === "paused",
+    isStopped: _status === "stopped",
     duration: _duration,
-    startedAt: timer.current.startedAt,
+    startedAt: timerRef.current.startedAt,
+    start: timerRef.current.start,
+    stop: timerRef.current.stop,
+    pause: timerRef.current.pause,
+    resume: timerRef.current.resume,
+    extend: timerRef.current.extend,
+    end: timerRef.current.end,
     useProgress,
   };
 }

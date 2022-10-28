@@ -27,17 +27,23 @@ export default meta({
 });
 
 export const Default = story(() => {
-  const { isPaused, resume, pause, stop, extend, end, useProgress } = useTimer(
-    action("callback"),
-    3000
-  );
+  const {
+    isRunning,
+    isStopped,
+    resume,
+    pause,
+    stop,
+    extend,
+    end,
+    useProgress,
+  } = useTimer(action("callback"), 3000);
 
   return (
     <Center>
       <Column gap="1rem" width="20rem" maxWidth="100%">
         <TimerProgress useProgress={useProgress} />
         <Row gap="1rem" justify="center">
-          {isPaused ? (
+          {!isRunning ? (
             <IconButton onClick={resume}>
               <PlayArrowIcon />
             </IconButton>
@@ -46,14 +52,14 @@ export const Default = story(() => {
               <PauseIcon />
             </IconButton>
           )}
-          <IconButton onClick={stop}>
+          <IconButton onClick={stop} disabled={isStopped}>
             <StopIcon />
-          </IconButton>
-          <IconButton onClick={() => extend(1000)}>
-            <AddIcon />
           </IconButton>
           <IconButton onClick={end}>
             <SkipNextIcon />
+          </IconButton>
+          <IconButton onClick={() => extend(1000)}>
+            <AddIcon />
           </IconButton>
         </Row>
       </Column>

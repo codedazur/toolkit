@@ -27,6 +27,30 @@ export class Timer {
     this._remaining = duration;
   }
 
+  private get _hasTimeout(): boolean {
+    return !!this.id;
+  }
+
+  public get status(): "stopped" | "running" | "paused" {
+    return this._hasTimeout
+      ? "running"
+      : this._remaining < this._duration
+      ? "paused"
+      : "stopped";
+  }
+
+  public get isRunning(): boolean {
+    return this.status === "running";
+  }
+
+  public get isPaused(): boolean {
+    return this.status === "paused";
+  }
+
+  public get isStopped(): boolean {
+    return this.status === "stopped";
+  }
+
   public get duration(): number {
     return this._duration;
   }
@@ -37,7 +61,7 @@ export class Timer {
 
   public get progress(): number {
     return clamp(
-      this.isRunning()
+      this.isRunning
         ? (Date.now() - this._shiftedStartedAt!) / this._duration
         : 1 - this._remaining / this._duration,
       0,
@@ -53,10 +77,8 @@ export class Timer {
     return this.duration - this.elapsed;
   }
 
-  private hasTimeout = (): boolean => !!this.id;
-
   private clearTimeout = (): void => {
-    if (!this.hasTimeout()) {
+    if (!this._hasTimeout) {
       return;
     }
 
@@ -65,7 +87,7 @@ export class Timer {
   };
 
   private setTimeout = (): void => {
-    if (this.hasTimeout()) {
+    if (this._hasTimeout) {
       throw new Error(
         "Cannot start a new timeout while a timeout is still running."
       );
@@ -101,12 +123,8 @@ export class Timer {
     );
   };
 
-  public isRunning = (): boolean => this.hasTimeout();
-
-  public isPaused = (): boolean => !this.hasTimeout();
-
   public start = (): void => {
-    if (this.isRunning()) {
+    if (this.isRunning) {
       return;
     }
 
@@ -116,7 +134,7 @@ export class Timer {
   };
 
   public stop = () => {
-    if (this.isPaused() && this._remaining === this._duration) {
+    if (this.isStopped) {
       return;
     }
 
@@ -125,7 +143,7 @@ export class Timer {
   };
 
   public pause = (): void => {
-    if (this.isPaused()) {
+    if (!this.isRunning) {
       return;
     }
 
@@ -138,7 +156,7 @@ export class Timer {
   };
 
   public resume = (): void => {
-    if (this.isRunning()) {
+    if (this.isRunning) {
       return;
     }
 
@@ -155,7 +173,7 @@ export class Timer {
   };
 
   public extend = (by: number): void => {
-    const wasRunning = this.isRunning();
+    const wasRunning = this.isRunning;
 
     this.pause();
     this._duration += by;
