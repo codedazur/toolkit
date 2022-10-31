@@ -44,7 +44,7 @@ export const useAudioProgress = ({
   return {
     time,
     setTime,
-    progress: time / duration,
+    progress: duration ? time / duration : 0,
     setProgress,
   };
 };
