@@ -5,6 +5,7 @@ import {
   Center,
   Column,
   Divider,
+  EdgeInset,
   Flex,
   IconButton,
   Image,
@@ -20,10 +21,12 @@ import {
   RepeatIcon,
   Row,
   Separate,
+  ShapedBox,
   ShuffleIcon,
   SkipNextIcon,
   SkipPreviousIcon,
   Slider,
+  Stack,
   StopIcon,
   Text,
   timecode,
@@ -46,6 +49,8 @@ import alienated from "./tracks/alienated.mp3";
 import meteorites from "./tracks/meteorites.mp3";
 import tabulaRasa from "./tracks/tabula-rasa.mp3";
 import { WithCenter } from "../../decorators/WithCenter";
+import { Bar } from "../../components/Bar";
+import { List } from "../../components/List";
 
 export default meta({
   decorators: [WithCenter],
@@ -65,12 +70,10 @@ export const Default = story(() => (
 ));
 
 const StateControls = () => (
-  <SegmentedBar>
-    <Row gap="1rem" crossAxisAlignment="center">
-      <PlayButton />
-      <StopButton />
-    </Row>
-  </SegmentedBar>
+  <Bar>
+    <PlayButton />
+    <StopButton />
+  </Bar>
 );
 
 const PlayButton = () => {
@@ -109,12 +112,10 @@ export const WithVolumeControls = story(() => (
 ));
 
 const VolumeControls = () => (
-  <SegmentedBar>
-    <Row gap="1rem" crossAxisAlignment="center">
-      <VolumeUpIcon />
-      <VolumeSlider />
-    </Row>
-  </SegmentedBar>
+  <Bar>
+    <VolumeUpIcon />
+    <VolumeSlider />
+  </Bar>
 );
 
 const VolumeSlider = () => {
@@ -129,7 +130,7 @@ const VolumeSlider = () => {
 
 export const WithSeekControls = story(() => (
   <AudioProvider tracks={[meteorites]}>
-    <Column gap="1rem" crossAxisAlignment="center">
+    <Column gap="1rem" align="center">
       <Row gap="1rem">
         <StateControls />
         <VolumeControls />
@@ -142,13 +143,11 @@ export const WithSeekControls = story(() => (
 ));
 
 const SeekControls = () => (
-  <SegmentedBar>
-    <Row gap="1rem" crossAxisAlignment="center">
-      <Time />
-      <ProgressSlider />
-      <Duration />
-    </Row>
-  </SegmentedBar>
+  <Bar>
+    <Time />
+    <ProgressSlider />
+    <Duration />
+  </Bar>
 );
 
 const Time = () => {
@@ -177,9 +176,9 @@ const Duration = () => {
 
 export const WithDynamicTrack = story(() => (
   <AudioProvider>
-    <Column gap="5rem" crossAxisAlignment="center">
+    <Column gap="5rem" align="center">
       <SelectTrack tracks={[meteorites, alienated, tabulaRasa]} />
-      <Column gap="1rem" crossAxisAlignment="center">
+      <Column gap="1rem" align="center">
         <Row gap="1rem">
           <StateControls />
           <VolumeControls />
@@ -195,7 +194,7 @@ export const WithDynamicTrack = story(() => (
 const SelectTrack = ({ tracks }: { tracks: string[] }) => (
   <Column gap="1rem">
     {tracks.map((track) => (
-      <Row key={track} gap="1rem" align="center">
+      <Row key={track} gap="0.5rem" align="center">
         <TrackRadioButton track={track} />
         <Text>{track.split("/").at(-1)}</Text>
       </Row>
@@ -219,9 +218,9 @@ const TrackRadioButton = ({ track }: { track: string }) => {
 
 export const WithPlaylist = story(() => (
   <AudioProvider tracks={[meteorites, alienated, tabulaRasa]}>
-    <Column gap="5rem" crossAxisAlignment="center">
+    <Column gap="5rem" align="center">
       <TrackList />
-      <Column gap="1rem" crossAxisAlignment="center">
+      <Column gap="1rem" align="center">
         <Row gap="1rem">
           <PlaylistControls />
           <StateControls />
@@ -240,39 +239,39 @@ const TrackList = () => {
     useAudio<string>();
 
   return (
-    <SegmentedList>
+    <List>
       {tracks.map((track, index) => (
-        <Row key={index} gap="1rem" crossAxisAlignment="center">
-          {cursor === index && isPlaying ? (
-            <IconButton onClick={pause}>
-              <PauseIcon />
-            </IconButton>
-          ) : (
-            <IconButton
-              onClick={() => {
-                setCursor(index);
-                play();
-              }}
-            >
-              <PlayArrowIcon />
-            </IconButton>
-          )}
-          <Text noWrap>{track.split("/").at(-1)}</Text>
-        </Row>
+        <EdgeInset all="0.5rem">
+          <Row key={index} gap="0.5rem">
+            {cursor === index && isPlaying ? (
+              <IconButton onClick={pause}>
+                <PauseIcon />
+              </IconButton>
+            ) : (
+              <IconButton
+                onClick={() => {
+                  setCursor(index);
+                  play();
+                }}
+              >
+                <PlayArrowIcon />
+              </IconButton>
+            )}
+            <Text noWrap>{track.split("/").at(-1)}</Text>
+          </Row>
+        </EdgeInset>
       ))}
-    </SegmentedList>
+    </List>
   );
 };
 
 const PlaylistControls = () => (
-  <SegmentedBar>
-    <Row gap="1rem">
-      <RepeatButton />
-      <ShuffleButton />
-      <PreviousButton />
-      <NextButton />
-    </Row>
-  </SegmentedBar>
+  <Bar>
+    <RepeatButton />
+    <ShuffleButton />
+    <PreviousButton />
+    <NextButton />
+  </Bar>
 );
 
 const RepeatButton = () => {
@@ -354,9 +353,9 @@ const myTracks: MyTrack[] = [
 export const WithMetadata = story(() => (
   <AudioProvider tracks={myTracks}>
     <FullscreenArtwork />
-    <Column gap="5rem" crossAxisAlignment="center">
+    <Column gap="5rem" align="center">
       <FancyTrackList />
-      <Column gap="1rem" crossAxisAlignment="center">
+      <Column gap="1rem" align="center">
         <Row gap="1rem">
           <PlaylistControls />
           <StateControls />
@@ -401,39 +400,45 @@ const FancyTrackList = () => {
     useAudio<MyTrack>();
 
   return (
-    <SegmentedList>
+    <List>
       {tracks.map((track, index) => (
-        <Row key={index} gap="1rem" crossAxisAlignment="center">
-          {cursor === index && isPlaying ? (
-            <IconButton onClick={pause}>
-              <PauseIcon />
-            </IconButton>
-          ) : (
-            <IconButton
-              onClick={() => {
-                setCursor(index);
-                play();
-              }}
-            >
-              <PlayArrowIcon />
-            </IconButton>
-          )}
-          <Avatar shape="rounded" width="3rem" height="3rem">
-            <Image source={track.artwork} />
-          </Avatar>
-          <Flex grow={1}>
-            <Column maxWidth="25rem" mainAxisAlignment="center">
-              <Text noWrap>{track.name}</Text>
-              <Opacity opacity={0.5}>
-                <Text noWrap>
-                  {track.artist} • {track.album}
-                </Text>
-              </Opacity>
-            </Column>
-          </Flex>
-        </Row>
+        <EdgeInset key={index} all="0.75rem" right="1rem">
+          <Row gap="1rem">
+            <Avatar shape="rounded" width="3rem" height="3rem">
+              <Stack>
+                <Image source={track.artwork} />
+                <Center>
+                  {cursor === index && isPlaying ? (
+                    <IconButton onClick={pause}>
+                      <PauseIcon />
+                    </IconButton>
+                  ) : (
+                    <IconButton
+                      onClick={() => {
+                        setCursor(index);
+                        play();
+                      }}
+                    >
+                      <PlayArrowIcon />
+                    </IconButton>
+                  )}
+                </Center>
+              </Stack>
+            </Avatar>
+            <Flex grow={1}>
+              <Column maxWidth="25rem" justify="center">
+                <Text noWrap>{track.name}</Text>
+                <Opacity opacity={0.5}>
+                  <Text noWrap>
+                    {track.artist} • {track.album}
+                  </Text>
+                </Opacity>
+              </Column>
+            </Flex>
+          </Row>
+        </EdgeInset>
       ))}
-    </SegmentedList>
+    </List>
   );
 };
 
@@ -441,50 +446,14 @@ const TrackData = () => {
   const { track } = useAudio<MyTrack>();
 
   return (
-    <SegmentedBar>
-      <Row gap="1rem">
-        <Avatar shape="rounded" width="1.5rem" height="1.5rem">
-          {track ? <Image source={track.artwork} /> : null}
-        </Avatar>
-        <Text noWrap>
-          {track?.name ?? <Opacity opacity={0.5}>...</Opacity>}
-        </Text>
-      </Row>
-    </SegmentedBar>
+    <Bar>
+      <Avatar shape="rounded" width="1.5rem" height="1.5rem">
+        {track ? <Image source={track.artwork} /> : null}
+      </Avatar>
+      <Text noWrap>{track?.name ?? <Opacity opacity={0.5}>...</Opacity>}</Text>
+    </Bar>
   );
 };
-
-const SegmentedList = ({ children }: { children?: ReactNode }) => (
-  <Placeholder width="auto" height="auto" shape="rounded" bordered>
-    <Padding vertical="1rem">
-      <Column gap="1rem">
-        <Separate separator={<Divider />}>
-          {Children.toArray(children).map((child, index) => (
-            <Padding key={index} horizontal="1rem">
-              {child}
-            </Padding>
-          ))}
-        </Separate>
-      </Column>
-    </Padding>
-  </Placeholder>
-);
-
-const SegmentedBar = ({ children }: { children?: ReactNode }) => (
-  <Placeholder width="auto" height="auto" shape="stadium" bordered>
-    <Padding horizontal="0.25rem">
-      <Row crossAxisAlignment="center">
-        <Separate separator={<Divider vertical />}>
-          {Children.toArray(children).map((child, index) => (
-            <Padding key={index} horizontal="1rem" vertical="0.5rem">
-              {child}
-            </Padding>
-          ))}
-        </Separate>
-      </Row>
-    </Padding>
-  </Placeholder>
-);
 
 const attributions = {
   [meteorites]: [
