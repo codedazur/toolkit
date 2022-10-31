@@ -100,12 +100,12 @@ export const NonLinear: Story = () => (
     <Placeholder>
       <Parallax
         factor={({ x, y }) =>
-          new Vector2(10 * Math.sqrt(x), 0.0001 * Math.pow(y, 2))
+          new Vector2(5 * Math.sqrt(x), 0.005 * Math.pow(y, 2))
         }
       >
         <Placeholder width="10rem" height="10rem">
-          <Text style={{ fontFamily: "system-ui" }}>10⋅√x</Text>
-          <Text style={{ fontFamily: "system-ui" }}>0.001⋅y²</Text>
+          <Text style={{ fontFamily: "system-ui" }}>5⋅√x</Text>
+          <Text style={{ fontFamily: "system-ui" }}>0.005⋅y²</Text>
         </Placeholder>
       </Parallax>
     </Placeholder>

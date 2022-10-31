@@ -1,5 +1,11 @@
 import { Vector2 } from "@codedazur/essentials";
-import { MaybeRef, useScroll } from "@codedazur/react-essentials";
+import { MaybeRef, ScrollState, useScroll } from "@codedazur/react-essentials";
+import { useCallback, useState } from "react";
+
+interface UseParallaxProps {
+  scrollRef?: MaybeRef<HTMLElement>;
+  factor: ParallaxFactor | ParallaxFactor[];
+}
 
 export type ParallaxFactor = number | ((position: Vector2) => Vector2);
 
@@ -31,20 +37,31 @@ export function useParallax(parameters: {
 export function useParallax({
   scrollRef,
   factor,
-}: {
-  scrollRef?: MaybeRef<HTMLElement>;
-  factor: ParallaxFactor | ParallaxFactor[];
-}): Vector2 | Vector2[] {
-  const { position } = useScroll(scrollRef);
+}: UseParallaxProps): Vector2 | Vector2[] {
+  const [translation, setTranslation] = useState<Vector2 | Vector2[]>(
+    Array.isArray(factor) ? factor.map(() => Vector2.zero) : Vector2.zero
+  );
 
-  if (Array.isArray(factor)) {
-    return factor.map((factor) => layer(factor, position));
-  } else {
-    return layer(factor, position);
-  }
+  const handleScroll = useCallback(
+    ({ position }: ScrollState) => {
+      setTranslation(
+        Array.isArray(factor)
+          ? factor.map((factor) => translate(position, factor))
+          : translate(position, factor)
+      );
+    },
+    [factor]
+  );
+
+  useScroll({
+    ref: scrollRef,
+    onScroll: handleScroll,
+  });
+
+  return translation;
 }
 
-function layer(factor: ParallaxFactor, position: Vector2): Vector2 {
+function translate(position: Vector2, factor: ParallaxFactor): Vector2 {
   return factor instanceof Function
     ? factor(position)
     : position.multiply(1 - factor);
