@@ -70,7 +70,7 @@ export class Timer {
   }
 
   public get elapsed(): number {
-    return this.progress * this.duration;
+    return Math.round(this.progress * this.duration);
   }
 
   public get remaining(): number {
