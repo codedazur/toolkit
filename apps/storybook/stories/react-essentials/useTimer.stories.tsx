@@ -6,6 +6,7 @@ import {
   LinearProgress,
   PauseIcon,
   PlayArrowIcon,
+  Positioned,
   RemoveIcon,
   Row,
   SkipNextIcon,
@@ -15,6 +16,7 @@ import {
 } from "@codedazur/react-components";
 import { useTimer } from "@codedazur/react-essentials";
 import { action } from "@storybook/addon-actions";
+import { Bar } from "../../components/Bar";
 import { meta } from "../../utilities/meta";
 import { story } from "../../utilities/story";
 import docs from "./useTimer.docs.mdx";
@@ -28,72 +30,73 @@ export default meta({
 });
 
 export const Default = story(() => {
-  const {
-    isRunning,
-    isStopped,
-    resume,
-    pause,
-    stop,
-    extend,
-    end,
-    useProgress,
-  } = useTimer(action("callback"), 3000);
+  const timer = useTimer(action("callback"), 3000);
 
   return (
     <Center>
-      <Column gap="1rem" width="20rem" maxWidth="100%">
-        <TimerProgress useProgress={useProgress} />
-        <Row gap="1rem" justify="center">
-          {!isRunning ? (
-            <IconButton onClick={resume}>
-              <PlayArrowIcon />
-            </IconButton>
-          ) : (
-            <IconButton onClick={pause}>
-              <PauseIcon />
-            </IconButton>
-          )}
-          <IconButton onClick={stop} disabled={isStopped}>
-            <StopIcon />
-          </IconButton>
-          <IconButton onClick={end}>
-            <SkipNextIcon />
-          </IconButton>
-        </Row>
-        <Row gap="1rem" justify="center">
-          <IconButton onClick={() => extend(-1000)}>
-            <RemoveIcon />
-          </IconButton>
-          <IconButton onClick={() => extend(1000)}>
-            <AddIcon />
-          </IconButton>
+      <Column gap="1rem" align="center">
+        <TimerProgress {...timer} />
+        <Row gap="1rem">
+          <TimerControls {...timer} />
+          <TimerExtension {...timer} />
         </Row>
       </Column>
     </Center>
   );
 });
 
-interface TimerProgressProps {
-  useProgress: ReturnType<typeof useTimer>["useProgress"];
-}
+interface TimerProgressProps extends ReturnType<typeof useTimer> {}
 
 const TimerProgress = ({ useProgress }: TimerProgressProps) => {
-  const { progress, elapsed, duration } = useProgress();
+  const { elapsed, progress, duration } = useProgress();
 
   return (
-    <Row gap="1rem" align="center">
-      <Text>0</Text>
-      <LinearProgress
-        width="20rem"
-        height="0.5rem"
-        progress={progress}
-        label={
-          elapsed > 0 && (
-            <Transform translateY="-1.5rem">{elapsed.toFixed(0)}</Transform>
-          )
-        }
-      />
+    <Bar>
+      <Text>{elapsed.toString().padStart(4, "0")}</Text>
+      <LinearProgress width="20rem" height="0.5rem" progress={progress} />
       <Text>{duration}</Text>
-    </Row>
+    </Bar>
   );
 };
+
+interface TimerExtensionProps extends ReturnType<typeof useTimer> {}
+
+const TimerExtension = ({ extend }: TimerExtensionProps) => (
+  <Bar>
+    <IconButton onClick={() => extend(-1000)}>
+      <RemoveIcon />
+    </IconButton>
+    <IconButton onClick={() => extend(1000)}>
+      <AddIcon />
+    </IconButton>
+  </Bar>
+);
+
+interface TimerControlsProps extends ReturnType<typeof useTimer> {}
+
+const TimerControls = ({
+  isRunning,
+  resume,
+  pause,
+  stop,
+  isStopped,
+  end,
+}: TimerControlsProps) => (
+  <Bar>
+    {!isRunning ? (
+      <IconButton onClick={resume}>
+        <PlayArrowIcon />
+      </IconButton>
+    ) : (
+      <IconButton onClick={pause}>
+        <PauseIcon />
+      </IconButton>
+    )}
+    <IconButton onClick={stop} disabled={isStopped}>
+      <StopIcon />
+    </IconButton>
+    <IconButton onClick={end}>
+      <SkipNextIcon />
+    </IconButton>
+  </Bar>
+);
