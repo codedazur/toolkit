@@ -6,6 +6,7 @@ import {
   LinearProgress,
   PauseIcon,
   PlayArrowIcon,
+  RemoveIcon,
   Row,
   SkipNextIcon,
   StopIcon,
@@ -58,6 +59,11 @@ export const Default = story(() => {
           <IconButton onClick={end}>
             <SkipNextIcon />
           </IconButton>
+        </Row>
+        <Row gap="1rem" justify="center">
+          <IconButton onClick={() => extend(-1000)}>
+            <RemoveIcon />
+          </IconButton>
           <IconButton onClick={() => extend(1000)}>
             <AddIcon />
           </IconButton>
@@ -79,8 +85,13 @@ const TimerProgress = ({ useProgress }: TimerProgressProps) => {
       <Text>0</Text>
       <LinearProgress
         width="20rem"
+        height="0.5rem"
         progress={progress}
-        label={<Transform translateY="-1.5rem">{elapsed.toFixed(0)}</Transform>}
+        label={
+          elapsed > 0 && (
+            <Transform translateY="-1.5rem">{elapsed.toFixed(0)}</Transform>
+          )
+        }
       />
       <Text>{duration}</Text>
     </Row>

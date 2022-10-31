@@ -147,7 +147,7 @@ const NotificationProgress = ({
 }: Pick<NotificationProps, "useProgress">) => {
   const { progress } = useProgress();
 
-  return <LinearProgress progress={1 - progress} height="2px" shape="square" />;
+  return <LinearProgress progress={1 - progress} height="1px" shape="square" />;
 };
 
 export const Groups = story(() => (

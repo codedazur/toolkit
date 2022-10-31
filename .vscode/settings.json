@@ -3,6 +3,8 @@
     "timer",
     "use-timer",
     "notification-provider",
-    "use-parallax"
+    "use-parallax",
+    "use-audio-progress",
+    "audio-provider"
   ]
 }
