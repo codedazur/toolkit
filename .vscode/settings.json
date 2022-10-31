@@ -5,6 +5,7 @@
     "notification-provider",
     "use-parallax",
     "use-audio-progress",
-    "audio-provider"
+    "audio-provider",
+    "use-date-picker"
   ]
 }

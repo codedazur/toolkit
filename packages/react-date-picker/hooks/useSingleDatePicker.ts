@@ -34,7 +34,7 @@ export const useSingleDatePicker = ({
   initialDate,
   isDateDisabled,
   ...props
-}: UseSingleDatePickerProps): UseSingleDatePickerResult => {
+}: UseSingleDatePickerProps = {}): UseSingleDatePickerResult => {
   const { dates, setDate, ...results } = useDatePicker({
     count: 1,
     initialDates: initialDate ? [initialDate] : undefined,

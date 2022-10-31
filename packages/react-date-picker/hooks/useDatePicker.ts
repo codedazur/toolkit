@@ -11,7 +11,7 @@ import {
   min,
   setMonth as setMonthDateFns,
   setYear,
-  startOfMonth
+  startOfMonth,
 } from "date-fns";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { getMonthData, MonthData } from "../utilities/getMonthData";
@@ -172,7 +172,7 @@ export const useDatePicker = ({
   autoProgressCursor = true,
   enforceChronologicalOrder = true,
   subsequentDates = "clear",
-}: UseDatePickerProps): UseDatePickerResult => {
+}: UseDatePickerProps = {}): UseDatePickerResult => {
   const [dates, setDates] = useState<Array<Date | null>>(
     new Array(count).fill(null).map((_, index) => initialDates?.[index] ?? null)
   );
