@@ -4,7 +4,6 @@ import {
   Background,
   Center,
   Column,
-  Divider,
   EdgeInset,
   Flex,
   IconButton,
@@ -12,16 +11,12 @@ import {
   Opacity,
   Padding,
   PauseIcon,
-  pick,
-  Placeholder,
   PlayArrowIcon,
   Positioned,
   RadioCheckedIcon,
   RadioUncheckedIcon,
   RepeatIcon,
   Row,
-  Separate,
-  ShapedBox,
   ShuffleIcon,
   SkipNextIcon,
   SkipPreviousIcon,
@@ -41,7 +36,7 @@ import {
 import { meta } from "../../utilities/meta";
 import { story } from "../../utilities/story";
 import docs from "./AudioProvider.docs.mdx";
-import { Children, FunctionComponent, ReactNode, useMemo } from "react";
+import { FunctionComponent } from "react";
 import distantWorldsIi from "./artworks/distant-worlds-ii.jpg";
 import distantWorlds from "./artworks/distant-worlds.jpg";
 import seaOfStars from "./artworks/sea-of-stars.jpg";
@@ -241,8 +236,8 @@ const TrackList = () => {
   return (
     <List>
       {tracks.map((track, index) => (
-        <EdgeInset all="0.5rem">
-          <Row key={index} gap="0.5rem">
+        <EdgeInset key={index} all="0.5rem">
+          <Row gap="0.5rem">
             {cursor === index && isPlaying ? (
               <IconButton onClick={pause}>
                 <PauseIcon />

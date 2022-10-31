@@ -13,9 +13,14 @@ import { ParallaxFactor, useParallax } from "@codedazur/react-parallax";
 import { faker } from "@faker-js/faker";
 import { Meta, Story } from "@storybook/react";
 import { ReactNode } from "react";
+import docs from "./useParallax.docs.mdx";
 
 export default {
-  title: "Hooks/useParallax",
+  parameters: {
+    docs: {
+      page: docs,
+    },
+  },
 } as Meta;
 
 export const Default: Story = () => (

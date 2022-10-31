@@ -6,6 +6,7 @@
     "use-parallax",
     "use-audio-progress",
     "audio-provider",
-    "use-date-picker"
+    "use-date-picker",
+    "use-pagination"
   ]
 }
