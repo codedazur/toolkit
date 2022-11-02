@@ -1,9 +1,10 @@
 {
-  "name": "essentials",
+  "name": "toolkit",
   "version": "0.0.0",
   "private": true,
   "workspaces": [
     "apps/*",
+    "internals/*",
     "packages/*"
   ],
   "scripts": {
@@ -12,7 +13,8 @@
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "audit": "npm audit --omit dev",
-    "storybook": "npm run dev -w apps/storybook"
+    "storybook": "npm run dev -w apps/storybook",
+    "website": "npm run dev -w apps/website"
   },
   "devDependencies": {
     "eslint-config-custom": "*",
