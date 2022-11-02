@@ -13,7 +13,7 @@
   "dependencies": {
     "@codedazur/essentials": "*",
     "@codedazur/react-audio": "*",
-    "@codedazur/react-components": "^22.0.0",
+    "@codedazur/react-components": "^22.1.1",
     "@codedazur/react-date-picker": "*",
     "@codedazur/react-essentials": "*",
     "@codedazur/react-notifications": "*",
@@ -29,13 +29,13 @@
   },
   "devDependencies": {
     "@storybook/addon-actions": "^6.5.13",
-    "@storybook/addon-essentials": "^6.5.12",
-    "@storybook/addon-interactions": "^6.5.12",
-    "@storybook/addon-links": "^6.5.12",
-    "@storybook/builder-vite": "^0.2.4",
-    "@storybook/react": "^6.5.12",
+    "@storybook/addon-essentials": "^6.5.13",
+    "@storybook/addon-interactions": "^6.5.13",
+    "@storybook/addon-links": "^6.5.13",
+    "@storybook/builder-vite": "^0.2.5",
+    "@storybook/react": "^6.5.13",
     "@storybook/testing-library": "^0.0.13",
     "@types/color": "^3.0.3",
-    "vite": "^3.1.8"
+    "vite": "^3.2.2"
   }
 }

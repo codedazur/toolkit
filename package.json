@@ -2,6 +2,10 @@
   "name": "toolkit",
   "version": "0.0.0",
   "private": true,
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "packageManager": "npm@8.15.0",
   "workspaces": [
     "apps/*",
     "internals/*",
@@ -16,14 +20,10 @@
     "storybook": "npm run dev -w apps/storybook",
     "website": "npm run dev -w apps/website"
   },
+  "dependencies": {},
   "devDependencies": {
     "eslint-config-custom": "*",
     "prettier": "latest",
     "turbo": "latest"
-  },
-  "engines": {
-    "node": ">=14.0.0"
-  },
-  "dependencies": {},
-  "packageManager": "npm@8.15.0"
+  }
 }
