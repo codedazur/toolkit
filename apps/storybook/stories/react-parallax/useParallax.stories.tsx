@@ -14,6 +14,12 @@ import { faker } from "@faker-js/faker";
 import { Meta, Story } from "@storybook/react";
 import { ReactNode } from "react";
 import docs from "./useParallax.docs.mdx";
+import layerOne from "./diorama/layer-one.png";
+import layerTwo from "./diorama/layer-two.png";
+import layerThree from "./diorama/layer-three.png";
+import layerFour from "./diorama/layer-four.png";
+import layerFive from "./diorama/layer-five.png";
+import layerSix from "./diorama/layer-six.png";
 
 export default {
   parameters: {
@@ -56,8 +62,6 @@ const Parallax = ({
   );
 };
 
-const title = faker.commerce.productName();
-
 export const Hero: Story = () => (
   <>
     <Stack>
@@ -65,7 +69,7 @@ export const Hero: Story = () => (
         <Placeholder height="40rem" crossed />
       </Parallax>
       <Center>
-        <Text>{title}</Text>
+        <Text>{faker.commerce.productName()}</Text>
       </Center>
     </Stack>
     <SizedBox height="200vh" />
@@ -77,22 +81,22 @@ export const Diorama: Story = () => (
     <Center>
       <Stack>
         <Parallax factor={0.7}>
-          <Image source="https://s3-us-west-2.amazonaws.com/s.cdpn.io/36124/c3po-base-test.png" />
+          <Image src={layerOne} alt="" />
         </Parallax>
         <Parallax factor={0.75}>
-          <Image source="https://s3-us-west-2.amazonaws.com/s.cdpn.io/36124/c3po--base-1_copy.png" />
+          <Image src={layerTwo} alt="" />
         </Parallax>
         <Parallax factor={0.85}>
-          <Image source="https://s3-us-west-2.amazonaws.com/s.cdpn.io/36124/c3po-foreground-test_copy.png" />
+          <Image src={layerThree} alt="" />
         </Parallax>
         <Parallax factor={0.95}>
-          <Image source="https://s3-us-west-2.amazonaws.com/s.cdpn.io/36124/title_copy.png" />
+          <Image src={layerFour} alt="" />
         </Parallax>
         <Parallax factor={1}>
-          <Image source="https://s3-us-west-2.amazonaws.com/s.cdpn.io/36124/c3po-profile_copy_copy.png" />
+          <Image src={layerFive} alt="" />
         </Parallax>
         <Parallax factor={1}>
-          <Image source="https://s3-us-west-2.amazonaws.com/s.cdpn.io/36124/c3po-eyes_copy.png" />
+          <Image src={layerSix} alt="" />
         </Parallax>
       </Stack>
     </Center>

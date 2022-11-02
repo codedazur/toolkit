@@ -401,7 +401,7 @@ const FancyTrackList = () => {
           <Row gap="1rem">
             <Avatar shape="rounded" width="3rem" height="3rem">
               <Stack>
-                <Image source={track.artwork} />
+                <Image src={track.artwork} alt={track.album} />
                 <Center>
                   {cursor === index && isPlaying ? (
                     <IconButton onClick={pause}>
@@ -443,7 +443,7 @@ const TrackData = () => {
   return (
     <Bar>
       <Avatar shape="rounded" width="1.5rem" height="1.5rem">
-        {track ? <Image source={track.artwork} /> : null}
+        {track ? <Image src={track.artwork} alt={track.album} /> : null}
       </Avatar>
       <Text noWrap>{track?.name ?? <Opacity opacity={0.5}>...</Opacity>}</Text>
     </Bar>

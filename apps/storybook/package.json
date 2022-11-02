@@ -1,19 +1,16 @@
 {
   "name": "storybook",
   "version": "0.0.0",
-  "description": "",
+  "private": true,
   "scripts": {
     "dev": "start-storybook -c . -p 6006",
-    "build": "build-storybook -o .storybook",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "build-storybook -c . -o .storybook",
+    "test": "echo \"No tests found.\""
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "@codedazur/essentials": "*",
     "@codedazur/react-audio": "*",
-    "@codedazur/react-components": "^22.1.1",
+    "@codedazur/react-components": "^23.0.0",
     "@codedazur/react-date-picker": "*",
     "@codedazur/react-essentials": "*",
     "@codedazur/react-notifications": "*",
