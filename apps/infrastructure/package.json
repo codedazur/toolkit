@@ -1,0 +1,21 @@
+{
+  "name": "infrastructure",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "test": "jest --passWithNoTests",
+    "synth": "cdk synth",
+    "diff": "cdk diff",
+    "deploy": "cdk deploy --require-approval never",
+    "destroy": "cdk destroy"
+  },
+  "dependencies": {
+    "@codedazur/cdk-constructs": "^6.4.1",
+    "aws-cdk-lib": "^2.50.0",
+    "constructs": "^10.1.147"
+  },
+  "devDependencies": {
+    "aws-cdk": "^2.50.0",
+    "ts-jest": "^29.0.3"
+  }
+}

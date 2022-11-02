@@ -8,7 +8,8 @@ In addition, it contains a storybook and a website to showcase these packages.
 
 ### Apps
 
-- `storybook` A storybook project documenting the packages.
+- `infrastructure` A CDK project containing infrastructure for the other apps.
+- `storybook` A Storybook project documenting the packages.
 - `website` A Next.js project showcasing the packages.
 
 ### Internals

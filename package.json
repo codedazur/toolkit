@@ -18,12 +18,18 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "audit": "npm audit --omit dev",
     "storybook": "npm run dev -w apps/storybook",
-    "website": "npm run dev -w apps/website"
+    "website": "npm run dev -w apps/website",
+    "deploy": "turbo run deploy"
   },
   "dependencies": {},
   "devDependencies": {
     "eslint-config-custom": "*",
     "prettier": "latest",
     "turbo": "latest"
+  },
+  "overrides": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "styled-components": "^5.3.6"
   }
 }

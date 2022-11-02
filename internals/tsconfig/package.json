@@ -4,7 +4,9 @@
   "private": true,
   "files": [
     "base.json",
+    "cdk.json",
     "nextjs.json",
-    "react-library.json"
+    "react-library.json",
+    "storybook.json"
   ]
 }
