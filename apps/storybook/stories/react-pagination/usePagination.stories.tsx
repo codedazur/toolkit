@@ -1,5 +1,4 @@
 import {
-  Button,
   ChevronLeftIcon,
   ChevronRightIcon,
   Row,
@@ -12,9 +11,10 @@ import {
   UsePaginationWithItemsProps,
 } from "@codedazur/react-components";
 import { faker } from "@faker-js/faker";
-import { WithCenter } from "../../decorators/WithCenter";
-import { meta } from "../../utilities/meta";
-import { story } from "../../utilities/story";
+import { SymbolButton } from "storybook/components/SymbolButton";
+import { WithCenter } from "storybook/decorators/WithCenter";
+import { meta } from "storybook/utilities/meta";
+import { story } from "storybook/utilities/story";
 import docs from "./usePagination.docs.mdx";
 
 export default meta<UsePaginationProps<string>>({
@@ -44,29 +44,29 @@ export const Default = story<UsePaginationWithCountProps>(
     return (
       <>
         <Row>
-          <PageButton onClick={previous} disabled={page === 1}>
+          <SymbolButton onClick={previous} disabled={page === 1}>
             <ChevronLeftIcon />
-          </PageButton>
+          </SymbolButton>
           <Row>
-            <Separate separator={<PageButton disabled>…</PageButton>}>
+            <Separate separator={<SymbolButton disabled>…</SymbolButton>}>
               {range.map((segment, index) => (
                 <Row key={index}>
                   {segment.map((number) => (
-                    <PageButton
+                    <SymbolButton
                       key={number}
                       onClick={() => setPage(number)}
                       disabled={number === page}
                     >
                       {number}
-                    </PageButton>
+                    </SymbolButton>
                   ))}
                 </Row>
               ))}
             </Separate>
           </Row>
-          <PageButton onClick={next} disabled={page === count}>
+          <SymbolButton onClick={next} disabled={page === count}>
             <ChevronRightIcon />
-          </PageButton>
+          </SymbolButton>
         </Row>
         {/* <DebugOverlay value={{ count, page, range }} /> */}
       </>
@@ -85,29 +85,29 @@ export const WithSiblingsAndBoundaries = story<UsePaginationWithCountProps>(
     return (
       <>
         <Row>
-          <PageButton onClick={previous} disabled={page === 1}>
+          <SymbolButton onClick={previous} disabled={page === 1}>
             <ChevronLeftIcon />
-          </PageButton>
+          </SymbolButton>
           <Row>
-            <Separate separator={<PageButton disabled>…</PageButton>}>
+            <Separate separator={<SymbolButton disabled>…</SymbolButton>}>
               {range.map((segment, index) => (
                 <Row key={index}>
                   {segment.map((number) => (
-                    <PageButton
+                    <SymbolButton
                       key={number}
                       onClick={() => setPage(number)}
                       disabled={number === page}
                     >
                       {number}
-                    </PageButton>
+                    </SymbolButton>
                   ))}
                 </Row>
               ))}
             </Separate>
           </Row>
-          <PageButton onClick={next} disabled={page === count}>
+          <SymbolButton onClick={next} disabled={page === count}>
             <ChevronRightIcon />
-          </PageButton>
+          </SymbolButton>
         </Row>
         {/* <DebugOverlay value={{ count, page, range }} /> */}
       </>
@@ -138,29 +138,29 @@ export const WithItems = story<UsePaginationWithItemsProps<string>>(
         ))}
         <SizedBox height="3rem" />
         <Row>
-          <PageButton onClick={previous} disabled={page === 1}>
+          <SymbolButton onClick={previous} disabled={page === 1}>
             <ChevronLeftIcon />
-          </PageButton>
+          </SymbolButton>
           <Row>
-            <Separate separator={<PageButton disabled>…</PageButton>}>
+            <Separate separator={<SymbolButton disabled>…</SymbolButton>}>
               {range.map((segment, index) => (
                 <Row key={index}>
                   {segment.map((number) => (
-                    <PageButton
+                    <SymbolButton
                       key={number}
                       onClick={() => setPage(number)}
                       disabled={number === page}
                     >
                       {number}
-                    </PageButton>
+                    </SymbolButton>
                   ))}
                 </Row>
               ))}
             </Separate>
           </Row>
-          <PageButton onClick={next} disabled={page === count}>
+          <SymbolButton onClick={next} disabled={page === count}>
             <ChevronRightIcon />
-          </PageButton>
+          </SymbolButton>
         </Row>
         {/* <DebugOverlay value={{ count, page, items, range }} /> */}
       </>
@@ -186,15 +186,15 @@ export const WithoutRange = story<UsePaginationWithCountProps>(
     return (
       <>
         <Row gap="1rem" crossAxisAlignment="center">
-          <PageButton onClick={previous} disabled={page === 1}>
+          <SymbolButton onClick={previous} disabled={page === 1}>
             <ChevronLeftIcon />
-          </PageButton>
+          </SymbolButton>
           <Text>
             {page} of {count}
           </Text>
-          <PageButton onClick={next} disabled={page === count}>
+          <SymbolButton onClick={next} disabled={page === count}>
             <ChevronRightIcon />
-          </PageButton>
+          </SymbolButton>
         </Row>
         {/* <DebugOverlay value={{ count, page }} /> */}
       </>
@@ -213,27 +213,27 @@ export const WithoutSeparator = story<UsePaginationWithCountProps>(
     return (
       <>
         <Row>
-          <PageButton onClick={previous} disabled={page === 1}>
+          <SymbolButton onClick={previous} disabled={page === 1}>
             <ChevronLeftIcon />
-          </PageButton>
+          </SymbolButton>
           <Row>
             {range.map((segment, index) => (
               <Row key={index}>
                 {segment.map((number) => (
-                  <PageButton
+                  <SymbolButton
                     key={number}
                     onClick={() => setPage(number)}
                     disabled={number === page}
                   >
                     {number}
-                  </PageButton>
+                  </SymbolButton>
                 ))}
               </Row>
             ))}
           </Row>
-          <PageButton onClick={next} disabled={page === count}>
+          <SymbolButton onClick={next} disabled={page === count}>
             <ChevronRightIcon />
-          </PageButton>
+          </SymbolButton>
         </Row>
         {/* <DebugOverlay value={{ count, page, range }} /> */}
       </>
@@ -250,15 +250,3 @@ export const WithoutSeparator = story<UsePaginationWithCountProps>(
     },
   }
 );
-
-const PageButton = Button;
-
-// const PageButton = styled(DebugButton).attrs((props) => ({
-//   background: "background",
-//   foreground: "foreground",
-//   ...props,
-// }))`
-//   width: 2rem;
-//   height: 2rem;
-//   padding: 0.125rem;
-// `;

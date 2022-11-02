@@ -1,14 +1,23 @@
-import { ShapedBox, Column, Placeholder } from "@codedazur/react-components";
-import { ReactNode, Children } from "react";
+import { border, Column, Placeholder } from "@codedazur/react-components";
+import { Children, ReactNode } from "react";
+import styled from "styled-components";
 
 export const List = ({ children }: { children?: ReactNode }) => (
-  <ShapedBox shape="stadium" style={{ borderRadius: "0.75rem" }}>
-    <Column gap="0.125rem">
-      {Children.toArray(children).map((child, index) => (
-        <Placeholder key={index} width="auto" height="auto" shape="rounded">
-          {child}
-        </Placeholder>
-      ))}
-    </Column>
-  </ShapedBox>
+  <ListColumn gap="0.125rem">
+    {Children.toArray(children).map((child, index) => (
+      <Placeholder key={index} width="auto" height="auto" shape="rounded">
+        {child}
+      </Placeholder>
+    ))}
+  </ListColumn>
 );
+
+const ListColumn = styled(Column)`
+  ${Placeholder}:first-child {
+    ${border({ radius: { top: "0.75rem" } })}
+  }
+
+  ${Placeholder}:last-child {
+    ${border({ radius: { bottom: "0.75rem" } })}
+  }
+`;

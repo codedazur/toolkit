@@ -1,4 +1,4 @@
-import { Placeholder, Padding, Row } from "@codedazur/react-components";
+import { Padding, Placeholder, Row } from "@codedazur/react-components";
 import { ReactNode } from "react";
 
 export const Bar = ({ children }: { children?: ReactNode }) => (

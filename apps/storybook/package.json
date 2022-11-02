@@ -20,8 +20,12 @@
     "@codedazur/react-pagination": "*",
     "@codedazur/react-parallax": "*",
     "@faker-js/faker": "^7.6.0",
+    "@storybook/jest": "^0.0.10",
+    "@types/styled-components": "^5.1.26",
+    "color": "^4.2.3",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "styled-components": "^5.3.6"
   },
   "devDependencies": {
     "@storybook/addon-actions": "^6.5.13",
@@ -31,6 +35,7 @@
     "@storybook/builder-vite": "^0.2.4",
     "@storybook/react": "^6.5.12",
     "@storybook/testing-library": "^0.0.13",
+    "@types/color": "^3.0.3",
     "vite": "^3.1.8"
   }
 }

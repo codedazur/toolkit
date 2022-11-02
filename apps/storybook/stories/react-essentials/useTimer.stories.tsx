@@ -1,24 +1,26 @@
 import {
   AddIcon,
+  background,
   Center,
   Column,
   IconButton,
   LinearProgress,
+  LinearProgressBar,
   PauseIcon,
   PlayArrowIcon,
-  Positioned,
   RemoveIcon,
   Row,
+  shape,
   SkipNextIcon,
   StopIcon,
   Text,
-  Transform,
 } from "@codedazur/react-components";
 import { useTimer } from "@codedazur/react-essentials";
 import { action } from "@storybook/addon-actions";
-import { Bar } from "../../components/Bar";
-import { meta } from "../../utilities/meta";
-import { story } from "../../utilities/story";
+import styled from "styled-components";
+import { Bar } from "storybook/components/Bar";
+import { meta } from "storybook/utilities/meta";
+import { story } from "storybook/utilities/story";
 import docs from "./useTimer.docs.mdx";
 
 export default meta({
@@ -53,11 +55,22 @@ const TimerProgress = ({ useProgress }: TimerProgressProps) => {
   return (
     <Bar>
       <Text>{elapsed.toString().padStart(4, "0")}</Text>
-      <LinearProgress width="20rem" height="0.5rem" progress={progress} />
+      <PrimaryLinearProgress
+        width="20rem"
+        height="0.5rem"
+        progress={progress}
+      />
       <Text>{duration}</Text>
     </Bar>
   );
 };
+
+const PrimaryLinearProgress = styled(LinearProgress)`
+  ${LinearProgressBar} {
+    ${background({ color: "primary" })};
+    ${shape("stadium")}
+  }
+`;
 
 interface TimerExtensionProps extends ReturnType<typeof useTimer> {}
 

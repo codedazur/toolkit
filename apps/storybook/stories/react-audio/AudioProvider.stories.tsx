@@ -1,4 +1,10 @@
 import {
+  AudioProvider,
+  useAudio,
+  useAudioProgress,
+  useAudioVolume,
+} from "@codedazur/react-audio";
+import {
   AbsorbPointer,
   Avatar,
   Background,
@@ -27,25 +33,19 @@ import {
   timecode,
   VolumeUpIcon,
 } from "@codedazur/react-components";
-import {
-  AudioProvider,
-  useAudio,
-  useAudioProgress,
-  useAudioVolume,
-} from "@codedazur/react-audio";
-import { meta } from "../../utilities/meta";
-import { story } from "../../utilities/story";
-import docs from "./AudioProvider.docs.mdx";
 import { FunctionComponent } from "react";
+import { Bar } from "storybook/components/Bar";
+import { List } from "storybook/components/List";
+import { WithCenter } from "storybook/decorators/WithCenter";
+import { meta } from "storybook/utilities/meta";
+import { story } from "storybook/utilities/story";
 import distantWorldsIi from "./artworks/distant-worlds-ii.jpg";
 import distantWorlds from "./artworks/distant-worlds.jpg";
 import seaOfStars from "./artworks/sea-of-stars.jpg";
+import docs from "./AudioProvider.docs.mdx";
 import alienated from "./tracks/alienated.mp3";
 import meteorites from "./tracks/meteorites.mp3";
 import tabulaRasa from "./tracks/tabula-rasa.mp3";
-import { WithCenter } from "../../decorators/WithCenter";
-import { Bar } from "../../components/Bar";
-import { List } from "../../components/List";
 
 export default meta({
   decorators: [WithCenter],

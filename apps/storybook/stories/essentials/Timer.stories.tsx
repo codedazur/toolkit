@@ -1,8 +1,8 @@
 import { Timer } from "@codedazur/essentials";
-import { Button, Center, Row } from "@codedazur/react-components";
+import { Button, Center, Column, Row } from "@codedazur/react-components";
 import { action } from "@storybook/addon-actions";
-import { meta } from "../../utilities/meta";
-import { story } from "../../utilities/story";
+import { meta } from "storybook/utilities/meta";
+import { story } from "storybook/utilities/story";
 import docs from "./Timer.docs.mdx";
 
 export default meta({
@@ -24,13 +24,19 @@ timer.addEventListener("end", action("end"));
 
 export const Default = story(() => (
   <Center>
-    <Row gap="1rem">
-      <Button onClick={timer.start}>Start</Button>
-      <Button onClick={timer.pause}>Pause</Button>
-      <Button onClick={timer.resume}>Resume</Button>
-      <Button onClick={timer.stop}>Stop</Button>
-      <Button onClick={() => timer.extend(1000)}>Extend</Button>
-      <Button onClick={timer.end}>End</Button>
-    </Row>
+    <Column gap="2rem">
+      <Row gap="1rem" justify="center">
+        <Button onClick={timer.start}>Start</Button>
+        <Button onClick={timer.stop}>Stop</Button>
+      </Row>
+      <Row gap="1rem" justify="center">
+        <Button onClick={timer.pause}>Pause</Button>
+        <Button onClick={timer.resume}>Resume</Button>
+      </Row>
+      <Row gap="1rem" justify="center">
+        <Button onClick={() => timer.extend(1000)}>Extend</Button>
+        <Button onClick={timer.end}>End</Button>
+      </Row>
+    </Column>
   </Center>
 ));
