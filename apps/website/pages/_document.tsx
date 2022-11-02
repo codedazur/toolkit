@@ -2,24 +2,22 @@ import Document, { DocumentContext } from "next/document";
 import { ServerStyleSheet } from "styled-components";
 
 /**
- * This is the officially recommended approach for implementing server-side
- * Styled Components in Next.js.
+ * @see https://styled-components.com/docs/advanced#with-swc
  * @see https://github.com/vercel/next.js/blob/canary/examples/with-styled-components/pages/_document.tsx
  */
 export default class MyDocument extends Document {
-  static override async getInitialProps(context: DocumentContext) {
+  static async getInitialProps(ctx: DocumentContext) {
     const sheet = new ServerStyleSheet();
-    const originalRenderPage = context.renderPage;
+    const originalRenderPage = ctx.renderPage;
 
     try {
-      context.renderPage = () =>
+      ctx.renderPage = () =>
         originalRenderPage({
           enhanceApp: (App) => (props) =>
             sheet.collectStyles(<App {...props} />),
         });
 
-      const initialProps = await Document.getInitialProps(context);
-
+      const initialProps = await Document.getInitialProps(ctx);
       return {
         ...initialProps,
         styles: [initialProps.styles, sheet.getStyleElement()],

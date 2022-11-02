@@ -6,8 +6,12 @@ const withTM = require("next-transpile-modules")([
   "@codedazur/react-notifications",
   "@codedazur/react-pagination",
   "@codedazur/react-parallax",
+  "@codedazur/react-preferences",
 ]);
 
 module.exports = withTM({
   reactStrictMode: true,
+  compiler: {
+    styledComponents: true,
+  },
 });
