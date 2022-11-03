@@ -12,8 +12,11 @@
       "outputs": ["dist/**", ".next/**", ".storybook/**"]
     },
     "infrastructure#deploy": {
-      "dependsOn": ["storybook#build"],
+      "dependsOn": ["website#build", "storybook#build"],
       "env": ["CDK_DEFAULT_ACCOUNT", "CDK_DEFAULT_REGION", "DOMAIN_NAME"]
+    },
+    "infrastructure#destroy": {
+      "env": ["CDK_DEFAULT_ACCOUNT", "CDK_DEFAULT_REGION"]
     },
     "dev": {
       "cache": false

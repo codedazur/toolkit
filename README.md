@@ -1,6 +1,6 @@
 # code d'azur Toolkit
 
-This repository contains a collection of all kinds of NPM packages intended to support web development projects.
+This repository is a collection of all kinds of NPM packages that support web development projects.
 
 In addition, it contains a storybook and a website to showcase these packages.
 

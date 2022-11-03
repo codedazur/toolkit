@@ -7,15 +7,18 @@
     "synth": "cdk synth",
     "diff": "cdk diff",
     "deploy": "cdk deploy --require-approval never",
-    "destroy": "cdk destroy"
+    "destroy": "cdk destroy --force"
   },
   "dependencies": {
     "@codedazur/cdk-constructs": "^6.4.1",
+    "@codedazur/essentials": "*",
     "aws-cdk-lib": "^2.50.0",
     "constructs": "^10.1.147"
   },
   "devDependencies": {
     "aws-cdk": "^2.50.0",
-    "ts-jest": "^29.0.3"
+    "dotenv": "^16.0.3",
+    "ts-jest": "^29.0.3",
+    "typescript": "^4.8.4"
   }
 }

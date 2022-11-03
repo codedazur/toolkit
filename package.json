@@ -19,7 +19,8 @@
     "audit": "npm audit --omit dev",
     "storybook": "npm run dev -w apps/storybook",
     "website": "npm run dev -w apps/website",
-    "deploy": "turbo run deploy"
+    "deploy": "turbo run deploy",
+    "destroy": "turbo run destroy"
   },
   "dependencies": {},
   "devDependencies": {

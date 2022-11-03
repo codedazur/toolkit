@@ -1,7 +1,10 @@
 #!/usr/bin/env node
 
 import { App } from "aws-cdk-lib";
+import dotenv from "dotenv";
 import { Toolkit } from "./stacks/Toolkit";
+
+dotenv.config();
 
 const app = new App();
 
