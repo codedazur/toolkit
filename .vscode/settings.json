@@ -10,6 +10,7 @@
     "use-pagination",
     "website",
     "infrastructure",
-    "essentials"
+    "essentials",
+    "static-site"
   ]
 }

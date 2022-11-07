@@ -123,26 +123,6 @@ export const NotificationsProvider: FunctionComponent<
   const [entries, setEntries] = useState<Notifications>({});
   const [queue, setQueue] = useState<Notifications>({});
 
-  useEffect(() => {
-    setEntries(
-      revalueObject(groups, ([group, all]) => {
-        const groupLimit = getGroupLimit(group);
-        const entries = groupLimit !== false ? all.slice(0, groupLimit) : all;
-
-        entries.forEach((entry) => entry.timer?.resume());
-
-        return entries;
-      })
-    );
-
-    setQueue(
-      revalueObject(groups, ([group, all]) => {
-        const groupLimit = getGroupLimit(group);
-        return groupLimit !== false ? all.slice(groupLimit) : [];
-      })
-    );
-  }, [groups, limit]);
-
   const getGroupOption = useCallback(
     (
       group: string,
@@ -166,6 +146,26 @@ export const NotificationsProvider: FunctionComponent<
     },
     [limit, getGroupOption]
   );
+
+  useEffect(() => {
+    setEntries(
+      revalueObject(groups, ([group, all]) => {
+        const groupLimit = getGroupLimit(group);
+        const entries = groupLimit !== false ? all.slice(0, groupLimit) : all;
+
+        entries.forEach((entry) => entry.timer?.resume());
+
+        return entries;
+      })
+    );
+
+    setQueue(
+      revalueObject(groups, ([group, all]) => {
+        const groupLimit = getGroupLimit(group);
+        return groupLimit !== false ? all.slice(groupLimit) : [];
+      })
+    );
+  }, [getGroupLimit, groups, limit]);
 
   const remove = useCallback((group: string, id: number) => {
     dispatch({

@@ -1,4 +1,4 @@
-import { StaticSite } from "@codedazur/cdk-constructs";
+import { StaticSite } from "@codedazur/cdk-static-site";
 import { App, Stack, StackProps } from "aws-cdk-lib";
 import { env } from "@codedazur/essentials";
 
