@@ -31,7 +31,7 @@ export interface StaticSiteProps {
   };
   domain?: {
     name: string;
-    subdomain: string;
+    subdomain?: string;
     zone?: IHostedZone;
   };
   website?: {
@@ -89,7 +89,9 @@ export class StaticSite extends Construct {
 
   protected determineDomain() {
     const domain = this.props.domain
-      ? [this.props.domain.subdomain, this.props.domain.name].join(".")
+      ? [this.props.domain.subdomain, this.props.domain.name]
+          .filter(Boolean)
+          .join(".")
       : undefined;
 
     if (domain) {

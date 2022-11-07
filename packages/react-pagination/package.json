@@ -5,7 +5,9 @@
   "types": "./index.ts",
   "license": "MIT",
   "scripts": {
-    "lint": "TIMING=1 eslint \"**/*.ts*\""
+    "lint": "TIMING=1 eslint \"**/*.ts*\"",
+    "test": "echo \"No tests configured.\"",
+    "release": "echo \"No releases configured.\""
   },
   "dependencies": {
     "@codedazur/essentials": "*"

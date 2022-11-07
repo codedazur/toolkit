@@ -8,19 +8,23 @@ export class Toolkit extends Stack {
 
     new StaticSite(this, "Website", {
       path: "../website/out",
-      domain: subdomain("toolkit"),
+      domain: domain({
+        subdomain: env("WEBSITE_SUBDOMAIN"),
+      }),
     });
 
     new StaticSite(this, "Storybook", {
       path: "../storybook/.storybook",
-      domain: subdomain("storybook.toolkit"),
+      domain: domain({
+        subdomain: env("STORYBOOK_SUBDOMAIN", "storybook"),
+      }),
     });
   }
 }
 
-function subdomain(subdomain: string): { name: string; subdomain: string } {
+const domain = ({ subdomain }: { subdomain?: string }) => {
   return {
-    name: env("DOMAIN_NAME", "codedazur.cloud"),
+    name: env("DOMAIN_NAME", "toolkit.codedazur.cloud"),
     subdomain,
   };
-}
+};

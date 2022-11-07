@@ -5,17 +5,17 @@
     "test": {},
     "audit": {},
     "build": {
-      "dependsOn": ["lint", "test", "^build"],
+      "dependsOn": ["lint", "test", "audit", "^build"],
       "outputs": ["dist/**", ".next/**", ".storybook/**"]
     },
-    "deploy": {
-      "dependsOn": ["audit", "build"]
+    "release": {
+      "dependsOn": ["^build"]
     },
-    "infrastructure#deploy": {
-      "dependsOn": ["website#build", "storybook#build"],
+    "deploy": {
+      "dependsOn": ["^build"],
       "env": ["CDK_DEFAULT_ACCOUNT", "CDK_DEFAULT_REGION", "DOMAIN_NAME"]
     },
-    "infrastructure#destroy": {
+    "destroy": {
       "env": ["CDK_DEFAULT_ACCOUNT", "CDK_DEFAULT_REGION"]
     },
     "dev": {

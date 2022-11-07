@@ -18,10 +18,11 @@
     "test": "turbo run test",
     "audit": "npm audit --omit dev",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "storybook": "npm run dev -w apps/storybook",
-    "website": "npm run dev -w apps/website",
-    "deploy": "turbo run infrastructure#deploy",
-    "destroy": "turbo run infrastructure#destroy"
+    "storybook": "turbo run dev --filter storybook",
+    "website": "npm turbo run dev --filter website",
+    "release": "turbo run release --filter=@codedazur/*",
+    "deploy": "turbo run deploy --filter=infrastructure",
+    "destroy": "turbo run destroy --filter=infrastructure"
   },
   "dependencies": {},
   "devDependencies": {

@@ -3,9 +3,9 @@
   "display": "CDK",
   "extends": "./base.json",
   "compilerOptions": {
-    "target": "ES2018",
+    "target": "es2018",
     "module": "commonjs",
-    "lib": ["es2018"],
+    "lib": ["es2018", "dom"],
     "inlineSources": true,
     "inlineSourceMap": true,
     "experimentalDecorators": true
