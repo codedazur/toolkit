@@ -21,7 +21,9 @@ jobs:
           node-version: 16
 
       - name: Install Dependencies
-        run: npm ci
+        run: |
+          npm config set //registry.npmjs.org/:_authToken ${{ secrets.NPM_TOKEN }}
+          npm ci
 
       - name: Create Release Pull Request
         uses: changesets/action@v1
