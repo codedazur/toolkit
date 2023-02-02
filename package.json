@@ -24,7 +24,9 @@
     "deploy": "turbo run deploy --filter=infrastructure",
     "destroy": "turbo run destroy --filter=infrastructure"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@changesets/cli": "^2.26.0"
+  },
   "devDependencies": {
     "eslint-config-custom": "*",
     "prettier": "latest",
