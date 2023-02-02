@@ -1,7 +1,4 @@
 ---
-"infrastructure": patch
-"storybook": patch
-"website": patch
 "eslint-config-custom": patch
 "tsconfig": patch
 "@codedazur/cdk-static-site": patch
