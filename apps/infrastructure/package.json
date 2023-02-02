@@ -10,7 +10,7 @@
     "destroy": "cdk destroy --force"
   },
   "dependencies": {
-    "@codedazur/cdk-constructs": "^6.4.1",
+    "@codedazur/cdk-constructs": "^7.1.0",
     "@codedazur/essentials": "*",
     "aws-cdk-lib": "^2.50.0",
     "constructs": "^10.1.147"

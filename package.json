@@ -22,7 +22,6 @@
     "deploy": "turbo run deploy",
     "destroy": "turbo run destroy"
   },
-  "dependencies": {},
   "devDependencies": {
     "eslint-config-custom": "*",
     "prettier": "latest",

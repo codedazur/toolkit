@@ -1,3 +1,9 @@
+/**
+ * @todo Currently, `env("FOO", "bar")` returns type `"bar"`, which is not
+ * correct, since `process.env.FOO` could hold any string value. When TypeScript
+ * v4.9 is released, use the new `satisfies` keyword to indicate that the
+ * `fallback` should satisfy `T` whithout narrowing the type of `T`.
+ */
 export function env<T extends string>(key: string, fallback: T): T;
 export function env<T extends string>(
   key: string,
