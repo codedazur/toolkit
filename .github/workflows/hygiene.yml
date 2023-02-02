@@ -34,4 +34,4 @@ jobs:
         run: npm run test
 
       - name: Audit
-        run: npm run audit
+        run: npm audit --prod
