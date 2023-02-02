@@ -20,3 +20,5 @@ yarn-error.log*
 
 # turbo
 .turbo
+
+dist
