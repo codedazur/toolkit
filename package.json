@@ -25,13 +25,15 @@
     "website": "npm turbo run dev --filter website",
     "release": "turbo run release --filter=@codedazur/*",
     "deploy": "turbo run deploy --filter=infrastructure",
-    "destroy": "turbo run destroy --filter=infrastructure"
+    "destroy": "turbo run destroy --filter=infrastructure",
+    "publish-packages": "turbo run build --filter=@codedazur/*"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.26.0",
     "eslint-config-custom": "*",
     "prettier": "latest",
-    "turbo": "latest",
-    "@changesets/cli": "^2.26.0"
+    "tsup": "^6.5.0",
+    "turbo": "latest"
   },
   "overrides": {
     "react": "^18.2.0",

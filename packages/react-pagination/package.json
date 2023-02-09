@@ -1,13 +1,21 @@
 {
   "name": "@codedazur/react-pagination",
-  "version": "0.0.0",
-  "main": "./index.ts",
-  "types": "./index.ts",
+  "version": "0.0.1",
+  "main": ".dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    }
+  },
   "license": "MIT",
   "scripts": {
     "lint": "TIMING=1 eslint \"**/*.ts*\"",
     "test": "echo \"No tests configured.\"",
-    "release": "echo \"No releases configured.\""
+    "release": "echo \"No releases configured.\"",
+    "build": "tsup index.ts --format esm,cjs --dts"
   },
   "dependencies": {
     "@codedazur/essentials": "*"
