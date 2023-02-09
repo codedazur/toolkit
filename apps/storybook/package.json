@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "start-storybook -c . -p 6006",
     "build": "build-storybook -c . -o .storybook",
-    "test": "echo \"No tests found.\""
+    "lint": "TIMING=1 eslint \"**/*.ts*\"",
+    "test": "echo \"No tests configured.\""
   },
   "dependencies": {
     "@codedazur/essentials": "*",

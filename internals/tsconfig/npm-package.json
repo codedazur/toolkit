@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "NPM Package",
+  "extends": "./base.json",
+  "compilerOptions": {
+    "lib": ["es2015", "dom"],
+    "module": "ESNext",
+    "target": "es6"
+  }
+}

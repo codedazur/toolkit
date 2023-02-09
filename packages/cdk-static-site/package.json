@@ -1,5 +1,5 @@
 {
-  "name": "@codedazur/react-audio",
+  "name": "@codedazur/cdk-static-site",
   "version": "0.0.0",
   "main": "./index.ts",
   "types": "./index.ts",
@@ -9,18 +9,17 @@
     "test": "echo \"No tests configured.\"",
     "release": "echo \"No releases configured.\""
   },
-  "dependencies": {
-    "@codedazur/essentials": "*"
-  },
   "peerDependencies": {
-    "react": ">=16.8.0"
+    "aws-cdk-lib": ">=2",
+    "constructs": ">=10"
   },
   "devDependencies": {
-    "@types/react": "^18.0.24",
-    "@types/react-dom": "^18.0.8",
-    "eslint": "^8.26.0",
+    "@types/node": "^16.18.3",
+    "aws-cdk-lib": "^2.50.0",
+    "constructs": "^10.1.152",
+    "esbuild": "^0.15.13",
+    "eslint": "^8.27.0",
     "eslint-config-custom": "*",
-    "react": "^18.2.0",
     "tsconfig": "*",
     "typescript": "^4.8.4"
   }

@@ -3,7 +3,10 @@
   "version": "0.0.0",
   "private": true,
   "engines": {
-    "node": ">=14.0.0"
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0",
+    "yarn": "Please use NPM!",
+    "pnpm": "Please use NPM!"
   },
   "packageManager": "npm@8.15.0",
   "workspaces": [
@@ -15,17 +18,20 @@
     "build": "turbo run build",
     "dev": "turbo run dev --parallel",
     "lint": "turbo run lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "test": "turbo run test",
     "audit": "npm audit --omit dev",
-    "storybook": "npm run dev -w apps/storybook",
-    "website": "npm run dev -w apps/website",
-    "deploy": "turbo run deploy",
-    "destroy": "turbo run destroy"
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "storybook": "turbo run dev --filter storybook",
+    "website": "npm turbo run dev --filter website",
+    "release": "turbo run release --filter=@codedazur/*",
+    "deploy": "turbo run deploy --filter=infrastructure",
+    "destroy": "turbo run destroy --filter=infrastructure"
   },
   "devDependencies": {
     "eslint-config-custom": "*",
     "prettier": "latest",
-    "turbo": "latest"
+    "turbo": "latest",
+    "@changesets/cli": "^2.26.0"
   },
   "overrides": {
     "react": "^18.2.0",

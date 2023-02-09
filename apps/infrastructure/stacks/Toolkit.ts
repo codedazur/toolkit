@@ -1,4 +1,4 @@
-import { StaticSite } from "@codedazur/cdk-constructs";
+import { StaticSite } from "@codedazur/cdk-static-site";
 import { App, Stack, StackProps } from "aws-cdk-lib";
 import { env } from "@codedazur/essentials";
 
@@ -8,19 +8,23 @@ export class Toolkit extends Stack {
 
     new StaticSite(this, "Website", {
       path: "../website/out",
-      domain: subdomain("toolkit"),
+      domain: domain({
+        subdomain: env("WEBSITE_SUBDOMAIN"),
+      }),
     });
 
     new StaticSite(this, "Storybook", {
       path: "../storybook/.storybook",
-      domain: subdomain("storybook.toolkit"),
+      domain: domain({
+        subdomain: env("STORYBOOK_SUBDOMAIN", "storybook"),
+      }),
     });
   }
 }
 
-function subdomain(subdomain: string): { name: string; subdomain: string } {
+const domain = ({ subdomain }: { subdomain?: string }) => {
   return {
-    name: env("DOMAIN_NAME", "codedazur.cloud"),
+    name: env("DOMAIN_NAME", "toolkit.codedazur.cloud"),
     subdomain,
   };
-}
+};
