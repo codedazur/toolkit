@@ -1,0 +1,26 @@
+# useIncreasedContrast
+
+A hook that determines whether the user prefers increased contrast. 
+
+This hook returns true if the current device has increased contrast setting enabled. 
+The return state will respond to changes in your devices settings and re-render your 
+component with the latest setting.
+
+```js
+import { useState } from 'react'
+import { useIncreasedContrast } from '@codedazur/react-preferences'
+
+export function Demo() {
+  const increasedContrast = useIncreasedContrast()
+
+  return (
+    <p>User prefers increased contrast: {String(increasedContrast)}</p>
+  )
+}
+```
+
+## Type Declarations
+
+```js
+declare function useIncreasedContrast(): boolean;
+````
