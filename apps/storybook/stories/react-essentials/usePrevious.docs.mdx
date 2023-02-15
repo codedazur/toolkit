@@ -1,0 +1,30 @@
+# usePrevious
+
+Returns the value of the previous state.
+
+## Usage
+    
+```js
+import { useState } from 'react'
+import { usePrevious } from '@codedazur/react-essentials'
+
+export function Demo() {
+  const [count, setCount] = useState(0)
+  const previousCount = usePrevious(count)
+
+  return (
+    <devices>
+      <div>Before: {previousCount}</div>
+      <div>Now: {count}</div>
+      <button onClick={() => setCount((count) => count + 1)}>-</button>
+      <button onClick={() => setCount((count) => count + 1)}>+</button>
+    </div>
+  )
+}
+```
+
+## Type Declarations
+
+```js
+declare function usePrevious<T>(value: T): T | undefined;
+````
