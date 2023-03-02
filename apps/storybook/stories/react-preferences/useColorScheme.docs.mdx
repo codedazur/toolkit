@@ -1,0 +1,26 @@
+# useColorScheme
+
+A hook that determines whether the user prefers a dark or light color scheme. 
+
+The return state will respond to changes in your devices settings and re-render your 
+component with the latest settings.
+
+```js
+import { useState } from 'react'
+import { useColorScheme } from '@codedazur/react-preferences'
+
+export function Demo() {
+  const {prefersDark, prefersLight} = useColorScheme()
+
+  return (
+    <p>User prefers dark color scheme: {String(prefersDark)}</p>
+    <p>User prefers light color scheme: {String(prefersLight)}</p>
+  )
+}
+```
+
+## Type Declarations
+
+```js
+declare function useColorScheme(): boolean;
+````

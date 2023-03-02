@@ -1,11 +1,12 @@
 import { Text, Center } from "@codedazur/react-components";
 
-import { useDarkColorScheme } from "@codedazur/react-preferences/hooks/useDarkColorScheme";
+import { useContrast } from "@codedazur/react-preferences";
 import { meta } from "storybook/utilities/meta";
 import { story } from "storybook/utilities/story";
-import docs from "./useDarkColorScheme.docs.mdx";
+import docs from "./useContrast.docs.mdx";
 
 export default meta({
+  title: 'useContrast',
   parameters: {
     docs: {
       page: docs,
@@ -14,11 +15,11 @@ export default meta({
 });
 
 export const Default = story(() => {
-  const darkColorScheme = useDarkColorScheme();
+  const prefersContrast = useContrast();
 
   return (
     <Center>
-      <Text>User prefers dark color scheme: {String(darkColorScheme)}</Text>
+      <Text>User prefers increased contrast: {String(prefersContrast)}</Text>
     </Center>
   );
 });

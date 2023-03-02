@@ -6,15 +6,17 @@ import { useCallback, useEffect, useState } from "react";
  * This hook returns true if the current device has increased contrast setting enabled.
  * The return state will respond to changes in your devices settings and re-render your
  * component with the latest setting.
+ * 
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-contrast MDN web docs - prefers-contrast}
  */
-export const useIncreasedContrast = () => {
-  const [increasedContrast, setIncreasedContrast] = useState(false);
+export const useContrast = () => {
+  const [prefersContrast, setPrefersContrast] = useState<null | boolean>(null);
 
   const updatePreferences = useCallback(() => {
     const mediaQuery = window.matchMedia("(prefers-contrast)");
 
     const update = () => {
-      setIncreasedContrast(mediaQuery.matches);
+      setPrefersContrast(mediaQuery.matches);
     };
 
     mediaQuery.addEventListener("change", update);
@@ -32,5 +34,5 @@ export const useIncreasedContrast = () => {
     updatePreferences();
   }, [updatePreferences]);
 
-  return increasedContrast;
+  return prefersContrast;
 };

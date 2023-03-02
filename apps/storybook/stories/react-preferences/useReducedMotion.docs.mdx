@@ -11,7 +11,7 @@ import { useState } from 'react'
 import { useReducedMotion } from '@codedazur/react-preferences'
 
 export function Demo() {
-  const reducedMotion = useReducedMotion()
+  const reducedMotion = useReducedMotion();
 
   return (
     <p>User prefers reduced motion: {String(reducedMotion)}</p>

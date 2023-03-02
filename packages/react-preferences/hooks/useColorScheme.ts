@@ -1,20 +1,24 @@
 import { useCallback, useEffect, useState } from "react";
 
 /**
- * A hook that determines whether the user prefers a dark color scheme.
+ * A hook that determines whether the user prefers a dark or light color scheme.
  *
- * This hook returns true if the current device has dark color scheme setting enabled.
  * The return state will respond to changes in your devices settings and re-render your
- * component with the latest setting.
+ * component with the latest settings.
+ *
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme MDN web docs - prefers-color-scheme}
  */
-export const useDarkColorScheme = () => {
-  const [darkColorScheme, setDarkColorScheme] = useState(false);
+export const useColorScheme = (): {
+  prefersDark: boolean | null;
+  prefersLight: boolean | null;
+} => {
+  const [prefersDark, setPrefersDark] = useState(false);
 
   const updatePreferences = useCallback(() => {
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
 
     const update = () => {
-      setDarkColorScheme(mediaQuery.matches);
+      setPrefersDark(mediaQuery.matches);
     };
 
     mediaQuery.addEventListener("change", update);
@@ -32,5 +36,5 @@ export const useDarkColorScheme = () => {
     updatePreferences();
   }, [updatePreferences]);
 
-  return darkColorScheme;
+  return { prefersDark, prefersLight: !prefersDark };
 };

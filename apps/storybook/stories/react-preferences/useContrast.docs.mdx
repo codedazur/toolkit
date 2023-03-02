@@ -1,4 +1,4 @@
-# useIncreasedContrast
+# useContrast
 
 A hook that determines whether the user prefers increased contrast. 
 
@@ -8,13 +8,13 @@ component with the latest setting.
 
 ```js
 import { useState } from 'react'
-import { useIncreasedContrast } from '@codedazur/react-preferences'
+import { useContrast } from '@codedazur/react-preferences'
 
 export function Demo() {
-  const increasedContrast = useIncreasedContrast()
+  const { prefersContrast } = useContrast();
 
   return (
-    <p>User prefers increased contrast: {String(increasedContrast)}</p>
+    <p>User prefers increased contrast: {String(prefersContrast)}</p>
   )
 }
 ```
@@ -22,5 +22,5 @@ export function Demo() {
 ## Type Declarations
 
 ```js
-declare function useIncreasedContrast(): boolean;
+declare function useContrast(): boolean;
 ````
