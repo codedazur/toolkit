@@ -18,7 +18,8 @@
     "build": "tsup index.ts --format esm,cjs --dts"
   },
   "dependencies": {
-    "@codedazur/essentials": "*"
+    "@codedazur/essentials": "*",
+    "@codedazur/react-essentials": "*"
   },
   "peerDependencies": {
     "react": ">=16.8.0"
