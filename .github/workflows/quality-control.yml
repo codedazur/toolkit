@@ -1,11 +1,11 @@
-name: hygiene
+name: Quality Control
 
 on:
   pull_request:
     types: [opened, synchronize]
 
 jobs:
-  lint:
+  quality-control:
     runs-on: ubuntu-latest
 
     concurrency:
