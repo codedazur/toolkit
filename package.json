@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "engines": {
-    "node": ">=18.0.0",
+    "node": ">=16.0.0",
     "npm": ">=8.0.0",
     "yarn": "Please use NPM!",
     "pnpm": "Please use NPM!"
@@ -30,7 +30,7 @@
   },
   "devDependencies": {
     "@changesets/cli": "^2.26.0",
-    "eslint-config-custom": "*",
+    "@codedazur/eslint-config-custom": "*",
     "prettier": "latest",
     "tsup": "^6.5.0",
     "turbo": "latest"

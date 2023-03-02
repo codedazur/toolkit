@@ -2,7 +2,8 @@
 
 import { App } from "aws-cdk-lib";
 import * as dotenv from "dotenv";
-import { Toolkit } from "./stacks/Toolkit";
+import { Website } from "./stacks/Website";
+import { Storybook } from "./stacks/Storybook";
 
 dotenv.config();
 
@@ -13,4 +14,5 @@ const env = {
   region: process.env.CDK_DEFAULT_REGION,
 };
 
-new Toolkit(app, "Toolkit", { env });
+new Storybook(app, "ToolkitStorybook", { env });
+new Website(app, "ToolkitWebsite", { env });

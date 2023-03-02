@@ -29,9 +29,9 @@
     "@types/react": "18.0.24",
     "@types/styled-components": "^5.1.26",
     "eslint": "8.26.0",
-    "eslint-config-custom": "*",
+    "@codedazur/eslint-config-custom": "*",
     "next-transpile-modules": "10.0.0",
-    "tsconfig": "*",
+    "@codedazur/tsconfig": "*",
     "typescript": "^4.8.4"
   }
 }

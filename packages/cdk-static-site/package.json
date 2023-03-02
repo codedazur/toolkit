@@ -19,8 +19,8 @@
     "constructs": "^10.1.152",
     "esbuild": "^0.15.13",
     "eslint": "^8.27.0",
-    "eslint-config-custom": "*",
-    "tsconfig": "*",
+    "@codedazur/eslint-config-custom": "*",
+    "@codedazur/tsconfig": "*",
     "typescript": "^4.8.4"
   }
 }

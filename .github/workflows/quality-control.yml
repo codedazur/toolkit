@@ -1,11 +1,11 @@
-name: hygiene
+name: Quality Control
 
 on:
   pull_request:
     types: [opened, synchronize]
 
 jobs:
-  lint:
+  quality-control:
     runs-on: ubuntu-latest
 
     concurrency:
@@ -35,3 +35,6 @@ jobs:
 
       - name: Audit
         run: npm audit --prod
+
+      - name: Build
+        run: export NODE_OPTIONS="--max_old_space_size=4096" && npm run build
