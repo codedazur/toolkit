@@ -6,7 +6,6 @@ import { story } from "storybook/utilities/story";
 import docs from "./useReducedMotion.docs.mdx";
 
 export default meta({
-  title: 'useReducedMotion',
   parameters: {
     docs: {
       page: docs,

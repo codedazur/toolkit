@@ -11,10 +11,14 @@ import { useState } from 'react'
 import { useContrast } from '@codedazur/react-preferences'
 
 export function Demo() {
-  const { prefersContrast } = useContrast();
+  const { prefersMore, prefersLess, prefersCustom, hasForcedColors } =
+    useContrast();
 
   return (
-    <p>User prefers increased contrast: {String(prefersContrast)}</p>
+    <p>User prefers more contrast: {String(prefersMore)}</p>
+    <p>User prefers less contrast: {String(prefersLess)}</p>
+    <p>User prefers custom contrast: {String(prefersCustom)}</p>
+    <p>User has forced colors enabled: {String(hasForcedColors)}</p>
   )
 }
 ```
