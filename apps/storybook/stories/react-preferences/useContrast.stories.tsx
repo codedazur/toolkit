@@ -6,7 +6,6 @@ import { story } from "storybook/utilities/story";
 import docs from "./useContrast.docs.mdx";
 
 export default meta({
-  title: 'useContrast',
   parameters: {
     docs: {
       page: docs,
@@ -15,11 +14,15 @@ export default meta({
 });
 
 export const Default = story(() => {
-  const prefersContrast = useContrast();
+  const { prefersMore, prefersLess, prefersCustom, hasForcedColors } =
+    useContrast();
 
   return (
     <Center>
-      <Text>User prefers increased contrast: {String(prefersContrast)}</Text>
+      <Text>User prefers more contrast: {String(prefersMore)}</Text>
+      <Text>User prefers less contrast: {String(prefersLess)}</Text>
+      <Text>User prefers custom contrast: {String(prefersCustom)}</Text>
+      <Text>User has forced colors enabled: {String(hasForcedColors)}</Text>
     </Center>
   );
 });

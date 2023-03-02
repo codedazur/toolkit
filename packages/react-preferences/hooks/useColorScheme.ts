@@ -8,10 +8,7 @@ import { useCallback, useEffect, useState } from "react";
  *
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme MDN web docs - prefers-color-scheme}
  */
-export const useColorScheme = (): {
-  prefersDark: boolean | null;
-  prefersLight: boolean | null;
-} => {
+export const useColorScheme = () => {
   const [prefersDark, setPrefersDark] = useState(false);
 
   const updatePreferences = useCallback(() => {

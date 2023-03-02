@@ -6,7 +6,7 @@ import { useCallback, useEffect, useState } from "react";
  * This hook returns true if the current device has Reduced Motion setting enabled.
  * The return state will respond to changes in your devices settings and re-render
  * your component with the latest setting.
- * 
+ *
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion MDN web docs - prefers-reduced-motion}
  */
 export const useReducedMotion = () => {

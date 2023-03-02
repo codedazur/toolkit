@@ -1,12 +1,11 @@
 import { Text, Center } from "@codedazur/react-components";
 
-import { useColorScheme } from "@codedazur/react-preferences/hooks/useColorScheme";
+import { useColorScheme } from "@codedazur/react-preferences";
 import { meta } from "storybook/utilities/meta";
 import { story } from "storybook/utilities/story";
 import docs from "./useColorScheme.docs.mdx";
 
 export default meta({
-  title: 'useColorScheme',
   parameters: {
     docs: {
       page: docs,
