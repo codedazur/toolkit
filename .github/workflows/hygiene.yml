@@ -37,4 +37,4 @@ jobs:
         run: npm audit --prod
 
       - name: Build
-        run: npm build --prod
+        run: npm run build
