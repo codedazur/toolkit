@@ -1,11 +1,12 @@
 import { Text, Center } from "@codedazur/react-components";
 
-import { useReducedMotion } from "@codedazur/react-preferences/hooks/useReducedMotion";
+import { useReducedMotion } from "@codedazur/react-preferences";
 import { meta } from "storybook/utilities/meta";
 import { story } from "storybook/utilities/story";
 import docs from "./useReducedMotion.docs.mdx";
 
 export default meta({
+  title: 'useReducedMotion',
   parameters: {
     docs: {
       page: docs,
