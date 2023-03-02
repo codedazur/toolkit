@@ -1,5 +1,11 @@
 # @codedazur/react-parallax
 
+## 0.0.2
+
+### Patch Changes
+
+- b27ce3a: add react essentials as dep
+
 ## 0.0.1
 
 ### Patch Changes
