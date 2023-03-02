@@ -2,7 +2,7 @@ import { StaticSite } from "@codedazur/cdk-static-site";
 import { App, Stack, StackProps } from "aws-cdk-lib";
 import { env } from "@codedazur/essentials";
 
-export class Toolkit extends Stack {
+export class Website extends Stack {
   constructor(scope?: App, id?: string, props?: StackProps) {
     super(scope, id, props);
 
@@ -10,13 +10,6 @@ export class Toolkit extends Stack {
       path: "../website/out",
       domain: domain({
         subdomain: env("WEBSITE_SUBDOMAIN"),
-      }),
-    });
-
-    new StaticSite(this, "Storybook", {
-      path: "../storybook/.storybook",
-      domain: domain({
-        subdomain: env("STORYBOOK_SUBDOMAIN", "storybook"),
       }),
     });
   }

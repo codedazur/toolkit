@@ -30,7 +30,7 @@
   },
   "devDependencies": {
     "@changesets/cli": "^2.26.0",
-    "eslint-config-custom": "*",
+    "@codedazur/eslint-config-custom": "*",
     "prettier": "latest",
     "tsup": "^6.5.0",
     "turbo": "latest"
