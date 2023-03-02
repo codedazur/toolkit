@@ -14,5 +14,5 @@ const env = {
   region: process.env.CDK_DEFAULT_REGION,
 };
 
-new Storybook(app, "Toolkit", { env });
-new Website(app, "Toolkit", { env });
+new Storybook(app, "ToolkitStorybook", { env });
+new Website(app, "ToolkitWebsite", { env });
