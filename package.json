@@ -26,7 +26,8 @@
     "release": "turbo run release --filter=@codedazur/*",
     "deploy": "turbo run deploy --filter=infrastructure",
     "destroy": "turbo run destroy --filter=infrastructure",
-    "publish-packages": "turbo run build lint test --filter=@codedazur/* && changeset version && changeset publish"
+    "version-packages": "turbo run lint test --filter=@codedazur/* && changeset version",
+    "publish-packages": "turbo run build --filter=@codedazur/*  && changeset publish"
   },
   "devDependencies": {
     "@changesets/cli": "^2.26.0",
