@@ -8,7 +8,7 @@
     "yarn": "Please use NPM!",
     "pnpm": "Please use NPM!"
   },
-  "packageManager": "npm@8.15.0",
+  "packageManager": "npm@8.19.4",
   "workspaces": [
     "apps/*",
     "internals/*",
