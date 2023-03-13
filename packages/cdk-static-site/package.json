@@ -17,7 +17,7 @@
     "@types/node": "^16.18.3 || ^18.14.6",
     "aws-cdk-lib": "^2.50.0",
     "constructs": "^10.1.152",
-    "esbuild": "^0.15.13",
+    "esbuild": "^0.15.13 || ^0.17.0",
     "eslint": "^8.27.0",
     "@codedazur/eslint-config-custom": "*",
     "@codedazur/tsconfig": "*",
