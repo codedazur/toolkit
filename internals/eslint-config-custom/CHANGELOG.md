@@ -1,5 +1,11 @@
 # eslint-config-custom
 
+## 0.0.6
+
+### Patch Changes
+
+- [`c15a770`](https://github.com/codedazur/toolkit/commit/c15a770c36a84040a2b745e9f221459dcea29153) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - rename package
+
 ## 0.0.5
 
 ### Patch Changes
