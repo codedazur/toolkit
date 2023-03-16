@@ -7,8 +7,8 @@
     "test": "jest --passWithNoTests",
     "synth": "cdk synth",
     "diff": "cdk diff",
-    "deploy": "cdk deploy --require-approval never",
-    "destroy": "cdk destroy --force"
+    "deploy": "cdk deploy --all --require-approval never",
+    "destroy": "cdk destroy --all --force"
   },
   "dependencies": {
     "@codedazur/cdk-static-site": "*",
