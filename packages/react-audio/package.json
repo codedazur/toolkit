@@ -29,7 +29,7 @@
     "@types/react": "^18.0.24",
     "@types/react-dom": "^18.0.8",
     "eslint": "^8.26.0",
-    "@codedazur/eslint-config-custom": "*",
+    "@codedazur/eslint-config": "*",
     "react": "^18.2.0",
     "@codedazur/tsconfig": "*",
     "typescript": "^4.8.4"

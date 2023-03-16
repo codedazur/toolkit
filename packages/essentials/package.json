@@ -20,7 +20,7 @@
   },
   "devDependencies": {
     "eslint": "^8.26.0",
-    "@codedazur/eslint-config-custom": "*",
+    "@codedazur/eslint-config": "*",
     "@codedazur/tsconfig": "*",
     "typescript": "^4.8.4"
   }

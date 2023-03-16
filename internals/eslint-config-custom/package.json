@@ -1,5 +1,5 @@
 {
-  "name": "@codedazur/eslint-config-custom",
+  "name": "@codedazur/eslint-config",
   "version": "0.0.5",
   "main": "index.js",
   "license": "MIT",
