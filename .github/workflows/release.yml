@@ -24,12 +24,17 @@ jobs:
         run: |
           npm config set //registry.npmjs.org/:_authToken ${{ secrets.NPM_TOKEN }}
           npm ci
+      - name: Lint and Test
+        run: |
+          npm run lint&test
+      - name: Build Packages
+        run: |
+          npm run build-packages
 
       - name: Create Release Pull Request
         uses: changesets/action@v1
         with:
           publish: npm run publish-packages
-          version: npm run version-packages
           commit: "ci(changesets): version packages"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
