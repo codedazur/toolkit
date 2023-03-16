@@ -1,5 +1,11 @@
 # @codedazur/react-preferences
 
+## 0.0.4
+
+### Patch Changes
+
+- [#34](https://github.com/codedazur/toolkit/pull/34) [`22ca4fa`](https://github.com/codedazur/toolkit/commit/22ca4fa075a84e3dba01d79524c51ce62b24cf48) Thanks [@sayinserdar](https://github.com/sayinserdar)! - use publish config restricted
+
 ## 0.0.3
 
 ### Patch Changes
