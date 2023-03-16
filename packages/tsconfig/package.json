@@ -1,11 +1,16 @@
 {
   "name": "@codedazur/tsconfig",
   "version": "0.0.2",
-  "private": true,
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
   "files": [
     "base.json",
     "cdk.json",
     "nextjs.json",
+    "npm-package.json",
+    "package.json",
     "react-library.json",
     "storybook.json"
   ]
