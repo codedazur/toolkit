@@ -15,7 +15,8 @@
     "lint": "TIMING=1 eslint \"**/*.ts*\"",
     "test": "echo \"No tests configured.\"",
     "release": "echo \"No releases configured.\"",
-    "build": "tsup index.ts --format esm,cjs --dts"
+    "build": "tsup index.ts --format esm,cjs --dts",
+    "dev": "tsup index.ts --format esm,cjs --watch --external react"
   },
   "dependencies": {
     "@codedazur/essentials": "*",
