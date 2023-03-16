@@ -1,5 +1,11 @@
 # eslint-config-custom
 
+## 0.0.4
+
+### Patch Changes
+
+- [#38](https://github.com/codedazur/toolkit/pull/38) [`7c1048e`](https://github.com/codedazur/toolkit/commit/7c1048eff5d9fabbe5c1dead8df170b952f10c80) Thanks [@sayinserdar](https://github.com/sayinserdar)! - trigger version
+
 ## 0.0.3
 
 ### Patch Changes
