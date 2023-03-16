@@ -11,6 +11,7 @@
     "website",
     "infrastructure",
     "essentials",
-    "static-site"
+    "static-site",
+    "tsconfig"
   ]
 }
