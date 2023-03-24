@@ -32,6 +32,6 @@
     "@codedazur/eslint-config": "*",
     "next-transpile-modules": "10.0.0",
     "@codedazur/tsconfig": "*",
-    "typescript": "^4.8.4"
+    "typescript": "^4.8.4 || ^5.0.0"
   }
 }
