@@ -11,7 +11,6 @@
   "packageManager": "npm@8.19.4",
   "workspaces": [
     "apps/*",
-    "internals/*",
     "packages/*"
   ],
   "scripts": {
@@ -19,7 +18,7 @@
     "dev": "turbo run dev --parallel",
     "lint": "turbo run lint",
     "test": "turbo run test",
-    "audit": "npm audit",
+    "audit": "npm audit --omit-dev",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "storybook": "turbo run dev --filter storybook",
     "website": "npm turbo run dev --filter website",
@@ -31,16 +30,11 @@
     "publish-packages": "changeset publish"
   },
   "devDependencies": {
+    "@changesets/changelog-github": "0.4.8",
     "@changesets/cli": "^2.26.0",
     "@codedazur/eslint-config": "*",
     "prettier": "latest",
     "tsup": "^6.5.0",
-    "turbo": "latest",
-    "@changesets/changelog-github": "0.4.8"
-  },
-  "overrides": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "styled-components": "^5.3.6"
+    "turbo": "latest"
   }
 }
