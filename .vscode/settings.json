@@ -13,6 +13,7 @@
     "essentials",
     "static-site",
     "tsconfig",
-    "amplify-app"
+    "amplify-app",
+    "cdk-mailer"
   ]
 }
