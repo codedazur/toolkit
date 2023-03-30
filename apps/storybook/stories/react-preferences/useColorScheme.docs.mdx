@@ -5,6 +5,10 @@ A hook that determines whether the user prefers a dark or light color scheme.
 The return state will respond to changes in your devices settings and re-render your 
 component with the latest settings.
 
+In this hook `prefers-color-scheme` media query is used, see the following link for 
+more information and browser compatibility. 
+[MDN web docs - prefers-color-scheme](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme)
+
 ```js
 import { useState } from 'react'
 import { useColorScheme } from '@codedazur/react-preferences'
