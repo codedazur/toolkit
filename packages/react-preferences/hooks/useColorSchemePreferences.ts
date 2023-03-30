@@ -1,5 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
 
+export enum ColorScheme {
+  dark = 'dark',
+  light = 'light',
+}
+
 /**
  * A hook that determines whether the user prefers a dark or light color scheme.
  *
@@ -10,14 +15,15 @@ import { useCallback, useEffect, useState } from "react";
  * more information and browser compatibility.
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme MDN web docs - prefers-color-scheme}
  */
-export const useColorScheme = () => {
-  const [prefersDark, setPrefersDark] = useState(false);
+export const useColorSchemePreferences = () => {
+  const [colorScheme, setColorScheme] = useState<undefined | ColorScheme>(undefined);
 
   const updatePreferences = useCallback(() => {
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
 
     const update = () => {
-      setPrefersDark(mediaQuery.matches);
+      const prefersDark = mediaQuery.matches;
+      setColorScheme(prefersDark ? ColorScheme.dark : ColorScheme.light);
     };
 
     mediaQuery.addEventListener("change", update);
@@ -35,5 +41,5 @@ export const useColorScheme = () => {
     updatePreferences();
   }, [updatePreferences]);
 
-  return { prefersDark, prefersLight: !prefersDark };
-};
+  return colorScheme;
+}

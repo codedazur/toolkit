@@ -6,4 +6,4 @@ Added user preferences-related hooks, to check if a user has a preference for re
 
 - useReducedMotion
 - useContrast
-- useColorScheme
+- useColorSchemePreferences

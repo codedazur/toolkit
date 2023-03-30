@@ -1,9 +1,9 @@
 import { Text, Center } from "@codedazur/react-components";
 
-import { useColorScheme } from "@codedazur/react-preferences";
+import { useColorSchemePreferences } from "@codedazur/react-preferences";
 import { meta } from "storybook/utilities/meta";
 import { story } from "storybook/utilities/story";
-import docs from "./useColorScheme.docs.mdx";
+import docs from "./useColorSchemePreferences.docs.mdx";
 
 export default meta({
   parameters: {
@@ -14,12 +14,11 @@ export default meta({
 });
 
 export const Default = story(() => {
-  const { prefersDark, prefersLight } = useColorScheme();
+  const preferedColorScheme = useColorSchemePreferences();
 
   return (
     <Center>
-      <Text>User prefers dark color scheme: {String(prefersDark)}</Text>
-      <Text>User prefers light color scheme: {String(prefersLight)}</Text>
+      <Text>User prefers a {preferedColorScheme} color scheme.</Text>
     </Center>
   );
 });
