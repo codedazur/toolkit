@@ -34,7 +34,6 @@ export const useContrast = () => {
     mediaQueries.more.addEventListener("change", update);
     mediaQueries.less.addEventListener("change", update);
     mediaQueries.custom.addEventListener("change", update);
-    mediaQueries.forcedColors.addEventListener("change", update);
 
     return () => {
       mediaQueries.more.removeEventListener("change", update);
@@ -49,5 +48,5 @@ export const useContrast = () => {
     updatePreferences();
   }, [updatePreferences]);
 
-  return { prefersMore, prefersLess, prefersCustom, hasForcedColors };
+  return { prefersMore, prefersLess, prefersCustom };
 };
