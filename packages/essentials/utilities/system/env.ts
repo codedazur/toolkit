@@ -109,6 +109,15 @@ function strings<T extends string>(
     return fallback;
   }
 
+  /**
+   * @todo @bug If the value is an empty string, which is not uncommon in the
+   * context of dotenv, this operation returns `[""]`. I _think_ it would be
+   * better if it would return an empty array `[]`. However, this raises the
+   * question what it should return for the string `",,"`, which technically
+   * represents an array with three empty values. Maybe this should return
+   * `[undefined, undefined, undefined]`, in which case the empty string should
+   * probably be parsed as `[undefined]`?
+   */
   return value.split(",") as T[];
 }
 env.strings = strings;
