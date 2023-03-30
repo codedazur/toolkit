@@ -1,19 +1,21 @@
 import { Text, Button, Center, Column, Row } from "@codedazur/react-components";
 import { usePrevious } from "@codedazur/react-essentials";
+import { Meta } from "@storybook/react";
 import { useState } from "react";
-import { meta } from "storybook/utilities/meta";
-import { story } from "storybook/utilities/story";
 import docs from "./usePrevious.docs.mdx";
 
-export default meta({
+const meta: Meta =  {
+  title: "React Essentials/usePrevious",
   parameters: {
     docs: {
       page: docs,
     },
   },
-});
+};
 
-export const Default = story(() => {
+export default meta;
+
+export const Default = () => {
   const [count, setCount] = useState(0);
   const previousCount = usePrevious(count);
 
@@ -30,4 +32,4 @@ export const Default = story(() => {
       </Column>
     </Center>
   );
-});
+};

@@ -19,19 +19,24 @@ import { useTimer } from "@codedazur/react-essentials";
 import { action } from "@storybook/addon-actions";
 import styled from "styled-components";
 import { Bar } from "storybook/components/Bar";
-import { meta } from "storybook/utilities/meta";
-import { story } from "storybook/utilities/story";
-import docs from "./useTimer.docs.mdx";
 
-export default meta({
+import docs from "./useTimer.docs.mdx";
+import { Meta } from "@storybook/react";
+
+
+const meta: Meta =  {
+  title: 'React Essentials/useTimer',
   parameters: {
     docs: {
       page: docs,
     },
   },
-});
+};
 
-export const Default = story(() => {
+export default meta;
+
+
+export const Default = () => {
   const timer = useTimer(action("callback"), 3000);
 
   return (
@@ -45,7 +50,7 @@ export const Default = story(() => {
       </Column>
     </Center>
   );
-});
+};
 
 interface TimerProgressProps extends ReturnType<typeof useTimer> {}
 

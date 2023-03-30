@@ -1,1 +1,17 @@
-# NotificationsProvider
+import { Canvas, Meta, Story } from '@storybook/blocks';
+
+import * as NotificationsProviderStories from './NotificationsProvider.stories';
+
+<Meta of={NotificationsProviderStories} />
+
+<Canvas of={NotificationsProviderStories.Default} />
+
+<Canvas of={NotificationsProviderStories.Groups} />
+
+<Canvas of={NotificationsProviderStories.Limited} />
+
+<Canvas of={NotificationsProviderStories.Persistent} />
+
+<Canvas of={NotificationsProviderStories.MixedDurations} />
+
+<Canvas of={NotificationsProviderStories.Groups} />

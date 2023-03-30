@@ -1,17 +1,19 @@
 import { Timer } from "@codedazur/essentials";
 import { Button, Center, Column, Row } from "@codedazur/react-components";
 import { action } from "@storybook/addon-actions";
-import { meta } from "storybook/utilities/meta";
-import { story } from "storybook/utilities/story";
+import type { Meta, StoryObj } from "@storybook/react";
 import docs from "./Timer.docs.mdx";
 
-export default meta({
+const meta: Meta<Timer>  = {
+  title: "Essentials/Timer",
   parameters: {
     docs: {
       page: docs,
     },
   },
-});
+};
+
+export default meta;
 
 const timer = new Timer(action("callback"), 3000);
 
@@ -22,7 +24,10 @@ timer.addEventListener("resume", action("resume"));
 timer.addEventListener("extend", action("extend"));
 timer.addEventListener("end", action("end"));
 
-export const Default = story(() => (
+
+type Story = StoryObj<typeof Timer>;
+
+export const Default: Story = { render: () => (
   <Center>
     <Column gap="2rem">
       <Row gap="1rem" justify="center">
@@ -39,4 +44,4 @@ export const Default = story(() => (
       </Row>
     </Column>
   </Center>
-));
+)};

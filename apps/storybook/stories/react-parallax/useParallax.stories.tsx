@@ -21,13 +21,18 @@ import layerFour from "./diorama/layer-four.png";
 import layerFive from "./diorama/layer-five.png";
 import layerSix from "./diorama/layer-six.png";
 
-export default {
+
+
+const meta: Meta =  {
+  title: 'React Parallax/useParallax',
   parameters: {
     docs: {
       page: docs,
     },
   },
-} as Meta;
+};
+
+export default meta;
 
 export const Default: Story = () => (
   <>

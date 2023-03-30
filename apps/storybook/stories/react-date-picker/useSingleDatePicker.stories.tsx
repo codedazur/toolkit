@@ -1,16 +1,19 @@
 import { useSingleDatePicker } from "@codedazur/react-date-picker";
-import { Meta, Story } from "@storybook/react";
+import { Meta } from "@storybook/react";
 import docs from "./useSingleDatePicker.docs.mdx";
 
-export default {
+const meta: Meta =  {
+  title: "React Date Picker/useSingleDatePicker",
   parameters: {
     docs: {
       page: docs,
     },
   },
-} as Meta;
+};
 
-export const Default: Story = () => {
+export default meta;
+
+export const Default = () => {
   const datePicker = useSingleDatePicker();
 
   return <></>;
