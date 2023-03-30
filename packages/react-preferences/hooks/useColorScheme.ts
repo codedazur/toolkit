@@ -6,7 +6,7 @@ import { useCallback, useEffect, useState } from "react";
  * The return state will respond to changes in your devices settings and re-render your
  * component with the latest settings.
  *
- * In this hook `prefers-color-scheme` media query is used, see the following link for 
+ * In this hook `prefers-color-scheme` media query is used, see the following link for
  * more information and browser compatibility.
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme MDN web docs - prefers-color-scheme}
  */

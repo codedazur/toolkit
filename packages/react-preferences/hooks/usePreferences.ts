@@ -1,5 +1,5 @@
 /**
- * @todo Implement this hook.  
+ * @todo Implement this hook.
  */
 export const usePreferences = () => {
   return {
