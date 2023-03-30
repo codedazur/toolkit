@@ -6,6 +6,7 @@ import {
   FunctionCode,
   FunctionEventType,
   OriginProtocolPolicy,
+  PriceClass,
   ViewerProtocolPolicy,
 } from "aws-cdk-lib/aws-cloudfront";
 import { HttpOrigin } from "aws-cdk-lib/aws-cloudfront-origins";
@@ -39,6 +40,7 @@ export interface StaticSiteProps {
     errorDocument?: string;
   };
   distribution?: {
+    priceClass?: PriceClass;
     functions?: {
       viewerRequest?: FunctionCode[];
       viewerResponse?: FunctionCode[];
@@ -131,7 +133,7 @@ export class StaticSite extends Construct {
         ? new DnsValidatedCertificate(this, "Certificate", {
             domainName: this.domain,
             hostedZone: this.zone,
-            region: "us-east-1", // CloudFront only checks this region for certificates.
+            region: "us-east-1",
           })
         : undefined;
 
@@ -168,7 +170,10 @@ export class StaticSite extends Construct {
   }
 
   protected createViewerResponseFunction() {
-    const handlers = this.props.distribution?.functions?.viewerResponse ?? [];
+    const handlers = [
+      this.getSecurityHeadersCode(),
+      ...(this.props.distribution?.functions?.viewerResponse ?? []),
+    ].filter((handler): handler is FunctionCode => !!handler);
 
     if (handlers.length === 0) {
       return undefined;
@@ -179,6 +184,10 @@ export class StaticSite extends Construct {
     });
   }
 
+  /**
+   * @todo @bug The `complete` function should return `event.response` when it
+   * is used as a viewerResponse function.
+   */
   protected getMiddlewareCode(handlers: FunctionCode[]) {
     return FunctionCode.fromInline(/* js */ `
 			function handler(event) {
@@ -253,8 +262,47 @@ export class StaticSite extends Construct {
 		`);
   }
 
+  /**
+   * @todo Decide if and how we want to include this by default. What if someone
+   * _does_ want their site to be loaded in an iFrame? We could add some
+   * optional props of course, such as `distribution.xFrameOptions: string` or
+   * something like that.
+   */
+  protected getSecurityHeadersCode() {
+    return FunctionCode.fromInline(/* js */ `
+			function securityHeaders(event, next) {
+				event.response.headers["strict-transport-security"] = {
+          value: "max-age=63072000; includeSubdomains; preload",
+        };
+
+        /**
+         * @todo I believe this header is way too strict. Make it better.
+         */
+        // event.response.headers["content-security-policy"] = {
+        //   value:
+        //     "default-src 'none'; img-src 'self'; script-src 'self'; style-src 'self'; object-src 'none'",
+        // };
+
+        event.response.headers["x-content-type-options"] = {
+          value: "nosniff",
+        };
+
+        event.response.headers["x-frame-options"] = {
+          value: "DENY",
+        };
+
+        event.response.headers["x-xss-protection"] = {
+          value: "1; mode=block",
+        };
+
+        return next(event);
+			}
+		`);
+  }
+
   protected createDistribution() {
     const distribution = new Distribution(this, "Distribution", {
+      priceClass: this.props.distribution?.priceClass,
       certificate: this.certificate,
       domainNames: this.domain ? [this.domain] : undefined,
       defaultBehavior: {
