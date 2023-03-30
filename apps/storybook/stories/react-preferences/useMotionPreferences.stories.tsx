@@ -1,9 +1,9 @@
 import { Text, Center } from "@codedazur/react-components";
 
-import { useReducedMotion } from "@codedazur/react-preferences";
+import { useMotionPreferences } from "@codedazur/react-preferences";
 import { meta } from "storybook/utilities/meta";
 import { story } from "storybook/utilities/story";
-import docs from "./useReducedMotion.docs.mdx";
+import docs from "./useMotionPreferences.docs.mdx";
 
 export default meta({
   parameters: {
@@ -14,11 +14,11 @@ export default meta({
 });
 
 export const Default = story(() => {
-  const reducedMotion = useReducedMotion();
+  const preferedMotion = useMotionPreferences();
 
   return (
     <Center>
-      <Text>User prefers reduced motion: {String(reducedMotion)}</Text>
+      <Text>User prefers {preferedMotion || "default"} motion.</Text>
     </Center>
   );
 });

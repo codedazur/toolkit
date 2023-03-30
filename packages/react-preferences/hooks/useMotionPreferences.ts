@@ -1,5 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
 
+export enum Motion {
+  reduced = "reduced",
+}
+
 /**
  * A hook that determines whether the user prefers reduced motion.
  *
@@ -11,16 +15,15 @@ import { useCallback, useEffect, useState } from "react";
  * more information and browser compatibility.
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion MDN web docs - prefers-reduced-motion}
  */
-export const useReducedMotion = () => {
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState<
-    null | boolean
-  >(null);
+export const useMotionPreferences = () => {
+  const [motion, setMotion] = useState<undefined | null | Motion>(undefined);
 
   const updatePreferences = useCallback(() => {
     const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
 
     const update = () => {
-      setPrefersReducedMotion(mediaQuery.matches);
+      const prefersReducedMotion = mediaQuery.matches;
+      setMotion(prefersReducedMotion ? Motion.reduced : null);
     };
 
     mediaQuery.addEventListener("change", update);
@@ -38,5 +41,5 @@ export const useReducedMotion = () => {
     updatePreferences();
   }, [updatePreferences]);
 
-  return prefersReducedMotion;
+  return motion;
 };

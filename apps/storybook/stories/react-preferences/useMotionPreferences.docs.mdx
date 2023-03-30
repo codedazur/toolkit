@@ -1,4 +1,4 @@
-# useReducedMotion
+# useMotionPreferences
 
 A hook that determines whether the user prefers reduced motion. 
 
@@ -12,13 +12,13 @@ more information and browser compatibility.
 
 ```js
 import { useState } from 'react'
-import { useReducedMotion } from '@codedazur/react-preferences'
+import { useMotionPreferences } from '@codedazur/react-preferences'
 
 export function Demo() {
-  const reducedMotion = useReducedMotion();
+  const preferedMotion = useMotionPreferences();
 
   return (
-    <p>User prefers reduced motion: {String(reducedMotion)}</p>
+    <p>User prefers {preferedMotion || 'default'} motion.</p>
   )
 }
 ```
@@ -26,5 +26,5 @@ export function Demo() {
 ## Type Declarations
 
 ```js
-declare function useReducedMotion(): boolean;
+declare function useMotionPreferences(): boolean;
 ````
