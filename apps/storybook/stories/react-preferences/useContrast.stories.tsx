@@ -14,15 +14,13 @@ export default meta({
 });
 
 export const Default = story(() => {
-  const { prefersMore, prefersLess, prefersCustom, hasForcedColors } =
-    useContrast();
+  const { prefersMore, prefersLess, prefersCustom } = useContrast();
 
   return (
     <Center>
       <Text>User prefers more contrast: {String(prefersMore)}</Text>
       <Text>User prefers less contrast: {String(prefersLess)}</Text>
       <Text>User prefers custom contrast: {String(prefersCustom)}</Text>
-      <Text>User has forced colors enabled: {String(hasForcedColors)}</Text>
     </Center>
   );
 });
