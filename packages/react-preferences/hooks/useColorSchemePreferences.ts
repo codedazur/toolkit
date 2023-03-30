@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 
 export enum ColorScheme {
-  dark = 'dark',
-  light = 'light',
+  dark = "dark",
+  light = "light",
 }
 
 /**
@@ -16,7 +16,9 @@ export enum ColorScheme {
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme MDN web docs - prefers-color-scheme}
  */
 export const useColorSchemePreferences = () => {
-  const [colorScheme, setColorScheme] = useState<undefined | ColorScheme>(undefined);
+  const [colorScheme, setColorScheme] = useState<undefined | ColorScheme>(
+    undefined
+  );
 
   const updatePreferences = useCallback(() => {
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
@@ -42,4 +44,4 @@ export const useColorSchemePreferences = () => {
   }, [updatePreferences]);
 
   return colorScheme;
-}
+};

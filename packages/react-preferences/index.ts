@@ -1,3 +1,3 @@
 export * from "./hooks/useColorSchemePreferences";
-export * from "./hooks/useContrast";
+export * from "./hooks/useContrastPreferences";
 export * from "./hooks/useReducedMotion";

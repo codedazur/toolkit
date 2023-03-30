@@ -1,4 +1,4 @@
-# useContrast
+# useContrastPreferences
 
 A hook that determines whether the user prefers increased contrast. 
 
@@ -12,15 +12,13 @@ more information and browser compatibility.
 
 ```js
 import { useState } from 'react'
-import { useContrast } from '@codedazur/react-preferences'
+import { useContrastPreferences } from '@codedazur/react-preferences'
 
 export function Demo() {
-  const { prefersMore, prefersLess, prefersCustom } = useContrast();
+  const preferedContrast = useContrastPreferences();
 
   return (
-    <p>User prefers more contrast: {String(prefersMore)}</p>
-    <p>User prefers less contrast: {String(prefersLess)}</p>
-    <p>User prefers custom contrast: {String(prefersCustom)}</p>
+    <p>User prefers {preferedContrast || 'default'} contrast.</p>
   )
 }
 ```
@@ -28,5 +26,5 @@ export function Demo() {
 ## Type Declarations
 
 ```js
-declare function useContrast(): boolean;
+declare function useContrastPreferences(): boolean;
 ````

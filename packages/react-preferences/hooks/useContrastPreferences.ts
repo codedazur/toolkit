@@ -1,5 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
 
+export enum Contrast {
+  more = "more",
+  less = "less",
+  custom = "custom",
+}
+
 /**
  * A hook that determines whether the user prefers increased contrast.
  *
@@ -11,10 +17,10 @@ import { useCallback, useEffect, useState } from "react";
  * more information and browser compatibility.
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-contrast MDN web docs - prefers-contrast}
  */
-export const useContrast = () => {
-  const [prefersMore, setPrefersMore] = useState<null | boolean>(null);
-  const [prefersLess, setPrefersLess] = useState<null | boolean>(null);
-  const [prefersCustom, setPrefersCustom] = useState<null | boolean>(null);
+export const useContrastPreferences = () => {
+  const [contrast, setContrast] = useState<undefined | null | Contrast>(
+    undefined
+  );
 
   const updatePreferences = useCallback(() => {
     const mediaQueries = {
@@ -24,9 +30,18 @@ export const useContrast = () => {
     };
 
     const update = () => {
-      setPrefersMore(mediaQueries.more.matches);
-      setPrefersLess(mediaQueries.less.matches);
-      setPrefersCustom(mediaQueries.custom.matches);
+      if (mediaQueries.more.matches) {
+        setContrast(Contrast.more);
+      } else if (mediaQueries.less.matches) {
+        setContrast(Contrast.less);
+      } else if (mediaQueries.custom.matches) {
+        setContrast(Contrast.custom);
+      } else {
+        // @todo: decide what to do when there is no preference.
+        // - null
+        // - 'default'
+        setContrast(null);
+      }
     };
 
     update();
@@ -48,5 +63,5 @@ export const useContrast = () => {
     updatePreferences();
   }, [updatePreferences]);
 
-  return { prefersMore, prefersLess, prefersCustom };
+  return contrast;
 };
