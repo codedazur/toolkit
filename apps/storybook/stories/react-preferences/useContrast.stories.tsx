@@ -15,6 +15,7 @@ export default meta({
 
 export const Default = story(() => {
   const { prefersMore, prefersLess, prefersCustom } = useContrast();
+  const{} = useContrast();
 
   return (
     <Center>
