@@ -12,6 +12,7 @@
     "infrastructure",
     "essentials",
     "static-site",
-    "tsconfig"
+    "tsconfig",
+    "amplify-app"
   ]
 }
