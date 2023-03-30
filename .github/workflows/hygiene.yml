@@ -1,4 +1,4 @@
-name: Quality Control
+name: Hygiene
 
 on:
   pull_request:
@@ -34,7 +34,7 @@ jobs:
         run: npm run test
 
       - name: Audit
-        run: npm audit --prod
+        run: npm run audit
 
       - name: Build
         run: export NODE_OPTIONS="--max_old_space_size=4096" && npm run build

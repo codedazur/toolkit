@@ -19,7 +19,7 @@
     "dev": "turbo run dev --parallel",
     "lint": "turbo run lint",
     "test": "turbo run test",
-    "audit": "npm audit --omit dev",
+    "audit": "npm audit",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "storybook": "turbo run dev --filter storybook",
     "website": "npm turbo run dev --filter website",
