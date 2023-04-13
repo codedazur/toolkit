@@ -11,6 +11,9 @@
     }
   },
   "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "lint": "TIMING=1 eslint \"**/*.ts*\"",
     "release": "echo \"No releases configured.\"",
