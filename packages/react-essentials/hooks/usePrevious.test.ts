@@ -11,22 +11,22 @@ describe('usePrevious', () => {
 
   it('should return the previous value after the value changes', () => {
     const { result, rerender } = renderHook((props) => usePrevious(props), {
-      initialProps: 0,
+      initialProps: 'initial value',
     });
 
     expect(result.current).toBe(undefined);
 
     act(() => {
-      rerender(1);
+      rerender('first rerender value');
     });
 
-    expect(result.current).toBe(0);
+    expect(result.current).toBe('initial value');
 
     act(() => {
-      rerender(2);
+      rerender('second rerender value');
     });
 
-    expect(result.current).toBe(1);
+    expect(result.current).toBe('first rerender value');
 
   });
 });
