@@ -21,11 +21,10 @@ import layerFour from "./diorama/layer-four.png";
 import layerFive from "./diorama/layer-five.png";
 import layerSix from "./diorama/layer-six.png";
 
-
-
-const meta: Meta =  {
-  title: 'React Parallax/useParallax',
+const meta: Meta = {
+  title: "React Parallax/useParallax",
   parameters: {
+    layout: "fullscreen",
     docs: {
       page: docs,
     },
@@ -69,14 +68,16 @@ const Parallax = ({
 
 export const Hero: Story = () => (
   <>
-    <Stack>
-      <Parallax factor={0.5}>
-        <Placeholder height="40rem" crossed />
-      </Parallax>
-      <Center>
-        <Text>{faker.commerce.productName()}</Text>
-      </Center>
-    </Stack>
+    <Center>
+      <Stack>
+        <Parallax factor={0.5}>
+          <Placeholder height="40rem" crossed />
+        </Parallax>
+        <Center>
+          <Text>{faker.commerce.productName()}</Text>
+        </Center>
+      </Stack>
+    </Center>
     <SizedBox height="200vh" />
   </>
 );

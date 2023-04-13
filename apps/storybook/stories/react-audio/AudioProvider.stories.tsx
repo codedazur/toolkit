@@ -30,24 +30,24 @@ import {
   Stack,
   StopIcon,
   Text,
-  timecode,
   VolumeUpIcon,
+  timecode,
 } from "@codedazur/react-components";
 import { Meta, StoryObj } from "@storybook/react";
 import { FunctionComponent } from "react";
 import { Bar } from "storybook/components/Bar";
 import { List } from "storybook/components/List";
 import { WithCenter } from "storybook/decorators/WithCenter";
+import docs from "./AudioProvider.docs.mdx";
 import distantWorldsIi from "./artworks/distant-worlds-ii.jpg";
 import distantWorlds from "./artworks/distant-worlds.jpg";
 import seaOfStars from "./artworks/sea-of-stars.jpg";
 import alienated from "./tracks/alienated.mp3";
 import meteorites from "./tracks/meteorites.mp3";
 import tabulaRasa from "./tracks/tabula-rasa.mp3";
-import docs from "./AudioProvider.docs.mdx";
 
-const meta: Meta =  {
-  title: 'React-Audio/AudioProvider',
+const meta: Meta = {
+  title: "React-Audio/AudioProvider",
   decorators: [WithCenter],
   parameters: {
     docs: {
@@ -58,13 +58,15 @@ const meta: Meta =  {
 
 export default meta;
 
-export const Default: StoryObj ={  render: () => (
-  <AudioProvider tracks={[meteorites]}>
-    <StateControls />
-    <TrackAttributionOverlay />
-    <AudioDebugOverlay isPlaying />
-  </AudioProvider>
-)};
+export const Default: StoryObj = {
+  render: () => (
+    <AudioProvider tracks={[meteorites]}>
+      <StateControls />
+      <TrackAttributionOverlay />
+      <AudioDebugOverlay isPlaying />
+    </AudioProvider>
+  ),
+};
 
 const StateControls = () => (
   <Bar>

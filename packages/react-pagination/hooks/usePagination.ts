@@ -47,16 +47,13 @@ type usePaginationResponse<T> =
   | UsePaginationWithItemsResponse<T>
   | UsePaginationWithCountResponse;
 
-export function usePagination({
-  count,
-  initialPage,
-}: UsePaginationWithCountProps): UsePaginationWithCountResponse;
+export function usePagination(
+  props: UsePaginationWithCountProps
+): UsePaginationWithCountResponse;
 
-export function usePagination<T>({
-  items,
-  itemsPerPage,
-  initialPage,
-}: UsePaginationWithItemsProps<T>): UsePaginationWithItemsResponse<T>;
+export function usePagination<T>(
+  props: UsePaginationWithItemsProps<T>
+): UsePaginationWithItemsResponse<T>;
 
 export function usePagination<T>(
   props: UsePaginationProps<T>

@@ -17,15 +17,13 @@ import {
 } from "@codedazur/react-components";
 import { useTimer } from "@codedazur/react-essentials";
 import { action } from "@storybook/addon-actions";
-import styled from "styled-components";
-import { Bar } from "storybook/components/Bar";
-
-import docs from "./useTimer.docs.mdx";
 import { Meta } from "@storybook/react";
+import { Bar } from "storybook/components/Bar";
+import styled from "styled-components";
+import docs from "./useTimer.docs.mdx";
 
-
-const meta: Meta =  {
-  title: 'React Essentials/useTimer',
+const meta: Meta = {
+  title: "React Essentials/useTimer",
   parameters: {
     docs: {
       page: docs,
@@ -34,7 +32,6 @@ const meta: Meta =  {
 };
 
 export default meta;
-
 
 export const Default = () => {
   const timer = useTimer(action("callback"), 3000);
