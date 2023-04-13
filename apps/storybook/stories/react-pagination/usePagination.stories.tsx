@@ -6,13 +6,14 @@ import {
   SizedBox,
   Text,
 } from "@codedazur/react-components";
-import { UsePaginationProps,usePagination } from "@codedazur/react-pagination";
+
 
 import { faker } from "@faker-js/faker";
 import { Meta } from "@storybook/react";
 import { SymbolButton } from "storybook/components/SymbolButton";
 import { WithCenter } from "storybook/decorators/WithCenter";
 import docs from "./usePagination.docs.mdx";
+import { UsePaginationProps } from "@codedazur/react-pagination";
 
 const meta: Meta<UsePaginationProps<string>> =  {
   title: 'React-Pagination/usePagination',
@@ -36,7 +37,7 @@ const meta: Meta<UsePaginationProps<string>> =  {
 };
 export default meta;
 
-export const Default = (
+const DefaultStory = (
   (args) => {
     const { count, page, setPage, next, previous, range } = usePagination(args);
     return (
@@ -76,7 +77,13 @@ export const Default = (
   // }
 );
 
-export const WithSiblingsAndBoundaries =  (args) => {
+export const Default =  {
+  render: () => {
+    <DefaultStory/>
+  }
+}
+
+ const WithSiblingsAndBoundariesStory =  (args) => {
     const { count, page, setPage, next, previous, range } = usePagination(args);
 
     return (
@@ -110,6 +117,12 @@ export const WithSiblingsAndBoundaries =  (args) => {
       </>
     )
   };
+
+  export const WithSiblingsAndBoundaries =  {
+    render: () => {
+      <WithSiblingsAndBoundariesStory/>
+    }
+  }
   // {
   //   argTypes: {
   //     count: { control: { type: "number" } },
@@ -123,7 +136,7 @@ export const WithSiblingsAndBoundaries =  (args) => {
   // }
 
 
-export const WithItems = (
+const WithItemsStory = (
   (args) => {
     const { count, page, setPage, next, previous, range, items } =
       usePagination(args);
@@ -162,21 +175,28 @@ export const WithItems = (
         {/* <DebugOverlay value={{ count, page, items, range }} /> */}
       </>
     );
-  },
-  {
-    argTypes: {
-      items: { control: { type: "object" } },
-      itemsPerPage: { control: { type: "number" } },
-    },
-    args: {
-      items: Array.from({ length: 25 }).map(() => faker.commerce.productName()),
-      itemsPerPage: 3,
-      initialPage: 3,
-    },
   }
+  // {
+  //   argTypes: {
+  //     items: { control: { type: "object" } },
+  //     itemsPerPage: { control: { type: "number" } },
+  //   },
+  //   args: {
+  //     items: Array.from({ length: 25 }).map(() => faker.commerce.productName()),
+  //     itemsPerPage: 3,
+  //     initialPage: 3,
+  //   },
+  // }
 );
 
-export const WithoutRange = (
+
+export const WithItems =  {
+  render: () => {
+    <WithItemsStory/>
+  }
+}
+
+const WithoutRangeStory = (
   (args) => {
     const { count, page, next, previous } = usePagination(args);
 
@@ -203,7 +223,14 @@ export const WithoutRange = (
   // }
 );
 
-export const WithoutSeparator = (
+
+export const WithoutRange =  {
+  render: () => {
+    <WithoutRangeStory/>
+  }
+}
+
+const WithoutSeparatorStory = (
   (args) => {
     const { count, page, setPage, next, previous, range } = usePagination(args);
 
@@ -247,3 +274,10 @@ export const WithoutSeparator = (
   //   },
   // }
 );
+
+
+export const WithoutSeparator =  {
+  render: () => {
+    <WithoutSeparatorStory/>
+  }
+}

@@ -16,7 +16,7 @@ import {
 } from "@codedazur/react-notifications";
 import { faker } from "@faker-js/faker";
 import { expect } from "@storybook/jest";
-import { Meta } from "@storybook/react";
+import { Meta, StoryObj } from "@storybook/react";
 import { userEvent, within } from "@storybook/testing-library";
 import { FunctionComponent, ReactNode } from "react";
 import { Button } from "storybook/components/Button";
@@ -35,72 +35,69 @@ const meta: Meta =  {
 export default meta;
 
 
-export const Default = 
-  () => (
+export const Default: StoryObj = {
+  render: () => (
     <NotificationsProvider>
       <Center>
         <AddNotificationButton />
       </Center>
       <Notifications />
     </NotificationsProvider>
-  );
-  // {
-  //   play: async ({ canvasElement }) => {
-  //     const body = within(canvasElement.ownerDocument.body);
-  //     const button = await body.findByRole("button");
-  //     userEvent.click(button);
+  ),
+  play: async ({ canvasElement }) => {
+    const body = within(canvasElement.ownerDocument.body);
+    const button = await body.findByRole("button");
+    userEvent.click(button);
 
-  //     const notification = await body.findByTestId("notification");
-  //     expect(notification).toBeInTheDocument();
-  //   },
-  // }
+    const notification = await body.findByTestId("notification");
+    expect(notification).toBeInTheDocument();
+  },
+  }
 
 
-export const Limited = 
-  () => (
+export const Limited: StoryObj = {
+ render:  () => (
     <NotificationsProvider limit={3}>
       <Center>
         <AddNotificationButton />
       </Center>
       <Notifications />
     </NotificationsProvider>
-  );
-  // {
-  //   play: async ({ canvasElement }) => {
-  //     const body = within(canvasElement.ownerDocument.body);
+  ),
+    play: async ({ canvasElement }) => {
+      const body = within(canvasElement.ownerDocument.body);
 
-  //     const button = await body.findByRole("button");
-  //     for (let i = 0; i < 4; i++) {
-  //       userEvent.click(button);
-  //     }
+      const button = await body.findByRole("button");
+      for (let i = 0; i < 4; i++) {
+        userEvent.click(button);
+      }
 
-  //     const notifications = await body.findAllByTestId("notification");
-  //     expect(notifications.length).toEqual(3);
-  //   },
-  // }
+      const notifications = await body.findAllByTestId("notification");
+      expect(notifications.length).toEqual(3);
+    },
+  }
 
 
-export const Persistent = 
-  () => (
+export const Persistent: StoryObj =  {
+  render: () => (
     <NotificationsProvider autoDismiss={false}>
       <Center>
         <AddNotificationButton />
       </Center>
       <Notifications />
     </NotificationsProvider>
-  );
-  // {
-  //   play: async ({ canvasElement }) => {
-  //     const body = within(canvasElement.ownerDocument.body);
+  ),
+    play: async ({ canvasElement }) => {
+      const body = within(canvasElement.ownerDocument.body);
 
-  //     const button = await body.findByRole("button");
-  //     userEvent.click(button);
-  //   },
-  // }
+      const button = await body.findByRole("button");
+      userEvent.click(button);
+    },
+  
+  }
 
-
-export const MixedDurations = 
-  () => (
+export const MixedDurations: StoryObj = {
+  render: () => (
     <NotificationsProvider>
       <Center>
         <Row gap="1rem">
@@ -117,17 +114,17 @@ export const MixedDurations =
       </Center>
       <Notifications />
     </NotificationsProvider>
-  );
-  // {
-  //   play: async ({ canvasElement }) => {
-  //     const body = within(canvasElement.ownerDocument.body);
+  ),
+  
+    play: async ({ canvasElement }) => {
+      const body = within(canvasElement.ownerDocument.body);
 
-  //     const buttons = await body.findAllByRole("button");
-  //     for (const button of buttons) {
-  //       userEvent.click(button);
-  //     }
-  //   },
-  // }
+      const buttons = await body.findAllByRole("button");
+      for (const button of buttons) {
+        userEvent.click(button);
+      }
+    },
+  }
 
 
 const AddNotificationButton = ({
@@ -205,8 +202,8 @@ const NotificationProgress = ({
   return <LinearProgress progress={1 - progress} height="1px" shape="square" />;
 };
 
-export const Groups = 
-  () => (
+export const Groups: StoryObj = {
+  render: () => (
     <NotificationsProvider
       autoDismiss={{ banners: false }}
       limit={{ banners: 1, snackbars: 3 }}
@@ -222,21 +219,22 @@ export const Groups =
       </Column>
       <Snackbars />
     </NotificationsProvider>
-  );  // {
-  //   play: async ({ canvasElement }) => {
-  //     const body = within(canvasElement.ownerDocument.body);
+  ),
+  
+    play: async ({ canvasElement }) => {
+      const body = within(canvasElement.ownerDocument.body);
 
-  //     const [addBanner, addSnackbar] = await body.findAllByRole("button");
+      const [addBanner, addSnackbar] = await body.findAllByRole("button");
 
-  //     userEvent.click(addBanner);
-  //     const banner = await body.findByTestId("banner");
-  //     expect(banner).toBeInTheDocument();
+      userEvent.click(addBanner);
+      const banner = await body.findByTestId("banner");
+      expect(banner).toBeInTheDocument();
 
-  //     userEvent.click(addSnackbar);
-  //     const snackbar = await body.findByTestId("snackbar");
-  //     expect(snackbar).toBeInTheDocument();
-  //   },
-  // }
+      userEvent.click(addSnackbar);
+      const snackbar = await body.findByTestId("snackbar");
+      expect(snackbar).toBeInTheDocument();
+    },
+  }
 
 
 function useSnackbars() {
