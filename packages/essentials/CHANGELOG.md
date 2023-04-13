@@ -1,5 +1,11 @@
 # @codedazur/essentials
 
+## 0.0.5
+
+### Patch Changes
+
+- [`ab9c16b`](https://github.com/codedazur/toolkit/commit/ab9c16bba5f9976c80f7757dae459ee8050d796f) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - publish package
+
 ## 0.0.4
 
 ### Patch Changes
