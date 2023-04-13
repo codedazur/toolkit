@@ -1,24 +1,29 @@
 import { Text, Center } from "@codedazur/react-components";
 
 import { useContrastPreferences } from "@codedazur/react-preferences";
-import { meta } from "storybook/utilities/meta";
-import { story } from "storybook/utilities/story";
-import docs from "./useContrastPreferences.docs.mdx";
 
-export default meta({
+import docs from "./useContrastPreferences.docs.mdx";
+import { Meta, StoryObj } from "@storybook/react";
+
+const meta: Meta = {
+  title: "Preferences/useContrastPreferences",
   parameters: {
     docs: {
       page: docs,
     },
   },
-});
+};
 
-export const Default = story(() => {
-  const preferedContrast = useContrastPreferences();
+export default meta;
 
-  return (
-    <Center>
-      <Text>User prefers {preferedContrast || "default"} contrast.</Text>
-    </Center>
-  );
-});
+export const Default: StoryObj = {
+  render: function Default() {
+    const preferedContrast = useContrastPreferences();
+
+    return (
+      <Center>
+        <Text>User prefers {preferedContrast || "default"} contrast.</Text>
+      </Center>
+    );
+  },
+};
