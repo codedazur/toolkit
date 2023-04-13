@@ -6,17 +6,21 @@
  * @see https://bost.ocks.org/mike/shuffle
  */
 export function shuffle<T>(array: T[]) {
-  let m = array.length;
-  let t;
-  let i;
+  const arrayCopy = [...array];
+  const arrayLength = arrayCopy.length;
 
-  while (m) {
-    i = Math.floor(Math.random() * m--);
-
-    t = array[m];
-    array[m] = array[i];
-    array[i] = t;
+  if (arrayLength === 0) {
+    return arrayCopy;
   }
 
-  return array;
+  const shuffledArray = [];
+
+  while (arrayCopy.length > 0) {
+    const randomIndex = Math.floor(Math.random() * arrayCopy.length);
+    const removedItem = arrayCopy.splice(randomIndex, 1)[0];
+    shuffledArray.push(removedItem);
+  }
+
+  return shuffledArray;
 }
+

@@ -13,10 +13,11 @@
   "license": "MIT",
   "scripts": {
     "lint": "TIMING=1 eslint \"**/*.ts*\"",
-    "test": "echo \"No tests configured.\"",
     "release": "echo \"No releases configured.\"",
     "build": "tsup index.ts --format esm,cjs --dts",
-    "dev": "tsup index.ts --format esm,cjs --watch"
+    "dev": "tsup index.ts --format esm,cjs --watch",
+    "test": "vitest",
+    "coverage": "vitest run --coverage"
   },
   "devDependencies": {
     "eslint": "^8.26.0",
