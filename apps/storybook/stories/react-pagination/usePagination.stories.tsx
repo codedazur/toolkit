@@ -1,28 +1,30 @@
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
+  Column,
   Row,
   Separate,
   SizedBox,
   Text,
 } from "@codedazur/react-components";
-
-
+import {
+  UsePaginationProps,
+  UsePaginationWithCountProps,
+  UsePaginationWithItemsProps,
+  usePagination,
+} from "@codedazur/react-pagination";
 import { faker } from "@faker-js/faker";
-import { Meta } from "@storybook/react";
+import { Meta, StoryObj } from "@storybook/react";
 import { SymbolButton } from "storybook/components/SymbolButton";
-import { WithCenter } from "storybook/decorators/WithCenter";
 import docs from "./usePagination.docs.mdx";
-import { UsePaginationProps } from "@codedazur/react-pagination";
 
-const meta: Meta<UsePaginationProps<string>> =  {
-  title: 'React-Pagination/usePagination',
+const meta: Meta<UsePaginationProps<string>> = {
+  title: "React-Pagination/usePagination",
   parameters: {
     docs: {
       page: docs,
     },
   },
-  decorators: [WithCenter],
   argTypes: {
     initialPage: { control: { type: "number" } },
     siblings: { control: { type: "number" } },
@@ -37,9 +39,10 @@ const meta: Meta<UsePaginationProps<string>> =  {
 };
 export default meta;
 
-const DefaultStory = (
-  (args) => {
+export const Default: StoryObj<UsePaginationWithCountProps> = {
+  render: function Default(args) {
     const { count, page, setPage, next, previous, range } = usePagination(args);
+
     return (
       <>
         <Row>
@@ -70,82 +73,71 @@ const DefaultStory = (
         {/* <DebugOverlay value={{ count, page, range }} /> */}
       </>
     );
-  }
-  // {
-  //   argTypes: { count: { control: { type: "number" } } },
-  //   args: { count: 9, initialPage: 5 },
-  // }
-);
+  },
+  argTypes: { count: { control: { type: "number" } } },
+  args: { count: 9, initialPage: 5 },
+};
 
-export const Default =  {
-  render: () => {
-    <DefaultStory/>
-  }
-}
+export const WithSiblingsAndBoundaries: StoryObj<UsePaginationWithCountProps> =
+  {
+    render: function WithSiblingsAndBoundariesStory(args) {
+      const { count, page, setPage, next, previous, range } =
+        usePagination(args);
 
- const WithSiblingsAndBoundariesStory =  (args) => {
-    const { count, page, setPage, next, previous, range } = usePagination(args);
-
-    return (
-      <>
-        <Row>
-          <SymbolButton onClick={previous} disabled={page === 1}>
-            <ChevronLeftIcon />
-          </SymbolButton>
+      return (
+        <>
           <Row>
-            <Separate separator={<SymbolButton disabled>…</SymbolButton>}>
-              {range.map((segment, index) => (
-                <Row key={index}>
-                  {segment.map((number) => (
-                    <SymbolButton
-                      key={number}
-                      onClick={() => setPage(number)}
-                      disabled={number === page}
-                    >
-                      {number}
-                    </SymbolButton>
-                  ))}
-                </Row>
-              ))}
-            </Separate>
+            <SymbolButton onClick={previous} disabled={page === 1}>
+              <ChevronLeftIcon />
+            </SymbolButton>
+            <Row>
+              <Separate separator={<SymbolButton disabled>…</SymbolButton>}>
+                {range.map((segment, index) => (
+                  <Row key={index}>
+                    {segment.map((number) => (
+                      <SymbolButton
+                        key={number}
+                        onClick={() => setPage(number)}
+                        disabled={number === page}
+                      >
+                        {number}
+                      </SymbolButton>
+                    ))}
+                  </Row>
+                ))}
+              </Separate>
+            </Row>
+            <SymbolButton onClick={next} disabled={page === count}>
+              <ChevronRightIcon />
+            </SymbolButton>
           </Row>
-          <SymbolButton onClick={next} disabled={page === count}>
-            <ChevronRightIcon />
-          </SymbolButton>
-        </Row>
-        {/* <DebugOverlay value={{ count, page, range }} /> */}
-      </>
-    )
+          {/* <DebugOverlay value={{ count, page, range }} /> */}
+        </>
+      );
+    },
+    argTypes: {
+      count: { control: { type: "number" } },
+    },
+    args: {
+      count: 23,
+      initialPage: 12,
+      siblings: 3,
+      boundary: 2,
+    },
   };
 
-  export const WithSiblingsAndBoundaries =  {
-    render: () => {
-      <WithSiblingsAndBoundariesStory/>
-    }
-  }
-  // {
-  //   argTypes: {
-  //     count: { control: { type: "number" } },
-  //   },
-  //   args: {
-  //     count: 23,
-  //     initialPage: 12,
-  //     siblings: 3,
-  //     boundary: 2,
-  //   },
-  // }
-
-
-const WithItemsStory = (
-  (args) => {
+export const WithItems: StoryObj<UsePaginationWithItemsProps<string>> = {
+  render: function WithItems(args) {
     const { count, page, setPage, next, previous, range, items } =
       usePagination(args);
 
     return (
       <>
-        {items.map((item) => (
-          <Text key={item}>{item}</Text>
-        ))}
+        <Column align="center">
+          {items.map((item) => (
+            <Text key={item}>{item}</Text>
+          ))}
+        </Column>
         <SizedBox height="3rem" />
         <Row>
           <SymbolButton onClick={previous} disabled={page === 1}>
@@ -175,29 +167,20 @@ const WithItemsStory = (
         {/* <DebugOverlay value={{ count, page, items, range }} /> */}
       </>
     );
-  }
-  // {
-  //   argTypes: {
-  //     items: { control: { type: "object" } },
-  //     itemsPerPage: { control: { type: "number" } },
-  //   },
-  //   args: {
-  //     items: Array.from({ length: 25 }).map(() => faker.commerce.productName()),
-  //     itemsPerPage: 3,
-  //     initialPage: 3,
-  //   },
-  // }
-);
+  },
+  argTypes: {
+    items: { control: { type: "object" } },
+    itemsPerPage: { control: { type: "number" } },
+  },
+  args: {
+    items: Array.from({ length: 25 }).map(() => faker.commerce.productName()),
+    itemsPerPage: 3,
+    initialPage: 3,
+  },
+};
 
-
-export const WithItems =  {
-  render: () => {
-    <WithItemsStory/>
-  }
-}
-
-const WithoutRangeStory = (
-  (args) => {
+export const WithoutRange: StoryObj<UsePaginationWithCountProps> = {
+  render: function WithoutRange(args) {
     const { count, page, next, previous } = usePagination(args);
 
     return (
@@ -216,22 +199,13 @@ const WithoutRangeStory = (
         {/* <DebugOverlay value={{ count, page }} /> */}
       </>
     );
-  }
-  // {
-  //   argTypes: { count: { control: { type: "number" } } },
-  //   args: { count: 5, initialPage: 1 },
-  // }
-);
+  },
+  argTypes: { count: { control: { type: "number" } } },
+  args: { count: 5, initialPage: 1 },
+};
 
-
-export const WithoutRange =  {
-  render: () => {
-    <WithoutRangeStory/>
-  }
-}
-
-const WithoutSeparatorStory = (
-  (args) => {
+export const WithoutSeparator: StoryObj<UsePaginationWithCountProps> = {
+  render: function WithoutSeparator(args) {
     const { count, page, setPage, next, previous, range } = usePagination(args);
 
     return (
@@ -262,22 +236,13 @@ const WithoutSeparatorStory = (
         {/* <DebugOverlay value={{ count, page, range }} /> */}
       </>
     );
-  }
-  // {
-  //   argTypes: { count: { control: { type: "number" } } },
-  //   args: {
-  //     count: 9,
-  //     initialPage: 5,
-  //     siblings: 2,
-  //     boundary: 0,
-  //     gapSize: 0,
-  //   },
-  // }
-);
-
-
-export const WithoutSeparator =  {
-  render: () => {
-    <WithoutSeparatorStory/>
-  }
-}
+  },
+  argTypes: { count: { control: { type: "number" } } },
+  args: {
+    count: 9,
+    initialPage: 5,
+    siblings: 2,
+    boundary: 0,
+    gapSize: 0,
+  },
+};

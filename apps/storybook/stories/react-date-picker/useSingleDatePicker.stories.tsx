@@ -2,7 +2,7 @@ import { useSingleDatePicker } from "@codedazur/react-date-picker";
 import { Meta } from "@storybook/react";
 import docs from "./useSingleDatePicker.docs.mdx";
 
-const meta: Meta =  {
+const meta: Meta = {
   title: "React Date Picker/useSingleDatePicker",
   parameters: {
     docs: {

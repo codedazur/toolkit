@@ -23,8 +23,8 @@ import { Button } from "storybook/components/Button";
 
 import docs from "./NotificationsProvider.docs.mdx";
 
-const meta: Meta =  {
-  title: 'react-notifications/NotificationsProvider',
+const meta: Meta = {
+  title: "react-notifications/NotificationsProvider",
   parameters: {
     docs: {
       page: docs,
@@ -33,7 +33,6 @@ const meta: Meta =  {
 };
 
 export default meta;
-
 
 export const Default: StoryObj = {
   render: () => (
@@ -52,11 +51,10 @@ export const Default: StoryObj = {
     const notification = await body.findByTestId("notification");
     expect(notification).toBeInTheDocument();
   },
-  }
-
+};
 
 export const Limited: StoryObj = {
- render:  () => (
+  render: () => (
     <NotificationsProvider limit={3}>
       <Center>
         <AddNotificationButton />
@@ -64,21 +62,20 @@ export const Limited: StoryObj = {
       <Notifications />
     </NotificationsProvider>
   ),
-    play: async ({ canvasElement }) => {
-      const body = within(canvasElement.ownerDocument.body);
+  play: async ({ canvasElement }) => {
+    const body = within(canvasElement.ownerDocument.body);
 
-      const button = await body.findByRole("button");
-      for (let i = 0; i < 4; i++) {
-        userEvent.click(button);
-      }
+    const button = await body.findByRole("button");
+    for (let i = 0; i < 4; i++) {
+      userEvent.click(button);
+    }
 
-      const notifications = await body.findAllByTestId("notification");
-      expect(notifications.length).toEqual(3);
-    },
-  }
+    const notifications = await body.findAllByTestId("notification");
+    expect(notifications.length).toEqual(3);
+  },
+};
 
-
-export const Persistent: StoryObj =  {
+export const Persistent: StoryObj = {
   render: () => (
     <NotificationsProvider autoDismiss={false}>
       <Center>
@@ -87,14 +84,13 @@ export const Persistent: StoryObj =  {
       <Notifications />
     </NotificationsProvider>
   ),
-    play: async ({ canvasElement }) => {
-      const body = within(canvasElement.ownerDocument.body);
+  play: async ({ canvasElement }) => {
+    const body = within(canvasElement.ownerDocument.body);
 
-      const button = await body.findByRole("button");
-      userEvent.click(button);
-    },
-  
-  }
+    const button = await body.findByRole("button");
+    userEvent.click(button);
+  },
+};
 
 export const MixedDurations: StoryObj = {
   render: () => (
@@ -115,17 +111,16 @@ export const MixedDurations: StoryObj = {
       <Notifications />
     </NotificationsProvider>
   ),
-  
-    play: async ({ canvasElement }) => {
-      const body = within(canvasElement.ownerDocument.body);
 
-      const buttons = await body.findAllByRole("button");
-      for (const button of buttons) {
-        userEvent.click(button);
-      }
-    },
-  }
+  play: async ({ canvasElement }) => {
+    const body = within(canvasElement.ownerDocument.body);
 
+    const buttons = await body.findAllByRole("button");
+    for (const button of buttons) {
+      userEvent.click(button);
+    }
+  },
+};
 
 const AddNotificationButton = ({
   group,
@@ -220,22 +215,21 @@ export const Groups: StoryObj = {
       <Snackbars />
     </NotificationsProvider>
   ),
-  
-    play: async ({ canvasElement }) => {
-      const body = within(canvasElement.ownerDocument.body);
 
-      const [addBanner, addSnackbar] = await body.findAllByRole("button");
+  play: async ({ canvasElement }) => {
+    const body = within(canvasElement.ownerDocument.body);
 
-      userEvent.click(addBanner);
-      const banner = await body.findByTestId("banner");
-      expect(banner).toBeInTheDocument();
+    const [addBanner, addSnackbar] = await body.findAllByRole("button");
 
-      userEvent.click(addSnackbar);
-      const snackbar = await body.findByTestId("snackbar");
-      expect(snackbar).toBeInTheDocument();
-    },
-  }
+    userEvent.click(addBanner);
+    const banner = await body.findByTestId("banner");
+    expect(banner).toBeInTheDocument();
 
+    userEvent.click(addSnackbar);
+    const snackbar = await body.findByTestId("snackbar");
+    expect(snackbar).toBeInTheDocument();
+  },
+};
 
 function useSnackbars() {
   const { entries, ...notifications } = useNotifications("snackbars");
