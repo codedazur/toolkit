@@ -1,8 +1,8 @@
 /**
- * The in-place Fisher-Yates shuffle algorithm.
+ * The Fisher-Yates shuffle algorithm.
  *
  * @param array The array that will be shuffled.
- * @returns The input array, now shuffled.
+ * @returns A shuffled clone of the input array.
  * @see https://bost.ocks.org/mike/shuffle
  */
 export function shuffle<T>(array: T[]) {
