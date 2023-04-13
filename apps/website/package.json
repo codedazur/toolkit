@@ -28,7 +28,7 @@
     "@types/node": "^18.11.9",
     "@types/react": "18.0.29",
     "@types/styled-components": "^5.1.26",
-    "eslint": "8.36.0",
+    "eslint": "8.38.0",
     "@codedazur/eslint-config": "*",
     "next-transpile-modules": "10.0.0",
     "@codedazur/tsconfig": "*",
