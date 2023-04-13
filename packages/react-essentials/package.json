@@ -12,7 +12,8 @@
   },
   "license": "MIT",
   "scripts": {
-    "test": "echo \"No tests configured.\"",
+    "test": "vitest",
+    "coverage": "vitest run --coverage",
     "release": "echo \"No releases configured.\"",
     "build": "tsup index.ts --format esm,cjs --dts",
     "dev": "tsup index.ts --format esm,cjs --watch --external react"
@@ -24,12 +25,15 @@
     "react": ">=16.8.0"
   },
   "devDependencies": {
+    "@codedazur/eslint-config": "*",
+    "@codedazur/tsconfig": "*",
+    "@testing-library/dom": "9.2.0",
+    "@testing-library/react": "alpha",
     "@types/react": "^18.0.24",
     "@types/react-dom": "^18.0.8",
     "eslint": "^8.26.0",
-    "@codedazur/eslint-config": "*",
+    "jsdom": "^21.1.1",
     "react": "^18.2.0",
-    "@codedazur/tsconfig": "*",
     "typescript": "^4.8.4 || ^5.0.0"
   }
 }
