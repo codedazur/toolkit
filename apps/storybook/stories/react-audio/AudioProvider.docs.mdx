@@ -1,1 +1,12 @@
-# AudioProvider
+
+
+import { Canvas, Meta, Story } from '@storybook/blocks';
+
+import * as AudioProviderStories from './AudioProvider.stories';
+
+<Meta of={AudioProviderStories} />
+
+<Canvas of={AudioProviderStories.Default} />
+
+
+<Canvas of={AudioProviderStories.WithVolumeControls} />

@@ -1,1 +1,17 @@
-# useParallax
+import { Canvas, Meta, Story } from '@storybook/blocks';
+
+import * as useParallaxStories from './useParallax.stories';
+
+<Meta of={useParallaxStories} />
+
+<Canvas of={useParallaxStories.Default} />
+
+<Canvas of={useParallaxStories.NonLinear} />
+
+<Canvas of={useParallaxStories.Hero} />
+
+<Canvas of={useParallaxStories.Diorama} />
+
+<Canvas of={useParallaxStories.Dynamic} />
+
+

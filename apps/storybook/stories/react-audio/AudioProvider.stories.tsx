@@ -33,36 +33,38 @@ import {
   timecode,
   VolumeUpIcon,
 } from "@codedazur/react-components";
+import { Meta, StoryObj } from "@storybook/react";
 import { FunctionComponent } from "react";
 import { Bar } from "storybook/components/Bar";
 import { List } from "storybook/components/List";
 import { WithCenter } from "storybook/decorators/WithCenter";
-import { meta } from "storybook/utilities/meta";
-import { story } from "storybook/utilities/story";
 import distantWorldsIi from "./artworks/distant-worlds-ii.jpg";
 import distantWorlds from "./artworks/distant-worlds.jpg";
 import seaOfStars from "./artworks/sea-of-stars.jpg";
-import docs from "./AudioProvider.docs.mdx";
 import alienated from "./tracks/alienated.mp3";
 import meteorites from "./tracks/meteorites.mp3";
 import tabulaRasa from "./tracks/tabula-rasa.mp3";
+import docs from "./AudioProvider.docs.mdx";
 
-export default meta({
+const meta: Meta =  {
+  title: 'React-Audio/AudioProvider',
   decorators: [WithCenter],
   parameters: {
     docs: {
       page: docs,
     },
   },
-});
+};
 
-export const Default = story(() => (
+export default meta;
+
+export const Default: StoryObj ={  render: () => (
   <AudioProvider tracks={[meteorites]}>
     <StateControls />
     <TrackAttributionOverlay />
     <AudioDebugOverlay isPlaying />
   </AudioProvider>
-));
+)};
 
 const StateControls = () => (
   <Bar>
@@ -95,7 +97,7 @@ const StopButton = () => {
   );
 };
 
-export const WithVolumeControls = story(() => (
+export const WithVolumeControls = () => (
   <AudioProvider tracks={[meteorites]}>
     <Row gap="1rem">
       <StateControls />
@@ -104,7 +106,7 @@ export const WithVolumeControls = story(() => (
     <TrackAttributionOverlay />
     <AudioDebugOverlay isPlaying volume />
   </AudioProvider>
-));
+);
 
 const VolumeControls = () => (
   <Bar>
@@ -123,7 +125,7 @@ const VolumeSlider = () => {
   );
 };
 
-export const WithSeekControls = story(() => (
+export const WithSeekControls = () => (
   <AudioProvider tracks={[meteorites]}>
     <Column gap="1rem" align="center">
       <Row gap="1rem">
@@ -135,7 +137,7 @@ export const WithSeekControls = story(() => (
     <TrackAttributionOverlay />
     <AudioDebugOverlay isPlaying volume time duration />
   </AudioProvider>
-));
+);
 
 const SeekControls = () => (
   <Bar>
@@ -169,7 +171,7 @@ const Duration = () => {
   return <Text>{timecode.minutes(duration)}</Text>;
 };
 
-export const WithDynamicTrack = story(() => (
+export const WithDynamicTrack = () => (
   <AudioProvider>
     <Column gap="5rem" align="center">
       <SelectTrack tracks={[meteorites, alienated, tabulaRasa]} />
@@ -184,7 +186,7 @@ export const WithDynamicTrack = story(() => (
     <TrackAttributionOverlay />
     <AudioDebugOverlay track isPlaying volume time duration />
   </AudioProvider>
-));
+);
 
 const SelectTrack = ({ tracks }: { tracks: string[] }) => (
   <Column gap="1rem">
@@ -211,7 +213,7 @@ const TrackRadioButton = ({ track }: { track: string }) => {
   );
 };
 
-export const WithPlaylist = story(() => (
+export const WithPlaylist = () => (
   <AudioProvider tracks={[meteorites, alienated, tabulaRasa]}>
     <Column gap="5rem" align="center">
       <TrackList />
@@ -227,7 +229,7 @@ export const WithPlaylist = story(() => (
     <TrackAttributionOverlay />
     <AudioDebugOverlay tracks cursor isPlaying volume time duration />
   </AudioProvider>
-));
+);
 
 const TrackList = () => {
   const { cursor, setCursor, tracks, isPlaying, pause, play } =
@@ -345,7 +347,7 @@ const myTracks: MyTrack[] = [
   },
 ];
 
-export const WithMetadata = story(() => (
+export const WithMetadata = () => (
   <AudioProvider tracks={myTracks}>
     <FullscreenArtwork />
     <Column gap="5rem" align="center">
@@ -365,7 +367,7 @@ export const WithMetadata = story(() => (
     <TrackAttributionOverlay />
     <AudioDebugOverlay tracks cursor isPlaying volume time duration />
   </AudioProvider>
-));
+);
 
 const FullscreenArtwork = () => {
   const { track } = useAudio<MyTrack>();
