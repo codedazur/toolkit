@@ -1,5 +1,15 @@
 # @codedazur/react-preferences
 
+## 0.0.5
+
+### Patch Changes
+
+- [#11](https://github.com/codedazur/toolkit/pull/11) [`e171a70`](https://github.com/codedazur/toolkit/commit/e171a70ff328416fda453f9343aae056aac716d4) Thanks [@ikbennadine](https://github.com/ikbennadine)! - Added user preferences-related hooks, to check if a user has a preference for reduced motion, increased contrast, or a color scheme:
+
+  - useMotionPreferences
+  - useContrastPreferences
+  - useColorSchemePreferences
+
 ## 0.0.4
 
 ### Patch Changes
