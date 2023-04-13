@@ -21,6 +21,6 @@ describe('clamp()', () => {
   });
 
   it('should throw an error if min is equal to max', () => {
-    expect(() => clamp(5, 10, 10)).toThrowError("The minimum value must be less than the maximum value.")
+    expect(() => clamp(5, 10, 10)).toThrowError("The minimum value must not be larger than the maximum value.")
   });
 });
