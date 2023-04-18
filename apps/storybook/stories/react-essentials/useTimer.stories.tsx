@@ -18,7 +18,7 @@ import {
 import { useTimer } from "@codedazur/react-essentials";
 import { action } from "@storybook/addon-actions";
 import { Meta } from "@storybook/react";
-import { Bar } from "storybook/components/Bar";
+import { Bar } from "@apps/storybook/components/Bar";
 import styled from "styled-components";
 import docs from "./useTimer.docs.mdx";
 

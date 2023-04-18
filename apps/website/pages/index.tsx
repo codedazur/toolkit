@@ -4,7 +4,7 @@ import {
   ConstrainedBox,
   Page,
 } from "@codedazur/react-components";
-import { Logo } from "website/components/Logo";
+import { Logo } from "@apps/website/components/Logo";
 
 export default function Home() {
   return (

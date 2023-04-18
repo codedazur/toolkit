@@ -19,7 +19,7 @@ import { expect } from "@storybook/jest";
 import { Meta, StoryObj } from "@storybook/react";
 import { userEvent, within } from "@storybook/testing-library";
 import { FunctionComponent, ReactNode } from "react";
-import { Button } from "storybook/components/Button";
+import { Button } from "@apps/storybook/components/Button";
 
 import docs from "./NotificationsProvider.docs.mdx";
 

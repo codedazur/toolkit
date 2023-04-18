@@ -15,7 +15,7 @@ import {
 } from "@codedazur/react-pagination";
 import { faker } from "@faker-js/faker";
 import { Meta, StoryObj } from "@storybook/react";
-import { SymbolButton } from "storybook/components/SymbolButton";
+import { SymbolButton } from "@apps/storybook/components/SymbolButton";
 import docs from "./usePagination.docs.mdx";
 
 const meta: Meta<UsePaginationProps<string>> = {

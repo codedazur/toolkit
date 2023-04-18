@@ -35,9 +35,9 @@ import {
 } from "@codedazur/react-components";
 import { Meta, StoryObj } from "@storybook/react";
 import { FunctionComponent } from "react";
-import { Bar } from "storybook/components/Bar";
-import { List } from "storybook/components/List";
-import { WithCenter } from "storybook/decorators/WithCenter";
+import { Bar } from "@apps/storybook/components/Bar";
+import { List } from "@apps/storybook/components/List";
+import { WithCenter } from "@apps/storybook/decorators/WithCenter";
 import docs from "./AudioProvider.docs.mdx";
 import distantWorldsIi from "./artworks/distant-worlds-ii.jpg";
 import distantWorlds from "./artworks/distant-worlds.jpg";
