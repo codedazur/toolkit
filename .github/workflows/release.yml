@@ -12,19 +12,28 @@ jobs:
     name: Publish
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Setup
+      - name: Setup Node
         uses: actions/setup-node@v3
         with:
           node-version: 16
 
-      - name: Publish
+      - name: Install Dependencies
+        run: |
+          npm config set //registry.npmjs.org/:_authToken ${{ secrets.NPM_TOKEN }}
+          npm ci
+
+      - name: Build Packages
+        run: |
+          npm run build:packages
+
+      - name: Commit or Publish
         uses: changesets/action@v1
         with:
-          publish: npm run publish-packages
-          commit: "ci(changesets): version packages"
+          commit: "chore(changesets): release packages"
+          publish: npm run publish
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -38,16 +47,16 @@ jobs:
       cancel-in-progress: true
 
     steps:
-      - name: Checkout
+      - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Setup
+      - name: Setup Node
         uses: actions/setup-node@v3
         with:
           node-version: 16
           cache: npm
 
-      - name: Install
+      - name: Install Deoendencies
         run: |
           npm config set //registry.npmjs.org/:_authToken ${{ secrets.NPM_TOKEN }}
           npm ci
@@ -59,7 +68,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ vars.AWS_REGION }}
 
-      - name: Deploy
+      - name: Deploy Apps
         run: |
           export NODE_OPTIONS="--max_old_space_size=4096"
           npm run deploy

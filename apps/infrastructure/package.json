@@ -1,5 +1,5 @@
 {
-  "name": "infrastructure",
+  "name": "@apps/infrastructure",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -13,8 +13,8 @@
   "dependencies": {
     "@codedazur/cdk-static-site": "*",
     "@codedazur/essentials": "*",
-    "@codedazur/storybook": "*",
-    "@codedazur/website": "*",
+    "@apps/storybook": "*",
+    "@apps/website": "*",
     "aws-cdk-lib": "^2.50.0",
     "constructs": "^10.1.147"
   },

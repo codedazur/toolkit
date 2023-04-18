@@ -14,20 +14,22 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "turbo run build",
     "dev": "turbo run dev --parallel",
+    "storybook": "turbo run dev --filter @apps/storybook",
+    "website": "turbo run dev --filter @apps/website",
+    "audit": "npm audit --omit-dev",
     "lint": "turbo run lint",
     "test": "turbo run test",
-    "audit": "npm audit --omit-dev",
+    "check": "turbo run lint test",
+    "check:apps": "npm run check -- --filter=@apps/*",
+    "check:packages": "npm run check -- --filter=@codedazur/*",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "storybook": "turbo run dev --filter storybook",
-    "website": "npm turbo run dev --filter website",
-    "release": "turbo run release --filter=@codedazur/*",
-    "deploy": "turbo run deploy --filter=infrastructure",
-    "destroy": "turbo run destroy --filter=infrastructure",
-    "lint&test": "turbo run lint test --filter=@codedazur/*",
-    "build-packages": "turbo run build --filter=@codedazur/*",
-    "publish-packages": "changeset publish"
+    "build": "turbo run build",
+    "build:apps": "turbo run build --filter=@apps/*",
+    "build:packages": "turbo run build --filter=@codedazur/*",
+    "deploy": "turbo run deploy --filter=@apps/infrastructure",
+    "destroy": "turbo run destroy --filter=@apps/infrastructure",
+    "publish": "changeset publish"
   },
   "devDependencies": {
     "@changesets/changelog-github": "0.4.8",

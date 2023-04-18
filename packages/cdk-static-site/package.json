@@ -6,8 +6,7 @@
   "license": "MIT",
   "scripts": {
     "lint": "TIMING=1 eslint \"**/*.ts*\"",
-    "test": "echo \"No tests configured.\"",
-    "release": "echo \"No releases configured.\""
+    "test": "echo \"No tests configured.\""
   },
   "peerDependencies": {
     "aws-cdk-lib": ">=2",
