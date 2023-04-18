@@ -17,6 +17,7 @@
     "@codedazur/react-notifications": "*",
     "@codedazur/react-pagination": "*",
     "@codedazur/react-parallax": "*",
+    "@codedazur/react-preferences": "*",
     "@faker-js/faker": "^7.6.0",
     "@storybook/jest": "^0.0.11-next.1 || ^0.1.0",
     "@types/styled-components": "^5.1.26",

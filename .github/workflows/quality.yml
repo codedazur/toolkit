@@ -6,6 +6,7 @@ on:
 
 jobs:
   quality:
+    name: Check Quality
     runs-on: ubuntu-latest
 
     concurrency:
