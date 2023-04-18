@@ -9,6 +9,5 @@
     "inlineSources": true,
     "inlineSourceMap": true,
     "experimentalDecorators": true
-  },
-  "exclude": ["node_modules", "cdk.out"]
+  }
 }
