@@ -1,5 +1,11 @@
 # tsconfig
 
+## 0.0.4
+
+### Patch Changes
+
+- [`2b3ea1b`](https://github.com/codedazur/toolkit/commit/2b3ea1be4e1599e6fea360297397824ceeac7282) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Remove outdated ts-node configuration for Storybook.
+
 ## 0.0.3
 
 ### Patch Changes
