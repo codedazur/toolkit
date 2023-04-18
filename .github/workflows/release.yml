@@ -8,27 +8,19 @@ on:
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
-  release-packages:
-    name: Release packages
+  publish:
+    name: Publish
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repo
+      - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Setup Node.js 16
+      - name: Setup
         uses: actions/setup-node@v3
         with:
           node-version: 16
 
-      - name: Install Dependencies
-        run: |
-          npm config set //registry.npmjs.org/:_authToken ${{ secrets.NPM_TOKEN }}
-          npm ci
-      - name: Build Packages
-        run: |
-          npm run build-packages
-
-      - name: Create Release Pull Request
+      - name: Publish
         uses: changesets/action@v1
         with:
           publish: npm run publish-packages
@@ -37,8 +29,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-  deploy-apps:
-    name: Deploy Storybook and Website
+  deploy:
+    name: Deploy
     runs-on: ubuntu-latest
 
     concurrency:
@@ -49,7 +41,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Setup Node
+      - name: Setup
         uses: actions/setup-node@v3
         with:
           node-version: 16

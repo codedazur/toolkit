@@ -13,10 +13,10 @@
   "dependencies": {
     "@codedazur/cdk-static-site": "*",
     "@codedazur/essentials": "*",
+    "@codedazur/storybook": "*",
+    "@codedazur/website": "*",
     "aws-cdk-lib": "^2.50.0",
-    "constructs": "^10.1.147",
-    "storybook": "*",
-    "website": "*"
+    "constructs": "^10.1.147"
   },
   "devDependencies": {
     "aws-cdk": "^2.50.0",
