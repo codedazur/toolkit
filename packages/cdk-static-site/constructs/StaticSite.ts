@@ -227,7 +227,7 @@ export class StaticSite extends Construct {
 						statusCode: 401,
 						statusDescription: "Unauthorized",
 						headers: {
-							"WWW-Authenticate": {
+							"www-authenticate": {
 								value: "Basic",
 							},
 						},
@@ -268,23 +268,23 @@ export class StaticSite extends Construct {
   protected getSecurityHeadersCode() {
     return FunctionCode.fromInline(/* js */ `
 			function securityHeaders(event, next) {
-				event.response.headers["Strict-Transport-Security"] = {
+				event.response.headers["strict-transport-security"] = {
           value: "max-age=63072000; includeSubDomains; preload",
         };
 
         /**
          * @todo Research CSP and define a good default.
          */
-        // event.response.headers["Content-Security-Policy"] = {
+        // event.response.headers["content-security-policy"] = {
         //   value:
         //     "default-src 'self'; img-src *; media-src *; frame-src *; font-src *
         // };
 
-        event.response.headers["X-Content-Type-Options"] = {
+        event.response.headers["x-content-type-options"] = {
           value: "nosniff",
         };
 
-        event.response.headers["X-Frame-Options"] = {
+        event.response.headers["x-frame-options"] = {
           value: "SAMEORIGIN",
         };
 
