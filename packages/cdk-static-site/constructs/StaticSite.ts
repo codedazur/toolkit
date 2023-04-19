@@ -165,7 +165,7 @@ export class StaticSite extends Construct {
     }
 
     return new CloudFrontFunction(this, "ViewerRequestFunction", {
-      code: this.getMiddlewareCode(handlers),
+      code: this.getMiddlewareCode(handlers, "request"),
     });
   }
 
@@ -180,7 +180,7 @@ export class StaticSite extends Construct {
     }
 
     return new CloudFrontFunction(this, "ViewerResponseFunction", {
-      code: this.getMiddlewareCode(handlers),
+      code: this.getMiddlewareCode(handlers, "response"),
     });
   }
 
@@ -188,7 +188,10 @@ export class StaticSite extends Construct {
    * @todo @bug The `complete` function should return `event.response` when it
    * is used as a viewerResponse function.
    */
-  protected getMiddlewareCode(handlers: FunctionCode[]) {
+  protected getMiddlewareCode(
+    handlers: FunctionCode[],
+    returnObject: "request" | "response"
+  ) {
     return FunctionCode.fromInline(/* js */ `
 			function handler(event) {
 				return chain(event, [
@@ -202,7 +205,7 @@ export class StaticSite extends Construct {
 			}
 
 			function complete(event) {
-				return event.request;
+				return event.${returnObject};
 			}
 		`);
   }
@@ -224,7 +227,7 @@ export class StaticSite extends Construct {
 						statusCode: 401,
 						statusDescription: "Unauthorized",
 						headers: {
-							"www-authenticate": {
+							"WWW-Authenticate": {
 								value: "Basic",
 							},
 						},
@@ -262,37 +265,27 @@ export class StaticSite extends Construct {
 		`);
   }
 
-  /**
-   * @todo Decide if and how we want to include this by default. What if someone
-   * _does_ want their site to be loaded in an iFrame? We could add some
-   * optional props of course, such as `distribution.xFrameOptions: string` or
-   * something like that.
-   */
   protected getSecurityHeadersCode() {
     return FunctionCode.fromInline(/* js */ `
 			function securityHeaders(event, next) {
-				event.response.headers["strict-transport-security"] = {
-          value: "max-age=63072000; includeSubdomains; preload",
+				event.response.headers["Strict-Transport-Security"] = {
+          value: "max-age=63072000; includeSubDomains; preload",
         };
 
         /**
-         * @todo I believe this header is way too strict. Make it better.
+         * @todo Research CSP and define a good default.
          */
-        // event.response.headers["content-security-policy"] = {
+        // event.response.headers["Content-Security-Policy"] = {
         //   value:
-        //     "default-src 'none'; img-src 'self'; script-src 'self'; style-src 'self'; object-src 'none'",
+        //     "default-src 'self'; img-src *; media-src *; frame-src *; font-src *
         // };
 
-        event.response.headers["x-content-type-options"] = {
+        event.response.headers["X-Content-Type-Options"] = {
           value: "nosniff",
         };
 
-        event.response.headers["x-frame-options"] = {
-          value: "DENY",
-        };
-
-        event.response.headers["x-xss-protection"] = {
-          value: "1; mode=block",
+        event.response.headers["X-Frame-Options"] = {
+          value: "SAMEORIGIN",
         };
 
         return next(event);
