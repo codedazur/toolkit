@@ -1,0 +1,38 @@
+import { Canvas, Meta, Story } from "@storybook/blocks";
+
+import * as useDeltaStories from "./useDelta.stories";
+
+<Meta of={useDeltaStories} />
+
+<Canvas of={useDeltaStories.Default} />
+
+# useDelta
+
+Returns the value of the delta state.
+
+## Usage
+
+```ts
+import { useState } from "react";
+import { useDelta } from "@codedazur/react-essentials";
+
+export function Demo() {
+  const [count, setCount] = useState(0);
+  const delta = useDelta(count);
+
+  return (
+    <div>
+      <div>Count: {count}</div>
+      <div>Delta: {delta}</div>
+      <button onClick={() => setCount((count) => count - 1)}>-</button>
+      <button onClick={() => setCount((count) => count + 1)}>+</button>
+    </div>
+  );
+}
+```
+
+## Type Declarations
+
+```ts
+declare function useDelta<T>(value: T): T | undefined;
+```

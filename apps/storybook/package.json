@@ -24,7 +24,8 @@
     "color": "^4.2.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "styled-components": "^5.3.6"
+    "styled-components": "^5.3.6",
+    "yaml": "^2.2.2"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.20.2",

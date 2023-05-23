@@ -35,7 +35,6 @@ export const useUpdateLoop = ({
   const scaledDeltaTime = useRef<number>();
   const scaledElapsedTime = useRef<number>();
   const checkTime = useRef<number>();
-  const averageDuration = useRef<number>();
   const timeScaleRef = useRef<number>(timeScale);
   const targetIntervalRef = useRef<number>();
 
@@ -83,9 +82,6 @@ export const useUpdateLoop = ({
           ? time.current - previousTime.current
           : 0;
         elapsedTime.current = (elapsedTime.current ?? 0) + deltaTime.current;
-        averageDuration.current = elapsedTime
-          ? (elapsedTime.current ?? 0) / frame.current
-          : undefined;
 
         scaledDeltaTime.current = deltaTime.current * timeScaleRef.current;
         scaledElapsedTime.current =
@@ -95,9 +91,9 @@ export const useUpdateLoop = ({
           index: frame.current ?? 0,
           time: scaledElapsedTime.current ?? 0,
           deltaTime: scaledDeltaTime.current ?? 0,
-          fps: averageDuration.current
-            ? 1000 / averageDuration.current
-            : undefined,
+          fps: scaledDeltaTime.current
+            ? Math.round(1000 / scaledDeltaTime.current)
+            : 0,
         });
       }
 
@@ -123,7 +119,6 @@ export const useUpdateLoop = ({
   const _reset = useCallback(() => {
     frame.current = undefined;
     elapsedTime.current = undefined;
-    averageDuration.current = undefined;
     checkTime.current = undefined;
   }, []);
 

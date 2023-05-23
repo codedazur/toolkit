@@ -1,5 +1,5 @@
 import { Button, Column, Row } from "@codedazur/react-components";
-import { usePrevious } from "@codedazur/react-essentials";
+import { useDelta } from "@codedazur/react-essentials";
 import { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
 import { DebugOverlay } from "../../components/DebugOverlay";
@@ -7,7 +7,7 @@ import { Monospace } from "../../components/Monospace";
 import docs from "./usePrevious.docs.mdx";
 
 const meta: Meta = {
-  title: "react-essentials/usePrevious",
+  title: "react-essentials/useDelta",
   parameters: {
     docs: {
       page: docs,
@@ -19,19 +19,19 @@ export default meta;
 
 export const Default: StoryObj = {
   render: function Default() {
-    const [count, setCount] = useState(0);
-    const previousCount = usePrevious(count);
+    const [value, setValue] = useState(0);
+    const delta = useDelta(value);
 
     return (
       <>
         <Column gap="1rem">
-          <Monospace>count: {count}</Monospace>
+          <Monospace>value: {value}</Monospace>
           <Row gap="1rem">
-            <Button onClick={() => setCount((count) => count - 1)}>-</Button>
-            <Button onClick={() => setCount((count) => count + 1)}>+</Button>
+            <Button onClick={() => setValue((count) => count - 1)}>-</Button>
+            <Button onClick={() => setValue((count) => count + 1)}>+</Button>
           </Row>
         </Column>
-        <DebugOverlay value={{ usePrevious: previousCount }} />
+        <DebugOverlay value={{ useDelta: delta }} />
       </>
     );
   },

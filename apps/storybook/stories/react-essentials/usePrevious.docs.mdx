@@ -1,21 +1,20 @@
-import { Canvas, Meta, Story } from '@storybook/blocks';
+import { Canvas, Meta, Story } from "@storybook/blocks";
 
-import * as usePreviousStories from './usePrevious.stories';
+import * as usePreviousStories from "./usePrevious.stories";
 
 <Meta of={usePreviousStories} />
 
 <Canvas of={usePreviousStories.Default} />
-
 
 # usePrevious
 
 Returns the value of the previous state.
 
 ## Usage
-    
-```js
-import { useState } from 'react'
-import { usePrevious } from '@codedazur/react-essentials'
+
+```ts
+import { useState } from "react";
+import { usePrevious } from "@codedazur/react-essentials";
 
 export function Demo() {
   const [count, setCount] = useState(0);
@@ -25,15 +24,15 @@ export function Demo() {
     <div>
       <div>Before: {previousCount}</div>
       <div>Now: {count}</div>
-      <button onClick={() => setCount((count) => count + 1)}>-</button>
+      <button onClick={() => setCount((count) => count - 1)}>-</button>
       <button onClick={() => setCount((count) => count + 1)}>+</button>
     </div>
-  )
+  );
 }
 ```
 
 ## Type Declarations
 
-```js
+```ts
 declare function usePrevious<T>(value: T): T | undefined;
-````
+```
