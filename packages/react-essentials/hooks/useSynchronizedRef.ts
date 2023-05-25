@@ -1,24 +1,22 @@
 import { RefObject, useEffect, useRef } from "react";
 
 /**
- * 
- * | Hook            | Mutable reference? | Re-renders on value change? | Synchronizes value changes? |
-| ---------------| ------------------| ---------------------------| ---------------------------|
-| `useRef`        | Yes               | No                         | No                         |
-| `useState`      | Yes               | Yes                        | No                         |
-| `useSynchronizedRef` | Yes           | No                         | Yes                        |
-
-Comparison to useRef and useState
-The useSynchronizedRef hook is similar to the useRef hook in that it allows you to 
-create a mutable reference that persists across re-renders of a component. 
-However, it also includes an useEffect hook that synchronizes the reference with a given value whenever that value changes.
-
- The main difference between useSynchronizedRef and useState is that
- useSynchronizedRef doesn't trigger a re-render when the value changes, while useState does. 
- When using useSynchronizedRef, you need to manually trigger a re-render by calling setState or by changing a prop passed to the component.
- * 
- * @param value it can be any value that useRef can hold 
- * @returns returns a ref object with a current property that is synchronized with the value passed in
+ * The `useSynchronizedRef` hook takes a variable and creates a reference to it
+ * that it updates whenever a re-render occurs, without itself triggering a
+ * re-render for this update.
+ *
+ * This is useful when you want to use a reactive variable in an effect without
+ * triggering that effect when the value of this variable changes, because you
+ * won't need to add the variable to the effect's dependency array.
+ *
+ * | Hook                 | Mutable? | Triggers re-renders? | Updates value? |
+ * | -------------------- | -------- | -------------------- | -------------- |
+ * | `useRef`             | Yes      | No                   | No             |
+ * | `useState`           | Yes      | Yes                  | No             |
+ * | `useSynchronizedRef` | Yes      | No                   | Yes            |
+ *
+ * @param value The variable to synchronize.
+ * @returns A reference to the latest value of the variable.
  */
 
 export function useSynchronizedRef<T>(value: T): RefObject<T> {
