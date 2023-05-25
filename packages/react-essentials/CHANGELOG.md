@@ -1,5 +1,13 @@
 # @codedazur/react-essentials
 
+## 0.0.3
+
+### Patch Changes
+
+- [#90](https://github.com/codedazur/toolkit/pull/90) [`e354ec0`](https://github.com/codedazur/toolkit/commit/e354ec09fe959cbdfe6325abf18e5aa9745b50ec) Thanks [@sayinserdar](https://github.com/sayinserdar)! - useDelta: add jsdoc and explanation
+
+  useSynchronizedRef: add jsdoc and explanation
+
 ## 0.0.2
 
 ### Patch Changes
