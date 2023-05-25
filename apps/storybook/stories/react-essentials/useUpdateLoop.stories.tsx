@@ -42,7 +42,7 @@ const meta: Meta<UseUpdateLoopArgs> = {
 export default meta;
 
 export const Default: StoryObj<UseUpdateLoopArgs> = {
-  render: (args) => {
+  render: function Default(args) {
     const [frame, setFrame] = useState<Frame>();
 
     const { status, start, pause, stop, isUpdating } = useUpdateLoop({
@@ -80,7 +80,7 @@ export const Default: StoryObj<UseUpdateLoopArgs> = {
 };
 
 export const WithAnimation: StoryObj<UseUpdateLoopArgs> = {
-  render: (args) => {
+  render: function WithAnimation(args) {
     const ref = useRef<HTMLDivElement>(null);
 
     const { status, start, pause, stop, isUpdating } = useUpdateLoop({

@@ -40,7 +40,7 @@ export const Default = () => {
 };
 
 export const WithScrollView: StoryObj = {
-  render: () => {
+  render: function WithScrollView() {
     const ref = useRef<HTMLDivElement>(null);
     const scroll = useScroll(ref);
 
@@ -57,7 +57,7 @@ export const WithScrollView: StoryObj = {
 };
 
 export const WithControls: StoryObj = {
-  render: () => {
+  render: function WithControls() {
     const ref = useRef<HTMLDivElement>(null);
 
     const scroll = useScroll(ref);

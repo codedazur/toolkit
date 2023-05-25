@@ -70,7 +70,7 @@ export function useTimer(callback: () => void, duration: number) {
   };
 }
 
-function useTimerProgress(
+export function useTimerProgress(
   timer: Timer,
   options: { targetFps?: number; immediately?: boolean } = {}
 ) {

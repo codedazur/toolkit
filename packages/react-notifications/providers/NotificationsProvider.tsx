@@ -1,5 +1,5 @@
 import { revalueObject, Timer } from "@codedazur/essentials";
-import { useTimerProgress as timerProgressHook } from "@codedazur/react-essentials";
+import { useTimerProgress } from "@codedazur/react-essentials";
 import {
   createContext,
   FunctionComponent,
@@ -191,7 +191,7 @@ export const NotificationsProvider: FunctionComponent<
 
       const useProgress = timer
         ? function useProgress(options: { targetFps?: number } = {}) {
-            return timerProgressHook(timer, {
+            return useTimerProgress(timer, {
               ...options,
               immediately: !!autoDismiss,
             });
