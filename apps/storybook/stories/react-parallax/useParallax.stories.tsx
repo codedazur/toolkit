@@ -22,7 +22,7 @@ import layerFive from "./diorama/layer-five.png";
 import layerSix from "./diorama/layer-six.png";
 
 const meta: Meta = {
-  title: "React Parallax/useParallax",
+  title: "react-parallax/useParallax",
   parameters: {
     layout: "fullscreen",
     docs: {

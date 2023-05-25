@@ -1,39 +1,42 @@
-import { Canvas, Meta, Story } from '@storybook/blocks';
-
-import * as usePreviousStories from './usePrevious.stories';
-
-<Meta of={usePreviousStories} />
-
-<Canvas of={usePreviousStories.Default} />
-
-
 # usePrevious
 
-Returns the value of the previous state.
+Returns the previous value of a variable.
 
 ## Usage
-    
-```js
-import { useState } from 'react'
-import { usePrevious } from '@codedazur/react-essentials'
 
-export function Demo() {
-  const [count, setCount] = useState(0);
-  const previousCount = usePrevious(count);
+```tsx
+const [position, setPosition] = useState(1);
+const previousPosition = usePrevious(position);
 
-  return (
-    <div>
-      <div>Before: {previousCount}</div>
-      <div>Now: {count}</div>
-      <button onClick={() => setCount((count) => count + 1)}>-</button>
-      <button onClick={() => setCount((count) => count + 1)}>+</button>
-    </div>
-  )
-}
+// set position to 2 on first render
+useEffect(() => setPosition(2), []);
+
+// will log undefined on first render
+// will log 1 on second render
+useEffect(() => {
+  console.log(deltaPosition);
+}, [deltaPosition]);
 ```
 
-## Type Declarations
+## Use-Case: Stepper
 
-```js
-declare function usePrevious<T>(value: T): T | undefined;
-````
+```tsx
+import { useState } from "react";
+import { sequence } from "@codedazur/essentials";
+import { usePrevious } from "@codedazur/react-essentials";
+
+export function Stepper({ count }) {
+  const [currentStep, setCurrentStep] = useState(0);
+  const previousStep = usePrevious(currentStep);
+
+  return (
+    <Row>
+      {sequence(1, count).map((step) => (
+        <Step isActive={currentStep === step} wasActive={previousStep === step}>
+          {step}
+        </Step>
+      ))}
+    </Row>
+  );
+}
+```

@@ -1,6 +1,19 @@
 import { clamp } from "../math/clamp";
 
-type TimerEvent = "start" | "stop" | "pause" | "resume" | "extend" | "end";
+export enum TimerEvent {
+  start = "start",
+  stop = "stop",
+  pause = "pause",
+  resume = "resume",
+  extend = "extend",
+  end = "end",
+}
+
+export enum TimerStatus {
+  stopped = "stopped",
+  running = "running",
+  paused = "paused",
+}
 
 export class Timer {
   private id?: number;
@@ -31,24 +44,24 @@ export class Timer {
     return !!this.id;
   }
 
-  public get status(): "stopped" | "running" | "paused" {
+  public get status(): TimerStatus {
     return this._hasTimeout
-      ? "running"
+      ? TimerStatus.running
       : this._remaining < this._duration
-      ? "paused"
-      : "stopped";
+      ? TimerStatus.paused
+      : TimerStatus.stopped;
   }
 
   public get isRunning(): boolean {
-    return this.status === "running";
+    return this.status === TimerStatus.running;
   }
 
   public get isPaused(): boolean {
-    return this.status === "paused";
+    return this.status === TimerStatus.paused;
   }
 
   public get isStopped(): boolean {
-    return this.status === "stopped";
+    return this.status === TimerStatus.stopped;
   }
 
   public get duration(): number {
@@ -101,7 +114,7 @@ export class Timer {
   private reset = (): void => {
     this.clearTimeout();
 
-    this._startedAt = this._shiftedStartedAt = Date.now();
+    this._startedAt = this._shiftedStartedAt = undefined;
     this._pausedAt = undefined;
     this._remaining = this._duration;
   };
@@ -129,8 +142,9 @@ export class Timer {
     }
 
     this.reset();
+    this._startedAt = this._shiftedStartedAt = Date.now();
     this.setTimeout();
-    this.runEventListeners("start");
+    this.runEventListeners(TimerEvent.start);
   };
 
   public stop = () => {
@@ -139,7 +153,7 @@ export class Timer {
     }
 
     this.reset();
-    this.runEventListeners("stop");
+    this.runEventListeners(TimerEvent.stop);
   };
 
   public pause = (): void => {
@@ -152,7 +166,7 @@ export class Timer {
     this._pausedAt = Date.now();
     this._remaining -= Date.now() - this._timeoutStartedAt!;
 
-    this.runEventListeners("pause");
+    this.runEventListeners(TimerEvent.pause);
   };
 
   public resume = (): void => {
@@ -169,7 +183,7 @@ export class Timer {
 
     this.setTimeout();
 
-    this.runEventListeners("resume");
+    this.runEventListeners(TimerEvent.resume);
   };
 
   public extend = (by: number): void => {
@@ -183,12 +197,12 @@ export class Timer {
       this.resume();
     }
 
-    this.runEventListeners("extend");
+    this.runEventListeners(TimerEvent.extend);
   };
 
   public end = (): void => {
     this.reset();
-    this.runEventListeners("end");
+    this.runEventListeners(TimerEvent.end);
 
     this.callback();
   };

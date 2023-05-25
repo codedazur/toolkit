@@ -1,0 +1,39 @@
+# useDelta
+
+Returns the difference between the current and previous value of a number.
+
+## Usage
+
+```tsx
+const [position, setPosition] = useState(10);
+const deltaPosition = useDelta(position);
+
+// set position to 5 on first render
+useEffect(() => setPosition(5), []);
+
+// will log 0 on first render
+// will log -5 on second render
+useEffect(() => {
+  console.log(deltaPosition);
+}, [deltaPosition]);
+```
+
+## Use-Case: Scroll Direction
+
+```tsx
+import { useState } from "react";
+import { useDelta } from "@codedazur/react-essentials";
+
+export function ScrollDirection() {
+  const { position } = useScroll();
+  const deltaY = useDelta(position.y);
+
+  if (deltaY > 0) {
+    return "You're scrolling down.";
+  } else if (deltaY < 0) {
+    return "You're scrolling up.";
+  } else {
+    return "You're not scrolling.";
+  }
+}
+```
