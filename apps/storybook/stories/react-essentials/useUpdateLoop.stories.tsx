@@ -22,7 +22,7 @@ interface UseUpdateLoopArgs {
   targetFps?: number;
 }
 
-const meta: Meta<UseUpateLoopArgs> = {
+const meta: Meta<UseUpdateLoopArgs> = {
   title: "react-essentials/useUpdateLoop",
   parameters: {
     docs: {
@@ -41,7 +41,7 @@ const meta: Meta<UseUpateLoopArgs> = {
 
 export default meta;
 
-export const Default: StoryObj<UseUpateLoopArgs> = {
+export const Default: StoryObj<UseUpdateLoopArgs> = {
   render: (args) => {
     const [frame, setFrame] = useState<Frame>();
 
@@ -79,7 +79,7 @@ export const Default: StoryObj<UseUpateLoopArgs> = {
   },
 };
 
-export const WithAnimation: StoryObj<UseUpateLoopArgs> = {
+export const WithAnimation: StoryObj<UseUpdateLoopArgs> = {
   render: (args) => {
     const ref = useRef<HTMLDivElement>(null);
 
