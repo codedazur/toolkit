@@ -1,5 +1,11 @@
 # @codedazur/essentials
 
+## 1.0.0
+
+### Major Changes
+
+- [#95](https://github.com/codedazur/toolkit/pull/95) [`74f16e0`](https://github.com/codedazur/toolkit/commit/74f16e00c20d7f36f26b43349fb0f0ba412a866d) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The Timer class now uses an enum for its state attribute.
+
 ## 0.0.5
 
 ### Patch Changes
