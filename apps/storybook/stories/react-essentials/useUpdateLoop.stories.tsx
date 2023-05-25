@@ -17,7 +17,7 @@ import { DebugOverlay } from "../../components/DebugOverlay";
 import docs from "./useUpdateLoop.docs.mdx";
 import styled from "styled-components";
 
-interface UseUpateLoopArgs {
+interface UseUpdateLoopArgs {
   timeScale?: number;
   targetFps?: number;
 }
