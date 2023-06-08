@@ -11,6 +11,9 @@
     }
   },
   "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "test": "vitest run",
     "coverage": "vitest run --coverage",
