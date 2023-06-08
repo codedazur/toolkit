@@ -1,4 +1,4 @@
-import { RefObject, useEffect, useRef } from "react";
+import { MutableRefObject, RefObject, useEffect, useRef } from "react";
 
 /**
  * The `useSynchronizedRef` hook takes a variable and creates a reference to it
@@ -19,7 +19,7 @@ import { RefObject, useEffect, useRef } from "react";
  * @returns A reference to the latest value of the variable.
  */
 
-export function useSynchronizedRef<T>(value: T): RefObject<T> {
+export function useSynchronizedRef<T>(value: T): MutableRefObject<T> {
   const ref = useRef(value);
 
   useEffect(() => {
