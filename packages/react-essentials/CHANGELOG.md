@@ -1,5 +1,11 @@
 # @codedazur/react-essentials
 
+## 0.0.4
+
+### Patch Changes
+
+- [#104](https://github.com/codedazur/toolkit/pull/104) [`f2d81bc`](https://github.com/codedazur/toolkit/commit/f2d81bc84e4972b749d9b37eb34f31e1cc56aaa3) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Correct the return type of useSynchronizedRef to MutableRefObject.
+
 ## 0.0.3
 
 ### Patch Changes
