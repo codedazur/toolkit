@@ -1,5 +1,11 @@
 # @codedazur/react-essentials
 
+## 0.1.0
+
+### Minor Changes
+
+- [`1da366d`](https://github.com/codedazur/toolkit/commit/1da366dea7a8f267876608b29bb8b74e886feddc) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Add onStart and onEnd callbacks to the useUpdateLoop hook.
+
 ## 0.0.4
 
 ### Patch Changes
