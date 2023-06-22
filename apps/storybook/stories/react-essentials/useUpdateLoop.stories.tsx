@@ -45,16 +45,16 @@ export const Default: StoryObj<UseUpdateLoopArgs> = {
   render: function Default(args) {
     const [frame, setFrame] = useState<Frame>();
 
-    const { status, start, pause, stop, isUpdating } = useUpdateLoop({
+    const { isUpdating, start, pause, stop } = useUpdateLoop({
       onUpdate: setFrame,
       ...args,
     });
 
     useEffect(() => {
-      if (status === "stopped") {
+      if (!isUpdating) {
         setFrame(undefined);
       }
-    }, [status]);
+    }, [isUpdating]);
 
     const controls = useMemo(
       () => (
@@ -62,12 +62,12 @@ export const Default: StoryObj<UseUpdateLoopArgs> = {
           <IconButton onClick={isUpdating ? pause : start}>
             {isUpdating ? <PauseIcon /> : <PlayArrowIcon />}
           </IconButton>
-          <IconButton onClick={stop} disabled={status === "stopped"}>
+          <IconButton onClick={stop}>
             <StopIcon />
           </IconButton>
         </Row>
       ),
-      [status, start, pause, stop, isUpdating]
+      [start, pause, stop, isUpdating]
     );
 
     return (
@@ -83,10 +83,15 @@ export const WithAnimation: StoryObj<UseUpdateLoopArgs> = {
   render: function WithAnimation(args) {
     const ref = useRef<HTMLDivElement>(null);
 
-    const { status, start, pause, stop, isUpdating } = useUpdateLoop({
+    const { isUpdating, start, pause, stop } = useUpdateLoop({
       onUpdate: ({ time }) => {
         if (ref.current) {
           ref.current.style.rotate = `${(time * 0.18) % 360}deg`;
+        }
+      },
+      onStop: () => {
+        if (ref.current) {
+          ref.current.style.rotate = `0deg`;
         }
       },
       ...args,
@@ -98,12 +103,12 @@ export const WithAnimation: StoryObj<UseUpdateLoopArgs> = {
           <IconButton onClick={isUpdating ? pause : start}>
             {isUpdating ? <PauseIcon /> : <PlayArrowIcon />}
           </IconButton>
-          <IconButton onClick={stop} disabled={status === "stopped"}>
+          <IconButton onClick={stop}>
             <StopIcon />
           </IconButton>
         </Row>
       ),
-      [status, start, pause, stop, isUpdating]
+      [start, pause, stop, isUpdating]
     );
 
     return (

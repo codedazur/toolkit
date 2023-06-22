@@ -1,114 +1,243 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useSynchronizedRef } from "./useSynchronizedRef";
 
+/**
+ * Represents a frame with relevant information.
+ */
 export interface Frame {
+  /**
+   * The index of the frame.
+   */
   index: number;
+  /**
+   * The time at the moment of this frane.
+   */
   time: number;
+  /**
+   * The time difference between the current frame and the previous frame.
+   */
   deltaTime: number;
+  /**
+   * The number of frames per second.
+   * @todo This shouldn't be part of the `Frame` itself.
+   */
   fps: number | undefined;
 }
 
-type Status = "stopped" | "started" | "paused";
+export interface UseUpdateLoopOptions {
+  /**
+   * Callback function to be called when the update loop starts.
+   */
+  onStart?: () => void;
+  /**
+   * Callback function to be called on each update.
+   */
+  onUpdate: (frame: Frame) => void;
+  /**
+   * Callback function to be called when the update loop stops.
+   */
+  onStop?: () => void;
+  /**
+   * Flag indicating whether to start the loop immediately.
+   */
+  immediately?: boolean;
+  /**
+   * Scaling factor for time. This will affect the `time` and `deltaTime`
+   * attributes of each frame without affecting the framerate.
+   */
+  timeScale?: number;
+  /**
+   * Target frames per second. This value will affect the framerate without
+   * affecting the time.
+   */
+  targetFps?: number;
+}
 
+/**
+ * Manages an update loop that can be paused and stopped. You can provide a
+ * target framerate, and you can adjust the time scale without affecting that
+ * framerate.
+ *
+ * @todo There is a bug in this hook, where changing the `onUpdate` callback
+ * does not stop the current loop, or replace the callback _of_ the current
+ * loop, but starts a new loop in _addition_ to the current loop.
+ *
+ * @todo The `isUpdating` reference should be a state variable, so that the hook
+ * causes a re-render when its value changes.
+ */
 export const useUpdateLoop = ({
+  onStart,
   onUpdate,
+  onStop,
   immediately = false,
   timeScale = 1,
   targetFps,
-}: {
-  onUpdate: (frame: Frame) => void;
-  immediately?: boolean;
-  timeScale?: number;
-  targetFps?: number;
-}) => {
+}: UseUpdateLoopOptions) => {
+  /**
+   * Synchronized referencne to the onUpdate callback.
+   */
   const onUpdateRef = useSynchronizedRef(onUpdate);
 
-  const [status, setStatus] = useState<Status>("stopped");
-  const isUpdating = useRef(false);
+  /**
+   * Flag indicating whether the update loop is currently running.
+   */
+  const [isUpdating, setIsUpdating] = useState(false);
 
+  /**
+   * The ID of the requested animation frame.
+   */
   const requestedFrameId = useRef<number>();
+
+  /**
+   * The index of the current frame.
+   */
   const frame = useRef<number>();
+
+  /**
+   * The timestamp of the current frame.
+   */
   const time = useRef<number>();
+
+  /**
+   * The timestamp of the previous frame.
+   */
   const previousTime = useRef<number>();
+
+  /**
+   * Time difference between the current frame and the previous frame
+   */
   const deltaTime = useRef<number>();
+
+  /**
+   * The total elapsed time since the start of the loop.
+   */
   const elapsedTime = useRef<number>();
+
+  /**
+   * The deltaTime scaled to the timeScale.
+   */
   const scaledDeltaTime = useRef<number>();
+
+  /**
+   * The total elapsed time scaled to the timeScale.
+   */
   const scaledElapsedTime = useRef<number>();
+
+  /**
+   * The time since the last call to the `onUpdate` callback. This is used to
+   * check whether enough time has passed to call `onUpdate` again given the
+   * `targetFps`.
+   */
   const checkTime = useRef<number>();
-  const timeScaleRef = useRef<number>(timeScale);
+
+  /**
+   * Reference to the `timeScale` value.
+   */
+  const timeScaleRef = useSynchronizedRef<number>(timeScale);
+
+  /**
+   * The target duration for a single frame given the `targetFps`.
+   */
   const targetIntervalRef = useRef<number>();
 
-  useEffect(() => {
-    timeScaleRef.current = timeScale;
-  }, [timeScale]);
-
+  /**
+   * Update the `targetIntervalRef` when the `targetFps` changes.
+   */
   useEffect(() => {
     targetIntervalRef.current =
       targetFps && targetFps > 0 ? 1000 / targetFps : undefined;
   }, [targetFps]);
 
   /**
-   * @todo There is a bug in this hook, where updating the `onUpdate` prop does
-   * not stop the current loop, or replace the callback _of_ the current loop,
-   * but starts a new loop in _addition_ to the current loop.
-   *
-   * @todo This method could use some abstraction for readability's sake.
+   * Sets various metrics for the current frame.
+   */
+  const setMetrics = useCallback(() => {
+    frame.current = (frame.current ?? -1) + 1;
+    previousTime.current = time.current;
+    time.current = new Date().getTime();
+    deltaTime.current = previousTime.current
+      ? time.current - previousTime.current
+      : 0;
+    elapsedTime.current = (elapsedTime.current ?? 0) + deltaTime.current;
+
+    scaledDeltaTime.current = deltaTime.current * timeScaleRef.current;
+    scaledElapsedTime.current =
+      (scaledElapsedTime.current ?? 0) + scaledDeltaTime.current;
+  }, [timeScaleRef]);
+
+  /**
+   * Checks whether the `onUpdate` callback should be called given the
+   * `targetFps` and the time elapsed since the previous call.
+   */
+  const shouldCallOnUpdate = useCallback(() => {
+    const currentTime = new Date().getTime();
+    const checkDelta = checkTime.current ? currentTime - checkTime.current : 0;
+
+    if (
+      !targetIntervalRef.current ||
+      !checkTime.current ||
+      checkDelta >= targetIntervalRef.current
+    ) {
+      checkTime.current =
+        currentTime -
+        (targetIntervalRef.current
+          ? checkDelta % targetIntervalRef.current
+          : 0);
+
+      return true;
+    }
+
+    return false;
+  }, []);
+
+  /**
+   * Calls the `onUpdate` callback with the current frame information.
+   */
+  const callOnUpdate = useCallback(() => {
+    onUpdateRef.current?.({
+      index: frame.current ?? 0,
+      time: scaledElapsedTime.current ?? 0,
+      deltaTime: scaledDeltaTime.current ?? 0,
+      fps: scaledDeltaTime.current
+        ? Math.round(1000 / scaledDeltaTime.current)
+        : 0,
+    });
+  }, [onUpdateRef]);
+
+  /**
+   * Step function that iterates as fast as the screen's refresh rate, and calls
+   * the `onUpdate` callback only if enough time has elapsed since the previous
+   * call given the `targetFps`.
    */
   const step = useCallback(() => {
-    if (!isUpdating.current) {
+    if (!isUpdating) {
       return;
     }
 
     requestedFrameId.current = requestAnimationFrame(() => {
-      const checkPrevious = checkTime.current;
-      const checkNow = new Date().getTime();
-      const checkDelta = checkPrevious ? checkNow - checkPrevious : 0;
+      setMetrics();
 
-      if (
-        !targetIntervalRef.current ||
-        !checkPrevious ||
-        checkDelta >= targetIntervalRef.current
-      ) {
-        checkTime.current =
-          checkNow -
-          (targetIntervalRef.current
-            ? checkDelta % targetIntervalRef.current
-            : 0);
-
-        frame.current = (frame.current ?? -1) + 1;
-        previousTime.current = time.current;
-        time.current = new Date().getTime();
-        deltaTime.current = previousTime.current
-          ? time.current - previousTime.current
-          : 0;
-        elapsedTime.current = (elapsedTime.current ?? 0) + deltaTime.current;
-
-        scaledDeltaTime.current = deltaTime.current * timeScaleRef.current;
-        scaledElapsedTime.current =
-          (scaledElapsedTime.current ?? 0) + scaledDeltaTime.current;
-
-        onUpdateRef.current?.({
-          index: frame.current ?? 0,
-          time: scaledElapsedTime.current ?? 0,
-          deltaTime: scaledDeltaTime.current ?? 0,
-          fps: scaledDeltaTime.current
-            ? Math.round(1000 / scaledDeltaTime.current)
-            : 0,
-        });
+      if (shouldCallOnUpdate()) {
+        callOnUpdate();
       }
 
       step();
     });
-  }, [onUpdateRef]);
+  }, [callOnUpdate, isUpdating, setMetrics, shouldCallOnUpdate]);
 
-  const _start = useCallback(() => {
-    isUpdating.current = true;
+  /**
+   * Starts the update loop.
+   */
+  const start = useCallback(() => {
+    onStart?.();
+    setIsUpdating(true);
+  }, [onStart]);
 
-    step();
-  }, [step]);
-
-  const _pause = useCallback(() => {
-    isUpdating.current = false;
+  /**
+   * Pauses the update loop.
+   */
+  const pause = useCallback(() => {
+    setIsUpdating(false);
     time.current = undefined;
 
     if (requestedFrameId.current) {
@@ -116,41 +245,57 @@ export const useUpdateLoop = ({
     }
   }, []);
 
-  const _reset = useCallback(() => {
+  /**
+   * Resets the update loop.
+   */
+  const reset = useCallback(() => {
     frame.current = undefined;
+    time.current = undefined;
+    previousTime.current = undefined;
+    deltaTime.current = undefined;
     elapsedTime.current = undefined;
+    scaledDeltaTime.current = undefined;
+    scaledElapsedTime.current = undefined;
     checkTime.current = undefined;
+    targetIntervalRef.current = undefined;
   }, []);
 
-  const start = useCallback(() => {
-    setStatus("started");
-    _start();
-  }, [_start]);
-
-  const pause = useCallback(() => {
-    setStatus("paused");
-    _pause();
-  }, [_pause]);
-
+  /**
+   * Stops the update loop.
+   */
   const stop = useCallback(() => {
-    setStatus("stopped");
-    _pause();
-    _reset();
-  }, [_pause, _reset]);
+    pause();
+    reset();
+    onStop?.();
+  }, [onStop, pause, reset]);
 
+  /**
+   * Kickstart the loop whenever updates are enebaled.
+   */
+  useEffect(() => {
+    if (isUpdating) {
+      step();
+    }
+  }, [isUpdating, step]);
+
+  /**
+   * Start the update loop immediately if requested.
+   */
   useEffect(() => {
     if (immediately) {
       start();
     }
   }, [immediately, start]);
 
-  useEffect(() => () => _pause(), [_pause]);
+  /**
+   * Pause the update loop when the hook unmounts.
+   */
+  useEffect(() => () => pause(), [pause]);
 
   return {
-    status,
     start,
     pause,
     stop,
-    isUpdating: isUpdating.current,
+    isUpdating,
   };
 };
