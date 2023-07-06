@@ -8,6 +8,9 @@
     "lint": "TIMING=1 eslint \"**/*.ts*\"",
     "test": "echo \"No tests configured.\""
   },
+  "dependencies": {
+    "@codedazur/cdk-cache-invalidator": "*"
+  },
   "peerDependencies": {
     "aws-cdk-lib": ">=2",
     "constructs": ">=10"

@@ -1,8 +1,12 @@
+import { CacheInvalidator } from "@codedazur/cdk-cache-invalidator";
 import { CfnOutput, RemovalPolicy } from "aws-cdk-lib";
-import { DnsValidatedCertificate } from "aws-cdk-lib/aws-certificatemanager";
 import {
-  Distribution,
+  DnsValidatedCertificate,
+  ICertificate,
+} from "aws-cdk-lib/aws-certificatemanager";
+import {
   Function as CloudFrontFunction,
+  Distribution,
   FunctionCode,
   FunctionEventType,
   OriginProtocolPolicy,
@@ -10,6 +14,7 @@ import {
   ViewerProtocolPolicy,
 } from "aws-cdk-lib/aws-cloudfront";
 import { HttpOrigin } from "aws-cdk-lib/aws-cloudfront-origins";
+import { AnyPrincipal, Effect, PolicyStatement } from "aws-cdk-lib/aws-iam";
 import {
   ARecord,
   HostedZone,
@@ -17,8 +22,9 @@ import {
   RecordTarget,
 } from "aws-cdk-lib/aws-route53";
 import { CloudFrontTarget } from "aws-cdk-lib/aws-route53-targets";
-import { Bucket } from "aws-cdk-lib/aws-s3";
+import { BlockPublicAccess, Bucket } from "aws-cdk-lib/aws-s3";
 import { BucketDeployment, Source } from "aws-cdk-lib/aws-s3-deployment";
+import { Secret } from "aws-cdk-lib/aws-secretsmanager";
 import { Construct } from "constructs";
 
 export interface StaticSiteProps {
@@ -58,12 +64,19 @@ export interface StaticSiteProps {
  *
  * The site redirects from HTTP to HTTPS, using a CloudFront distribution,
  * Route53 alias record, and ACM certificate.
+ *
+ * Direct read access to the bucket is disallowed unless a secret Referer header
+ * is included in the request. This makes the bucket website inaccessible to the
+ * public, while still allowing access by the CloudFront distribution, which is
+ * configured to include that secret header.
+ * @see https://repost.aws/knowledge-center/cloudfront-serve-static-website
  */
 export class StaticSite extends Construct {
   public readonly domain?: string;
+  public readonly refererSecret: Secret;
   public readonly bucket: Bucket;
   public readonly zone?: IHostedZone;
-  public readonly certificate?: DnsValidatedCertificate;
+  public readonly certificate?: ICertificate;
   public readonly functions: {
     viewerRequest?: CloudFrontFunction;
     viewerResponse?: CloudFrontFunction;
@@ -71,6 +84,7 @@ export class StaticSite extends Construct {
   public readonly distribution: Distribution;
   public readonly alias?: ARecord;
   public readonly deployment: BucketDeployment;
+  public readonly cacheInvalidator: CacheInvalidator;
 
   constructor(
     scope: Construct,
@@ -80,6 +94,7 @@ export class StaticSite extends Construct {
     super(scope, id);
 
     this.domain = this.determineDomain();
+    this.refererSecret = this.createRefererSecret();
     this.bucket = this.createBucket();
     this.zone = this.findHostedZone();
     this.certificate = this.createCertificate();
@@ -87,6 +102,7 @@ export class StaticSite extends Construct {
     this.distribution = this.createDistribution();
     this.alias = this.createAlias();
     this.deployment = this.createDeployment();
+    this.cacheInvalidator = this.createCacheInvalidator();
   }
 
   protected determineDomain() {
@@ -103,15 +119,41 @@ export class StaticSite extends Construct {
     return domain;
   }
 
+  protected createRefererSecret() {
+    return new Secret(this, "RefererSecret", {
+      generateSecretString: { excludePunctuation: true },
+    });
+  }
+
   protected createBucket() {
     const bucket = new Bucket(this, "Bucket", {
       publicReadAccess: true,
+      blockPublicAccess: new BlockPublicAccess({
+        blockPublicAcls: false,
+        ignorePublicAcls: false,
+        blockPublicPolicy: false,
+        restrictPublicBuckets: false,
+      }),
       websiteIndexDocument: this.props.website?.indexDocument ?? "index.html",
-      websiteErrorDocument: this.props.website?.errorDocument ?? "error.html",
+      websiteErrorDocument: this.props.website?.errorDocument ?? "404.html",
       transferAcceleration: this.props.bucket?.accelerate,
       removalPolicy: RemovalPolicy.DESTROY,
       autoDeleteObjects: true,
     });
+
+    bucket.addToResourcePolicy(
+      new PolicyStatement({
+        effect: Effect.DENY,
+        principals: [new AnyPrincipal()],
+        actions: ["s3:GetObject"],
+        resources: [bucket.arnForObjects("*")],
+        conditions: {
+          StringNotLike: {
+            "aws:Referer": this.refererSecret.secretValue.toString(),
+          },
+        },
+      })
+    );
 
     new CfnOutput(this, "BucketName", { value: bucket.bucketName });
 
@@ -165,7 +207,7 @@ export class StaticSite extends Construct {
     }
 
     return new CloudFrontFunction(this, "ViewerRequestFunction", {
-      code: this.getMiddlewareCode(handlers, "request"),
+      code: this.getRequestHandlerChainCode(handlers),
     });
   }
 
@@ -180,18 +222,11 @@ export class StaticSite extends Construct {
     }
 
     return new CloudFrontFunction(this, "ViewerResponseFunction", {
-      code: this.getMiddlewareCode(handlers, "response"),
+      code: this.getResponseHandlerChainCode(handlers),
     });
   }
 
-  /**
-   * @todo @bug The `complete` function should return `event.response` when it
-   * is used as a viewerResponse function.
-   */
-  protected getMiddlewareCode(
-    handlers: FunctionCode[],
-    returnObject: "request" | "response"
-  ) {
+  protected getRequestHandlerChainCode(handlers: FunctionCode[]) {
     return FunctionCode.fromInline(/* js */ `
 			function handler(event) {
 				return chain(event, [
@@ -205,7 +240,31 @@ export class StaticSite extends Construct {
 			}
 
 			function complete(event) {
-				return event.${returnObject};
+				return event.request;
+			}
+		`);
+  }
+
+  /**
+   * @todo This function duplicates a lot of the `getRequestHandlerChainCode`
+   * function. Only the `return` statement of the `complete` function is
+   * different. Refactor to avoid this repetition.
+   */
+  protected getResponseHandlerChainCode(handlers: FunctionCode[]) {
+    return FunctionCode.fromInline(/* js */ `
+			function handler(event) {
+				return chain(event, [
+					${handlers.map((code) => code.render().replace(/;\s*$/, "")).join(",")}
+				])
+			}
+
+			function chain(event, handlers) {
+				var current = handlers.shift() ?? complete;
+				return current(event, (event) => chain(event, handlers))
+			}
+
+			function complete(event) {
+				return event.response;
 			}
 		`);
   }
@@ -301,6 +360,9 @@ export class StaticSite extends Construct {
       defaultBehavior: {
         origin: new HttpOrigin(this.bucket.bucketWebsiteDomainName, {
           protocolPolicy: OriginProtocolPolicy.HTTP_ONLY,
+          customHeaders: {
+            Referer: this.refererSecret.secretValue.toString(),
+          },
         }),
         viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
         functionAssociations: [
@@ -352,9 +414,14 @@ export class StaticSite extends Construct {
       sources: [Source.asset(this.props.path)],
       destinationBucket: this.bucket,
       destinationKeyPrefix: this.props.deployment?.prefix,
-      distribution: this.distribution,
-      distributionPaths: this.props.deployment?.cacheInvalidations ?? ["/*"],
       memoryLimit: this.props.deployment?.memoryLimit,
+    });
+  }
+
+  protected createCacheInvalidator() {
+    return new CacheInvalidator(this, "CacheInvalidator", {
+      distribution: this.distribution,
+      paths: this.props.deployment?.cacheInvalidations ?? ["/*"],
     });
   }
 }
