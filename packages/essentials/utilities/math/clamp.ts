@@ -9,7 +9,9 @@
  */
 export function clamp(value: number, min: number, max: number): number {
   if (min > max) {
-    throw new Error("The minimum value must not be larger than the maximum value.");
-  } 
+    throw new Error(
+      "The minimum value must not be larger than the maximum value."
+    );
+  }
   return Math.max(min, Math.min(value, max));
 }

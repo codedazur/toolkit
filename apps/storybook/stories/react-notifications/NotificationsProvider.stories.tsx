@@ -208,6 +208,8 @@ export const Groups: StoryObj = {
           <Row gap="1rem">
             <AddBannerButton />
             <AddSnackbarButton />
+            <ClearAllGroupsButton />
+            <ClearGroupButton group="snackbars" />
           </Row>
         </Center>
       </Column>
@@ -261,6 +263,20 @@ const AddSnackbarButton = () => {
 
   return (
     <Button onClick={() => add(faker.lorem.sentence())}>Add Snackbar</Button>
+  );
+};
+
+const ClearAllGroupsButton = () => {
+  const { clearAllGroups } = useSnackbars();
+
+  return <Button onClick={() => clearAllGroups()}>Clear all groups</Button>;
+};
+
+const ClearGroupButton = ({ group }: { group: string }) => {
+  const { clearGroup } = useSnackbars();
+
+  return (
+    <Button onClick={() => clearGroup(group)}>Clear Snackbar Group</Button>
   );
 };
 
