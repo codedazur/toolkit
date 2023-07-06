@@ -37,9 +37,6 @@ export const useContrastPreferences = () => {
       } else if (mediaQueries.custom.matches) {
         setContrast(Contrast.custom);
       } else {
-        // @todo: decide what to do when there is no preference.
-        // - null
-        // - 'default'
         setContrast(null);
       }
     };
