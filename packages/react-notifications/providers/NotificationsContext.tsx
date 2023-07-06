@@ -29,7 +29,7 @@ export interface NotificationsContext {
     }
   ) => NotificationProps;
   readonly remove: (group: string, id: number) => void;
-  readonly clearGroup: (group: string) => void;
+  readonly clear: (group: string) => void;
 }
 
 const error = () => {
@@ -41,5 +41,5 @@ export const notificationsContext = createContext<NotificationsContext>({
   queue: {},
   add: error,
   remove: error,
-  clearGroup: error,
+  clear: error,
 });
