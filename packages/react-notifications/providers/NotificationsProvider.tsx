@@ -27,12 +27,12 @@ interface RemoveAction {
   group: string;
   id: number;
 }
-interface ClearGroupAction {
-  operation: "clearGroup";
+interface ClearAction {
+  operation: "clear";
   group: string;
 }
 
-type Actions = AddAction | RemoveAction | ClearGroupAction;
+type Actions = AddAction | RemoveAction | ClearAction;
 
 interface NotificationsProviderProps {
   autoDismiss?: MaybeGrouped<AutoDismiss>;
@@ -87,7 +87,7 @@ export const NotificationsProvider: FunctionComponent<
               ),
             ],
           };
-        case "clearGroup":
+        case "clear":
           return {
             ...state,
             [action.group]: [],
@@ -196,9 +196,9 @@ export const NotificationsProvider: FunctionComponent<
     [getGroupAutoDismiss, remove]
   );
 
-  const clearGroup = useCallback((group: string) => {
+  const clear = useCallback((group: string) => {
     dispatch({
-      operation: "clearGroup",
+      operation: "clear",
       group,
     });
   }, []);
@@ -210,7 +210,7 @@ export const NotificationsProvider: FunctionComponent<
         queue,
         add,
         remove,
-        clearGroup,
+        clear,
       }}
     >
       {children}

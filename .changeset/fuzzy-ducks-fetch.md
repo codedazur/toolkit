@@ -2,4 +2,4 @@
 "@codedazur/react-notifications": minor
 ---
 
-react-notifications: clearGroup function is added
+react-notifications: clear function is added

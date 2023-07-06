@@ -267,15 +267,15 @@ const AddSnackbarButton = () => {
 };
 
 const ClearSnackbarGroupButton = () => {
-  const { clearGroup } = useSnackbars();
+  const { clear } = useSnackbars();
 
-  return <Button onClick={() => clearGroup()}>Clear Snackbar Group</Button>;
+  return <Button onClick={() => clear()}>Clear Snackbar Group</Button>;
 };
 
 const ClearBannerGroupButton = () => {
-  const { clearGroup } = useBanners();
+  const { clear } = useBanners();
 
-  return <Button onClick={() => clearGroup()}>Clear Banner Group</Button>;
+  return <Button onClick={() => clear()}>Clear Banner Group</Button>;
 };
 
 const Snackbars = () => {
