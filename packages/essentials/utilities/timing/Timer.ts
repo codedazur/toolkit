@@ -16,8 +16,8 @@ export enum TimerStatus {
 }
 
 export class Timer {
-  private id?: number;
-  private callback: () => void;
+  private _timeout?: number | NodeJS.Timeout;
+  private _callback: () => void;
   private _duration: number;
   private _startedAt?: number;
   private _shiftedStartedAt?: number;
@@ -25,7 +25,7 @@ export class Timer {
   private _pausedAt?: number;
   private _remaining: number;
 
-  private eventListeners: Record<TimerEvent, Array<() => void>> = {
+  private _eventListeners: Record<TimerEvent, Array<() => void>> = {
     start: [],
     stop: [],
     pause: [],
@@ -35,13 +35,13 @@ export class Timer {
   };
 
   constructor(callback: () => void, duration: number) {
-    this.callback = callback;
+    this._callback = callback;
     this._duration = duration;
     this._remaining = duration;
   }
 
   private get _hasTimeout(): boolean {
-    return !!this.id;
+    return !!this._timeout;
   }
 
   public get status(): TimerStatus {
@@ -90,48 +90,48 @@ export class Timer {
     return this.duration - this.elapsed;
   }
 
-  private clearTimeout = (): void => {
+  private _clearTimeout = (): void => {
     if (!this._hasTimeout) {
       return;
     }
 
-    window.clearTimeout(this.id);
-    this.id = undefined;
+    clearTimeout(this._timeout);
+    this._timeout = undefined;
   };
 
-  private setTimeout = (): void => {
+  private _setTimeout = (): void => {
     if (this._hasTimeout) {
       throw new Error(
         "Cannot start a new timeout while a timeout is still running."
       );
     }
 
-    this.id = window.setTimeout(this.end, this._remaining);
+    this._timeout = setTimeout(this.end, this._remaining);
 
     this._timeoutStartedAt = Date.now();
   };
 
-  private reset = (): void => {
-    this.clearTimeout();
+  private _reset = (): void => {
+    this._clearTimeout();
 
     this._startedAt = this._shiftedStartedAt = undefined;
     this._pausedAt = undefined;
     this._remaining = this._duration;
   };
 
-  private runEventListeners = (event: TimerEvent): void => {
-    this.eventListeners[event].forEach((handler) => handler());
+  private _runEventListeners = (event: TimerEvent): void => {
+    this._eventListeners[event].forEach((handler) => handler());
   };
 
   public addEventListener = (event: TimerEvent, handler: () => void): void => {
-    this.eventListeners[event].push(handler);
+    this._eventListeners[event].push(handler);
   };
 
   public removeEventListener = (
     event: TimerEvent,
     handler: () => void
   ): void => {
-    this.eventListeners[event] = this.eventListeners[event].filter(
+    this._eventListeners[event] = this._eventListeners[event].filter(
       (entry) => entry !== handler
     );
   };
@@ -141,10 +141,10 @@ export class Timer {
       return;
     }
 
-    this.reset();
+    this._reset();
     this._startedAt = this._shiftedStartedAt = Date.now();
-    this.setTimeout();
-    this.runEventListeners(TimerEvent.start);
+    this._setTimeout();
+    this._runEventListeners(TimerEvent.start);
   };
 
   public stop = () => {
@@ -152,8 +152,8 @@ export class Timer {
       return;
     }
 
-    this.reset();
-    this.runEventListeners(TimerEvent.stop);
+    this._reset();
+    this._runEventListeners(TimerEvent.stop);
   };
 
   public pause = (): void => {
@@ -161,12 +161,12 @@ export class Timer {
       return;
     }
 
-    this.clearTimeout();
+    this._clearTimeout();
 
     this._pausedAt = Date.now();
     this._remaining -= Date.now() - this._timeoutStartedAt!;
 
-    this.runEventListeners(TimerEvent.pause);
+    this._runEventListeners(TimerEvent.pause);
   };
 
   public resume = (): void => {
@@ -181,9 +181,9 @@ export class Timer {
     this._shiftedStartedAt! += Date.now() - this._pausedAt;
     this._pausedAt = undefined;
 
-    this.setTimeout();
+    this._setTimeout();
 
-    this.runEventListeners(TimerEvent.resume);
+    this._runEventListeners(TimerEvent.resume);
   };
 
   public extend = (by: number): void => {
@@ -197,13 +197,13 @@ export class Timer {
       this.resume();
     }
 
-    this.runEventListeners(TimerEvent.extend);
+    this._runEventListeners(TimerEvent.extend);
   };
 
   public end = (): void => {
-    this.reset();
-    this.runEventListeners(TimerEvent.end);
+    this._reset();
+    this._runEventListeners(TimerEvent.end);
 
-    this.callback();
+    this._callback();
   };
 }
