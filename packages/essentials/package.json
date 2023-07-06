@@ -22,7 +22,7 @@
     "coverage": "vitest run --coverage"
   },
   "devDependencies": {
-    "eslint": "^8.26.0",
+    "eslint": "^8.44.0",
     "@codedazur/eslint-config": "*",
     "@codedazur/tsconfig": "*",
     "typescript": "^4.8.4 || ^5.0.0"
