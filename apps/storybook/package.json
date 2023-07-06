@@ -38,7 +38,7 @@
     "@storybook/react": "^7.0.26",
     "@storybook/react-vite": "^7.0.26",
     "@storybook/react-webpack5": "^7.0.26",
-    "@storybook/testing-library": "^0.0.14-next.1 || ^0.1.0",
+    "@storybook/testing-library": "^0.0.14-next.1 || ^0.1.0 || ^0.2.0",
     "@types/color": "^3.0.3",
     "storybook": "^7.0.26",
     "vite": "4.3.9"
