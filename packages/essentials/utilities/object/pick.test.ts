@@ -1,5 +1,5 @@
-import {describe, it, expect} from 'vitest';
-import { pick } from './pick';
+import { describe, it, expect } from "vitest";
+import { pick } from "./pick";
 
 describe("pick", () => {
   it("should pick specified properties from an object", () => {

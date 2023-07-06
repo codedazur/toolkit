@@ -1,6 +1,6 @@
 import { omit } from "./omit";
 
-import {describe, it, expect} from 'vitest';
+import { describe, it, expect } from "vitest";
 
 describe("omit", () => {
   it("should omit a single key from an object", () => {
@@ -37,6 +37,4 @@ describe("omit", () => {
 
     expect(output).toEqual({});
   });
-  
-
 });

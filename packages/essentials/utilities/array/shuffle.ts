@@ -23,4 +23,3 @@ export function shuffle<T>(array: T[]) {
 
   return shuffledArray;
 }
-
