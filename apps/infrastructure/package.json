@@ -15,7 +15,7 @@
     "@codedazur/essentials": "*",
     "@apps/storybook": "*",
     "@apps/website": "*",
-    "aws-cdk-lib": "^2.50.0",
+    "aws-cdk-lib": "^2.80.0",
     "constructs": "^10.1.147"
   },
   "devDependencies": {
