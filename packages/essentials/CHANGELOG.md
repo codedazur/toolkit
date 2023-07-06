@@ -1,5 +1,11 @@
 # @codedazur/essentials
 
+## 1.0.1
+
+### Patch Changes
+
+- [#119](https://github.com/codedazur/toolkit/pull/119) [`88888e0`](https://github.com/codedazur/toolkit/commit/88888e003816ca8376935a3fb9e00e0ac3d485bd) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - the Timer no longer fails during node processes
+
 ## 1.0.0
 
 ### Major Changes

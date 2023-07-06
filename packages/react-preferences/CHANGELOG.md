@@ -1,5 +1,11 @@
 # @codedazur/react-preferences
 
+## 1.0.0
+
+### Major Changes
+
+- [#119](https://github.com/codedazur/toolkit/pull/119) [`88888e0`](https://github.com/codedazur/toolkit/commit/88888e003816ca8376935a3fb9e00e0ac3d485bd) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - stable release
+
 ## 0.0.5
 
 ### Patch Changes
