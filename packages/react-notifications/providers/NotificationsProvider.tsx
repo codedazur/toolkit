@@ -31,15 +31,8 @@ interface ClearGroupAction {
   operation: "clearGroup";
   group: string;
 }
-interface ClearAllGroupsAction {
-  operation: "clearAllGroups";
-}
 
-type Actions =
-  | AddAction
-  | RemoveAction
-  | ClearGroupAction
-  | ClearAllGroupsAction;
+type Actions = AddAction | RemoveAction | ClearGroupAction;
 
 interface NotificationsProviderProps {
   autoDismiss?: MaybeGrouped<AutoDismiss>;
@@ -99,8 +92,6 @@ export const NotificationsProvider: FunctionComponent<
             ...state,
             [action.group]: [],
           };
-        case "clearAllGroups":
-          return { ...state, ...revalueObject(state, (_) => []) };
       }
     },
     {}
@@ -212,12 +203,6 @@ export const NotificationsProvider: FunctionComponent<
     });
   }, []);
 
-  const clearAllGroups = useCallback(() => {
-    dispatch({
-      operation: "clearAllGroups",
-    });
-  }, []);
-
   return (
     <notificationsContext.Provider
       value={{
@@ -226,7 +211,6 @@ export const NotificationsProvider: FunctionComponent<
         add,
         remove,
         clearGroup,
-        clearAllGroups,
       }}
     >
       {children}
