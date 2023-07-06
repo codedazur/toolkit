@@ -18,6 +18,32 @@ describe("Timer", () => {
     vi.useRealTimers();
   });
 
+  describe("Derived States", () => {
+    it("should correctly derive from the stopped status", () => {
+      expect(timer.status).toBe(TimerStatus.stopped);
+      expect(timer.isStopped).toBe(true);
+      expect(timer.isRunning).toBe(false);
+      expect(timer.isPaused).toBe(false);
+    });
+
+    it("should correctly derive from the running status", () => {
+      timer.start();
+      expect(timer.status).toBe(TimerStatus.running);
+      expect(timer.isStopped).toBe(false);
+      expect(timer.isRunning).toBe(true);
+      expect(timer.isPaused).toBe(false);
+    });
+
+    it("should correctly derive from the paused status", () => {
+      timer.start();
+      timer.pause();
+      expect(timer.status).toBe(TimerStatus.paused);
+      expect(timer.isStopped).toBe(false);
+      expect(timer.isRunning).toBe(false);
+      expect(timer.isPaused).toBe(true);
+    });
+  });
+
   describe("Initialization", () => {
     it("should initialize with the correct duration and remaining time", () => {
       expect(timer.duration).toBe(5000);
@@ -26,9 +52,6 @@ describe("Timer", () => {
 
     it("should be in the stopped status", () => {
       expect(timer.status).toBe(TimerStatus.stopped);
-      expect(timer.isStopped).toBe(true);
-      expect(timer.isRunning).toBe(false);
-      expect(timer.isPaused).toBe(false);
     });
   });
 
@@ -37,9 +60,6 @@ describe("Timer", () => {
       timer.start();
 
       expect(timer.status).toBe(TimerStatus.running);
-      expect(timer.isRunning).toBe(true);
-      expect(timer.isStopped).toBe(false);
-      expect(timer.isPaused).toBe(false);
 
       vi.advanceTimersByTime(5000);
 
@@ -63,9 +83,6 @@ describe("Timer", () => {
       timer.stop();
 
       expect(timer.status).toBe(TimerStatus.stopped);
-      expect(timer.isStopped).toBe(true);
-      expect(timer.isRunning).toBe(false);
-      expect(timer.isPaused).toBe(false);
     });
 
     it("should emit the 'stop' event when the timer stops", () => {
@@ -85,8 +102,6 @@ describe("Timer", () => {
       timer.pause();
 
       expect(timer.status).toBe(TimerStatus.paused);
-      expect(timer.isPaused).toBe(true);
-      expect(timer.isRunning).toBe(false);
       expect(callback).not.toHaveBeenCalled();
       expect(timer.remaining).toBe(3000);
     });
@@ -109,8 +124,6 @@ describe("Timer", () => {
       timer.resume();
 
       expect(timer.status).toBe(TimerStatus.running);
-      expect(timer.isRunning).toBe(true);
-      expect(timer.isPaused).toBe(false);
 
       vi.advanceTimersByTime(3000);
 
@@ -130,8 +143,6 @@ describe("Timer", () => {
       timer.resume();
 
       expect(timer.status).toBe(TimerStatus.running);
-      expect(timer.isRunning).toBe(true);
-      expect(timer.isPaused).toBe(false);
     });
 
     it("should emit the 'resume' event when the timer resumes", () => {
@@ -180,20 +191,6 @@ describe("Timer", () => {
   });
 
   describe("Event Listeners", () => {
-    it("should call the registered event listeners when an event occurs", () => {
-      const startHandler = vi.fn();
-      const stopHandler = vi.fn();
-
-      timer.addEventListener(TimerEvent.start, startHandler);
-      timer.addEventListener(TimerEvent.stop, stopHandler);
-
-      timer.start();
-      timer.stop();
-
-      expect(startHandler).toHaveBeenCalled();
-      expect(stopHandler).toHaveBeenCalled();
-    });
-
     it("should remove event listeners when requested", () => {
       const eventHandler = vi.fn();
 
@@ -203,6 +200,7 @@ describe("Timer", () => {
       expect(eventHandler).toHaveBeenCalledTimes(1);
 
       timer.removeEventListener(TimerEvent.start, eventHandler);
+      timer.stop();
       timer.start();
 
       expect(eventHandler).toHaveBeenCalledTimes(1);
