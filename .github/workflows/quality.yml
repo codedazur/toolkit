@@ -29,7 +29,7 @@ jobs:
           npm ci
 
       - name: Audit
-        run: npm run audit
+        run: npm run audit --audit-level=high
 
       - name: Lint
         run: npm run lint
