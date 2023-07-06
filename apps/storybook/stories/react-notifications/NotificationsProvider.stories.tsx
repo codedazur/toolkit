@@ -208,8 +208,8 @@ export const Groups: StoryObj = {
           <Row gap="1rem">
             <AddBannerButton />
             <AddSnackbarButton />
-            <ClearAllGroupsButton />
-            <ClearGroupButton group="snackbars" />
+            <ClearSnackbarGroupButton />
+            <ClearBannerGroupButton />
           </Row>
         </Center>
       </Column>
@@ -266,18 +266,16 @@ const AddSnackbarButton = () => {
   );
 };
 
-const ClearAllGroupsButton = () => {
-  const { clearAllGroups } = useSnackbars();
-
-  return <Button onClick={() => clearAllGroups()}>Clear all groups</Button>;
-};
-
-const ClearGroupButton = ({ group }: { group: string }) => {
+const ClearSnackbarGroupButton = () => {
   const { clearGroup } = useSnackbars();
 
-  return (
-    <Button onClick={() => clearGroup(group)}>Clear Snackbar Group</Button>
-  );
+  return <Button onClick={() => clearGroup()}>Clear Snackbar Group</Button>;
+};
+
+const ClearBannerGroupButton = () => {
+  const { clearGroup } = useBanners();
+
+  return <Button onClick={() => clearGroup()}>Clear Banner Group</Button>;
 };
 
 const Snackbars = () => {

@@ -10,7 +10,6 @@ import { notificationsContext } from "../providers/NotificationsContext";
  * @property {Function} add - Adds a new notification to the specified group.
  * @property {Function} remove - Removes a notification with the specified ID from the group.
  * @property {Function} clearGroup - Clears all notifications in the specified group.
- * @property {Function} clearAllGroups - Clears all notifications in all groups.
  *
  * **/
 export const useNotifications = (group: string = "default") => {
@@ -22,7 +21,6 @@ export const useNotifications = (group: string = "default") => {
     add: (children: ReactNode, options?: { autoDismiss?: number | false }) =>
       context.add(group, children, options),
     remove: (id: number) => context.remove(group, id),
-    clearGroup: (group: string) => context.clearGroup(group),
-    clearAllGroups: () => context.clearAllGroups(),
+    clearGroup: () => context.clearGroup(group),
   };
 };
