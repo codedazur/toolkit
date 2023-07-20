@@ -56,6 +56,7 @@ export interface StaticSiteProps {
     memoryLimit?: number;
     prefix?: string;
     cacheInvalidations?: string[];
+    awaitCacheInvalidations?: boolean;
   };
 }
 
@@ -84,7 +85,7 @@ export class StaticSite extends Construct {
   public readonly distribution: Distribution;
   public readonly alias?: ARecord;
   public readonly deployment: BucketDeployment;
-  public readonly cacheInvalidator: CacheInvalidator;
+  public readonly cacheInvalidator?: CacheInvalidator;
 
   constructor(
     scope: Construct,
@@ -102,7 +103,10 @@ export class StaticSite extends Construct {
     this.distribution = this.createDistribution();
     this.alias = this.createAlias();
     this.deployment = this.createDeployment();
-    this.cacheInvalidator = this.createCacheInvalidator();
+
+    if (props.deployment?.awaitCacheInvalidations !== false) {
+      this.cacheInvalidator = this.createCacheInvalidator();
+    }
   }
 
   protected determineDomain() {
@@ -207,7 +211,7 @@ export class StaticSite extends Construct {
     }
 
     return new CloudFrontFunction(this, "ViewerRequestFunction", {
-      code: this.getRequestHandlerChainCode(handlers),
+      code: this.getHandlerChainCode(handlers, "request"),
     });
   }
 
@@ -222,11 +226,14 @@ export class StaticSite extends Construct {
     }
 
     return new CloudFrontFunction(this, "ViewerResponseFunction", {
-      code: this.getResponseHandlerChainCode(handlers),
+      code: this.getHandlerChainCode(handlers, "response"),
     });
   }
 
-  protected getRequestHandlerChainCode(handlers: FunctionCode[]) {
+  protected getHandlerChainCode(
+    handlers: FunctionCode[],
+    completion: "request" | "response"
+  ) {
     return FunctionCode.fromInline(/* js */ `
 			function handler(event) {
 				return chain(event, [
@@ -240,31 +247,7 @@ export class StaticSite extends Construct {
 			}
 
 			function complete(event) {
-				return event.request;
-			}
-		`);
-  }
-
-  /**
-   * @todo This function duplicates a lot of the `getRequestHandlerChainCode`
-   * function. Only the `return` statement of the `complete` function is
-   * different. Refactor to avoid this repetition.
-   */
-  protected getResponseHandlerChainCode(handlers: FunctionCode[]) {
-    return FunctionCode.fromInline(/* js */ `
-			function handler(event) {
-				return chain(event, [
-					${handlers.map((code) => code.render().replace(/;\s*$/, "")).join(",")}
-				])
-			}
-
-			function chain(event, handlers) {
-				var current = handlers.shift() ?? complete;
-				return current(event, (event) => chain(event, handlers))
-			}
-
-			function complete(event) {
-				return event.response;
+				return event.${completion};
 			}
 		`);
   }
@@ -324,6 +307,10 @@ export class StaticSite extends Construct {
 		`);
   }
 
+  /**
+   * @todo Make these headers configurable.
+   * @todo Research CSP and define a good default.
+   */
   protected getSecurityHeadersCode() {
     return FunctionCode.fromInline(/* js */ `
 			function securityHeaders(event, next) {
@@ -331,9 +318,6 @@ export class StaticSite extends Construct {
           value: "max-age=63072000; includeSubDomains; preload",
         };
 
-        /**
-         * @todo Research CSP and define a good default.
-         */
         // event.response.headers["content-security-policy"] = {
         //   value:
         //     "default-src 'self'; img-src *; media-src *; frame-src *; font-src *
@@ -415,6 +399,11 @@ export class StaticSite extends Construct {
       destinationBucket: this.bucket,
       destinationKeyPrefix: this.props.deployment?.prefix,
       memoryLimit: this.props.deployment?.memoryLimit,
+      distribution:
+        this.props.deployment?.awaitCacheInvalidations !== false
+          ? this.distribution
+          : undefined,
+      distributionPaths: this.props.deployment?.cacheInvalidations,
     });
   }
 
