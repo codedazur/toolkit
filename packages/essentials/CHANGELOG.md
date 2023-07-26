@@ -1,5 +1,11 @@
 # @codedazur/essentials
 
+## 1.1.1
+
+### Patch Changes
+
+- [#138](https://github.com/codedazur/toolkit/pull/138) [`08e8d85`](https://github.com/codedazur/toolkit/commit/08e8d854a0f90c697a825fcc4fb7af92fedee661) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - export sleep from index
+
 ## 1.1.0
 
 ### Minor Changes
