@@ -6,8 +6,6 @@
 
 - [#133](https://github.com/codedazur/toolkit/pull/133) [`678b5f7`](https://github.com/codedazur/toolkit/commit/678b5f7e0358cba7bdc0c0fc6dcb1a12658c1663) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - stable release
 
-- [#124](https://github.com/codedazur/toolkit/pull/124) [`a155600`](https://github.com/codedazur/toolkit/commit/a1556008adb2356fd16d4d2d8814427d9a260aef) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - stable release
-
 ### Patch Changes
 
 - Updated dependencies [[`8996031`](https://github.com/codedazur/toolkit/commit/8996031f86872cf66ab42bb0ec1629079e4cb1c2)]:
