@@ -13,4 +13,5 @@ export * from "./utilities/object/pick";
 export * from "./utilities/object/rekeyObject";
 export * from "./utilities/object/revalueObject";
 export * from "./utilities/system/env";
+export * from "./utilities/timing/sleep";
 export * from "./utilities/timing/Timer";
