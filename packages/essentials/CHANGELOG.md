@@ -1,5 +1,11 @@
 # @codedazur/essentials
 
+## 1.1.0
+
+### Minor Changes
+
+- [#134](https://github.com/codedazur/toolkit/pull/134) [`74998c6`](https://github.com/codedazur/toolkit/commit/74998c65e00c47b8d18c9a1607ddbd15800d98f3) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - add sleep function
+
 ## 1.0.1
 
 ### Patch Changes
