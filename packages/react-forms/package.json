@@ -1,0 +1,39 @@
+{
+  "name": "@codedazur/react-forms",
+  "version": "0.0.0",
+  "main": ".dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    }
+  },
+  "license": "MIT",
+  "scripts": {
+    "lint": "TIMING=1 eslint \"**/*.ts*\"",
+    "test": "echo \"No tests configured.\"",
+    "build": "tsup index.ts --format esm,cjs --dts",
+    "dev": "tsup index.ts --format esm,cjs --watch --external react"
+  },
+  "dependencies": {
+    "@codedazur/essentials": "*",
+    "@codedazur/react-essentials": "*"
+  },
+  "peerDependencies": {
+    "react": ">=16.8.0"
+  },
+  "devDependencies": {
+    "@codedazur/eslint-config": "*",
+    "@codedazur/tsconfig": "*",
+    "@types/react-dom": "^18.0.8",
+    "@types/react": "^18.0.24",
+    "eslint": "^8.44.0",
+    "react": "^18.2.0",
+    "typescript": "^5.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

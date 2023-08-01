@@ -14,7 +14,7 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "turbo run dev --parallel --concurrency=15",
+    "dev": "turbo run dev --parallel --concurrency=20",
     "storybook": "turbo run dev --filter @apps/storybook",
     "website": "turbo run dev --filter @apps/website",
     "audit": "npm audit --omit-dev",
