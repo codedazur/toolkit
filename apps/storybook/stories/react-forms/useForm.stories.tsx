@@ -1,5 +1,16 @@
-import { Button, Column, FormField, Input } from "@codedazur/react-components";
-import { isEmail, isNotEmpty, useForm } from "@codedazur/react-forms";
+import {
+  Button,
+  Column,
+  FormField,
+  Input,
+  Select,
+} from "@codedazur/react-components";
+import {
+  FieldProps,
+  isEmail,
+  isNotEmpty,
+  useForm,
+} from "@codedazur/react-forms";
 import { action } from "@storybook/addon-actions";
 import { Meta, StoryObj } from "@storybook/react";
 import { DebugOverlay } from "../../components/DebugOverlay";
@@ -30,30 +41,12 @@ export const LoginForm: StoryObj = {
       <>
         <form onSubmit={form.onSubmit}>
           <Column gap="1rem" width="20rem">
-            <FormField
-              title="Email"
-              error={form.fields.email.isTouched && form.fields.email.error}
-            >
-              <Input
-                type="email"
-                {...form.fields.email}
-                error={form.fields.email.isTouched && !!form.fields.email.error}
-              />
-            </FormField>
-            <FormField
+            <InputFormField {...form.fields.email} title="Email" type="email" />
+            <InputFormField
+              {...form.fields.password}
               title="Password"
-              error={
-                form.fields.password.isTouched && form.fields.password.error
-              }
-            >
-              <Input
-                type="password"
-                {...form.fields.password}
-                error={
-                  form.fields.password.isTouched && !!form.fields.password.error
-                }
-              />
-            </FormField>
+              type="password"
+            />
             <Button type="submit" disabled={!form.isValid}>
               Submit
             </Button>
@@ -81,7 +74,7 @@ export const TicketsForm: StoryObj = {
     const form = useForm<TicketsFormFields>({
       fields: {
         date: { validation: [isNotEmpty] },
-        type: { validation: [isNotEmpty] },
+        type: { initialValue: TicketType.OneWay },
         tickets: { validation: [isNotEmpty] },
       },
       onSubmit: action("onSubmit"),
@@ -91,40 +84,17 @@ export const TicketsForm: StoryObj = {
       <>
         <form onSubmit={form.onSubmit}>
           <Column gap="1rem" width="20rem">
-            <FormField
-              title="Date"
-              error={form.fields.date.isTouched && form.fields.date.error}
-            >
-              <Input
-                type="date"
-                {...form.fields.date}
-                error={form.fields.date.isTouched && !!form.fields.date.error}
-              />
-            </FormField>
-            <FormField
+            <InputFormField {...form.fields.date} title="Date" type="date" />
+            <SelectFormField
+              {...form.fields.type}
               title="Type"
-              error={form.fields.type.isTouched && form.fields.type.error}
-            >
-              <select {...form.fields.type}>
-                {Object.values(TicketType).map((type) => (
-                  <option key={type} value={type}>
-                    {type}
-                  </option>
-                ))}
-              </select>
-            </FormField>
-            <FormField
+              options={Object.values(TicketType)}
+            />
+            <InputFormField
+              {...form.fields.tickets}
               title="Tickets"
-              error={form.fields.tickets.isTouched && form.fields.tickets.error}
-            >
-              <Input
-                type="number"
-                {...form.fields.tickets}
-                error={
-                  form.fields.tickets.isTouched && !!form.fields.tickets.error
-                }
-              />
-            </FormField>
+              type="number"
+            />
             <Button type="submit" disabled={!form.isValid}>
               Submit
             </Button>
@@ -135,3 +105,36 @@ export const TicketsForm: StoryObj = {
     );
   },
 };
+
+const InputFormField = ({
+  title,
+  type = "text",
+  isTouched,
+  error,
+  ...props
+}: { title?: string; type?: string } & FieldProps<
+  string | number,
+  HTMLInputElement
+>) => (
+  <FormField title={title} error={isTouched && error}>
+    <Input {...props} type={type} error={isTouched && !!error} />
+  </FormField>
+);
+
+const SelectFormField = ({
+  title,
+  isTouched,
+  error,
+  ...props
+}: { title?: string; options: string[] } & FieldProps<
+  string | number,
+  HTMLSelectElement
+>) => (
+  <FormField title={title} error={isTouched && error}>
+    <Select
+      {...props}
+      options={props.options.map((value) => ({ value, label: value }))}
+      error={isTouched && !!error}
+    />
+  </FormField>
+);

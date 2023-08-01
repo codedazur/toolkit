@@ -31,10 +31,11 @@ import {
   StopIcon,
   Text,
   VolumeUpIcon,
+  pick,
   timecode,
 } from "@codedazur/react-components";
 import { Meta, StoryObj } from "@storybook/react";
-import { FunctionComponent } from "react";
+import { FunctionComponent, useMemo } from "react";
 import { Bar } from "@apps/storybook/components/Bar";
 import { List } from "@apps/storybook/components/List";
 import { WithCenter } from "@apps/storybook/decorators/WithCenter";
@@ -45,6 +46,7 @@ import seaOfStars from "./artworks/sea-of-stars.jpg";
 import alienated from "./tracks/alienated.mp3";
 import meteorites from "./tracks/meteorites.mp3";
 import tabulaRasa from "./tracks/tabula-rasa.mp3";
+import { DebugOverlay } from "../../components/DebugOverlay";
 
 const meta: Meta = {
   title: "React-Audio/AudioProvider",
@@ -512,23 +514,21 @@ const AudioDebugOverlay: FunctionComponent<AudioDebugOverlayProps> = ({
   targetFps,
   ...keyObject
 }) => {
-  return null;
+  const audio = {
+    ...useAudio(),
+    ...useAudioVolume(),
+    ...useAudioProgress({ targetFps }),
+  };
 
-  // const audio = {
-  //   ...useAudio(),
-  //   ...useAudioVolume(),
-  //   ...useAudioProgress({ targetFps }),
-  // };
+  const keys = useMemo(
+    () =>
+      Object.entries(keyObject)
+        .filter(([, value]) => !!value)
+        .map(([key]) => key) as Array<
+        keyof ReturnType<typeof useAudioProgress>
+      >,
+    [keyObject]
+  );
 
-  // const keys = useMemo(
-  //   () =>
-  //     Object.entries(keyObject)
-  //       .filter(([, value]) => !!value)
-  //       .map(([key]) => key) as Array<
-  //       keyof ReturnType<typeof useAudioProgress>
-  //     >,
-  //   [keyObject]
-  // );
-
-  // return <DebugOverlay value={pick(audio, keys)} />;
+  return <DebugOverlay value={pick(audio, keys)} />;
 };
