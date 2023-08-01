@@ -1,5 +1,11 @@
 # @codedazur/essentials
 
+## 1.1.2
+
+### Patch Changes
+
+- [#141](https://github.com/codedazur/toolkit/pull/141) [`6589e2d`](https://github.com/codedazur/toolkit/commit/6589e2d703dc68ed981e38b4680658077ad0251c) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - properly resolve sleep promise
+
 ## 1.1.1
 
 ### Patch Changes
