@@ -1,5 +1,5 @@
+import { describe, expect, it } from "vitest";
 import { shuffle } from "./shuffle";
-import { describe, it, expect } from "vitest";
 
 describe("shuffle", () => {
   it("should return an empty array when given an empty array", () => {

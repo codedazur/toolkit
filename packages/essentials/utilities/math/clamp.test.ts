@@ -1,7 +1,7 @@
+import { describe, expect, it } from "vitest";
 import { clamp } from "./clamp";
-import { describe, it, expect } from "vitest";
 
-describe("clamp()", () => {
+describe("clamp", () => {
   it("should return the value when within the range", () => {
     const result = clamp(5, 0, 10);
     expect(result).toEqual(5);

@@ -1,5 +1,5 @@
+import { describe, expect, it } from "vitest";
 import { sequence } from "./sequence";
-import { describe, it, expect } from "vitest";
 
 describe("sequence", () => {
   it("generates an array starting at 0 and ending at 5", () => {
