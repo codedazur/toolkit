@@ -104,7 +104,7 @@ export class StaticSite extends Construct {
     this.alias = this.createAlias();
     this.deployment = this.createDeployment();
 
-    if (props.deployment?.awaitCacheInvalidations !== false) {
+    if (!props.deployment?.awaitCacheInvalidations) {
       this.cacheInvalidator = this.createCacheInvalidator();
     }
   }
@@ -400,7 +400,7 @@ export class StaticSite extends Construct {
       destinationKeyPrefix: this.props.deployment?.prefix,
       memoryLimit: this.props.deployment?.memoryLimit,
       distribution:
-        this.props.deployment?.awaitCacheInvalidations !== false
+        !this.props.deployment?.awaitCacheInvalidations
           ? this.distribution
           : undefined,
       distributionPaths: this.props.deployment?.cacheInvalidations,
