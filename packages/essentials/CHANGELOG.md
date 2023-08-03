@@ -1,5 +1,11 @@
 # @codedazur/essentials
 
+## 1.1.3
+
+### Patch Changes
+
+- [#147](https://github.com/codedazur/toolkit/pull/147) [`184fafb`](https://github.com/codedazur/toolkit/commit/184fafb3f0000696b9ea7afa78f48359265d76b8) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - better typings for object utilities
+
 ## 1.1.2
 
 ### Patch Changes
