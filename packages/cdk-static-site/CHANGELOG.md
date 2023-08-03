@@ -1,5 +1,16 @@
 # @codedazur/cdk-static-site
 
+## 2.0.0
+
+### Major Changes
+
+- [#148](https://github.com/codedazur/toolkit/pull/148) [`228254c`](https://github.com/codedazur/toolkit/commit/228254c40e2fbafe26dc6bac7e394b23390da19f) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - stable release
+
+### Patch Changes
+
+- Updated dependencies [[`228254c`](https://github.com/codedazur/toolkit/commit/228254c40e2fbafe26dc6bac7e394b23390da19f)]:
+  - @codedazur/cdk-cache-invalidator@2.0.0
+
 ## 1.0.0
 
 ### Major Changes
