@@ -10,6 +10,9 @@
       "import": "./dist/index.mjs"
     }
   },
+  "publishConfig": {
+    "access": "restricted"
+  },
   "license": "MIT",
   "scripts": {
     "lint": "TIMING=1 eslint \"**/*.ts*\"",

@@ -10,6 +10,9 @@
       "import": "./dist/index.mjs"
     }
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "license": "MIT",
   "scripts": {
     "lint": "TIMING=1 eslint \"**/*.ts*\"",
@@ -28,8 +31,5 @@
     "react": "^18.2.0",
     "@codedazur/tsconfig": "*",
     "typescript": "^5.1.6"
-  },
-  "publishConfig": {
-    "access": "public"
   }
 }

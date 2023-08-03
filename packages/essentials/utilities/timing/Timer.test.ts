@@ -1,9 +1,7 @@
+import { Mock, afterAll, afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { Timer, TimerEvent, TimerStatus } from "./Timer";
-import { describe, it, expect, vi, Mock, beforeEach, afterEach } from "vitest";
 
 describe("Timer", () => {
-  vi.useFakeTimers();
-
   let callback: Mock;
   let timer: Timer;
 
@@ -14,7 +12,10 @@ describe("Timer", () => {
   });
 
   afterEach(() => {
-    vi.clearAllMocks();
+    vi.clearAllTimers();
+  });
+  
+  afterAll(() => {
     vi.useRealTimers();
   });
 

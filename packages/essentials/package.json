@@ -10,10 +10,10 @@
       "import": "./dist/index.mjs"
     }
   },
-  "license": "MIT",
   "publishConfig": {
     "access": "public"
   },
+  "license": "MIT",
   "scripts": {
     "lint": "TIMING=1 eslint \"**/*.ts*\"",
     "build": "tsup index.ts --format esm,cjs --dts",
