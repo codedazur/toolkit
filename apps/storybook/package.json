@@ -41,6 +41,6 @@
     "@storybook/testing-library": "^0.0.14-next.1 || ^0.1.0 || ^0.2.0",
     "@types/color": "^3.0.3",
     "storybook": "^7.0.26",
-    "vite": "4.4.4"
+    "vite": "4.4.8"
   }
 }
