@@ -1,3 +1,4 @@
+import { describe, it, expect } from "vitest";
 import { rekeyObject } from "./rekeyObject";
 
 const object = { a: 1, b: 2, c: 3 };
