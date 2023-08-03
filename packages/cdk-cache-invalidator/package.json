@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "main": "./index.ts",
   "types": "./index.ts",
+  "publishConfig": {
+    "access": "public"
+  },
   "license": "MIT",
   "scripts": {
     "lint": "TIMING=1 eslint \"**/*.ts*\"",
