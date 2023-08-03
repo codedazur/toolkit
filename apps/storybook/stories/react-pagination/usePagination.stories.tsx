@@ -42,7 +42,6 @@ export default meta;
 export const Default: StoryObj<UsePaginationWithPagesProps> = {
   render: function Default(args) {
     const { pages, page, setPage, next, previous, range } = usePagination(args);
-    console.log(range, page);
 
     return (
       <>
@@ -131,7 +130,6 @@ export const WithItems: StoryObj<UsePaginationWithItemsProps<string>> = {
   render: function WithItems(args) {
     const { pages, page, setPage, next, previous, range, items } =
       usePagination(args);
-    console.log(range);
 
     return (
       <>

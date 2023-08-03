@@ -128,10 +128,7 @@ export function usePagination<T>(
   );
 
   const setPage = (page: number) =>
-    _setPage(() => {
-      console.log(clampIndex(page));
-      return clampIndex(page);
-    });
+    _setPage(() => clampIndex(page));
 
   const next = () => setPage(page + 1);
   const previous = () => setPage(page - 1);
