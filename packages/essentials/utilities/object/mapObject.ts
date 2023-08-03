@@ -1,8 +1,10 @@
-export function mapObject<Key extends string | number | symbol, Value, Return>(
-  record: Record<Key, Value>,
-  callback: (entry: [Key, Value]) => Return
-): Return[] {
-  return Object.entries(record).map(([key, value]) =>
-    callback([key as Key, value as Value])
-  );
+/**
+ * Maps each entry of an object to a new value using a callback function and
+ * returns an array containing the new values.
+ */
+export function mapObject<T extends Record<string, any>, U>(
+  object: T,
+  callback: (entry: [keyof T, T[keyof T]], index: number) => U
+): U[] {
+  return Object.entries(object).map(callback);
 }

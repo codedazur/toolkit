@@ -14,7 +14,7 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "turbo run dev --parallel --concurrency=15",
+    "dev": "turbo run dev --parallel --concurrency=20",
     "storybook": "turbo run dev --filter @apps/storybook",
     "website": "turbo run dev --filter @apps/website",
     "audit": "npm audit --omit-dev",
@@ -33,11 +33,11 @@
   },
   "devDependencies": {
     "@changesets/changelog-github": "0.4.8",
-    "@changesets/cli": "^2.26.0",
+    "@changesets/cli": "^2.26.2",
     "@codedazur/eslint-config": "*",
     "prettier": "latest",
-    "tsup": "^6.5.0",
+    "tsup": "^7.1.0",
     "turbo": "latest",
-    "vitest": "^0.30.1 || ^0.31.0 || ^0.32.0 || ^0.33.0"
+    "vitest": "^0.34.1"
   }
 }

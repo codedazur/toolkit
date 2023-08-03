@@ -205,12 +205,16 @@ export const Groups: StoryObj = {
       <Column gap="1rem" height="100%">
         <Banners />
         <Center>
-          <Row gap="1rem">
-            <AddBannerButton />
-            <AddSnackbarButton />
-            <ClearSnackbarGroupButton />
-            <ClearBannerGroupButton />
-          </Row>
+          <Column gap="3rem" align="center">
+            <Row gap="1rem">
+              <AddBannerButton />
+              <ClearBannersButton />
+            </Row>
+            <Row gap="1rem">
+              <AddSnackbarButton />
+              <ClearSnackbarsButton />
+            </Row>
+          </Column>
         </Center>
       </Column>
       <Snackbars />
@@ -220,7 +224,7 @@ export const Groups: StoryObj = {
   play: async ({ canvasElement }) => {
     const body = within(canvasElement.ownerDocument.body);
 
-    const [addBanner, addSnackbar] = await body.findAllByRole("button");
+    const [addBanner, , addSnackbar] = await body.findAllByRole("button");
 
     userEvent.click(addBanner);
     const banner = await body.findByTestId("banner");
@@ -266,16 +270,16 @@ const AddSnackbarButton = () => {
   );
 };
 
-const ClearSnackbarGroupButton = () => {
+const ClearSnackbarsButton = () => {
   const { clear } = useSnackbars();
 
-  return <Button onClick={() => clear()}>Clear Snackbar Group</Button>;
+  return <Button onClick={() => clear()}>Clear Snackbars</Button>;
 };
 
-const ClearBannerGroupButton = () => {
+const ClearBannersButton = () => {
   const { clear } = useBanners();
 
-  return <Button onClick={() => clear()}>Clear Banner Group</Button>;
+  return <Button onClick={() => clear()}>Clear Banners</Button>;
 };
 
 const Snackbars = () => {

@@ -12,7 +12,7 @@
   "dependencies": {
     "@codedazur/essentials": "*",
     "@codedazur/react-audio": "*",
-    "@codedazur/react-components": "^23.0.0",
+    "@codedazur/react-components": "^24.5.9",
     "@codedazur/react-date-picker": "*",
     "@codedazur/react-essentials": "*",
     "@codedazur/react-notifications": "*",
@@ -24,14 +24,14 @@
     "styled-components": "^5.3.6"
   },
   "devDependencies": {
-    "@babel/core": "^7.19.6",
-    "@types/node": "^18.11.9",
+    "@babel/core": "^7.22.9",
+    "@types/node": "^20.4.5",
     "@types/react": "18.2.18",
     "@types/styled-components": "^5.1.26",
     "eslint": "8.46.0",
     "@codedazur/eslint-config": "*",
     "next-transpile-modules": "10.0.1",
     "@codedazur/tsconfig": "*",
-    "typescript": "^4.8.4 || ^5.0.0"
+    "typescript": "^5.1.6"
   }
 }

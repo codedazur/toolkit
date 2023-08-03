@@ -1,6 +1,6 @@
 {
-  "name": "@codedazur/react-pagination",
-  "version": "0.0.1",
+  "name": "@codedazur/react-forms",
+  "version": "0.0.0",
   "main": ".dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -10,9 +10,6 @@
       "import": "./dist/index.mjs"
     }
   },
-  "publishConfig": {
-    "access": "restricted"
-  },
   "license": "MIT",
   "scripts": {
     "lint": "TIMING=1 eslint \"**/*.ts*\"",
@@ -21,18 +18,22 @@
     "dev": "tsup index.ts --format esm,cjs --watch --external react"
   },
   "dependencies": {
-    "@codedazur/essentials": "*"
+    "@codedazur/essentials": "*",
+    "@codedazur/react-essentials": "*"
   },
   "peerDependencies": {
     "react": ">=16.8.0"
   },
   "devDependencies": {
-    "@types/react": "^18.2.18",
-    "@types/react-dom": "^18.2.7",
-    "eslint": "^8.46.0",
     "@codedazur/eslint-config": "*",
-    "react": "^18.2.0",
     "@codedazur/tsconfig": "*",
+    "@types/react-dom": "^18.2.7",
+    "@types/react": "^18.2.18",
+    "eslint": "^8.46.0",
+    "react": "^18.2.0",
     "typescript": "^5.1.6"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

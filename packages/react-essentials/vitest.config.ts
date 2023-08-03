@@ -8,7 +8,7 @@ export default defineConfig({
     setupFiles: "./test/setup.ts",
     passWithNoTests: true,
     coverage: {
-      provider: "c8",
+      provider: "v8",
       reporter: ["text", "html", "clover", "json", "lcov"],
       exclude: ["./test/setup.ts"],
     },

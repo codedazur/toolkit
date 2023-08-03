@@ -19,7 +19,7 @@ export const DebugOverlay: FunctionComponent<DebugOverlayProps> = ({
         aliasDuplicateObjects: false,
         keepUndefined: true,
         customTags: [functionTag],
-      })
+      }),
     );
   }, [value]);
 
@@ -38,6 +38,7 @@ const DebugBox = styled(Positioned).attrs({ mode: "fixed" })`
   pointer-events: none;
   font-size: smaller;
   line-height: 1.5em;
+  opacity: 0.75;
 `;
 
 const functionTag: ScalarTag = {
