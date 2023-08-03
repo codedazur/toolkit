@@ -1,4 +1,4 @@
-import { Timer } from "@codedazur/essentials";
+import { Timer, TimerEvent } from "@codedazur/essentials";
 import { Button, Center, Column, Row } from "@codedazur/react-components";
 import { action } from "@storybook/addon-actions";
 import type { Meta, StoryObj } from "@storybook/react";
@@ -17,12 +17,11 @@ export default meta;
 
 const timer = new Timer(action("callback"), 3000);
 
-timer.addEventListener("start", action("start"));
-timer.addEventListener("stop", action("stop"));
-timer.addEventListener("pause", action("pause"));
-timer.addEventListener("resume", action("resume"));
-timer.addEventListener("extend", action("extend"));
-timer.addEventListener("end", action("end"));
+timer.addEventListener(TimerEvent.start, action("start"));
+timer.addEventListener(TimerEvent.stop, action("stop"));
+timer.addEventListener(TimerEvent.pause, action("pause"));
+timer.addEventListener(TimerEvent.resume, action("resume"));
+timer.addEventListener(TimerEvent.end, action("end"));
 
 type Story = StoryObj<typeof Timer>;
 

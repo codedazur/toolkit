@@ -97,29 +97,59 @@ const TimerExtension = ({ extend }: TimerExtensionProps) => (
 
 interface TimerControlsProps extends ReturnType<typeof useTimer> {}
 
+// play
+// pause
+// set time (0) 
+// changeDuration(currentDuration)??
+// status = running / notRunning (isRunning)
+
+// user friendly
+// status = running / stopped / paused / completed
+// stop > set time (0) and not play
+// start > set time (0) and play (also when it's playing?: yes)
+// extend > changeDuration()
+
+// setDuration after completed, should change the state to paused and update the duration.
+
+
+
+
 const TimerControls = ({
   status,
+  start,
   resume,
   pause,
   stop,
-  isStopped,
   end,
-}: TimerControlsProps) => (
-  <Bar>
-    {status === TimerStatus.running ? (
-      <IconButton onClick={pause}>
-        <PauseIcon />
+  setDuration,
+  duration,
+}: TimerControlsProps) => {
+  const isStopped = status === TimerStatus.stopped;
+  const isRunning = status === TimerStatus.running;
+
+  return (
+    <Bar>
+      {isRunning ? (
+        <IconButton onClick={pause}>
+          <PauseIcon />
+        </IconButton>
+      ) : (
+        <IconButton onClick={resume}>
+          <PlayArrowIcon />
+        </IconButton>
+      )}
+      <IconButton onClick={() => setDuration(duration + 1000)}>
+        changeDuration
       </IconButton>
-    ) : (
-      <IconButton onClick={resume}>
-        <PlayArrowIcon />
+      <IconButton onClick={start}>start</IconButton>
+      <IconButton onClick={resume}>resume</IconButton>
+      <IconButton onClick={stop}>stop</IconButton>
+      <IconButton onClick={stop} disabled={isStopped}>
+        <StopIcon />
       </IconButton>
-    )}
-    <IconButton onClick={stop} disabled={isStopped}>
-      <StopIcon />
-    </IconButton>
-    <IconButton onClick={end}>
-      <SkipNextIcon />
-    </IconButton>
-  </Bar>
-);
+      <IconButton onClick={end}>
+        <SkipNextIcon />
+      </IconButton>
+    </Bar>
+  );
+};
