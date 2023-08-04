@@ -1,5 +1,11 @@
 # @codedazur/cdk-static-site
 
+## 1.0.1
+
+### Patch Changes
+
+- [#152](https://github.com/codedazur/toolkit/pull/152) [`042b4eb`](https://github.com/codedazur/toolkit/commit/042b4ebe6246694fc6bcd3fa4aa721330dbacf5a) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - correct default cache invalidation procedure
+
 ## 1.0.0
 
 ### Major Changes
