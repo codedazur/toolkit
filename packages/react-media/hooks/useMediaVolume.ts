@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { useAudio } from "./useAudio";
+import { useMedia } from "./useMedia";
 
-export const useAudioVolume = () => {
-  const { element, setVolume } = useAudio();
+export const useMediaVolume = () => {
+  const { element, setVolume } = useMedia();
 
   const [volume, _setVolume] = useState<number>(element ? element.volume : 1);
 

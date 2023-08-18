@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@codedazur/essentials": "*",
-    "@codedazur/react-audio": "*",
+    "@codedazur/react-media": "*",
     "@codedazur/react-components": "^24.5.9",
     "@codedazur/react-date-picker": "*",
     "@codedazur/react-essentials": "*",
