@@ -41,7 +41,8 @@ describe("usePagination ", () => {
       act(() => {
         result.current.setPage(2);
       });
-      // Should not change the layout of the segments
+
+      // The layout of the segments should still be the same.
       expect(result.current.range).toEqual([[1, 2, 3, 4, 5], [20]]);
 
       expect(result.current.page).toBe(2);
@@ -53,8 +54,10 @@ describe("usePagination ", () => {
       expect(result.current.page).toBe(1);
 
       act(() => {
-        result.current.previous(); // Try to go to the previous page (should remain on the first page)
+        // Trying to go to the previous page should not have any effect.
+        result.current.previous();
       });
+
       expect(result.current.page).toBe(1);
     });
   });

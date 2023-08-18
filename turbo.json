@@ -7,9 +7,11 @@
     },
     "audit": {},
     "lint": {},
-    "test": {},
+    "test": {
+      "dependsOn": ["^build"]
+    },
     "build": {
-      "dependsOn": ["audit", "lint", "^build", "test"],
+      "dependsOn": ["^build", "audit", "lint", "test"],
       "outputs": ["dist/**", ".next/**", ".storybook/**"]
     },
     "deploy": {
