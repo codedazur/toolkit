@@ -37,10 +37,5 @@
         "CDK_DEFAULT_REGION"
       ]
     },
-    "react-pagination#build": {
-      "dependsOn": [
-        "essentials#build"
-      ]
-    }
   }
 }
