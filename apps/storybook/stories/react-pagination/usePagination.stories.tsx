@@ -17,6 +17,7 @@ import { faker } from "@faker-js/faker";
 import { Meta, StoryObj } from "@storybook/react";
 import { SymbolButton } from "@apps/storybook/components/SymbolButton";
 import docs from "./usePagination.docs.mdx";
+import { DebugOverlay } from "../../components/DebugOverlay";
 
 const meta: Meta<UsePaginationProps<string>> = {
   title: "React-Pagination/usePagination",
@@ -70,7 +71,7 @@ export const Default: StoryObj<UsePaginationWithPagesProps> = {
             <ChevronRightIcon />
           </SymbolButton>
         </Row>
-        {/* <DebugOverlay value={{ pages, page, range }} /> */}
+        <DebugOverlay value={{ pages, page, range }} />
       </>
     );
   },
@@ -111,7 +112,7 @@ export const WithSiblingsAndBoundaries: StoryObj<UsePaginationWithPagesProps> =
               <ChevronRightIcon />
             </SymbolButton>
           </Row>
-          {/* <DebugOverlay value={{ pages, page, range }} /> */}
+          <DebugOverlay value={{ pages, page, range }} />
         </>
       );
     },
@@ -164,7 +165,7 @@ export const WithItems: StoryObj<UsePaginationWithItemsProps<string>> = {
             <ChevronRightIcon />
           </SymbolButton>
         </Row>
-        {/* <DebugOverlay value={{ pages, page, items, range }} /> */}
+        <DebugOverlay value={{ pages, page, items, range }} />
       </>
     );
   },
@@ -196,7 +197,7 @@ export const WithoutRange: StoryObj<UsePaginationWithPagesProps> = {
             <ChevronRightIcon />
           </SymbolButton>
         </Row>
-        {/* <DebugOverlay value={{ pages, page }} /> */}
+        <DebugOverlay value={{ pages, page }} />
       </>
     );
   },
@@ -233,7 +234,7 @@ export const WithoutSeparator: StoryObj<UsePaginationWithPagesProps> = {
             <ChevronRightIcon />
           </SymbolButton>
         </Row>
-        {/* <DebugOverlay value={{ pages, page, range }} /> */}
+        <DebugOverlay value={{ pages, page, range }} />
       </>
     );
   },
