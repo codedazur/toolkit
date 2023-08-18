@@ -51,13 +51,11 @@ export function MediaProvider({
   );
   const trackRef = useSynchronizedRef(track);
 
-  const elementRef: MaybeRef<HTMLMediaElement> =
-    initialElement ??
-    useRef(
-      typeof window !== "undefined"
-        ? window.document.createElement("video")
-        : null,
-    );
+  const elementRef: MaybeRef<HTMLMediaElement> =  useRef(
+    typeof window !== "undefined"
+      ? window.document.createElement("video")
+      : null,
+  );
 
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const isPlayingRef = useSynchronizedRef(isPlaying);
