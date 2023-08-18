@@ -5,14 +5,17 @@ import { formatSegments } from "../utilities/formatSegments";
 interface UsePaginationBaseProps {
   initialPage?: number;
   /**
-   * A number representing the number of siblings pages to be shown on each side of the current page in the pagination.
-   * For example, if siblings is 1, there will be one page on the left and one page on the right of the current page.
+   * The number of siblings pages to be shown on each side of the current page
+   * in the pagination. For example, if siblings is 1, there will be one page on
+   * the left and one page on the right of the current page.
    */
   siblings: number;
 
   /**
-   * A number specifying the number of boundaries pages to be shown at the beginning and end of the pagination.
-   *  These are the fixed pages shown at the extreme ends of the pagination, typically used to provide direct access to the first and last pages.
+   * The number of boundaries pages to be shown at the beginning and end of the
+   * pagination. These are the fixed pages shown at the extreme ends of the
+   * pagination, typically used to provide direct access to the first and last
+   * pages.
    */
   boundaries: number;
 
@@ -33,7 +36,7 @@ export type UsePaginationProps<T> =
   | UsePaginationWithItemsProps<T>;
 
 function isWithCount<T>(
-  props: UsePaginationProps<T>
+  props: UsePaginationProps<T>,
 ): props is UsePaginationWithPagesProps {
   return "pages" in props;
 }
@@ -58,15 +61,15 @@ type usePaginationResponse<T> =
   | UsePaginationWithPagesResponse;
 
 export function usePagination(
-  props: UsePaginationWithPagesProps
+  props: UsePaginationWithPagesProps,
 ): UsePaginationWithPagesResponse;
 
 export function usePagination<T>(
-  props: UsePaginationWithItemsProps<T>
+  props: UsePaginationWithItemsProps<T>,
 ): UsePaginationWithItemsResponse<T>;
 
 export function usePagination<T>(
-  props: UsePaginationProps<T>
+  props: UsePaginationProps<T>,
 ): usePaginationResponse<T> {
   assert(props.boundaries >= 0, "Boundaries must be a positive number");
   assert(props.siblings >= 0, "Siblings must be a positive number");
@@ -82,12 +85,12 @@ export function usePagination<T>(
 
   const computedPages = useMemo(
     () => Math.ceil(items.length / itemsPerPage),
-    [itemsPerPage, items]
+    [itemsPerPage, items],
   );
 
   const clampIndex = useCallback(
     (index: number) => clamp(index, 1, computedPages),
-    [computedPages]
+    [computedPages],
   );
 
   const [page, _setPage] = useState(clampIndex(props.initialPage ?? 1));
@@ -95,7 +98,7 @@ export function usePagination<T>(
   const clampedSequence = useCallback(
     (start: number, end: number) =>
       sequence(clampIndex(start), clampIndex(end)),
-    [clampIndex]
+    [clampIndex],
   );
 
   const { boundaries = 1, siblings = 1, gapSize = 1 } = props;
@@ -114,7 +117,7 @@ export function usePagination<T>(
       computedPages,
       siblings,
       boundaries,
-      gapSize
+      gapSize,
     );
   }, [page, boundaries, siblings, clampedSequence, computedPages, gapSize]);
 
@@ -122,13 +125,12 @@ export function usePagination<T>(
     () =>
       items.slice(
         (page - 1) * itemsPerPage,
-        (page - 1) * itemsPerPage + itemsPerPage
+        (page - 1) * itemsPerPage + itemsPerPage,
       ),
-    [itemsPerPage, items, page]
+    [itemsPerPage, items, page],
   );
 
-  const setPage = (page: number) =>
-    _setPage(() => clampIndex(page));
+  const setPage = (page: number) => _setPage(() => clampIndex(page));
 
   const next = () => setPage(page + 1);
   const previous = () => setPage(page - 1);

@@ -16,7 +16,7 @@ describe("usePagination ", () => {
           siblings: 1,
           boundaries: 1,
           gapSize: 1,
-        })
+        }),
       );
 
       expect(page).toBe(1);
@@ -28,7 +28,12 @@ describe("usePagination ", () => {
 
     it("should go to the next and previous page", () => {
       const { result } = renderHook(() =>
-        usePagination({ pages: 20, initialPage: 1, siblings: 1, boundaries: 1 })
+        usePagination({
+          pages: 20,
+          initialPage: 1,
+          siblings: 1,
+          boundaries: 1,
+        }),
       );
 
       expect(result.current.range).toEqual([[1, 2, 3, 4, 5], [20]]);
@@ -65,7 +70,7 @@ describe("usePagination ", () => {
           initialPage: 1,
           siblings: 1,
           boundaries: 1,
-        })
+        }),
       );
 
       expect(result.current.page).toBe(1);
@@ -86,7 +91,7 @@ describe("usePagination ", () => {
           initialPage: 1,
           siblings: 1,
           boundaries: 1,
-        })
+        }),
       );
 
       act(() => {
@@ -118,8 +123,8 @@ describe("usePagination ", () => {
             siblings: -1,
             boundaries: -1,
             gapSize: -1,
-          })
-        )
+          }),
+        ),
       ).toThrow();
     });
     it("should throw an error when siblings is negative", () => {
@@ -131,8 +136,8 @@ describe("usePagination ", () => {
             siblings: -1,
             boundaries: 1,
             gapSize: 1,
-          })
-        )
+          }),
+        ),
       ).toThrow();
     });
     it("should throw an error when boundaries is negative", () => {
@@ -144,8 +149,8 @@ describe("usePagination ", () => {
             siblings: 1,
             boundaries: -1,
             gapSize: 1,
-          })
-        )
+          }),
+        ),
       ).toThrow();
     });
     it("should throw an error when gapSize is negative", () => {
@@ -157,8 +162,8 @@ describe("usePagination ", () => {
             siblings: 1,
             boundaries: 1,
             gapSize: -1,
-          })
-        )
+          }),
+        ),
       ).toThrow();
     });
     it("should throw an error when initialPage is negative", () => {
@@ -170,8 +175,8 @@ describe("usePagination ", () => {
             siblings: 1,
             boundaries: 1,
             gapSize: 1,
-          })
-        )
+          }),
+        ),
       ).toThrow();
     });
   });
