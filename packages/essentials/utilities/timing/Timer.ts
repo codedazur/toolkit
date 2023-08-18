@@ -24,6 +24,7 @@ export class Timer {
   private _shiftedStartedAt?: number;
   private _timeoutStartedAt?: number;
   private _pausedAt?: number;
+  private _completedAt?: number;
   private _remaining: number;
 
   private _eventListeners: Record<TimerEvent, Array<() => void>> = {
@@ -36,6 +37,10 @@ export class Timer {
   };
 
   constructor(callback: () => void, duration: number) {
+    if (duration < 0) {
+      throw new Error("Duration cannot be less then 0.");
+    }
+
     this._callback = callback;
     this._duration = duration;
     this._remaining = duration;
@@ -48,7 +53,7 @@ export class Timer {
   public get status(): TimerStatus {
     if (this._hasTimeout) {
       return TimerStatus.running;
-    } else if (this._remaining === 0 && this.startedAt) {
+    } else if (this._remaining === 0 && this._startedAt && this._completedAt) {
       return TimerStatus.completed;
     } else if (this._remaining < this._duration) {
       return TimerStatus.paused;
@@ -82,6 +87,10 @@ export class Timer {
   }
 
   public get progress(): number {
+    if (this.isCompleted) {
+      return 1;
+    }
+
     const progress = clamp(
       this.isRunning
         ? (Date.now() - this._shiftedStartedAt!) / this._duration
@@ -127,6 +136,7 @@ export class Timer {
 
     this._startedAt = this._shiftedStartedAt = undefined;
     this._pausedAt = undefined;
+    this._completedAt = undefined;
     this._remaining = this._duration;
   };
 
@@ -193,17 +203,6 @@ export class Timer {
     this._runEventListeners(TimerEvent.resume);
   };
 
-  /**
-   * Test scenarios:
-   * 1. Timer is running, duration is changed
-   * 2. Timer is paused, duration is changed
-   * 3. Timer is stopped, duration is changed
-   * 4. Timer is completed, duration is changed
-   * 5. Duration is changed to 0
-   * 6. Duration is changed to negative
-   * 7. Duration is changed to positive
-   * 8. Duration is changed to same value
-   */
   public setDuration = (duration: number): void => {
     const wasRunning = this.isRunning;
 
@@ -211,9 +210,18 @@ export class Timer {
       throw new Error("Duration cannot be less then 0.");
     }
 
-    if (!this.isStopped && this.elapsed > duration) {
+    if (duration === this.duration) {
+      return;
+    }
+
+    if (wasRunning && this.elapsed >= duration) {
       this.end();
       return;
+    }
+
+    if (this.isCompleted) {
+      this._pausedAt = this._completedAt;
+      this._completedAt = undefined;
     }
 
     this._clearTimeout();
@@ -234,6 +242,7 @@ export class Timer {
   public end = (): void => {
     this._clearTimeout();
 
+    this._completedAt = Date.now();
     this._pausedAt = undefined;
     this._remaining = 0;
 

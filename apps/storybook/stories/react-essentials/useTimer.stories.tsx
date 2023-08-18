@@ -97,23 +97,6 @@ const TimerExtension = ({ extend }: TimerExtensionProps) => (
 
 interface TimerControlsProps extends ReturnType<typeof useTimer> {}
 
-// play
-// pause
-// set time (0) 
-// changeDuration(currentDuration)??
-// status = running / notRunning (isRunning)
-
-// user friendly
-// status = running / stopped / paused / completed
-// stop > set time (0) and not play
-// start > set time (0) and play (also when it's playing?: yes)
-// extend > changeDuration()
-
-// setDuration after completed, should change the state to paused and update the duration.
-
-
-
-
 const TimerControls = ({
   status,
   start,
@@ -121,8 +104,6 @@ const TimerControls = ({
   pause,
   stop,
   end,
-  setDuration,
-  duration,
 }: TimerControlsProps) => {
   const isStopped = status === TimerStatus.stopped;
   const isRunning = status === TimerStatus.running;
@@ -138,9 +119,6 @@ const TimerControls = ({
           <PlayArrowIcon />
         </IconButton>
       )}
-      <IconButton onClick={() => setDuration(duration + 1000)}>
-        changeDuration
-      </IconButton>
       <IconButton onClick={start}>start</IconButton>
       <IconButton onClick={resume}>resume</IconButton>
       <IconButton onClick={stop}>stop</IconButton>
