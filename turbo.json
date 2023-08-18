@@ -9,15 +9,38 @@
     "lint": {},
     "test": {},
     "build": {
-      "dependsOn": ["audit", "lint", "test", "^build"],
-      "outputs": ["dist/**", ".next/**", ".storybook/**"]
+      "dependsOn": [
+        "audit",
+        "lint",
+        "test",
+        "^build"
+      ],
+      "outputs": [
+        "dist/**",
+        ".next/**",
+        ".storybook/**"
+      ]
     },
     "deploy": {
-      "dependsOn": ["^build"],
-      "env": ["CDK_DEFAULT_ACCOUNT", "CDK_DEFAULT_REGION", "DOMAIN_NAME"]
+      "dependsOn": [
+        "^build"
+      ],
+      "env": [
+        "CDK_DEFAULT_ACCOUNT",
+        "CDK_DEFAULT_REGION",
+        "DOMAIN_NAME"
+      ]
     },
     "destroy": {
-      "env": ["CDK_DEFAULT_ACCOUNT", "CDK_DEFAULT_REGION"]
+      "env": [
+        "CDK_DEFAULT_ACCOUNT",
+        "CDK_DEFAULT_REGION"
+      ]
+    },
+    "react-pagination": {
+      "dependsOn": [
+        "essentials"
+      ]
     }
   }
 }
