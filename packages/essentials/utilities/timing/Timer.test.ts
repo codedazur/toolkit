@@ -81,13 +81,10 @@ describe("Timer", () => {
       expect(timer.isPaused).toBe(false);
     });
 
-    /**
-     * @todo This test needs to be fixed and enabled.
-     */
-    it.skip("should emit the 'stop' event when the timer stops", () => {
+    it("should emit the 'stop' event when the timer stops", () => {
       const eventHandler = vi.fn();
       timer.addEventListener(TimerEvent.stop, eventHandler);
-
+      timer.start();
       timer.stop();
 
       expect(eventHandler).toHaveBeenCalled();

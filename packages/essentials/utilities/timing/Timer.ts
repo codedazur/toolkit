@@ -53,7 +53,7 @@ export class Timer {
   public get status(): TimerStatus {
     if (this._hasTimeout) {
       return TimerStatus.running;
-    } else if (this._remaining === 0 && this._startedAt && this._completedAt) {
+    } else if (this._remaining === 0 && this._completedAt) {
       return TimerStatus.completed;
     } else if (this._remaining < this._duration) {
       return TimerStatus.paused;
