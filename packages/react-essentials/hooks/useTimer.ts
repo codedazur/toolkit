@@ -1,6 +1,6 @@
 import { Timer, TimerEvent, TimerStatus } from "@codedazur/essentials";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useDelta } from "./useDelta";
+
 import { useSynchronizedRef } from "./useSynchronizedRef";
 import { useUpdateLoop } from "./useUpdateLoop";
 
@@ -17,8 +17,6 @@ export function useTimer(callback: () => void, duration: number) {
 
   const [_status, setStatus] = useState<TimerStatus>(TimerStatus.stopped);
   const [_duration, setDuration] = useState<number>(duration);
-
-  const deltaDuration = useDelta(duration);
 
   useEffect(() => {
     const timer = timerRef.current;
@@ -46,12 +44,8 @@ export function useTimer(callback: () => void, duration: number) {
   }, [timerRef]);
 
   useEffect(() => {
-    if (deltaDuration > 0) {
-      // @todo: setDuration should be called here
-      // timerRef.current.extend(deltaDuration);
-      setDuration(timerRef.current.duration);
-    }
-  }, [deltaDuration]);
+    timerRef.current.setDuration(duration);
+  }, [duration]);
 
   const useProgress = useCallback(function useProgress({
     targetFps,
