@@ -1,16 +1,29 @@
-import { clamp, sequence } from "@codedazur/essentials";
+import { assert, clamp, sequence } from "@codedazur/essentials";
 import { useCallback, useMemo, useState } from "react";
 import { formatSegments } from "../utilities/formatSegments";
 
 interface UsePaginationBaseProps {
   initialPage?: number;
+  /**
+   * The number of siblings pages to be shown on each side of the current page
+   * in the pagination. For example, if siblings is 1, there will be one page on
+   * the left and one page on the right of the current page.
+   */
   siblings: number;
-  boundary: number;
+
+  /**
+   * The number of boundaries pages to be shown at the beginning and end of the
+   * pagination. These are the fixed pages shown at the extreme ends of the
+   * pagination, typically used to provide direct access to the first and last
+   * pages.
+   */
+  boundaries: number;
+
   gapSize?: number;
 }
 
-export interface UsePaginationWithCountProps extends UsePaginationBaseProps {
-  count: number;
+export interface UsePaginationWithPagesProps extends UsePaginationBaseProps {
+  pages: number;
 }
 
 export interface UsePaginationWithItemsProps<T> extends UsePaginationBaseProps {
@@ -19,18 +32,18 @@ export interface UsePaginationWithItemsProps<T> extends UsePaginationBaseProps {
 }
 
 export type UsePaginationProps<T> =
-  | UsePaginationWithCountProps
+  | UsePaginationWithPagesProps
   | UsePaginationWithItemsProps<T>;
 
 function isWithCount<T>(
-  props: UsePaginationProps<T>
-): props is UsePaginationWithCountProps {
-  return "count" in props;
+  props: UsePaginationProps<T>,
+): props is UsePaginationWithPagesProps {
+  return "pages" in props;
 }
 
 interface UsePaginationWithItemsResponse<T> {
   page: number;
-  count: number;
+  pages: number;
   setPage: (page: number) => void;
   next: () => void;
   previous: () => void;
@@ -38,38 +51,46 @@ interface UsePaginationWithItemsResponse<T> {
   items: T[];
 }
 
-type UsePaginationWithCountResponse = Omit<
+type UsePaginationWithPagesResponse = Omit<
   UsePaginationWithItemsResponse<never>,
   "items"
 >;
 
 type usePaginationResponse<T> =
   | UsePaginationWithItemsResponse<T>
-  | UsePaginationWithCountResponse;
+  | UsePaginationWithPagesResponse;
 
 export function usePagination(
-  props: UsePaginationWithCountProps
-): UsePaginationWithCountResponse;
+  props: UsePaginationWithPagesProps,
+): UsePaginationWithPagesResponse;
 
 export function usePagination<T>(
-  props: UsePaginationWithItemsProps<T>
+  props: UsePaginationWithItemsProps<T>,
 ): UsePaginationWithItemsResponse<T>;
 
 export function usePagination<T>(
-  props: UsePaginationProps<T>
+  props: UsePaginationProps<T>,
 ): usePaginationResponse<T> {
+  assert(props.boundaries >= 0, "Boundaries must be a positive number");
+  assert(props.siblings >= 0, "Siblings must be a positive number");
+  if (props.gapSize)
+    assert(props.gapSize >= 0, "Gap size must be a positive number");
+  if (props.initialPage) {
+    assert(props.initialPage > 0, "Initial page must be a positive number");
+  }
+
   const { items, itemsPerPage, hasItems } = isWithCount(props)
-    ? { items: sequence(1, props.count), itemsPerPage: 1, hasItems: false }
+    ? { items: sequence(1, props.pages), itemsPerPage: 1, hasItems: false }
     : { ...props, hasItems: true };
 
-  const count = useMemo(
+  const computedPages = useMemo(
     () => Math.ceil(items.length / itemsPerPage),
-    [itemsPerPage, items]
+    [itemsPerPage, items],
   );
 
   const clampIndex = useCallback(
-    (index: number) => clamp(index, 1, count),
-    [count]
+    (index: number) => clamp(index, 1, computedPages),
+    [computedPages],
   );
 
   const [page, _setPage] = useState(clampIndex(props.initialPage ?? 1));
@@ -77,28 +98,36 @@ export function usePagination<T>(
   const clampedSequence = useCallback(
     (start: number, end: number) =>
       sequence(clampIndex(start), clampIndex(end)),
-    [clampIndex]
+    [clampIndex],
   );
 
-  const { boundary = 1, siblings = 1, gapSize = 1 } = props;
+  const { boundaries = 1, siblings = 1, gapSize = 1 } = props;
 
   const range = useMemo(() => {
     const segments: [number[], number[], number[]] = [
-      boundary ? clampedSequence(1, boundary) : [],
+      boundaries ? clampedSequence(1, boundaries) : [],
       clampedSequence(page - siblings, page + siblings),
-      boundary ? clampedSequence(count + 1 - boundary, count) : [],
+      boundaries
+        ? clampedSequence(computedPages + 1 - boundaries, computedPages)
+        : [],
     ];
 
-    return formatSegments(segments, count, siblings, boundary, gapSize);
-  }, [page, boundary, siblings, clampedSequence, count, gapSize]);
+    return formatSegments(
+      segments,
+      computedPages,
+      siblings,
+      boundaries,
+      gapSize,
+    );
+  }, [page, boundaries, siblings, clampedSequence, computedPages, gapSize]);
 
   const currentItems = useMemo(
     () =>
       items.slice(
         (page - 1) * itemsPerPage,
-        (page - 1) * itemsPerPage + itemsPerPage
+        (page - 1) * itemsPerPage + itemsPerPage,
       ),
-    [itemsPerPage, items, page]
+    [itemsPerPage, items, page],
   );
 
   const setPage = (page: number) => _setPage(() => clampIndex(page));
@@ -111,7 +140,7 @@ export function usePagination<T>(
     setPage,
     next,
     previous,
-    count,
+    pages: computedPages,
     range,
     ...(hasItems ? { items: currentItems } : {}),
   };
