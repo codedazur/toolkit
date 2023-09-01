@@ -1,9 +1,9 @@
 import {
-  AudioProvider,
-  useAudio,
-  useAudioProgress,
-  useAudioVolume,
-} from "@codedazur/react-audio";
+  MediaProvider,
+  useMedia,
+  useMediaProgress,
+  useMediaVolume,
+} from "@codedazur/react-media";
 import {
   AbsorbPointer,
   Avatar,
@@ -39,7 +39,7 @@ import { FunctionComponent, useMemo } from "react";
 import { Bar } from "@apps/storybook/components/Bar";
 import { List } from "@apps/storybook/components/List";
 import { WithCenter } from "@apps/storybook/decorators/WithCenter";
-import docs from "./AudioProvider.docs.mdx";
+import docs from "./MediaProvider.docs.mdx";
 import distantWorldsIi from "./artworks/distant-worlds-ii.jpg";
 import distantWorlds from "./artworks/distant-worlds.jpg";
 import seaOfStars from "./artworks/sea-of-stars.jpg";
@@ -49,7 +49,7 @@ import tabulaRasa from "./tracks/tabula-rasa.mp3";
 import { DebugOverlay } from "../../components/DebugOverlay";
 
 const meta: Meta = {
-  title: "React-Audio/AudioProvider",
+  title: "React-Media/MediaProvider",
   decorators: [WithCenter],
   parameters: {
     docs: {
@@ -62,11 +62,11 @@ export default meta;
 
 export const Default: StoryObj = {
   render: () => (
-    <AudioProvider tracks={[meteorites]}>
+    <MediaProvider tracks={[meteorites]}>
       <StateControls />
       <TrackAttributionOverlay />
-      <AudioDebugOverlay isPlaying />
-    </AudioProvider>
+      <MediaDebugOverlay isPlaying />
+    </MediaProvider>
   ),
 };
 
@@ -78,7 +78,7 @@ const StateControls = () => (
 );
 
 const PlayButton = () => {
-  const { track, isPlaying, pause, play } = useAudio();
+  const { track, isPlaying, pause, play } = useMedia();
 
   return isPlaying ? (
     <IconButton onClick={pause}>
@@ -92,7 +92,7 @@ const PlayButton = () => {
 };
 
 const StopButton = () => {
-  const { isPlaying, stop } = useAudio();
+  const { isPlaying, stop } = useMedia();
 
   return (
     <IconButton onClick={stop} disabled={!isPlaying}>
@@ -102,14 +102,14 @@ const StopButton = () => {
 };
 
 export const WithVolumeControls = () => (
-  <AudioProvider tracks={[meteorites]}>
+  <MediaProvider tracks={[meteorites]}>
     <Row gap="1rem">
       <StateControls />
       <VolumeControls />
     </Row>
     <TrackAttributionOverlay />
-    <AudioDebugOverlay isPlaying volume />
-  </AudioProvider>
+    <MediaDebugOverlay isPlaying volume />
+  </MediaProvider>
 );
 
 const VolumeControls = () => (
@@ -120,7 +120,7 @@ const VolumeControls = () => (
 );
 
 const VolumeSlider = () => {
-  const { volume, setVolume } = useAudioVolume();
+  const { volume, setVolume } = useMediaVolume();
 
   return (
     <Padding right="0.5rem">
@@ -130,7 +130,7 @@ const VolumeSlider = () => {
 };
 
 export const WithSeekControls = () => (
-  <AudioProvider tracks={[meteorites]}>
+  <MediaProvider tracks={[meteorites]}>
     <Column gap="1rem" align="center">
       <Row gap="1rem">
         <StateControls />
@@ -139,8 +139,8 @@ export const WithSeekControls = () => (
       <SeekControls />
     </Column>
     <TrackAttributionOverlay />
-    <AudioDebugOverlay isPlaying volume time duration />
-  </AudioProvider>
+    <MediaDebugOverlay isPlaying volume time duration />
+  </MediaProvider>
 );
 
 const SeekControls = () => (
@@ -152,13 +152,13 @@ const SeekControls = () => (
 );
 
 const Time = () => {
-  const { time } = useAudioProgress({ targetFps: 1 });
+  const { time } = useMediaProgress({ targetFps: 1 });
 
   return <Text>{timecode.minutes(Math.round(time))}</Text>;
 };
 
 const ProgressSlider = () => {
-  const { progress, setProgress } = useAudioProgress();
+  const { progress, setProgress } = useMediaProgress();
 
   return (
     <Slider
@@ -170,13 +170,13 @@ const ProgressSlider = () => {
 };
 
 const Duration = () => {
-  const { duration } = useAudio();
+  const { duration } = useMedia();
 
   return <Text>{timecode.minutes(duration)}</Text>;
 };
 
 export const WithDynamicTrack = () => (
-  <AudioProvider>
+  <MediaProvider>
     <Column gap="5rem" align="center">
       <SelectTrack tracks={[meteorites, alienated, tabulaRasa]} />
       <Column gap="1rem" align="center">
@@ -188,8 +188,8 @@ export const WithDynamicTrack = () => (
       </Column>
     </Column>
     <TrackAttributionOverlay />
-    <AudioDebugOverlay track isPlaying volume time duration />
-  </AudioProvider>
+    <MediaDebugOverlay track isPlaying volume time duration />
+  </MediaProvider>
 );
 
 const SelectTrack = ({ tracks }: { tracks: string[] }) => (
@@ -204,7 +204,7 @@ const SelectTrack = ({ tracks }: { tracks: string[] }) => (
 );
 
 const TrackRadioButton = ({ track }: { track: string }) => {
-  const { track: currentTrack, setTrack } = useAudio();
+  const { track: currentTrack, setTrack } = useMedia();
 
   return track === currentTrack ? (
     <IconButton disabled>
@@ -218,7 +218,7 @@ const TrackRadioButton = ({ track }: { track: string }) => {
 };
 
 export const WithPlaylist = () => (
-  <AudioProvider tracks={[meteorites, alienated, tabulaRasa]}>
+  <MediaProvider tracks={[meteorites, alienated, tabulaRasa]}>
     <Column gap="5rem" align="center">
       <TrackList />
       <Column gap="1rem" align="center">
@@ -231,13 +231,13 @@ export const WithPlaylist = () => (
       </Column>
     </Column>
     <TrackAttributionOverlay />
-    <AudioDebugOverlay tracks cursor isPlaying volume time duration />
-  </AudioProvider>
+    <MediaDebugOverlay tracks cursor isPlaying volume time duration />
+  </MediaProvider>
 );
 
 const TrackList = () => {
   const { cursor, setCursor, tracks, isPlaying, pause, play } =
-    useAudio<string>();
+    useMedia<string>();
 
   return (
     <List>
@@ -276,7 +276,7 @@ const PlaylistControls = () => (
 );
 
 const RepeatButton = () => {
-  const { repeat, toggleRepeat } = useAudio();
+  const { repeat, toggleRepeat } = useMedia();
 
   return (
     <IconButton onClick={toggleRepeat}>
@@ -288,7 +288,7 @@ const RepeatButton = () => {
 };
 
 const ShuffleButton = () => {
-  const { shuffle, toggleShuffle } = useAudio();
+  const { shuffle, toggleShuffle } = useMedia();
 
   return (
     <IconButton onClick={toggleShuffle}>
@@ -300,7 +300,7 @@ const ShuffleButton = () => {
 };
 
 const PreviousButton = () => {
-  const { previous, canPlayPrevious } = useAudio();
+  const { previous, canPlayPrevious } = useMedia();
 
   return (
     <IconButton onClick={previous} disabled={!canPlayPrevious}>
@@ -310,7 +310,7 @@ const PreviousButton = () => {
 };
 
 const NextButton = () => {
-  const { next, canPlayNext } = useAudio();
+  const { next, canPlayNext } = useMedia();
 
   return (
     <IconButton onClick={next} disabled={!canPlayNext}>
@@ -352,7 +352,7 @@ const myTracks: MyTrack[] = [
 ];
 
 export const WithMetadata = () => (
-  <AudioProvider tracks={myTracks}>
+  <MediaProvider tracks={myTracks}>
     <FullscreenArtwork />
     <Column gap="5rem" align="center">
       <FancyTrackList />
@@ -369,12 +369,12 @@ export const WithMetadata = () => (
       </Column>
     </Column>
     <TrackAttributionOverlay />
-    <AudioDebugOverlay tracks cursor isPlaying volume time duration />
-  </AudioProvider>
+    <MediaDebugOverlay tracks cursor isPlaying volume time duration />
+  </MediaProvider>
 );
 
 const FullscreenArtwork = () => {
-  const { track } = useAudio<MyTrack>();
+  const { track } = useMedia<MyTrack>();
 
   if (!track) return null;
 
@@ -398,7 +398,7 @@ const FullscreenArtwork = () => {
 
 const FancyTrackList = () => {
   const { cursor, setCursor, tracks, isPlaying, pause, play } =
-    useAudio<MyTrack>();
+    useMedia<MyTrack>();
 
   return (
     <List>
@@ -444,7 +444,7 @@ const FancyTrackList = () => {
 };
 
 const TrackData = () => {
-  const { track } = useAudio<MyTrack>();
+  const { track } = useMedia<MyTrack>();
 
   return (
     <Bar>
@@ -475,7 +475,7 @@ const attributions = {
 };
 
 const TrackAttributionOverlay = () => {
-  const { track } = useAudio();
+  const { track } = useMedia();
 
   if (!track) {
     return null;
@@ -498,26 +498,26 @@ const TrackAttributionOverlay = () => {
   );
 };
 
-interface AudioDebugOverlayProps
+interface MediaDebugOverlayProps
   extends Partial<
     Record<
-      | keyof ReturnType<typeof useAudio>
-      | keyof ReturnType<typeof useAudioVolume>
-      | keyof ReturnType<typeof useAudioProgress>,
+      | keyof ReturnType<typeof useMedia>
+      | keyof ReturnType<typeof useMediaVolume>
+      | keyof ReturnType<typeof useMediaProgress>,
       boolean
     >
   > {
   targetFps?: number;
 }
 
-const AudioDebugOverlay: FunctionComponent<AudioDebugOverlayProps> = ({
+const MediaDebugOverlay: FunctionComponent<MediaDebugOverlayProps> = ({
   targetFps,
   ...keyObject
 }) => {
-  const audio = {
-    ...useAudio(),
-    ...useAudioVolume(),
-    ...useAudioProgress({ targetFps }),
+  const media = {
+    ...useMedia(),
+    ...useMediaVolume(),
+    ...useMediaProgress({ targetFps }),
   };
 
   const keys = useMemo(
@@ -525,10 +525,10 @@ const AudioDebugOverlay: FunctionComponent<AudioDebugOverlayProps> = ({
       Object.entries(keyObject)
         .filter(([, value]) => !!value)
         .map(([key]) => key) as Array<
-        keyof ReturnType<typeof useAudioProgress>
+        keyof ReturnType<typeof useMediaProgress>
       >,
     [keyObject]
   );
 
-  return <DebugOverlay value={pick(audio, keys)} />;
+  return <DebugOverlay value={pick(media, keys)} />;
 };

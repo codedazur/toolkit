@@ -1,88 +1,27 @@
 import { modulo, shuffle as shuffleArray } from "@codedazur/essentials";
-import { useSynchronizedRef } from "@codedazur/react-essentials";
 import {
-  createContext,
+  MaybeRef,
+  resolveMaybeRef,
+  useSynchronizedRef,
+} from "@codedazur/react-essentials";
+import {
   ReactNode,
   SetStateAction,
+  createContext,
   useCallback,
   useEffect,
   useMemo,
   useRef,
   useState,
 } from "react";
+import { MediaContext, mediaContext } from "./MediaContext";
 
-export type AudioTrack = string | { source: string };
+export type MediaTrack = string | { source: string };
 
-export interface AudioContext<T extends AudioTrack = AudioTrack> {
-  element: HTMLAudioElement | undefined;
-  tracks: T[];
-  setTracks: (tracks: T[]) => void;
-  cursor: number;
-  setCursor: (index: number) => void;
-  track: T | undefined;
-  setTrack: (track: T) => void;
-  isPlaying: boolean;
-  play: () => void;
-  pause: () => void;
-  stop: () => void;
-  setVolume: (volume: number) => void;
-  addTrack: (track: T) => void;
-  insertTrack: (track: T) => void;
-  canPlayPrevious: boolean;
-  previous: () => void;
-  canPlayNext: boolean;
-  next: () => void;
-  autoPlay: boolean;
-  setAutoPlay: (autoPlay: boolean) => void;
-  shuffle: boolean;
-  setShuffle: (shuffle: boolean) => void;
-  toggleShuffle: () => void;
-  repeat: boolean;
-  setRepeat: (repeat: boolean) => void;
-  toggleRepeat: () => void;
-  setTime: (time: number) => void;
-  setProgress: (progress: number) => void;
-  duration: number;
-}
 
-function error() {
-  throw new Error("No AudioProvider found in ancestry.");
-}
-
-export const audioContext = createContext<AudioContext>({
-  element: undefined,
-  tracks: [],
-  setTracks: error,
-  cursor: 0,
-  setCursor: error,
-  track: undefined,
-  setTrack: error,
-  isPlaying: false,
-  play: error,
-  pause: error,
-  stop: error,
-  setVolume: error,
-  addTrack: error,
-  insertTrack: error,
-  canPlayPrevious: false,
-  previous: error,
-  canPlayNext: false,
-  next: error,
-  autoPlay: false,
-  setAutoPlay: error,
-  shuffle: false,
-  setShuffle: error,
-  toggleShuffle: error,
-  repeat: false,
-  setRepeat: error,
-  toggleRepeat: error,
-  setTime: error,
-  setProgress: error,
-  duration: 0,
-});
-
-interface AudioProviderProps {
-  tracks?: AudioTrack[];
+interface MediaProviderProps {
+  element?: MaybeRef<HTMLMediaElement>;
+  tracks?: MediaTrack[];
   cursor?: number;
   volume?: number;
   autoPlay?: boolean;
@@ -91,29 +30,31 @@ interface AudioProviderProps {
   children?: ReactNode;
 }
 
-export function AudioProvider({
+export function MediaProvider({
+  element: initialElement,
   tracks: initialTracks = [],
   cursor: initialCursor = 0,
   autoPlay: initialAutoPlay = true,
   repeat: initialRepeat = false,
   shuffle: initialShuffle = false,
   children,
-}: AudioProviderProps) {
-  const [tracks, setTracks] = useState<AudioTrack[]>(initialTracks);
-  const [shuffled, setShuffled] = useState<AudioTrack[]>(
-    initialShuffle ? shuffleArray([...initialTracks]) : initialTracks
+}: MediaProviderProps) {
+  const [tracks, setTracks] = useState<MediaTrack[]>(initialTracks);
+  const [shuffled, setShuffled] = useState<MediaTrack[]>(
+    initialShuffle ? shuffleArray([...initialTracks]) : initialTracks,
   );
   const [cursor, _setCursor] = useState<number>(initialCursor);
 
-  const track = useMemo<AudioTrack | undefined>(
+  const track = useMemo<MediaTrack | undefined>(
     () => shuffled[cursor],
-    [shuffled, cursor]
+    [shuffled, cursor],
   );
   const trackRef = useSynchronizedRef(track);
 
-  const element = useMemo(
-    () => (typeof Audio !== "undefined" ? new Audio() : undefined),
-    []
+  const elementRef: MaybeRef<HTMLMediaElement> =  useRef(
+    typeof window !== "undefined"
+      ? window.document.createElement("video")
+      : null,
   );
 
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
@@ -135,35 +76,40 @@ export function AudioProvider({
   const stop = useCallback(() => {
     pause();
 
+    const element = resolveMaybeRef(elementRef);
+
     if (element) {
       element.currentTime = 0;
     }
-  }, [pause, element]);
+  }, [pause, elementRef]);
 
   const setVolume = useCallback(
     (volume: number) => {
+      const element = resolveMaybeRef(elementRef);
+
       if (!element) return;
+
       element.volume = volume;
     },
-    [element]
+    [elementRef],
   );
 
   const addTrack = useCallback(
-    (track: AudioTrack) => {
+    (track: MediaTrack) => {
       setTracks((tracks) => [...tracks, track]);
     },
-    [setTracks]
+    [setTracks],
   );
 
   const insertTrack = useCallback(
-    (track: AudioTrack) => {
+    (track: MediaTrack) => {
       setTracks((tracks) => [
         ...tracks.slice(0, cursor),
         track,
         ...tracks.slice(cursor),
       ]);
     },
-    [cursor]
+    [cursor],
   );
 
   const setCursor = useCallback(
@@ -176,19 +122,19 @@ export function AudioProvider({
           : Math.max(0, Math.min(newCursor, tracks.length - 1));
       });
     },
-    [_setCursor, repeatRef, tracks]
+    [_setCursor, repeatRef, tracks],
   );
 
   const setTrack = useCallback(
-    (track: AudioTrack) => {
+    (track: MediaTrack) => {
       setTracks([track]);
     },
-    [setTracks]
+    [setTracks],
   );
 
   const canPlayNext = useMemo(
     () => repeat || cursor < tracks.length - 1,
-    [repeat, cursor, tracks]
+    [repeat, cursor, tracks],
   );
 
   const next = useCallback(() => {
@@ -209,20 +155,27 @@ export function AudioProvider({
 
   const toggleShuffle = useCallback(
     () => setShuffle((shuffle) => !shuffle),
-    []
+    [],
   );
 
   const toggleRepeat = useCallback(() => setRepeat((repeat) => !repeat), []);
 
   /**
-   * Pause the audio element when the provider is unrendered.
+   * Pause the media element when the provider is unrendered.
    */
-  useEffect(() => () => element && element.pause(), [element]);
+  useEffect(
+    () => () => {
+      const element = resolveMaybeRef(elementRef);
+      element && element.pause();
+    },
+    [elementRef],
+  );
 
   /**
-   * Bind event handlers to the audio element.
+   * Bind event handlers to the media element.
    */
   useEffect(() => {
+    const element = resolveMaybeRef(elementRef);
     if (!element) return;
 
     const handlePlay = () => setIsPlaying(true);
@@ -238,14 +191,15 @@ export function AudioProvider({
       element.removeEventListener("pause", handlePause);
       element.removeEventListener("durationchange", handleDurationChange);
     };
-  }, [element]);
+  }, [elementRef]);
 
   /**
-   * Change the audio element source when the track changes, continuing playback
+   * Change the media element source when the track changes, continuing playback
    * if the element was already playing, or pausing the element when no track is
    * selected.
    */
   useEffect(() => {
+    const element = resolveMaybeRef(elementRef);
     if (!element) return;
 
     if (track) {
@@ -258,31 +212,33 @@ export function AudioProvider({
       element.pause();
       element.currentTime = 0;
     }
-  }, [track, element, isPlayingRef]);
+  }, [track, elementRef, isPlayingRef]);
 
   /**
-   * Tell the audio element to pause and play.
+   * Tell the media element to pause and play.
    */
   useEffect(() => {
+    const element = resolveMaybeRef(elementRef);
     if (!element) return;
 
     isPlaying ? setTimeout(() => void element.play(), 1) : element.pause();
-  }, [element, isPlaying]);
+  }, [elementRef, isPlaying]);
 
   const setTime = useCallback(
     (time: number) => {
+      const element = resolveMaybeRef(elementRef);
       if (!element) return;
 
       element.currentTime = time;
     },
-    [element]
+    [elementRef],
   );
 
   const setProgress = useCallback(
     (progress: number) => {
       setTime(progress * duration);
     },
-    [duration, setTime]
+    [duration, setTime],
   );
 
   /**
@@ -294,7 +250,7 @@ export function AudioProvider({
 
   /**
    * If `autoPlay` is enabled, automatically play the current track when it
-   * changes, even when the audio element wasn't already playing.
+   * changes, even when the media element wasn't already playing.
    */
   const readyRef = useRef(false);
   useEffect(() => {
@@ -305,11 +261,12 @@ export function AudioProvider({
   }, [track, autoPlay, play]);
 
   /**
-   * Tell the audio player what to do when the track ends. If `autoPlay` is
+   * Tell the media element what to do when the track ends. If `autoPlay` is
    * enabled, it should continue to the next track if there is one, otherwise
    * it should stop.
    */
   useEffect(() => {
+    const element = resolveMaybeRef(elementRef);
     if (!element) return;
 
     const handleEnded = autoPlay && canPlayNext ? next : stop;
@@ -319,7 +276,7 @@ export function AudioProvider({
     return () => {
       element.removeEventListener("ended", handleEnded);
     };
-  }, [element, autoPlay, next, stop, canPlayNext]);
+  }, [elementRef, autoPlay, next, stop, canPlayNext]);
 
   /**
    * Shuffle the tracks, shifting the cursor to retain the active track.
@@ -337,8 +294,8 @@ export function AudioProvider({
     }
   }, [shuffle, tracks, trackRef, setCursor]);
 
-  const context: AudioContext = {
-    element,
+  const context: MediaContext = {
+    element: resolveMaybeRef(elementRef),
     tracks: shuffled,
     setTracks,
     cursor,
@@ -370,6 +327,6 @@ export function AudioProvider({
   };
 
   return (
-    <audioContext.Provider value={context}>{children}</audioContext.Provider>
+    <mediaContext.Provider value={context}>{children}</mediaContext.Provider>
   );
 }

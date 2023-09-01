@@ -1,19 +1,19 @@
 import { useUpdateLoop } from "@codedazur/react-essentials";
 import { useCallback, useEffect, useState } from "react";
-import { useAudio } from "./useAudio";
+import { useMedia } from "./useMedia";
 
-export const useAudioProgress = ({
+export const useMediaProgress = ({
   targetFps,
 }: { targetFps?: number } | undefined = {}) => {
-  const audio = useAudio();
+  const media = useMedia();
 
-  const { element, isPlaying, duration, setTime, setProgress } = audio;
+  const { element, isPlaying, duration, setTime, setProgress } = media;
 
   const [time, _setTime] = useState(element?.currentTime ?? 0);
 
   const onUpdate = useCallback(
     () => element && _setTime(element.currentTime),
-    [element]
+    [element],
   );
 
   const { start, stop } = useUpdateLoop({
@@ -44,7 +44,7 @@ export const useAudioProgress = ({
   return {
     time,
     setTime,
-    progress: duration ? time / duration : 0,
+    progress: time / duration,
     setProgress,
   };
 };
