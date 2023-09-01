@@ -1,5 +1,13 @@
 # @codedazur/essentials
 
+## 1.2.0
+
+### Minor Changes
+
+- [#150](https://github.com/codedazur/toolkit/pull/150) [`e3014cb`](https://github.com/codedazur/toolkit/commit/e3014cba349119c47862f8d399fadd91a51e8338) Thanks [@sayinserdar](https://github.com/sayinserdar)! - @codedazur/essentials - assert function is added
+
+  @codedazur/react-pagination - first release and adding tests
+
 ## 1.1.3
 
 ### Patch Changes
