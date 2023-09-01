@@ -149,10 +149,16 @@ export const useUpdateLoop = ({
   }, [targetFps]);
 
   /**
+   * Increments the frame index.
+   */
+  const incrementFrame = useCallback(() => {
+    frame.current = (frame.current ?? -1) + 1;
+  }, []);
+
+  /**
    * Sets various metrics for the current frame.
    */
   const setMetrics = useCallback(() => {
-    frame.current = (frame.current ?? -1) + 1;
     previousTime.current = time.current;
     time.current = new Date().getTime();
     deltaTime.current = previousTime.current
@@ -198,9 +204,7 @@ export const useUpdateLoop = ({
       index: frame.current ?? 0,
       time: scaledElapsedTime.current ?? 0,
       deltaTime: scaledDeltaTime.current ?? 0,
-      fps: scaledDeltaTime.current
-        ? Math.round(1000 / scaledDeltaTime.current)
-        : 0,
+      fps: deltaTime.current ? Math.round(1000 / deltaTime.current) : 0,
     });
   }, [onUpdateRef]);
 
@@ -210,39 +214,31 @@ export const useUpdateLoop = ({
    * call given the `targetFps`.
    */
   const step = useCallback(() => {
-    if (!isUpdating) {
-      return;
-    }
-
     requestedFrameId.current = requestAnimationFrame(() => {
-      setMetrics();
-
       if (shouldCallOnUpdate()) {
+        incrementFrame();
+        setMetrics();
         callOnUpdate();
       }
 
       step();
     });
-  }, [callOnUpdate, isUpdating, setMetrics, shouldCallOnUpdate]);
+  }, [callOnUpdate, incrementFrame, setMetrics, shouldCallOnUpdate]);
 
   /**
    * Starts the update loop.
    */
   const start = useCallback(() => {
+    setMetrics();
     onStart?.();
     setIsUpdating(true);
-  }, [onStart]);
+  }, [onStart, setMetrics]);
 
   /**
    * Pauses the update loop.
    */
   const pause = useCallback(() => {
     setIsUpdating(false);
-    time.current = undefined;
-
-    if (requestedFrameId.current) {
-      window.cancelAnimationFrame(requestedFrameId.current);
-    }
   }, []);
 
   /**
@@ -257,7 +253,6 @@ export const useUpdateLoop = ({
     scaledDeltaTime.current = undefined;
     scaledElapsedTime.current = undefined;
     checkTime.current = undefined;
-    targetIntervalRef.current = undefined;
   }, []);
 
   /**
@@ -275,6 +270,12 @@ export const useUpdateLoop = ({
   useEffect(() => {
     if (isUpdating) {
       step();
+    } else {
+      time.current = undefined;
+
+      if (requestedFrameId.current) {
+        window.cancelAnimationFrame(requestedFrameId.current);
+      }
     }
   }, [isUpdating, step]);
 
