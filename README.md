@@ -18,7 +18,7 @@ In addition, it contains a storybook and a website to showcase these packages.
 - `cdk-static-site` Resources for static site hosting with S3 and CloudFront.
 - `eslint-config` Shared ESLint configurations.
 - `essentials` A tree-shakeable collection of general-purpose utilities.
-- `react-media` A headless media utilities for React projects.
+- `react-media` A headless media player for React projects.
 - `react-date-picker` A headless date picker for React projects.
 - `react-essentials` A tree-shakeable collection of utilities for React projects.
 - `react-forms` Business logic for form state management for React projects.
