@@ -13,7 +13,7 @@
       "outputs": ["dist/**", ".next/**", ".storybook/**"]
     },
     "deploy": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["build"],
       "env": ["CDK_DEFAULT_ACCOUNT", "CDK_DEFAULT_REGION", "DOMAIN_NAME"]
     },
     "destroy": {
