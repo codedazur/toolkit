@@ -11,6 +11,12 @@ export default defineConfig({
       provider: "v8",
       reporter: ["text", "html", "clover", "json", "lcov"],
       exclude: ["./test/setup.ts"],
+      lines: 96.53,
+      functions: 90,
+      branches: 84.37,
+      statements: 96.53,
+      thresholdAutoUpdate: true,
+      all: true,
     },
   },
 });
