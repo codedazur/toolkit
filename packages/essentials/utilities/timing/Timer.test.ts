@@ -281,6 +281,7 @@ describe("Timer", () => {
       timer.setDuration(2000);
 
       expect(timer.status).toBe(TimerStatus.paused);
+      expect(callback).not.toHaveBeenCalled();
     });
 
     it("should not change a timer when duration is set to the initial duration", () => {
