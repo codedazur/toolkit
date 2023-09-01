@@ -1,6 +1,6 @@
 import { Timer, TimerEvent, TimerStatus } from "@codedazur/essentials";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useDelta } from "./useDelta";
+
 import { useSynchronizedRef } from "./useSynchronizedRef";
 import { useUpdateLoop } from "./useUpdateLoop";
 
@@ -18,8 +18,6 @@ export function useTimer(callback: () => void, duration: number) {
   const [_status, setStatus] = useState<TimerStatus>(TimerStatus.stopped);
   const [_duration, setDuration] = useState<number>(duration);
 
-  const deltaDuration = useDelta(duration);
-
   useEffect(() => {
     const timer = timerRef.current;
 
@@ -31,7 +29,8 @@ export function useTimer(callback: () => void, duration: number) {
     timer.addEventListener(TimerEvent.pause, reflectStatus);
     timer.addEventListener(TimerEvent.resume, reflectStatus);
     timer.addEventListener(TimerEvent.end, reflectStatus);
-    timer.addEventListener(TimerEvent.extend, reflectDuration);
+    timer.addEventListener(TimerEvent.changeDuration, reflectDuration);
+    timer.addEventListener(TimerEvent.changeDuration, reflectStatus);
 
     return () => {
       timer.removeEventListener(TimerEvent.start, reflectStatus);
@@ -39,15 +38,14 @@ export function useTimer(callback: () => void, duration: number) {
       timer.removeEventListener(TimerEvent.pause, reflectStatus);
       timer.removeEventListener(TimerEvent.resume, reflectStatus);
       timer.removeEventListener(TimerEvent.end, reflectStatus);
-      timer.removeEventListener(TimerEvent.extend, reflectDuration);
+      timer.removeEventListener(TimerEvent.changeDuration, reflectDuration);
+      timer.removeEventListener(TimerEvent.changeDuration, reflectStatus);
     };
   }, [timerRef]);
 
   useEffect(() => {
-    if (deltaDuration > 0) {
-      timerRef.current.extend(deltaDuration);
-    }
-  }, [deltaDuration]);
+    timerRef.current.setDuration(duration);
+  }, [duration]);
 
   const useProgress = useCallback(function useProgress({
     targetFps,
@@ -65,6 +63,7 @@ export function useTimer(callback: () => void, duration: number) {
     pause: timerRef.current.pause,
     resume: timerRef.current.resume,
     extend: timerRef.current.extend,
+    setDuration: timerRef.current.setDuration,
     end: timerRef.current.end,
     useProgress,
   };
@@ -88,7 +87,7 @@ export function useTimerProgress(
     timer.addEventListener(TimerEvent.pause, stop);
     timer.addEventListener(TimerEvent.stop, stop);
     timer.addEventListener(TimerEvent.stop, onUpdate);
-    timer.addEventListener(TimerEvent.extend, onUpdate);
+    timer.addEventListener(TimerEvent.changeDuration, onUpdate);
     timer.addEventListener(TimerEvent.end, onUpdate);
 
     return () => {
@@ -97,7 +96,7 @@ export function useTimerProgress(
       timer.removeEventListener(TimerEvent.pause, stop);
       timer.removeEventListener(TimerEvent.stop, stop);
       timer.removeEventListener(TimerEvent.stop, onUpdate);
-      timer.removeEventListener(TimerEvent.extend, onUpdate);
+      timer.removeEventListener(TimerEvent.changeDuration, onUpdate);
       timer.removeEventListener(TimerEvent.end, onUpdate);
     };
   }, [onUpdate, start, stop, timer]);

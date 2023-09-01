@@ -99,27 +99,35 @@ interface TimerControlsProps extends ReturnType<typeof useTimer> {}
 
 const TimerControls = ({
   status,
+  start,
   resume,
   pause,
   stop,
-  isStopped,
   end,
-}: TimerControlsProps) => (
-  <Bar>
-    {status === TimerStatus.running ? (
-      <IconButton onClick={pause}>
-        <PauseIcon />
+}: TimerControlsProps) => {
+  const isStopped = status === TimerStatus.stopped;
+  const isRunning = status === TimerStatus.running;
+
+  return (
+    <Bar>
+      {isRunning ? (
+        <IconButton onClick={pause}>
+          <PauseIcon />
+        </IconButton>
+      ) : (
+        <IconButton onClick={resume}>
+          <PlayArrowIcon />
+        </IconButton>
+      )}
+      <IconButton onClick={start}>start</IconButton>
+      <IconButton onClick={resume}>resume</IconButton>
+      <IconButton onClick={stop}>stop</IconButton>
+      <IconButton onClick={stop} disabled={isStopped}>
+        <StopIcon />
       </IconButton>
-    ) : (
-      <IconButton onClick={resume}>
-        <PlayArrowIcon />
+      <IconButton onClick={end}>
+        <SkipNextIcon />
       </IconButton>
-    )}
-    <IconButton onClick={stop} disabled={isStopped}>
-      <StopIcon />
-    </IconButton>
-    <IconButton onClick={end}>
-      <SkipNextIcon />
-    </IconButton>
-  </Bar>
-);
+    </Bar>
+  );
+};

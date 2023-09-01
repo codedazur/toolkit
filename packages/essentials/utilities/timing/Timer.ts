@@ -5,7 +5,7 @@ export enum TimerEvent {
   stop = "stop",
   pause = "pause",
   resume = "resume",
-  extend = "extend",
+  changeDuration = "changeDuration",
   end = "end",
 }
 
@@ -13,6 +13,7 @@ export enum TimerStatus {
   stopped = "stopped",
   running = "running",
   paused = "paused",
+  completed = "completed",
 }
 
 export class Timer {
@@ -23,6 +24,7 @@ export class Timer {
   private _shiftedStartedAt?: number;
   private _timeoutStartedAt?: number;
   private _pausedAt?: number;
+  private _completedAt?: number;
   private _remaining: number;
 
   private _eventListeners: Record<TimerEvent, Array<() => void>> = {
@@ -30,11 +32,15 @@ export class Timer {
     stop: [],
     pause: [],
     resume: [],
-    extend: [],
+    changeDuration: [],
     end: [],
   };
 
   constructor(callback: () => void, duration: number) {
+    if (duration < 0) {
+      throw new Error("Duration cannot be less then 0.");
+    }
+
     this._callback = callback;
     this._duration = duration;
     this._remaining = duration;
@@ -45,11 +51,15 @@ export class Timer {
   }
 
   public get status(): TimerStatus {
-    return this._hasTimeout
-      ? TimerStatus.running
-      : this._remaining < this._duration
-      ? TimerStatus.paused
-      : TimerStatus.stopped;
+    if (this._hasTimeout) {
+      return TimerStatus.running;
+    } else if (this._remaining === 0 && this._completedAt) {
+      return TimerStatus.completed;
+    } else if (this._remaining < this._duration) {
+      return TimerStatus.paused;
+    } else {
+      return TimerStatus.stopped;
+    }
   }
 
   public get isRunning(): boolean {
@@ -64,6 +74,10 @@ export class Timer {
     return this.status === TimerStatus.stopped;
   }
 
+  public get isCompleted(): boolean {
+    return this.status === TimerStatus.completed;
+  }
+
   public get duration(): number {
     return this._duration;
   }
@@ -73,13 +87,19 @@ export class Timer {
   }
 
   public get progress(): number {
-    return clamp(
+    if (this.isCompleted) {
+      return 1;
+    }
+
+    const progress = clamp(
       this.isRunning
         ? (Date.now() - this._shiftedStartedAt!) / this._duration
         : 1 - this._remaining / this._duration,
       0,
       1
     );
+
+    return progress || 0;
   }
 
   public get elapsed(): number {
@@ -87,7 +107,7 @@ export class Timer {
   }
 
   public get remaining(): number {
-    return this.duration - this.elapsed;
+    return this._duration - this.elapsed;
   }
 
   private _clearTimeout = (): void => {
@@ -116,6 +136,7 @@ export class Timer {
 
     this._startedAt = this._shiftedStartedAt = undefined;
     this._pausedAt = undefined;
+    this._completedAt = undefined;
     this._remaining = this._duration;
   };
 
@@ -137,10 +158,6 @@ export class Timer {
   };
 
   public start = (): void => {
-    if (this.isRunning) {
-      return;
-    }
-
     this._reset();
     this._startedAt = this._shiftedStartedAt = Date.now();
     this._setTimeout();
@@ -170,7 +187,7 @@ export class Timer {
   };
 
   public resume = (): void => {
-    if (this.isRunning) {
+    if (this.isRunning || this.isCompleted) {
       return;
     }
 
@@ -186,24 +203,50 @@ export class Timer {
     this._runEventListeners(TimerEvent.resume);
   };
 
-  public extend = (by: number): void => {
+  public setDuration = (duration: number): void => {
     const wasRunning = this.isRunning;
 
-    this.pause();
-    this._duration += by;
-    this._remaining += by;
-
-    if (wasRunning) {
-      this.resume();
+    if (duration < 0) {
+      throw new Error("Duration cannot be less then 0.");
     }
 
-    this._runEventListeners(TimerEvent.extend);
+    if (duration === this.duration) {
+      return;
+    }
+
+    if (wasRunning && this.elapsed >= duration) {
+      this.end();
+      return;
+    }
+
+    if (this.isCompleted) {
+      this._pausedAt = this._completedAt;
+      this._completedAt = undefined;
+    }
+
+    this._clearTimeout();
+    this._remaining = duration - (this.elapsed || 0);
+    this._duration = duration;
+
+    if (wasRunning) {
+      this._setTimeout();
+    }
+
+    this._runEventListeners(TimerEvent.changeDuration);
+  };
+
+  public extend = (by: number): void => {
+    this.setDuration(this.duration + by);
   };
 
   public end = (): void => {
-    this._reset();
-    this._runEventListeners(TimerEvent.end);
+    this._clearTimeout();
 
+    this._completedAt = Date.now();
+    this._pausedAt = undefined;
+    this._remaining = 0;
+
+    this._runEventListeners(TimerEvent.end);
     this._callback();
   };
 }
