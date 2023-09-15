@@ -1,0 +1,18 @@
+{
+  "conventionalCommits.scopes": [
+    "timer",
+    "use-timer",
+    "notification-provider",
+    "use-parallax",
+    "use-audio-progress",
+    "audio-provider",
+    "use-date-picker",
+    "use-pagination",
+    "website",
+    "infrastructure",
+    "essentials",
+    "static-site",
+    "tsconfig",
+    "amplify-app"
+  ]
+}
