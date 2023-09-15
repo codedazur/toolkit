@@ -4,6 +4,7 @@ import { WithApp } from "./decorators/WithApp";
 export const decorators: DecoratorFn[] = [WithApp];
 
 export const parameters: Parameters = {
+  layout: "centered",
   actions: { argTypesRegex: "^on[A-Z].*" },
   controls: {
     matchers: {

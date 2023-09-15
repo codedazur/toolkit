@@ -6,6 +6,7 @@ on:
 
 jobs:
   quality:
+    name: Check Quality
     runs-on: ubuntu-latest
 
     concurrency:
@@ -13,28 +14,28 @@ jobs:
       cancel-in-progress: true
 
     steps:
-      - name: Checkout
+      - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Setup
+      - name: Setup Node
         uses: actions/setup-node@v3
         with:
           node-version: 16
           cache: npm
 
-      - name: Install
+      - name: Install Dependencies
         run: |
           npm config set //registry.npmjs.org/:_authToken ${{ secrets.NPM_TOKEN }}
           npm ci
 
+      - name: Audit
+        run: npm run audit --audit-level=high
+
       - name: Lint
         run: npm run lint
 
-      - name: Test
-        run: npm run test
-
-      - name: Audit
-        run: npm run audit
-
       - name: Build
         run: export NODE_OPTIONS="--max_old_space_size=4096" && npm run build
+
+      - name: Test
+        run: npm run test

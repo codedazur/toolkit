@@ -1,14 +1,14 @@
 import { mutateObject } from "./mutateObject";
 
-export function rekeyObject<
-  Key extends string | number | symbol,
-  Value,
-  NewKey extends string | number | symbol
->(
-  record: Record<Key, Value>,
-  callback: (entry: [Key, Value]) => NewKey
-): Record<NewKey, Value> {
-  return mutateObject(record, ([key, value]) => [
+/**
+ * Changes the keys of an object by mutating the object using a callback
+ * function. The values of the object are preserved.
+ */
+export function rekeyObject<T extends Record<string, any>>(
+  object: T,
+  callback: (entry: [keyof T, T[keyof T]]) => string
+): { [key: string]: T[keyof T] } {
+  return mutateObject(object, ([key, value]) => [
     callback([key, value]),
     value,
   ]);

@@ -1,0 +1,39 @@
+{
+  "name": "@codedazur/react-media",
+  "version": "0.0.2",
+  "main": ".dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    }
+  },
+  "publishConfig": {
+    "access": "restricted"
+  },
+  "license": "MIT",
+  "scripts": {
+    "lint": "TIMING=1 eslint \"**/*.ts*\"",
+    "test": "echo \"No tests configured.\"",
+    "build": "tsup index.ts --format esm,cjs --dts",
+    "dev": "tsup index.ts --format esm,cjs --watch --external react"
+  },
+  "dependencies": {
+    "@codedazur/essentials": "*",
+    "@codedazur/react-essentials": "*"
+  },
+  "peerDependencies": {
+    "react": ">=16.8.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.18",
+    "@types/react-dom": "^18.2.7",
+    "eslint": "^8.46.0",
+    "@codedazur/eslint-config": "*",
+    "react": "^18.2.0",
+    "@codedazur/tsconfig": "*",
+    "typescript": "^5.1.6"
+  }
+}

@@ -10,13 +10,6 @@
     "incremental": true,
     "module": "esnext",
     "resolveJsonModule": true,
-    "jsx": "preserve",
-    "ts-node": {
-      "compilerOptions": {
-        "module": "commonjs"
-      }
-    }
-  },
-  "include": ["src"],
-  "exclude": ["node_modules"]
+    "jsx": "preserve"
+  }
 }
