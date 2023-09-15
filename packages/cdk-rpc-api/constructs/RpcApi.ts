@@ -17,8 +17,8 @@ import {
 import { ApiGateway } from "aws-cdk-lib/aws-route53-targets";
 import { Construct } from "constructs";
 
-export interface ApiProps extends RestApiProps {
-  endpoints: Record<string, ResourceProps>;
+export interface RpcApiProps extends RestApiProps {
+  procedures: Record<string, ProcedureProps>;
   domain?: DomainProps;
 }
 
@@ -27,33 +27,64 @@ interface DomainProps {
   subdomain?: string;
 }
 
-interface ResourceProps {
+interface ProcedureProps {
   method?: HttpMethod;
   handler?: IFunction;
-  endpoints?: Record<string, ResourceProps>;
+  procedures?: Record<string, ProcedureProps>;
 }
 
-export class Api extends RestApi {
-  constructor(scope: Construct, id: string, { endpoints, ...props }: ApiProps) {
+/**
+ * A construct to create a Remote Procedure Call API on API Gateway.
+ *
+ * @example
+ * new RpcApi(this, "MyRpcApi", {
+ *   procedures: {
+ *     helloWorld: {
+ *       method: HttpMethod.GET,
+ *       handler: helloWorldHandler,
+ *     },
+ *     search: {
+ *       method: HttpMethod.GET,
+ *       handler: searchHandler,
+ *       procedures: {
+ *         createIndex: {
+ *           method: HttpMethod.POST,
+ *           handler: createIndexHandler,
+ *         },
+ *         flushIndex: {
+ *           method: HttpMethod.DELETE,
+ *           handler: flushIndexHandler,
+ *         },
+ *       },
+ *     },
+ *   },
+ * });
+ */
+export class RpcApi extends RestApi {
+  constructor(
+    scope: Construct,
+    id: string,
+    { procedures: endpoints, ...props }: RpcApiProps,
+  ) {
     super(scope, id, props);
 
-    this.createEndpoints(this.root, endpoints);
+    this.createProcedures(this.root, endpoints);
     this.createDomain(props.domain);
   }
 
-  protected createEndpoints(
+  protected createProcedures(
     parent: IResource,
-    children: Record<string, ResourceProps>,
+    children: Record<string, ProcedureProps>,
   ) {
     Object.entries(children).forEach(([slug, child]) =>
-      this.createEndpoint(parent, slug, child),
+      this.createProcedure(parent, slug, child),
     );
   }
 
-  protected createEndpoint(
+  protected createProcedure(
     parent: IResource,
     slug: string,
-    { method, handler, endpoints }: ResourceProps,
+    { method, handler, procedures: endpoints }: ProcedureProps,
   ) {
     const resource = parent.addResource(slug, {
       defaultIntegration:
@@ -65,7 +96,7 @@ export class Api extends RestApi {
     }
 
     if (endpoints) {
-      this.createEndpoints(resource, endpoints);
+      this.createProcedures(resource, endpoints);
     }
   }
 
