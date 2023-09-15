@@ -1,1 +1,1 @@
-# @codedazur/cdk-static-site
+# @codedazur/cdk-cache-invalidator
