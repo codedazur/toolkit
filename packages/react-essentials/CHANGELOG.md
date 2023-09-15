@@ -1,5 +1,14 @@
 # @codedazur/react-essentials
 
+## 0.1.1
+
+### Patch Changes
+
+- [#170](https://github.com/codedazur/toolkit/pull/170) [`fd893de`](https://github.com/codedazur/toolkit/commit/fd893ded5571212c0101ae57430e2ee923a94a7b) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - provide correct frame metrics for useUpdateLoop
+
+- Updated dependencies [[`6a7da43`](https://github.com/codedazur/toolkit/commit/6a7da43a389d6e45740eea9d77f6e993340cb05c)]:
+  - @codedazur/essentials@1.3.0
+
 ## 0.1.0
 
 ### Minor Changes
