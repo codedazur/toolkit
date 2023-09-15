@@ -81,6 +81,17 @@ describe("useUpdateLoop", () => {
         fps: 50,
       }),
     );
+
+    vi.advanceTimersByTime(2000);
+
+    expect(onUpdate).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        index: 149,
+        time: 3000,
+        deltaTime: 20,
+        fps: 50,
+      }),
+    );
   });
 
   it("should not call the onUpdate callback when the loop is paused", () => {
