@@ -35,7 +35,7 @@ import {
   timecode,
 } from "@codedazur/react-components";
 import { Meta, StoryObj } from "@storybook/react";
-import { FunctionComponent, useMemo } from "react";
+import { FunctionComponent, useMemo, useRef } from "react";
 import { Bar } from "@apps/storybook/components/Bar";
 import { List } from "@apps/storybook/components/List";
 import { WithCenter } from "@apps/storybook/decorators/WithCenter";
@@ -46,6 +46,9 @@ import seaOfStars from "./artworks/sea-of-stars.jpg";
 import alienated from "./tracks/alienated.mp3";
 import meteorites from "./tracks/meteorites.mp3";
 import tabulaRasa from "./tracks/tabula-rasa.mp3";
+import bigBuckBunny from "./videos/big-buck-bunny.mp4";
+import ships from "./videos/ships.mp4";
+import guitar from "./videos/guitar.mp4";
 import { DebugOverlay } from "../../components/DebugOverlay";
 
 const meta: Meta = {
@@ -111,6 +114,40 @@ export const WithVolumeControls = () => (
     <MediaDebugOverlay isPlaying volume />
   </MediaProvider>
 );
+
+export const Video = () => {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  return (
+    <MediaProvider tracks={[bigBuckBunny]} element={videoRef}>
+      <Stack justify={"center"} align={"center"}>
+        <video
+          style={{ height: "15rem", width: "25rem" }}
+          controls
+          ref={videoRef}
+        />
+      </Stack>
+
+      <MediaDebugOverlay tracks cursor isPlaying volume time duration />
+    </MediaProvider>
+  );
+};
+export const MultipleVideos = () => {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  return (
+    <MediaProvider tracks={[bigBuckBunny, ships, guitar]} element={videoRef}>
+      <Stack justify={"center"} align={"center"}>
+        <video
+          style={{ height: "15rem", width: "25rem" }}
+          controls
+          ref={videoRef}
+        />
+      </Stack>
+      <TrackList />
+      <PlaylistControls />
+      <MediaDebugOverlay tracks cursor isPlaying volume time duration />
+    </MediaProvider>
+  );
+};
 
 const VolumeControls = () => (
   <Bar>
@@ -472,6 +509,11 @@ const attributions = {
     "https://soundcloud.com/purrplecat/tabula-rasa",
     "Licensed under CC BY-SA 3.0",
   ],
+  [ships]: ["Stock video by Videezy", "http://videezy.com/"],
+  [guitar]: [
+    "Video by Nino Souza",
+    "https://www.pexels.com/video/rock-audio-pedal-banda-4142301/",
+  ],
 };
 
 const TrackAttributionOverlay = () => {
@@ -488,7 +530,7 @@ const TrackAttributionOverlay = () => {
       <AbsorbPointer>
         <Opacity opacity={0.5}>
           <Column style={{ fontSize: "smaller", lineHeight: "1.5em" }}>
-            {attributions[source].map((line) => (
+            {attributions[source]?.map((line) => (
               <Text key={line}>{line}</Text>
             ))}
           </Column>
@@ -527,7 +569,7 @@ const MediaDebugOverlay: FunctionComponent<MediaDebugOverlayProps> = ({
         .map(([key]) => key) as Array<
         keyof ReturnType<typeof useMediaProgress>
       >,
-    [keyObject]
+    [keyObject],
   );
 
   return <DebugOverlay value={pick(media, keys)} />;

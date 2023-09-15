@@ -18,7 +18,6 @@ import { MediaContext, mediaContext } from "./MediaContext";
 
 export type MediaTrack = string | { source: string };
 
-
 interface MediaProviderProps {
   element?: MaybeRef<HTMLMediaElement>;
   tracks?: MediaTrack[];
@@ -51,11 +50,12 @@ export function MediaProvider({
   );
   const trackRef = useSynchronizedRef(track);
 
-  const elementRef: MaybeRef<HTMLMediaElement> =  useRef(
+  const internalElementRef: MaybeRef<HTMLMediaElement> = useRef(
     typeof window !== "undefined"
       ? window.document.createElement("video")
       : null,
   );
+  const elementRef = initialElement ?? internalElementRef;
 
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const isPlayingRef = useSynchronizedRef(isPlaying);
