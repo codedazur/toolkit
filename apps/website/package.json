@@ -1,5 +1,5 @@
 {
-  "name": "website",
+  "name": "@apps/website",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -11,27 +11,27 @@
   },
   "dependencies": {
     "@codedazur/essentials": "*",
-    "@codedazur/react-audio": "*",
-    "@codedazur/react-components": "^23.0.0",
+    "@codedazur/react-media": "*",
+    "@codedazur/react-components": "^24.5.9",
     "@codedazur/react-date-picker": "*",
     "@codedazur/react-essentials": "*",
     "@codedazur/react-notifications": "*",
     "@codedazur/react-pagination": "*",
     "@codedazur/react-parallax": "*",
-    "next": "13.2.4",
+    "next": "13.4.19",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "styled-components": "^5.3.6"
   },
   "devDependencies": {
-    "@babel/core": "^7.19.6",
-    "@types/node": "^18.11.9",
-    "@types/react": "18.0.29",
+    "@babel/core": "^7.22.9",
+    "@types/node": "^20.4.5",
+    "@types/react": "18.2.21",
     "@types/styled-components": "^5.1.26",
-    "eslint": "8.36.0",
+    "eslint": "8.49.0",
     "@codedazur/eslint-config": "*",
-    "next-transpile-modules": "10.0.0",
+    "next-transpile-modules": "10.0.1",
     "@codedazur/tsconfig": "*",
-    "typescript": "^4.8.4 || ^5.0.0"
+    "typescript": "^5.1.6"
   }
 }

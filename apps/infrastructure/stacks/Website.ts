@@ -1,6 +1,5 @@
-import { StaticSite } from "@codedazur/cdk-static-site";
-import { App, Stack, StackProps } from "aws-cdk-lib";
 import { env } from "@codedazur/essentials";
+import { App, Stack, StackProps } from "aws-cdk-lib";
 import { ToolkitSite } from "../constructs/ToolkitSite";
 
 export class Website extends Stack {

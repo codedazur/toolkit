@@ -1,7 +1,6 @@
 import { revalueObject, Timer } from "@codedazur/essentials";
-import { useTimerProgress as timerProgressHook } from "@codedazur/react-essentials";
+import { useTimerProgress } from "@codedazur/react-essentials";
 import {
-  createContext,
   FunctionComponent,
   ReactNode,
   Reducer,
@@ -10,46 +9,12 @@ import {
   useReducer,
   useState,
 } from "react";
-
-export interface NotificationsContext {
-  readonly entries: Notifications;
-  readonly queue: Notifications;
-  readonly add: (
-    group: string,
-    children: ReactNode,
-    options?: {
-      autoDismiss?: AutoDismiss;
-    }
-  ) => NotificationProps;
-  readonly remove: (group: string, id: number) => void;
-}
-
-type Notifications = Record<string, NotificationGroup>;
-
-type NotificationGroup = Array<NotificationProps>;
-
-export interface NotificationProps {
-  readonly id: number;
-  readonly children: ReactNode;
-  readonly dismiss: () => void;
-  readonly timer?: Timer;
-  readonly useProgress: (options?: { targetFps?: number }) => {
-    progress: number;
-    elapsed: number;
-    remaining: number;
-  };
-}
-
-const error = () => {
-  throw new Error("No NotificationsProvider found in ancestry.");
-};
-
-export const notificationsContext = createContext<NotificationsContext>({
-  entries: {},
-  queue: {},
-  add: error,
-  remove: error,
-});
+import {
+  AutoDismiss,
+  NotificationProps,
+  Notifications,
+  notificationsContext,
+} from "./NotificationsContext";
 
 interface AddAction {
   operation: "add";
@@ -62,8 +27,12 @@ interface RemoveAction {
   group: string;
   id: number;
 }
+interface ClearAction {
+  operation: "clear";
+  group: string;
+}
 
-type Actions = AddAction | RemoveAction;
+type Actions = AddAction | RemoveAction | ClearAction;
 
 interface NotificationsProviderProps {
   autoDismiss?: MaybeGrouped<AutoDismiss>;
@@ -74,13 +43,11 @@ interface NotificationsProviderProps {
 type MaybeGrouped<T> = T | Record<string, T>;
 
 type Option = AutoDismiss | Limit;
-type AutoDismiss = number | false;
+
 type Limit = number | false;
 
 /**
- * @todo Explore an alternative for working with groups. How about a provider
- * that takes an array of hook returns? Is that crazy?
- * ```
+ *
  * <NotificationGroupsProvider groups={{
  *   snackbars: useNotifications({ limit: 3 }),
  *   banners: useNotifications({ autoDismiss: false })
@@ -91,7 +58,12 @@ type Limit = number | false;
  *
  * const localNotifications = useNotifications();
  * ```
+ *
+ *  @param autoDismiss: dismisses the notification after the given number of milliseconds defaults to 5000
+ *  @param limit: limits the number of notifications in the group defaults to false (no limit)
+ *
  */
+
 export const NotificationsProvider: FunctionComponent<
   NotificationsProviderProps
 > = ({ autoDismiss, limit, children }) => {
@@ -114,6 +86,11 @@ export const NotificationsProvider: FunctionComponent<
                 ({ id }) => id !== action.id
               ),
             ],
+          };
+        case "clear":
+          return {
+            ...state,
+            [action.group]: [],
           };
       }
     },
@@ -191,7 +168,7 @@ export const NotificationsProvider: FunctionComponent<
 
       const useProgress = timer
         ? function useProgress(options: { targetFps?: number } = {}) {
-            return timerProgressHook(timer, {
+            return useTimerProgress(timer, {
               ...options,
               immediately: !!autoDismiss,
             });
@@ -219,6 +196,13 @@ export const NotificationsProvider: FunctionComponent<
     [getGroupAutoDismiss, remove]
   );
 
+  const clear = useCallback((group: string) => {
+    dispatch({
+      operation: "clear",
+      group,
+    });
+  }, []);
+
   return (
     <notificationsContext.Provider
       value={{
@@ -226,6 +210,7 @@ export const NotificationsProvider: FunctionComponent<
         queue,
         add,
         remove,
+        clear,
       }}
     >
       {children}
