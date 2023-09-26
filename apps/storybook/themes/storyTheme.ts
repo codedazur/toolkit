@@ -1,4 +1,4 @@
-import { darkTheme, Theme } from "@codedazur/react-components";
+import { darkTheme, deepPurple, Theme } from "@codedazur/react-components";
 import Color from "color";
 
 export const storyTheme: Theme = {
@@ -6,7 +6,7 @@ export const storyTheme: Theme = {
 
   colors: {
     ...darkTheme.colors,
-    primary: new Color(0xff1747),
+    primary: deepPurple[500],
   },
 
   text: {

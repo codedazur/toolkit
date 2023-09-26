@@ -1,0 +1,27 @@
+{
+  "name": "@codedazur/cdk-rpc-api",
+  "version": "1.0.0",
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT",
+  "scripts": {
+    "lint": "TIMING=1 eslint \"**/*.ts*\"",
+    "test": "echo \"No tests configured.\""
+  },
+  "peerDependencies": {
+    "aws-cdk-lib": ">=2",
+    "constructs": ">=10"
+  },
+  "devDependencies": {
+    "@types/node": "^20.4.5",
+    "aws-cdk-lib": "^2.89.0",
+    "constructs": "^10.2.69",
+    "eslint": "^8.46.0",
+    "@codedazur/eslint-config": "*",
+    "@codedazur/tsconfig": "*",
+    "typescript": "^5.1.6"
+  }
+}

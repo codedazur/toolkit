@@ -1,6 +1,6 @@
 {
   "name": "@codedazur/essentials",
-  "version": "0.0.3",
+  "version": "1.3.0",
   "main": ".dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -10,18 +10,20 @@
       "import": "./dist/index.mjs"
     }
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "license": "MIT",
   "scripts": {
     "lint": "TIMING=1 eslint \"**/*.ts*\"",
-    "test": "echo \"No tests configured.\"",
-    "release": "echo \"No releases configured.\"",
     "build": "tsup index.ts --format esm,cjs --dts",
-    "dev": "tsup index.ts --format esm,cjs --watch"
+    "dev": "tsup index.ts --format esm,cjs --watch",
+    "test": "vitest run --coverage"
   },
   "devDependencies": {
-    "eslint": "^8.26.0",
+    "eslint": "^8.46.0",
     "@codedazur/eslint-config": "*",
     "@codedazur/tsconfig": "*",
-    "typescript": "^4.8.4 || ^5.0.0"
+    "typescript": "^5.1.6"
   }
 }

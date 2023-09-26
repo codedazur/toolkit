@@ -1,6 +1,6 @@
 {
   "name": "@codedazur/react-notifications",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "main": ".dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -10,11 +10,13 @@
       "import": "./dist/index.mjs"
     }
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "license": "MIT",
   "scripts": {
     "lint": "TIMING=1 eslint \"**/*.ts*\"",
     "test": "echo \"No tests configured.\"",
-    "release": "echo \"No releases configured.\"",
     "build": "tsup index.ts --format esm,cjs --dts",
     "dev": "tsup index.ts --format esm,cjs --watch --external react"
   },
@@ -26,12 +28,12 @@
     "react": ">=16.8.0"
   },
   "devDependencies": {
-    "@types/react": "^18.0.24",
-    "@types/react-dom": "^18.0.8",
-    "eslint": "^8.26.0",
+    "@types/react": "^18.2.18",
+    "@types/react-dom": "^18.2.7",
+    "eslint": "^8.46.0",
     "@codedazur/eslint-config": "*",
     "react": "^18.2.0",
     "@codedazur/tsconfig": "*",
-    "typescript": "^4.8.4 || ^5.0.0"
+    "typescript": "^5.1.6"
   }
 }

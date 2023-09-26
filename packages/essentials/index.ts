@@ -15,4 +15,6 @@ export * from "./utilities/object/rekeyObject";
 export * from "./utilities/object/revalueObject";
 export * from "./utilities/string/pascalCase";
 export * from "./utilities/system/env";
+export * from "./utilities/timing/sleep";
 export * from "./utilities/timing/Timer";
+export * from "./utilities/assert";

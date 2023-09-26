@@ -48,16 +48,16 @@ export class Vector2 {
     return this.multiply(-1);
   }
 
-  public magnitude(): number {
+  public get magnitude(): number {
     return Math.hypot(this.x, this.y);
   }
 
-  public angle(): Angle {
+  public get angle(): Angle {
     return new Angle(Math.atan2(this.y, this.x));
   }
 
   public normalize(): Vector2 {
-    return this.divide(this.magnitude());
+    return this.divide(this.magnitude);
   }
 
   public distance(other: Vector2): number {
@@ -67,6 +67,14 @@ export class Vector2 {
 
   public setLength(length: number): Vector2 {
     return this.normalize().multiply(length);
+  }
+
+  public rotate(angle: Angle): Vector2 {
+    const { x, y } = this;
+    const cos = Math.cos(angle.radians);
+    const sin = Math.sin(angle.radians);
+
+    return new Vector2(x * cos - y * sin, x * sin + y * cos);
   }
 
   public dot(other: Vector2): number {

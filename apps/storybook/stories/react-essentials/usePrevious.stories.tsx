@@ -1,33 +1,50 @@
-import { Text, Button, Center, Column, Row } from "@codedazur/react-components";
+import { sequence } from "@codedazur/essentials";
+import {
+  Button,
+  Column,
+  Grid,
+  GridItem,
+  Row,
+  background,
+  border,
+  shape,
+  transparent,
+} from "@codedazur/react-components";
 import { usePrevious } from "@codedazur/react-essentials";
+import { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
-import { meta } from "storybook/utilities/meta";
-import { story } from "storybook/utilities/story";
+import { DebugOverlay } from "../../components/DebugOverlay";
+import { Monospace } from "../../components/Monospace";
 import docs from "./usePrevious.docs.mdx";
+import styled, { css } from "styled-components";
 
-export default meta({
+const meta: Meta = {
+  title: "react-essentials/usePrevious",
   parameters: {
     docs: {
       page: docs,
     },
   },
-});
+};
 
-export const Default = story(() => {
-  const [count, setCount] = useState(0);
-  const previousCount = usePrevious(count);
+export default meta;
 
-  return (
-    <Center>
-      <Column gap="1rem" style={{ minWidth: "170px" }}>
-        <Text>Before: {String(previousCount)}</Text>
-        <Text>Now: {count}</Text>
+export const Default: StoryObj = {
+  render: function Default() {
+    const [count, setCount] = useState(0);
+    const previousCount = usePrevious(count);
 
-        <Row gap="1rem">
-          <Button onClick={() => setCount(count - 1)}>-</Button>
-          <Button onClick={() => setCount(count + 1)}>+</Button>
-        </Row>
-      </Column>
-    </Center>
-  );
-});
+    return (
+      <>
+        <Column gap="1rem">
+          <Monospace>{count}</Monospace>
+          <Row gap="1rem">
+            <Button onClick={() => setCount((count) => count - 1)}>-</Button>
+            <Button onClick={() => setCount((count) => count + 1)}>+</Button>
+          </Row>
+        </Column>
+        <DebugOverlay value={{ usePrevious: previousCount }} />
+      </>
+    );
+  },
+};

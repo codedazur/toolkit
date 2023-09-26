@@ -1,10 +1,10 @@
-import { Timer } from "@codedazur/essentials";
+import { Timer, TimerEvent, TimerStatus } from "@codedazur/essentials";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useDelta } from "./useDelta";
+
 import { useSynchronizedRef } from "./useSynchronizedRef";
 import { useUpdateLoop } from "./useUpdateLoop";
 
-type Status = "running" | "paused" | "stopped";
+export { TimerEvent, TimerStatus } from "@codedazur/essentials";
 
 export function useTimer(callback: () => void, duration: number) {
   const callbackRef = useSynchronizedRef(callback);
@@ -15,10 +15,8 @@ export function useTimer(callback: () => void, duration: number) {
 
   const timerRef = useRef<Timer>(new Timer(dynamicCallback, duration));
 
-  const [_status, setStatus] = useState<Status>("stopped");
+  const [_status, setStatus] = useState<TimerStatus>(TimerStatus.stopped);
   const [_duration, setDuration] = useState<number>(duration);
-
-  const deltaDuration = useDelta(duration);
 
   useEffect(() => {
     const timer = timerRef.current;
@@ -26,28 +24,28 @@ export function useTimer(callback: () => void, duration: number) {
     const reflectStatus = () => setStatus(timer.status);
     const reflectDuration = () => setDuration(timer.duration);
 
-    timer.addEventListener("start", reflectStatus);
-    timer.addEventListener("stop", reflectStatus);
-    timer.addEventListener("pause", reflectStatus);
-    timer.addEventListener("resume", reflectStatus);
-    timer.addEventListener("end", reflectStatus);
-    timer.addEventListener("extend", reflectDuration);
+    timer.addEventListener(TimerEvent.start, reflectStatus);
+    timer.addEventListener(TimerEvent.stop, reflectStatus);
+    timer.addEventListener(TimerEvent.pause, reflectStatus);
+    timer.addEventListener(TimerEvent.resume, reflectStatus);
+    timer.addEventListener(TimerEvent.end, reflectStatus);
+    timer.addEventListener(TimerEvent.changeDuration, reflectDuration);
+    timer.addEventListener(TimerEvent.changeDuration, reflectStatus);
 
     return () => {
-      timer.removeEventListener("start", reflectStatus);
-      timer.removeEventListener("stop", reflectStatus);
-      timer.removeEventListener("pause", reflectStatus);
-      timer.removeEventListener("resume", reflectStatus);
-      timer.removeEventListener("end", reflectStatus);
-      timer.removeEventListener("extend", reflectDuration);
+      timer.removeEventListener(TimerEvent.start, reflectStatus);
+      timer.removeEventListener(TimerEvent.stop, reflectStatus);
+      timer.removeEventListener(TimerEvent.pause, reflectStatus);
+      timer.removeEventListener(TimerEvent.resume, reflectStatus);
+      timer.removeEventListener(TimerEvent.end, reflectStatus);
+      timer.removeEventListener(TimerEvent.changeDuration, reflectDuration);
+      timer.removeEventListener(TimerEvent.changeDuration, reflectStatus);
     };
   }, [timerRef]);
 
   useEffect(() => {
-    if (deltaDuration > 0) {
-      timerRef.current.extend(deltaDuration);
-    }
-  }, [deltaDuration]);
+    timerRef.current.setDuration(duration);
+  }, [duration]);
 
   const useProgress = useCallback(function useProgress({
     targetFps,
@@ -58,9 +56,6 @@ export function useTimer(callback: () => void, duration: number) {
 
   return {
     status: _status,
-    isRunning: _status === "running",
-    isPaused: _status === "paused",
-    isStopped: _status === "stopped",
     duration: _duration,
     startedAt: timerRef.current.startedAt,
     start: timerRef.current.start,
@@ -68,6 +63,7 @@ export function useTimer(callback: () => void, duration: number) {
     pause: timerRef.current.pause,
     resume: timerRef.current.resume,
     extend: timerRef.current.extend,
+    setDuration: timerRef.current.setDuration,
     end: timerRef.current.end,
     useProgress,
   };
@@ -86,22 +82,22 @@ export function useTimerProgress(
   const { start, stop } = useUpdateLoop({ onUpdate, ...options });
 
   useEffect(() => {
-    timer.addEventListener("start", start);
-    timer.addEventListener("resume", start);
-    timer.addEventListener("pause", stop);
-    timer.addEventListener("stop", stop);
-    timer.addEventListener("stop", onUpdate);
-    timer.addEventListener("extend", onUpdate);
-    timer.addEventListener("end", onUpdate);
+    timer.addEventListener(TimerEvent.start, start);
+    timer.addEventListener(TimerEvent.resume, start);
+    timer.addEventListener(TimerEvent.pause, stop);
+    timer.addEventListener(TimerEvent.stop, stop);
+    timer.addEventListener(TimerEvent.stop, onUpdate);
+    timer.addEventListener(TimerEvent.changeDuration, onUpdate);
+    timer.addEventListener(TimerEvent.end, onUpdate);
 
     return () => {
-      timer.removeEventListener("start", start);
-      timer.removeEventListener("resume", start);
-      timer.removeEventListener("pause", stop);
-      timer.removeEventListener("stop", stop);
-      timer.removeEventListener("stop", onUpdate);
-      timer.removeEventListener("extend", onUpdate);
-      timer.removeEventListener("end", onUpdate);
+      timer.removeEventListener(TimerEvent.start, start);
+      timer.removeEventListener(TimerEvent.resume, start);
+      timer.removeEventListener(TimerEvent.pause, stop);
+      timer.removeEventListener(TimerEvent.stop, stop);
+      timer.removeEventListener(TimerEvent.stop, onUpdate);
+      timer.removeEventListener(TimerEvent.changeDuration, onUpdate);
+      timer.removeEventListener(TimerEvent.end, onUpdate);
     };
   }, [onUpdate, start, stop, timer]);
 

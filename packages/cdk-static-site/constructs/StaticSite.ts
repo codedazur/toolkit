@@ -1,14 +1,20 @@
+import { CacheInvalidator } from "@codedazur/cdk-cache-invalidator";
 import { CfnOutput, RemovalPolicy } from "aws-cdk-lib";
-import { DnsValidatedCertificate } from "aws-cdk-lib/aws-certificatemanager";
 import {
-  Distribution,
+  DnsValidatedCertificate,
+  ICertificate,
+} from "aws-cdk-lib/aws-certificatemanager";
+import {
   Function as CloudFrontFunction,
+  Distribution,
   FunctionCode,
   FunctionEventType,
   OriginProtocolPolicy,
+  PriceClass,
   ViewerProtocolPolicy,
 } from "aws-cdk-lib/aws-cloudfront";
 import { HttpOrigin } from "aws-cdk-lib/aws-cloudfront-origins";
+import { AnyPrincipal, Effect, PolicyStatement } from "aws-cdk-lib/aws-iam";
 import {
   ARecord,
   HostedZone,
@@ -16,8 +22,9 @@ import {
   RecordTarget,
 } from "aws-cdk-lib/aws-route53";
 import { CloudFrontTarget } from "aws-cdk-lib/aws-route53-targets";
-import { Bucket } from "aws-cdk-lib/aws-s3";
+import { BlockPublicAccess, Bucket } from "aws-cdk-lib/aws-s3";
 import { BucketDeployment, Source } from "aws-cdk-lib/aws-s3-deployment";
+import { Secret } from "aws-cdk-lib/aws-secretsmanager";
 import { Construct } from "constructs";
 
 export interface StaticSiteProps {
@@ -39,6 +46,7 @@ export interface StaticSiteProps {
     errorDocument?: string;
   };
   distribution?: {
+    priceClass?: PriceClass;
     functions?: {
       viewerRequest?: FunctionCode[];
       viewerResponse?: FunctionCode[];
@@ -48,6 +56,7 @@ export interface StaticSiteProps {
     memoryLimit?: number;
     prefix?: string;
     cacheInvalidations?: string[];
+    awaitCacheInvalidations?: boolean;
   };
 }
 
@@ -56,12 +65,19 @@ export interface StaticSiteProps {
  *
  * The site redirects from HTTP to HTTPS, using a CloudFront distribution,
  * Route53 alias record, and ACM certificate.
+ *
+ * Direct read access to the bucket is disallowed unless a secret Referer header
+ * is included in the request. This makes the bucket website inaccessible to the
+ * public, while still allowing access by the CloudFront distribution, which is
+ * configured to include that secret header.
+ * @see https://repost.aws/knowledge-center/cloudfront-serve-static-website
  */
 export class StaticSite extends Construct {
   public readonly domain?: string;
+  public readonly refererSecret: Secret;
   public readonly bucket: Bucket;
   public readonly zone?: IHostedZone;
-  public readonly certificate?: DnsValidatedCertificate;
+  public readonly certificate?: ICertificate;
   public readonly functions: {
     viewerRequest?: CloudFrontFunction;
     viewerResponse?: CloudFrontFunction;
@@ -69,6 +85,7 @@ export class StaticSite extends Construct {
   public readonly distribution: Distribution;
   public readonly alias?: ARecord;
   public readonly deployment: BucketDeployment;
+  public readonly cacheInvalidator?: CacheInvalidator;
 
   constructor(
     scope: Construct,
@@ -78,6 +95,7 @@ export class StaticSite extends Construct {
     super(scope, id);
 
     this.domain = this.determineDomain();
+    this.refererSecret = this.createRefererSecret();
     this.bucket = this.createBucket();
     this.zone = this.findHostedZone();
     this.certificate = this.createCertificate();
@@ -85,6 +103,10 @@ export class StaticSite extends Construct {
     this.distribution = this.createDistribution();
     this.alias = this.createAlias();
     this.deployment = this.createDeployment();
+
+    if (!props.deployment?.awaitCacheInvalidations) {
+      this.cacheInvalidator = this.createCacheInvalidator();
+    }
   }
 
   protected determineDomain() {
@@ -101,15 +123,41 @@ export class StaticSite extends Construct {
     return domain;
   }
 
+  protected createRefererSecret() {
+    return new Secret(this, "RefererSecret", {
+      generateSecretString: { excludePunctuation: true },
+    });
+  }
+
   protected createBucket() {
     const bucket = new Bucket(this, "Bucket", {
       publicReadAccess: true,
+      blockPublicAccess: new BlockPublicAccess({
+        blockPublicAcls: false,
+        ignorePublicAcls: false,
+        blockPublicPolicy: false,
+        restrictPublicBuckets: false,
+      }),
       websiteIndexDocument: this.props.website?.indexDocument ?? "index.html",
-      websiteErrorDocument: this.props.website?.errorDocument ?? "error.html",
+      websiteErrorDocument: this.props.website?.errorDocument ?? "404.html",
       transferAcceleration: this.props.bucket?.accelerate,
       removalPolicy: RemovalPolicy.DESTROY,
       autoDeleteObjects: true,
     });
+
+    bucket.addToResourcePolicy(
+      new PolicyStatement({
+        effect: Effect.DENY,
+        principals: [new AnyPrincipal()],
+        actions: ["s3:GetObject"],
+        resources: [bucket.arnForObjects("*")],
+        conditions: {
+          StringNotLike: {
+            "aws:Referer": this.refererSecret.secretValue.toString(),
+          },
+        },
+      })
+    );
 
     new CfnOutput(this, "BucketName", { value: bucket.bucketName });
 
@@ -131,7 +179,7 @@ export class StaticSite extends Construct {
         ? new DnsValidatedCertificate(this, "Certificate", {
             domainName: this.domain,
             hostedZone: this.zone,
-            region: "us-east-1", // CloudFront only checks this region for certificates.
+            region: "us-east-1",
           })
         : undefined;
 
@@ -163,23 +211,29 @@ export class StaticSite extends Construct {
     }
 
     return new CloudFrontFunction(this, "ViewerRequestFunction", {
-      code: this.getMiddlewareCode(handlers),
+      code: this.getHandlerChainCode(handlers, "request"),
     });
   }
 
   protected createViewerResponseFunction() {
-    const handlers = this.props.distribution?.functions?.viewerResponse ?? [];
+    const handlers = [
+      this.getSecurityHeadersCode(),
+      ...(this.props.distribution?.functions?.viewerResponse ?? []),
+    ].filter((handler): handler is FunctionCode => !!handler);
 
     if (handlers.length === 0) {
       return undefined;
     }
 
     return new CloudFrontFunction(this, "ViewerResponseFunction", {
-      code: this.getMiddlewareCode(handlers),
+      code: this.getHandlerChainCode(handlers, "response"),
     });
   }
 
-  protected getMiddlewareCode(handlers: FunctionCode[]) {
+  protected getHandlerChainCode(
+    handlers: FunctionCode[],
+    completion: "request" | "response"
+  ) {
     return FunctionCode.fromInline(/* js */ `
 			function handler(event) {
 				return chain(event, [
@@ -193,7 +247,7 @@ export class StaticSite extends Construct {
 			}
 
 			function complete(event) {
-				return event.request;
+				return event.${completion};
 			}
 		`);
   }
@@ -253,13 +307,46 @@ export class StaticSite extends Construct {
 		`);
   }
 
+  /**
+   * @todo Make these headers configurable.
+   * @todo Research CSP and define a good default.
+   */
+  protected getSecurityHeadersCode() {
+    return FunctionCode.fromInline(/* js */ `
+			function securityHeaders(event, next) {
+				event.response.headers["strict-transport-security"] = {
+          value: "max-age=63072000; includeSubDomains; preload",
+        };
+
+        // event.response.headers["content-security-policy"] = {
+        //   value:
+        //     "default-src 'self'; img-src *; media-src *; frame-src *; font-src *
+        // };
+
+        event.response.headers["x-content-type-options"] = {
+          value: "nosniff",
+        };
+
+        event.response.headers["x-frame-options"] = {
+          value: "SAMEORIGIN",
+        };
+
+        return next(event);
+			}
+		`);
+  }
+
   protected createDistribution() {
     const distribution = new Distribution(this, "Distribution", {
+      priceClass: this.props.distribution?.priceClass,
       certificate: this.certificate,
       domainNames: this.domain ? [this.domain] : undefined,
       defaultBehavior: {
         origin: new HttpOrigin(this.bucket.bucketWebsiteDomainName, {
           protocolPolicy: OriginProtocolPolicy.HTTP_ONLY,
+          customHeaders: {
+            Referer: this.refererSecret.secretValue.toString(),
+          },
         }),
         viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
         functionAssociations: [
@@ -311,9 +398,19 @@ export class StaticSite extends Construct {
       sources: [Source.asset(this.props.path)],
       destinationBucket: this.bucket,
       destinationKeyPrefix: this.props.deployment?.prefix,
-      distribution: this.distribution,
-      distributionPaths: this.props.deployment?.cacheInvalidations ?? ["/*"],
       memoryLimit: this.props.deployment?.memoryLimit,
+      distribution:
+        !this.props.deployment?.awaitCacheInvalidations
+          ? this.distribution
+          : undefined,
+      distributionPaths: this.props.deployment?.cacheInvalidations,
+    });
+  }
+
+  protected createCacheInvalidator() {
+    return new CacheInvalidator(this, "CacheInvalidator", {
+      distribution: this.distribution,
+      paths: this.props.deployment?.cacheInvalidations ?? ["/*"],
     });
   }
 }

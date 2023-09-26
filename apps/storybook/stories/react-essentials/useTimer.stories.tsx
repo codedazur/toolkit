@@ -1,7 +1,6 @@
 import {
   AddIcon,
   background,
-  Center,
   Column,
   IconButton,
   LinearProgress,
@@ -15,53 +14,64 @@ import {
   StopIcon,
   Text,
 } from "@codedazur/react-components";
-import { useTimer } from "@codedazur/react-essentials";
+import { useTimer, TimerStatus } from "@codedazur/react-essentials";
 import { action } from "@storybook/addon-actions";
+import { Meta } from "@storybook/react";
+import { Bar } from "@apps/storybook/components/Bar";
 import styled from "styled-components";
-import { Bar } from "storybook/components/Bar";
-import { meta } from "storybook/utilities/meta";
-import { story } from "storybook/utilities/story";
 import docs from "./useTimer.docs.mdx";
+import { DebugOverlay } from "../../components/DebugOverlay";
 
-export default meta({
+const meta: Meta = {
+  title: "react-essentials/useTimer",
   parameters: {
     docs: {
       page: docs,
     },
   },
-});
+};
 
-export const Default = story(() => {
+export default meta;
+
+export const Default = () => {
   const timer = useTimer(action("callback"), 3000);
 
   return (
-    <Center>
-      <Column gap="1rem" align="center">
-        <TimerProgress {...timer} />
-        <Row gap="1rem">
-          <TimerControls {...timer} />
-          <TimerExtension {...timer} />
-        </Row>
-      </Column>
-    </Center>
+    <Column gap="1rem" align="center">
+      <TimerProgress {...timer} />
+      <Row gap="1rem">
+        <TimerControls {...timer} />
+        <TimerExtension {...timer} />
+      </Row>
+    </Column>
   );
-});
+};
 
 interface TimerProgressProps extends ReturnType<typeof useTimer> {}
 
-const TimerProgress = ({ useProgress }: TimerProgressProps) => {
-  const { elapsed, progress, duration } = useProgress();
+const TimerProgress = (timer: TimerProgressProps) => {
+  const { progress, elapsed, remaining } = timer.useProgress();
 
   return (
-    <Bar>
-      <Text>{elapsed.toString().padStart(4, "0")}</Text>
-      <PrimaryLinearProgress
-        width="20rem"
-        height="0.5rem"
-        progress={progress}
+    <>
+      <Bar>
+        <Text>{elapsed.toString().padStart(4, "0")}</Text>
+        <PrimaryLinearProgress
+          width="20rem"
+          height="0.5rem"
+          progress={progress}
+        />
+        <Text>{timer.duration}</Text>
+      </Bar>
+      <DebugOverlay
+        value={{
+          useTimer: {
+            ...timer,
+            useProgress: { progress, elapsed, remaining },
+          },
+        }}
       />
-      <Text>{duration}</Text>
-    </Bar>
+    </>
   );
 };
 
@@ -88,28 +98,36 @@ const TimerExtension = ({ extend }: TimerExtensionProps) => (
 interface TimerControlsProps extends ReturnType<typeof useTimer> {}
 
 const TimerControls = ({
-  isRunning,
+  status,
+  start,
   resume,
   pause,
   stop,
-  isStopped,
   end,
-}: TimerControlsProps) => (
-  <Bar>
-    {!isRunning ? (
-      <IconButton onClick={resume}>
-        <PlayArrowIcon />
+}: TimerControlsProps) => {
+  const isStopped = status === TimerStatus.stopped;
+  const isRunning = status === TimerStatus.running;
+
+  return (
+    <Bar>
+      {isRunning ? (
+        <IconButton onClick={pause}>
+          <PauseIcon />
+        </IconButton>
+      ) : (
+        <IconButton onClick={resume}>
+          <PlayArrowIcon />
+        </IconButton>
+      )}
+      <IconButton onClick={start}>start</IconButton>
+      <IconButton onClick={resume}>resume</IconButton>
+      <IconButton onClick={stop}>stop</IconButton>
+      <IconButton onClick={stop} disabled={isStopped}>
+        <StopIcon />
       </IconButton>
-    ) : (
-      <IconButton onClick={pause}>
-        <PauseIcon />
+      <IconButton onClick={end}>
+        <SkipNextIcon />
       </IconButton>
-    )}
-    <IconButton onClick={stop} disabled={isStopped}>
-      <StopIcon />
-    </IconButton>
-    <IconButton onClick={end}>
-      <SkipNextIcon />
-    </IconButton>
-  </Bar>
-);
+    </Bar>
+  );
+};

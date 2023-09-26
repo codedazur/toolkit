@@ -1,5 +1,5 @@
 {
-  "name": "infrastructure",
+  "name": "@apps/infrastructure",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -11,23 +11,20 @@
     "destroy": "cdk destroy --all --force"
   },
   "dependencies": {
+    "@apps/storybook": "*",
+    "@apps/website": "*",
     "@codedazur/cdk-static-site": "*",
     "@codedazur/essentials": "*",
-    "@storybook/addon-essentials": "7.0.26",
-    "@storybook/addon-interactions": "7.0.26",
-    "@storybook/builder-vite": "7.0.26",
-    "@storybook/react": "7.0.26",
-    "aws-cdk-lib": "^2.50.0",
-    "constructs": "^10.1.147",
-    "eslint-config-next": "12.0.4",
-    "storybook": "*",
-    "website": "*"
+    "aws-cdk-lib": "^2.89.0",
+    "constructs": "^10.2.69",
+    "eslint-config-next": "13.5.3",
+    "eslint-plugin-react": "7.33.2"
   },
   "devDependencies": {
-    "aws-cdk": "^2.50.0",
-    "dotenv": "^16.0.3",
-    "ts-jest": "^27.0.3",
+    "aws-cdk": "^2.89.0",
+    "dotenv": "^16.3.1",
+    "ts-jest": "^29.1.1",
     "ts-node": "^10.9.1",
-    "typescript": "^4.8.4 || ^5.0.0"
+    "typescript": "^5.1.6"
   }
 }

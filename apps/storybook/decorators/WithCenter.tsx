@@ -1,7 +1,7 @@
 import { Center } from "@codedazur/react-components";
-import { DecoratorFn } from "@storybook/react";
+import { Decorator } from "@storybook/react";
 
-export const WithCenter: DecoratorFn = (Story) => (
+export const WithCenter: Decorator = (Story) => (
   <Center>
     <Story />
   </Center>

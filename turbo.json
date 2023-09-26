@@ -1,25 +1,25 @@
 {
   "$schema": "https://turborepo.org/schema.json",
   "pipeline": {
-    "lint": {},
-    "test": {},
-    "audit": {},
-    "build": {
-      "dependsOn": ["lint", "test", "audit", "^build"],
-      "outputs": ["dist/**", ".next/**", ".storybook/**"]
+    "dev": {
+      "cache": false,
+      "persistent": true
     },
-    "release": {
+    "audit": {},
+    "lint": {},
+    "test": {
       "dependsOn": ["^build"]
     },
+    "build": {
+      "dependsOn": ["^build", "audit", "lint", "test"],
+      "outputs": ["dist/**", ".next/**", ".storybook/**"]
+    },
     "deploy": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["build"],
       "env": ["CDK_DEFAULT_ACCOUNT", "CDK_DEFAULT_REGION", "DOMAIN_NAME"]
     },
     "destroy": {
       "env": ["CDK_DEFAULT_ACCOUNT", "CDK_DEFAULT_REGION"]
-    },
-    "dev": {
-      "cache": false
     }
   }
 }
