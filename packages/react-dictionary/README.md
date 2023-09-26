@@ -1,0 +1,1 @@
+# @codedazur/react-dictionary
