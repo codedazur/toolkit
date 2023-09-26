@@ -1,0 +1,32 @@
+{
+  "name": "@codedazur/cdk-mailer",
+  "version": "0.0.0",
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "license": "MIT",
+  "scripts": {
+    "lint": "TIMING=1 eslint \"**/*.ts*\"",
+    "test": "echo \"No tests configured.\"",
+    "release": "echo \"No releases configured.\""
+  },
+  "dependencies": {
+    "@aws-sdk/client-lambda": "^3.231.0",
+    "@aws-sdk/client-ses": "^3.231.0",
+    "@aws-sdk/client-sqs": "^3.231.0",
+    "@codedazur/essentials": "*"
+  },
+  "peerDependencies": {
+    "aws-cdk-lib": ">=2",
+    "constructs": ">=10"
+  },
+  "devDependencies": {
+    "@types/node": "^16.18.3",
+    "aws-cdk-lib": "^2.55.1",
+    "constructs": "^10.1.194",
+    "esbuild": "^0.16.9",
+    "eslint": "^8.30.0",
+    "eslint-config-custom": "*",
+    "tsconfig": "*",
+    "typescript": "^4.9.4"
+  }
+}
