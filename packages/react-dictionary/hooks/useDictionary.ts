@@ -1,6 +1,5 @@
 import { useContext } from "react";
-import { dictionaryContext } from "../contexts/dictionaryContext";
-import { Locale } from "@codedazur/react-dictionary";
+import { Locale, dictionaryContext } from "../contexts/dictionaryContext";
 
 export const useDictionary = (locale?: Locale) => {
   const { entries, locale: currentLocale } = useContext(dictionaryContext);

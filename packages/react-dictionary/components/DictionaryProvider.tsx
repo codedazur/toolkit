@@ -1,6 +1,10 @@
 import { FunctionComponent, ReactNode, useMemo } from "react";
-import { Dictionary, dictionaryContext } from "../contexts/dictionaryContext";
-import { DictionaryKey, Locale } from "@codedazur/react-dictionary";
+import {
+  Dictionary,
+  DictionaryKey,
+  Locale,
+  dictionaryContext,
+} from "../contexts/dictionaryContext";
 
 export interface DictionaryProviderProps {
   locale?: Locale;
