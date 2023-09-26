@@ -16,12 +16,12 @@
   "devDependencies": {
     "@codedazur/eslint-config": "*",
     "@codedazur/tsconfig": "*",
-    "@types/node": "^16.18.3",
+    "@types/node": "^16.18.3 || ^18.18.0",
     "aws-cdk-lib": "^2.55.1",
     "constructs": "^10.1.194",
-    "esbuild": "^0.16.9",
+    "esbuild": "^0.16.9 || ^0.19.1",
     "eslint": "^8.30.0",
-    "typescript": "^4.9.4"
+    "typescript": "^4.9.4 || ^5.2.2"
   },
   "dependencies": {
     "@codedazur/essentials": "*",
