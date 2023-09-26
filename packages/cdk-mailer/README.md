@@ -1,0 +1,1 @@
+# @codedazur/cdk-mailer

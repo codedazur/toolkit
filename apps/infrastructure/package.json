@@ -16,9 +16,7 @@
     "@codedazur/cdk-static-site": "*",
     "@codedazur/essentials": "*",
     "aws-cdk-lib": "^2.89.0",
-    "constructs": "^10.2.69",
-    "eslint-config-next": "13.5.3",
-    "eslint-plugin-react": "7.33.2"
+    "constructs": "^10.2.69"
   },
   "devDependencies": {
     "aws-cdk": "^2.89.0",
