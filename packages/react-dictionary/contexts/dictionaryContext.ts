@@ -12,17 +12,13 @@ export type Dictionary = ReadonlyMap<DictionaryKey, string>;
  * import "@codedazur/react-dictionary";
  *
  * declare module "@codedazur/react-dictionary" {
- *   export enum DictionaryKey {
- *     "foo",
- *     "bar",
- *     "baz",
- *   }
+ *   export type DictionaryKey = "foo" | "bar" | "baz";
  * }
  */
-export enum DictionaryKey {}
+export type DictionaryKey = string;
 
 /**
- * This enum can be overridden using module augmentation.
+ * This type can be overridden using module augmentation.
  *
  * @example
  * // dictionary.d.ts
@@ -30,17 +26,10 @@ export enum DictionaryKey {}
  * import "@codedazur/react-dictionary";
  *
  * declare module "@codedazur/react-dictionary" {
- *   export enum Locale {
- *     en_US = "en_US",
- *     en_GB = "en_GB",
- *   }
+ *   export type Locale = "en_US" | "en_GB";
  * }
  */
-export enum Locale {
-  en_US = "en_US",
-}
-
-export const DefaultLocale = Locale.en_US;
+export type Locale = string;
 
 export interface DictionaryContext {
   locale: Locale | null;

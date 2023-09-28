@@ -13,7 +13,7 @@ export interface DictionaryProviderProps {
 }
 
 export const DictionaryProvider: FunctionComponent<DictionaryProviderProps> = ({
-  locale = Locale.en_US,
+  locale = null,
   dictionaries,
   children,
 }) => {
