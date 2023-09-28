@@ -1,5 +1,11 @@
 # @codedazur/react-audio
 
+## 0.0.3
+
+### Patch Changes
+
+- [`3cfb400`](https://github.com/codedazur/toolkit/commit/3cfb400155270d95d9c713f5324d4258c3cb0e8d) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - take initial element value into account
+
 ## 0.0.2
 
 ### Patch Changes
