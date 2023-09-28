@@ -1,5 +1,11 @@
 # @codedazur/react-dictionary
 
+## 0.2.0
+
+### Minor Changes
+
+- [`4e970b1`](https://github.com/codedazur/toolkit/commit/4e970b1dfcb1c9cecfe49aa2e741d9a98038c0e8) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - default to more lenient typings
+
 ## 0.1.0
 
 ### Minor Changes
