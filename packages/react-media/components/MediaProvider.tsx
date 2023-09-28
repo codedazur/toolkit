@@ -7,14 +7,13 @@ import {
 import {
   ReactNode,
   SetStateAction,
-  createContext,
   useCallback,
   useEffect,
   useMemo,
   useRef,
   useState,
 } from "react";
-import { MediaContext, mediaContext } from "./MediaContext";
+import { MediaContext, mediaContext } from "../contexts/mediaContext";
 
 export type MediaTrack = string | { source: string };
 
@@ -55,7 +54,8 @@ export function MediaProvider({
       ? window.document.createElement("video")
       : null,
   );
-  const elementRef = initialElement ?? internalElementRef;
+  const elementRef: MaybeRef<HTMLMediaElement> =
+    initialElement ?? internalElementRef;
 
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const isPlayingRef = useSynchronizedRef(isPlaying);
