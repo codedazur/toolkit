@@ -1,23 +1,30 @@
 import { Vector2 } from "@codedazur/essentials";
-import { MaybeRef, ScrollState, useScroll } from "@codedazur/react-essentials";
+import {
+  MaybeRef,
+  ScrollState,
+  resolveMaybeRef,
+  useScroll,
+} from "@codedazur/react-essentials";
 import { useCallback, useState } from "react";
 
 interface UseParallaxProps {
   scrollRef?: MaybeRef<HTMLElement>;
-  factor: ParallaxFactor | ParallaxFactor[];
+  targetRef: MaybeRef<HTMLElement>;
+  factor: ParallaxFactor;
 }
 
 export type ParallaxFactor = number | ((position: Vector2) => Vector2);
 
 export function useParallax(parameters: {
   scrollRef?: MaybeRef<HTMLElement>;
+  targetRef: MaybeRef<HTMLElement>;
   factor: ParallaxFactor;
-}): Vector2;
+}): void;
 
-export function useParallax(parameters: {
-  scrollRef?: MaybeRef<HTMLElement>;
-  factor: ParallaxFactor[];
-}): Vector2[];
+// export function useParallax(parameters: {
+//   scrollRef?: MaybeRef<HTMLElement>;
+//   factor: ParallaxFactor[];
+// });
 
 /**
  * @todo Investigate if we can implement a pure CSS approach to resolve the
@@ -36,29 +43,27 @@ export function useParallax(parameters: {
  */
 export function useParallax({
   scrollRef,
+  targetRef,
   factor,
-}: UseParallaxProps): Vector2 | Vector2[] {
-  const [translation, setTranslation] = useState<Vector2 | Vector2[]>(
-    Array.isArray(factor) ? factor.map(() => Vector2.zero) : Vector2.zero
-  );
-
+}: UseParallaxProps) {
   const handleScroll = useCallback(
     ({ position }: ScrollState) => {
-      setTranslation(
-        Array.isArray(factor)
-          ? factor.map((factor) => translate(position, factor))
-          : translate(position, factor)
-      );
+      const target = resolveMaybeRef(targetRef);
+
+      if (!target) {
+        return;
+      }
+
+      const translated = translate(position, factor);
+      target.style.transform = `translateX(${translated.x}px) translateY(${translated.y}px)`;
     },
-    [factor]
+    [targetRef, factor],
   );
 
   useScroll({
     ref: scrollRef,
     onScroll: handleScroll,
   });
-
-  return translation;
 }
 
 function translate(position: Vector2, factor: ParallaxFactor): Vector2 {

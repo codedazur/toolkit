@@ -7,12 +7,11 @@ import {
   SizedBox,
   Stack,
   Text,
-  Transform,
 } from "@codedazur/react-components";
 import { ParallaxFactor, useParallax } from "@codedazur/react-parallax";
 import { faker } from "@faker-js/faker";
 import { Meta, StoryObj } from "@storybook/react";
-import { ReactNode } from "react";
+import { ReactNode, useRef } from "react";
 import docs from "./useParallax.docs.mdx";
 import layerOne from "./diorama/layer-one.png";
 import layerTwo from "./diorama/layer-two.png";
@@ -59,13 +58,10 @@ const Parallax = ({
   factor: ParallaxFactor;
   children?: ReactNode;
 }) => {
-  const { x, y } = useParallax({ factor });
+  const ref = useRef<HTMLDivElement>(null);
+  useParallax({ targetRef: ref, factor });
 
-  return (
-    <Transform x={x} y={y}>
-      {children}
-    </Transform>
-  );
+  return <div ref={ref}>{children}</div>;
 };
 
 export const Hero: StoryObj = {
