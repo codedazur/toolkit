@@ -18,7 +18,7 @@
     "test": "vitest run --coverage",
     "coverage": "vitest run --coverage",
     "build": "tsup index.ts --format esm,cjs --dts",
-    "dev": "tsup index.ts --format esm,cjs --watch --external react"
+    "dev": "tsup index.ts --format esm,cjs --dts --watch --external react"
   },
   "peerDependencies": {
     "react": ">=16.8.0",

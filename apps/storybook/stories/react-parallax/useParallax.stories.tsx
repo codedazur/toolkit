@@ -8,17 +8,16 @@ import {
   Stack,
   Text,
 } from "@codedazur/react-components";
-import { ParallaxFactor, useParallax } from "@codedazur/react-parallax";
+import { useParallax } from "@codedazur/react-parallax";
 import { faker } from "@faker-js/faker";
 import { Meta, StoryObj } from "@storybook/react";
-import { ReactNode, useRef } from "react";
-import docs from "./useParallax.docs.mdx";
-import layerOne from "./diorama/layer-one.png";
-import layerTwo from "./diorama/layer-two.png";
-import layerThree from "./diorama/layer-three.png";
-import layerFour from "./diorama/layer-four.png";
 import layerFive from "./diorama/layer-five.png";
+import layerFour from "./diorama/layer-four.png";
+import layerOne from "./diorama/layer-one.png";
 import layerSix from "./diorama/layer-six.png";
+import layerThree from "./diorama/layer-three.png";
+import layerTwo from "./diorama/layer-two.png";
+import docs from "./useParallax.docs.mdx";
 
 const meta: Meta = {
   title: "react-parallax/useParallax",
@@ -38,11 +37,14 @@ export const Default: StoryObj = {
       <Placeholder height="100vh">
         <Row gap="1rem">
           {[-0.5, 0, 0.5, 1, 1.5].map((factor, index) => (
-            <Parallax key={index} factor={factor}>
-              <Placeholder width="10rem" height="10rem">
-                <Text>{factor}</Text>
-              </Placeholder>
-            </Parallax>
+            <Placeholder
+              key={index}
+              ref={useParallax({ factor })}
+              width="10rem"
+              height="10rem"
+            >
+              <Text>{factor}</Text>
+            </Placeholder>
           ))}
         </Row>
       </Placeholder>
@@ -51,98 +53,86 @@ export const Default: StoryObj = {
   ),
 };
 
-const Parallax = ({
-  factor,
-  children,
-}: {
-  factor: ParallaxFactor;
-  children?: ReactNode;
-}) => {
-  const ref = useRef<HTMLDivElement>(null);
-  useParallax({ targetRef: ref, factor });
-
-  return <div ref={ref}>{children}</div>;
-};
-
 export const Hero: StoryObj = {
-  render: () => (
-    <>
-      <Stack>
-        <Parallax factor={0.5}>
-          <Placeholder height="40rem" crossed />
-        </Parallax>
-        <Center>
-          <Text>{faker.commerce.productName()}</Text>
-        </Center>
-      </Stack>
-      <SizedBox height="200vh" />
-    </>
-  ),
+  render: function Default() {
+    const ref = useParallax<HTMLDivElement>({
+      factor: 0.5,
+    });
+
+    return (
+      <>
+        <Stack>
+          <Placeholder ref={ref} height="40rem" crossed />
+          <Center>
+            <Text>{faker.commerce.productName()}</Text>
+          </Center>
+        </Stack>
+        <SizedBox height="200vh" />
+      </>
+    );
+  },
 };
 
 export const Diorama: StoryObj = {
-  render: () => (
-    <>
-      <Center>
-        <Stack>
-          <Parallax factor={0.7}>
-            <Image src={layerOne} alt="" />
-          </Parallax>
-          <Parallax factor={0.75}>
-            <Image src={layerTwo} alt="" />
-          </Parallax>
-          <Parallax factor={0.85}>
-            <Image src={layerThree} alt="" />
-          </Parallax>
-          <Parallax factor={0.95}>
-            <Image src={layerFour} alt="" />
-          </Parallax>
-          <Parallax factor={1}>
-            <Image src={layerFive} alt="" />
-          </Parallax>
-          <Parallax factor={1}>
-            <Image src={layerSix} alt="" />
-          </Parallax>
-        </Stack>
-      </Center>
-      <SizedBox height="200vh" />
-    </>
-  ),
+  render: function Diorama() {
+    const layers = [
+      { src: layerOne, ref: useParallax<HTMLImageElement>({ factor: 0.7 }) },
+      { src: layerTwo, ref: useParallax<HTMLImageElement>({ factor: 0.75 }) },
+      { src: layerThree, ref: useParallax<HTMLImageElement>({ factor: 0.85 }) },
+      { src: layerFour, ref: useParallax<HTMLImageElement>({ factor: 0.95 }) },
+      { src: layerFive, ref: useParallax<HTMLImageElement>({ factor: 1 }) },
+      { src: layerSix, ref: useParallax<HTMLImageElement>({ factor: 1 }) },
+    ];
+
+    return (
+      <>
+        <Center>
+          <Stack>
+            {layers.map((props, index) => (
+              <Image key={index} {...props} alt="" />
+            ))}
+          </Stack>
+        </Center>
+        <SizedBox height="200vh" />
+      </>
+    );
+  },
 };
 
 export const NonLinear: StoryObj = {
-  render: () => (
-    <>
-      <Placeholder height="100vh">
-        <Parallax
-          factor={({ x, y }) =>
-            new Vector2(5 * Math.sqrt(x), 0.005 * Math.pow(y, 2))
-          }
-        >
-          <Placeholder width="10rem" height="10rem">
+  render: function NonLinear() {
+    const ref = useParallax<HTMLDivElement>({
+      factor: ({ x, y }) =>
+        new Vector2(5 * Math.sqrt(x), 0.005 * Math.pow(y, 2)),
+    });
+
+    return (
+      <>
+        <Placeholder height="100vh">
+          <Placeholder ref={ref} width="10rem" height="10rem">
             <Text style={{ fontFamily: "system-ui" }}>5⋅√x</Text>
             <Text style={{ fontFamily: "system-ui" }}>0.005⋅y²</Text>
           </Placeholder>
-        </Parallax>
-      </Placeholder>
-      <SizedBox width="200vw" height="100vh" />
-    </>
-  ),
+        </Placeholder>
+        <SizedBox width="200vw" height="100vh" />
+      </>
+    );
+  },
 };
 
 export const Dynamic: StoryObj = {
-  render: () => (
-    <>
-      <Placeholder height="100vh">
-        <Parallax
-          factor={({ x, y }) =>
-            new Vector2(0, y < 200 ? y : y > 400 ? y - 200 : 200)
-          }
-        >
-          <Placeholder width="10rem" height="10rem" />
-        </Parallax>
-      </Placeholder>
-      <SizedBox width="200vw" height="100vh" />
-    </>
-  ),
+  render: function Dynamic() {
+    const ref = useParallax<HTMLDivElement>({
+      factor: ({ y }) => new Vector2(0, y < 200 ? y : y > 400 ? y - 200 : 200),
+    });
+
+    return (
+      <>
+        <Placeholder height="100vh">
+          <Placeholder ref={ref} width="10rem" height="10rem" />
+        </Placeholder>
+        <SizedBox width="200vw" height="100vh" />
+      </>
+    );
+  },
 };

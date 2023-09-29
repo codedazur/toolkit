@@ -5,21 +5,19 @@ import {
   resolveMaybeRef,
   useScroll,
 } from "@codedazur/react-essentials";
-import { useCallback, useState } from "react";
+import { RefObject, useCallback, useRef, useState } from "react";
 
 interface UseParallaxProps {
   scrollRef?: MaybeRef<HTMLElement>;
-  targetRef: MaybeRef<HTMLElement>;
   factor: ParallaxFactor;
 }
 
 export type ParallaxFactor = number | ((position: Vector2) => Vector2);
 
-export function useParallax(parameters: {
+export function useParallax<T extends HTMLElement>(parameters: {
   scrollRef?: MaybeRef<HTMLElement>;
-  targetRef: MaybeRef<HTMLElement>;
   factor: ParallaxFactor;
-}): void;
+}): RefObject<T>;
 
 // export function useParallax(parameters: {
 //   scrollRef?: MaybeRef<HTMLElement>;
@@ -41,14 +39,15 @@ export function useParallax(parameters: {
  * This is only relevant if we cannot implement a way to avoid re-rendering on
  * every scroll event.
  */
-export function useParallax({
-  scrollRef,
-  targetRef,
+export function useParallax<T extends HTMLElement>({
   factor,
-}: UseParallaxProps) {
+  scrollRef,
+}: UseParallaxProps): RefObject<T> {
+  const ref = useRef<T>(null);
+
   const handleScroll = useCallback(
     ({ position }: ScrollState) => {
-      const target = resolveMaybeRef(targetRef);
+      const target = resolveMaybeRef(ref);
 
       if (!target) {
         return;
@@ -60,13 +59,15 @@ export function useParallax({
         target.style.transform = `translateX(${translated.x}px) translateY(${translated.y}px)`;
       });
     },
-    [targetRef, factor],
+    [ref, factor],
   );
 
   useScroll({
     ref: scrollRef,
     onScroll: handleScroll,
   });
+
+  return ref;
 }
 
 function translate(position: Vector2, factor: ParallaxFactor): Vector2 {
