@@ -55,7 +55,10 @@ export function useParallax({
       }
 
       const translated = translate(position, factor);
-      target.style.transform = `translateX(${translated.x}px) translateY(${translated.y}px)`;
+
+      window.requestAnimationFrame(() => {
+        target.style.transform = `translateX(${translated.x}px) translateY(${translated.y}px)`;
+      });
     },
     [targetRef, factor],
   );
