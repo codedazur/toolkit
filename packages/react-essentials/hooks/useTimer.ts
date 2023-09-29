@@ -51,8 +51,7 @@ export function useTimer(callback: () => void, duration: number) {
     targetFps,
   }: { targetFps?: number } = {}) {
     return useTimerProgress(timerRef.current, { targetFps });
-  },
-  []);
+  }, []);
 
   return {
     status: _status,
@@ -71,7 +70,7 @@ export function useTimer(callback: () => void, duration: number) {
 
 export function useTimerProgress(
   timer: Timer,
-  options: { targetFps?: number; immediately?: boolean } = {}
+  options: { targetFps?: number; immediately?: boolean } = {},
 ) {
   const [progress, setProgress] = useState(timer.progress);
 

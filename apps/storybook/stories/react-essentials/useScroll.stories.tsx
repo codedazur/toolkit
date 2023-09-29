@@ -86,7 +86,7 @@ export const WithControls: StoryObj = {
             ))}
         </Row>
       ),
-      []
+      [],
     );
 
     return (
@@ -180,7 +180,7 @@ export const WithAnimatedBackground = () => {
   const background = transform(
     progress.y,
     [0, 1],
-    [amber[700].toString(), deepPurple[700].toString()]
+    [amber[700].toString(), deepPurple[700].toString()],
   );
 
   return (

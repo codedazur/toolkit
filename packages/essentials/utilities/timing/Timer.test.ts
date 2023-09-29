@@ -1,4 +1,13 @@
-import { Mock, afterAll, afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import {
+  Mock,
+  afterAll,
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi,
+} from "vitest";
 import { Timer, TimerEvent, TimerStatus } from "./Timer";
 
 describe("Timer", () => {
@@ -14,7 +23,7 @@ describe("Timer", () => {
   afterEach(() => {
     vi.clearAllTimers();
   });
-  
+
   afterAll(() => {
     vi.useRealTimers();
   });
@@ -22,7 +31,7 @@ describe("Timer", () => {
   describe("Initialization", () => {
     it("should throw an error when duration is less then 0", () => {
       expect(() => new Timer(callback, -2000)).toThrow(
-        new Error("Duration cannot be less then 0.")
+        new Error("Duration cannot be less then 0."),
       );
     });
 
@@ -260,7 +269,7 @@ describe("Timer", () => {
 
     it("should throw an error when duration is less then 0", () => {
       expect(() => timer.setDuration(-1000)).toThrow(
-        new Error("Duration cannot be less then 0.")
+        new Error("Duration cannot be less then 0."),
       );
     });
 

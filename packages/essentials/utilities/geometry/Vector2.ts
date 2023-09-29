@@ -19,28 +19,28 @@ export class Vector2 {
   public add(other: number | Vector2): Vector2 {
     return new Vector2(
       this.x + (other instanceof Vector2 ? other.x : other),
-      this.y + (other instanceof Vector2 ? other.y : other)
+      this.y + (other instanceof Vector2 ? other.y : other),
     );
   }
 
   public subtract(other: number | Vector2): Vector2 {
     return new Vector2(
       this.x - (other instanceof Vector2 ? other.x : other),
-      this.y - (other instanceof Vector2 ? other.y : other)
+      this.y - (other instanceof Vector2 ? other.y : other),
     );
   }
 
   public multiply(other: number | Vector2): Vector2 {
     return new Vector2(
       this.x * (other instanceof Vector2 ? other.x : other),
-      this.y * (other instanceof Vector2 ? other.y : other)
+      this.y * (other instanceof Vector2 ? other.y : other),
     );
   }
 
   public divide(other: number | Vector2): Vector2 {
     return new Vector2(
       this.x / (other instanceof Vector2 ? other.x : other),
-      this.y / (other instanceof Vector2 ? other.y : other)
+      this.y / (other instanceof Vector2 ? other.y : other),
     );
   }
 
@@ -103,7 +103,7 @@ export function isVector2Like(value: unknown): value is Vector2Like {
   return !!value && typeof value === "object" && "x" in value && "y" in value;
 }
 export function isPartialVector2Like(
-  value: unknown
+  value: unknown,
 ): value is Partial<Vector2Like> {
   return !!value && typeof value === "object" && ("x" in value || "y" in value);
 }

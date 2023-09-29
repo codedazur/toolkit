@@ -14,7 +14,7 @@ describe("useSynchronizedRef", () => {
       (props) => useSynchronizedRef(props.value),
       {
         initialProps: { value: "initial value" },
-      }
+      },
     );
     expect(result.current.current).toEqual("initial value");
     rerender({ value: "new value" });

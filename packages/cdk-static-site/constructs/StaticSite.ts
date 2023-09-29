@@ -90,7 +90,7 @@ export class StaticSite extends Construct {
   constructor(
     scope: Construct,
     id: string,
-    protected readonly props: StaticSiteProps
+    protected readonly props: StaticSiteProps,
   ) {
     super(scope, id);
 
@@ -156,7 +156,7 @@ export class StaticSite extends Construct {
             "aws:Referer": this.refererSecret.secretValue.toString(),
           },
         },
-      })
+      }),
     );
 
     new CfnOutput(this, "BucketName", { value: bucket.bucketName });
@@ -232,7 +232,7 @@ export class StaticSite extends Construct {
 
   protected getHandlerChainCode(
     handlers: FunctionCode[],
-    completion: "request" | "response"
+    completion: "request" | "response",
   ) {
     return FunctionCode.fromInline(/* js */ `
 			function handler(event) {
@@ -287,7 +287,7 @@ export class StaticSite extends Construct {
           [
             this.props.authentication?.username,
             this.props.authentication?.password,
-          ].join(":")
+          ].join(":"),
         ).toString("base64")
       : undefined;
   }
@@ -386,7 +386,7 @@ export class StaticSite extends Construct {
       ? new ARecord(this, "DomainAlias", {
           recordName: this.domain,
           target: RecordTarget.fromAlias(
-            new CloudFrontTarget(this.distribution)
+            new CloudFrontTarget(this.distribution),
           ),
           zone: this.zone,
         })
@@ -399,10 +399,9 @@ export class StaticSite extends Construct {
       destinationBucket: this.bucket,
       destinationKeyPrefix: this.props.deployment?.prefix,
       memoryLimit: this.props.deployment?.memoryLimit,
-      distribution:
-        !this.props.deployment?.awaitCacheInvalidations
-          ? this.distribution
-          : undefined,
+      distribution: !this.props.deployment?.awaitCacheInvalidations
+        ? this.distribution
+        : undefined,
       distributionPaths: this.props.deployment?.cacheInvalidations,
     });
   }

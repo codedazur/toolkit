@@ -7,11 +7,11 @@ describe("modulo", () => {
     expect(modulo(-5, -3)).toBe(-2);
     expect(modulo(-5, 3)).toBe(1);
     expect(modulo(5, -3)).toBe(-1);
-    
+
     expect(modulo(0, 3)).toBe(0);
     expect(modulo(0, -3)).toBe(-0);
 
-    expect(modulo(5, 0)).toBeNaN();;
+    expect(modulo(5, 0)).toBeNaN();
     expect(modulo(0, 0)).toBeNaN();
   });
 

@@ -10,19 +10,19 @@ export function formatSegments(
   count: number,
   siblings: number,
   boundary: number,
-  gapSize: number = 1
+  gapSize: number = 1,
 ): Range {
   const maxLength = boundary + gapSize + ACTIVE_PAGE_COUNT + siblings * 2;
   return mergeSegments(
     filterSegments(padSegments(segments, count, maxLength), count),
-    gapSize
+    gapSize,
   );
 }
 
 export function padSegments(
   segments: Range3,
   count: number,
-  maxLength: number
+  maxLength: number,
 ): Range3 {
   const lowerThreshold = maxLength;
   const upperThreshold = count + 1 - maxLength;
@@ -60,7 +60,7 @@ export function mergeSegments(segments: Range, gapSize: number = 1): Range {
 
       return merged;
     },
-    [segments.shift() as number[]]
+    [segments.shift() as number[]],
   );
 }
 

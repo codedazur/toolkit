@@ -6,7 +6,7 @@ import { mutateObject } from "./mutateObject";
  */
 export function rekeyObject<T extends Record<string, any>>(
   object: T,
-  callback: (entry: [keyof T, T[keyof T]]) => string
+  callback: (entry: [keyof T, T[keyof T]]) => string,
 ): { [key: string]: T[keyof T] } {
   return mutateObject(object, ([key, value]) => [
     callback([key, value]),

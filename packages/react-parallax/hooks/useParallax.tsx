@@ -39,7 +39,7 @@ export function useParallax({
   factor,
 }: UseParallaxProps): Vector2 | Vector2[] {
   const [translation, setTranslation] = useState<Vector2 | Vector2[]>(
-    Array.isArray(factor) ? factor.map(() => Vector2.zero) : Vector2.zero
+    Array.isArray(factor) ? factor.map(() => Vector2.zero) : Vector2.zero,
   );
 
   const handleScroll = useCallback(
@@ -47,10 +47,10 @@ export function useParallax({
       setTranslation(
         Array.isArray(factor)
           ? factor.map((factor) => translate(position, factor))
-          : translate(position, factor)
+          : translate(position, factor),
       );
     },
-    [factor]
+    [factor],
   );
 
   useScroll({

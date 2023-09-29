@@ -67,7 +67,7 @@ export const Default: StoryObj<UseUpdateLoopArgs> = {
           </IconButton>
         </Row>
       ),
-      [start, pause, stop, isUpdating]
+      [start, pause, stop, isUpdating],
     );
 
     return (
@@ -108,7 +108,7 @@ export const WithAnimation: StoryObj<UseUpdateLoopArgs> = {
           </IconButton>
         </Row>
       ),
-      [start, pause, stop, isUpdating]
+      [start, pause, stop, isUpdating],
     );
 
     return (
@@ -123,5 +123,5 @@ export const WithAnimation: StoryObj<UseUpdateLoopArgs> = {
 const Shape = styled.div(
   size("10rem"),
   shape("rounded"),
-  background({ color: "primary" })
+  background({ color: "primary" }),
 );

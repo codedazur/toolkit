@@ -4,7 +4,7 @@
  */
 export function mapObject<T extends Record<string, any>, U>(
   object: T,
-  callback: (entry: [keyof T, T[keyof T]], index: number) => U
+  callback: (entry: [keyof T, T[keyof T]], index: number) => U,
 ): U[] {
   return Object.entries(object).map(callback);
 }

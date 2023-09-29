@@ -83,7 +83,7 @@ export const NotificationsProvider: FunctionComponent<
             ...state,
             [action.group]: [
               ...(state[action.group] ?? []).filter(
-                ({ id }) => id !== action.id
+                ({ id }) => id !== action.id,
               ),
             ],
           };
@@ -94,7 +94,7 @@ export const NotificationsProvider: FunctionComponent<
           };
       }
     },
-    {}
+    {},
   );
 
   const [entries, setEntries] = useState<Notifications>({});
@@ -103,25 +103,25 @@ export const NotificationsProvider: FunctionComponent<
   const getGroupOption = useCallback(
     (
       group: string,
-      option: MaybeGrouped<Option> | undefined
+      option: MaybeGrouped<Option> | undefined,
     ): Option | undefined => {
       return isGrouped(option) ? option?.[group] ?? option?.default : option;
     },
-    []
+    [],
   );
 
   const getGroupAutoDismiss = useCallback(
     (group: string): AutoDismiss => {
       return getGroupOption(group, autoDismiss) ?? 5000;
     },
-    [autoDismiss, getGroupOption]
+    [autoDismiss, getGroupOption],
   );
 
   const getGroupLimit = useCallback(
     (group: string): Limit => {
       return getGroupOption(group, limit) ?? false;
     },
-    [limit, getGroupOption]
+    [limit, getGroupOption],
   );
 
   useEffect(() => {
@@ -133,14 +133,14 @@ export const NotificationsProvider: FunctionComponent<
         entries.forEach((entry) => entry.timer?.resume());
 
         return entries;
-      })
+      }),
     );
 
     setQueue(
       revalueObject(groups, ([group, all]) => {
         const groupLimit = getGroupLimit(group);
         return groupLimit !== false ? all.slice(groupLimit) : [];
-      })
+      }),
     );
   }, [getGroupLimit, groups, limit]);
 
@@ -158,7 +158,7 @@ export const NotificationsProvider: FunctionComponent<
       children: ReactNode,
       {
         autoDismiss = getGroupAutoDismiss(group),
-      }: { autoDismiss?: AutoDismiss } = {}
+      }: { autoDismiss?: AutoDismiss } = {},
     ) => {
       const id = Date.now();
 
@@ -193,7 +193,7 @@ export const NotificationsProvider: FunctionComponent<
 
       return notification;
     },
-    [getGroupAutoDismiss, remove]
+    [getGroupAutoDismiss, remove],
   );
 
   const clear = useCallback((group: string) => {
@@ -219,7 +219,7 @@ export const NotificationsProvider: FunctionComponent<
 };
 
 function isGrouped(
-  option: MaybeGrouped<Option> | undefined
+  option: MaybeGrouped<Option> | undefined,
 ): option is Record<string, Option> {
   return typeof option === "object";
 }

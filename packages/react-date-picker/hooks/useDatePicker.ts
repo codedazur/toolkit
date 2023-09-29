@@ -30,7 +30,7 @@ export interface UseDatePickerProps extends UseDatePickerFlags {
   isDateDisabled?: (
     date: Date,
     cursor: number,
-    dates: Array<Date | null>
+    dates: Array<Date | null>,
   ) => boolean;
   locale?: Locale | null;
   dayLabelFormat?: string | ((date: Date) => string);
@@ -174,18 +174,20 @@ export const useDatePicker = ({
   subsequentDates = "clear",
 }: UseDatePickerProps = {}): UseDatePickerResult => {
   const [dates, setDates] = useState<Array<Date | null>>(
-    new Array(count).fill(null).map((_, index) => initialDates?.[index] ?? null)
+    new Array(count)
+      .fill(null)
+      .map((_, index) => initialDates?.[index] ?? null),
   );
   const [cursor, setCursor] = useState<number>(initialCursor);
   const [month, setMonth] = useState(
-    startOfMonth(initialMonth ?? initialDates?.[0] ?? new Date())
+    startOfMonth(initialMonth ?? initialDates?.[0] ?? new Date()),
   );
   const [focusedDate, setFocusedDate] = useState<Date | null>(null);
 
   useEffect(() => {
     setCursor((cursor) => clamp(cursor, 0, count - 1));
     setDates((dates) =>
-      new Array(count).fill(null).map((_, index) => dates?.[index] ?? null)
+      new Array(count).fill(null).map((_, index) => dates?.[index] ?? null),
     );
   }, [count]);
 
@@ -219,7 +221,7 @@ export const useDatePicker = ({
       minDuration,
       dates,
       cursor,
-    ]
+    ],
   );
 
   const isFirstDate = useCallback(
@@ -227,7 +229,7 @@ export const useDatePicker = ({
       const lastDate = dates[0];
       return !!lastDate && isSameDay(date, lastDate);
     },
-    [dates]
+    [dates],
   );
 
   const isLastDate = useCallback(
@@ -235,7 +237,7 @@ export const useDatePicker = ({
       const lastDate = dates[dates.length - 1];
       return !!lastDate && isSameDay(date, lastDate);
     },
-    [dates]
+    [dates],
   );
 
   const isSelectedDate = useCallback(
@@ -243,7 +245,7 @@ export const useDatePicker = ({
       dates
         .map((otherDate) => otherDate && isSameDay(date, otherDate))
         .includes(true),
-    [dates]
+    [dates],
   );
 
   const isInSelectedRange = useCallback(
@@ -262,7 +264,7 @@ export const useDatePicker = ({
 
       return isInRange(date, minSelectedDate, maxSelectedDate);
     },
-    [dates]
+    [dates],
   );
 
   const isInFocusedRange = useCallback(
@@ -278,7 +280,7 @@ export const useDatePicker = ({
 
       return isInRange(date, minSelectedDate, focusedDate);
     },
-    [dates, focusedDate]
+    [dates, focusedDate],
   );
 
   const setDate = useCallback(
@@ -351,28 +353,28 @@ export const useDatePicker = ({
       subsequentDates,
       ignoreDisabledDates,
       isDateDisabled,
-    ]
+    ],
   );
 
   const toDate = useCallback((date: Date) => setMonth(startOfMonth(date)), []);
   const toMonth = useCallback(
     (index: number) =>
       setMonth((month) => startOfMonth(setMonthDateFns(month, index))),
-    []
+    [],
   );
   const toYear = useCallback(
     (index: number) => setMonth((month) => startOfMonth(setYear(month, index))),
-    []
+    [],
   );
 
   const moveMonth = useCallback(
     (offset: number) =>
       setMonth((month) => startOfMonth(addMonths(month, offset))),
-    []
+    [],
   );
   const moveYear = useCallback(
     (offset: number) => moveMonth(offset * 12),
-    [moveMonth]
+    [moveMonth],
   );
 
   const toPreviousMonth = useCallback(() => moveMonth(-1), [moveMonth]);
@@ -382,14 +384,14 @@ export const useDatePicker = ({
 
   const clear = useCallback(
     () => setDates((dates) => new Array(dates.length).fill(null) as null[]),
-    []
+    [],
   );
 
   const handleDateClick = useCallback(
     (date: Date) => {
       setDate(cursor, date);
     },
-    [setDate, cursor]
+    [setDate, cursor],
   );
 
   const handleDateMouseEnter = useCallback(
@@ -398,7 +400,7 @@ export const useDatePicker = ({
         setFocusedDate(date);
       }
     },
-    [dates, cursor]
+    [dates, cursor],
   );
 
   const handleDateMouseLeave = useCallback(() => {
@@ -445,7 +447,7 @@ export const useDatePicker = ({
       weekdayLabelFormat,
       monthLabelFormat,
       locale,
-    ]
+    ],
   );
 
   const monthData = useMemo(() => getMonthByOffset(0), [getMonthByOffset]);
