@@ -5,39 +5,26 @@ import {
   resolveMaybeRef,
   useScroll,
 } from "@codedazur/react-essentials";
-import { RefObject, useCallback, useRef, useState } from "react";
+import { RefObject, useCallback, useRef } from "react";
 
-interface UseParallaxProps {
+export interface UseParallaxProps {
   scrollRef?: MaybeRef<HTMLElement>;
   factor: ParallaxFactor;
 }
 
 export type ParallaxFactor = number | ((position: Vector2) => Vector2);
 
-export function useParallax<T extends HTMLElement>(parameters: {
-  scrollRef?: MaybeRef<HTMLElement>;
-  factor: ParallaxFactor;
-}): RefObject<T>;
-
-// export function useParallax(parameters: {
-//   scrollRef?: MaybeRef<HTMLElement>;
-//   factor: ParallaxFactor[];
-// });
-
 /**
- * @todo Investigate if we can implement a pure CSS approach to resolve the
- * performance issues. We should do this before the other todo's, because the
- * outcome might affect the other tasks.
+ * Creates a ref that can be used to apply a parallax effect to an element.
+ * @param factor The factor of the parallax effect. A number between -1 and 1.
+ * @param scrollRef The scrollable element. Defaults to the window.
+ * @returns A ref to the element.
+ * @example
+ * const ref = useParallax<HTMLDivElement>({
+ *   factor: 0.5,
+ * });
  *
- * @todo Improve the performance of this hook by preventing the need to re-
- * render on every scroll event. We could use Framer Motion's `MotionValue` for
- * this, but in order to avoid a dependency, we might be able to implement
- * something similar ourselves using refs.
- *
- * @todo Option: Support just a single layer instead of an entire array, so that
- * it is easier to move the hook down in the render tree to improve performance.
- * This is only relevant if we cannot implement a way to avoid re-rendering on
- * every scroll event.
+ * return <div ref={ref} />
  */
 export function useParallax<T extends HTMLElement>({
   factor,

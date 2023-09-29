@@ -75,22 +75,16 @@ export const Hero: StoryObj = {
 
 export const Diorama: StoryObj = {
   render: function Diorama() {
-    const layers = [
-      { src: layerOne, ref: useParallax<HTMLImageElement>({ factor: 0.7 }) },
-      { src: layerTwo, ref: useParallax<HTMLImageElement>({ factor: 0.75 }) },
-      { src: layerThree, ref: useParallax<HTMLImageElement>({ factor: 0.85 }) },
-      { src: layerFour, ref: useParallax<HTMLImageElement>({ factor: 0.95 }) },
-      { src: layerFive, ref: useParallax<HTMLImageElement>({ factor: 1 }) },
-      { src: layerSix, ref: useParallax<HTMLImageElement>({ factor: 1 }) },
-    ];
-
     return (
       <>
         <Center>
           <Stack>
-            {layers.map((props, index) => (
-              <Image key={index} {...props} alt="" />
-            ))}
+            <Image src={layerOne} ref={useParallax({ factor: 0.6 })} alt="" />
+            <Image src={layerTwo} ref={useParallax({ factor: 0.7 })} alt="" />
+            <Image src={layerThree} ref={useParallax({ factor: 0.8 })} alt="" />
+            <Image src={layerFour} ref={useParallax({ factor: 0.9 })} alt="" />
+            <Image src={layerFive} ref={useParallax({ factor: 1 })} alt="" />
+            <Image src={layerSix} ref={useParallax({ factor: 1 })} alt="" />
           </Stack>
         </Center>
         <SizedBox height="200vh" />
