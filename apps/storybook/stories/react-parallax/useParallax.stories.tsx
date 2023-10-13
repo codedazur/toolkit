@@ -1,5 +1,8 @@
 import { Vector2 } from "@codedazur/essentials";
 import {
+  AspectRatio,
+  Background,
+  Box,
   Center,
   Image,
   Placeholder,
@@ -7,10 +10,12 @@ import {
   SizedBox,
   Stack,
   Text,
+  black,
 } from "@codedazur/react-components";
 import { useParallax } from "@codedazur/react-parallax";
 import { faker } from "@faker-js/faker";
 import { Meta, StoryObj } from "@storybook/react";
+import styled from "styled-components";
 import layerFive from "./diorama/layer-five.png";
 import layerFour from "./diorama/layer-four.png";
 import layerOne from "./diorama/layer-one.png";
@@ -53,25 +58,47 @@ export const Default: StoryObj = {
   ),
 };
 
-export const Hero: StoryObj = {
-  render: function Default() {
-    const ref = useParallax<HTMLDivElement>({
-      factor: 0.5,
-    });
-
-    return (
-      <>
-        <Stack>
-          <Placeholder ref={ref} height="40rem" crossed />
-          <Center>
-            <Text>{faker.commerce.productName()}</Text>
-          </Center>
-        </Stack>
-        <SizedBox height="200vh" />
-      </>
-    );
-  },
+export const Heroes: StoryObj = {
+  render: () => (
+    <Box padding="10vw" flex={{ direction: "column", gap: "10vw" }}>
+      <Hero />
+      <Hero />
+      <Hero />
+      <Hero />
+      <Hero />
+    </Box>
+  ),
 };
+
+const Hero = () => {
+  const ref = useParallax<HTMLImageElement>({
+    factor: 0.5,
+    cover: true,
+  });
+
+  return (
+    <Box shape="rounded">
+      <Stack>
+        <AspectRatio ratio={16 / 9}>
+          <Image
+            ref={ref}
+            src={faker.image.urlPicsumPhotos({ width: 1920, height: 1080 })}
+            alt=""
+          />
+        </AspectRatio>
+        <Background $color={black.alpha(0.5)} style={{ zIndex: 1 }}>
+          <Center>
+            <Title>{faker.commerce.productName()}</Title>
+          </Center>
+        </Background>
+      </Stack>
+    </Box>
+  );
+};
+
+const Title = styled(Text)`
+  font-size: 2.5vw;
+`;
 
 export const Diorama: StoryObj = {
   render: function Diorama() {
