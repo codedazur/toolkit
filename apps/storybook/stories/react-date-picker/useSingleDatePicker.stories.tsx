@@ -19,10 +19,10 @@ import docs from "./useSingleDatePicker.docs.mdx";
 import { addDays, Day } from "date-fns";
 import { enGB, enUS, es, nl, ru } from "date-fns/locale";
 import { FunctionComponent, useMemo, useRef, useState } from "react";
-import { Monospace } from "./components/Monospace";
 import { Weekdays } from "./components/Weekdays";
 import { Days } from "./components/Days";
 import { Navigation } from "./components/Navigation";
+import { Monospace } from "../../components/Monospace";
 
 const localeMap: Record<string, Locale> = {
   "en-US": enUS,

@@ -30,7 +30,7 @@ import {
   UseDatePickerProps,
   useDatePicker,
 } from "@codedazur/react-date-picker";
-import { Monospace } from "./components/Monospace";
+import { Monospace } from "../../components/Monospace";
 
 const DatePicker: FunctionComponent<UseDatePickerProps> = (props) => {
   const { cursor, dates, month, toNextMonth, toPreviousMonth } =
