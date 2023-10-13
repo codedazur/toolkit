@@ -8,7 +8,7 @@ export function env<T extends string>(key: string, fallback: T): T;
 export function env<T extends string>(key: string, fallback?: T): T | undefined;
 export function env<T extends string>(
   key: string,
-  fallback?: T
+  fallback?: T,
 ): T | undefined {
   const value = process.env[key];
 
@@ -35,7 +35,7 @@ env.string = string;
 function int<T extends number>(key: string, fallback: T): number | T;
 function int<T extends number>(
   key: string,
-  fallback?: T
+  fallback?: T,
 ): number | T | undefined;
 function int<T extends number>(key: string, fallback?: T): T | undefined {
   const value = process.env[key];
@@ -51,7 +51,7 @@ env.int = int;
 function float<T extends number>(key: string, fallback: T): number | T;
 function float<T extends number>(
   key: string,
-  fallback?: T
+  fallback?: T,
 ): number | T | undefined;
 function float<T extends number>(key: string, fallback?: T): T | undefined {
   const value = process.env[key];
@@ -97,11 +97,11 @@ env.date = date;
 function strings<T extends string>(key: string, fallback: T[]): T[];
 function strings<T extends string>(
   key: string,
-  fallback?: T[]
+  fallback?: T[],
 ): T[] | undefined;
 function strings<T extends string>(
   key: string,
-  fallback?: T[]
+  fallback?: T[],
 ): T[] | undefined {
   const value = process.env[key];
 
@@ -139,7 +139,7 @@ function floats<T extends number>(key: string, fallback: T[]): number[] | T[];
 function floats<T extends number>(key: string, fallback?: T[]): T[] | undefined;
 function floats<T extends number>(
   key: string,
-  fallback?: T[]
+  fallback?: T[],
 ): T[] | undefined {
   const value = process.env[key];
 

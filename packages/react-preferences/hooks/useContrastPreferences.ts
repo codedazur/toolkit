@@ -19,7 +19,7 @@ export enum Contrast {
  */
 export const useContrastPreferences = () => {
   const [contrast, setContrast] = useState<undefined | null | Contrast>(
-    undefined
+    undefined,
   );
 
   const updatePreferences = useCallback(() => {

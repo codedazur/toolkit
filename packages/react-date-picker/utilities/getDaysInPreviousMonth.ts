@@ -2,7 +2,7 @@ import { getDay, startOfMonth } from "date-fns";
 
 export function getDaysInPreviousMonth(
   month: Date,
-  weekStartsOn: number
+  weekStartsOn: number,
 ): number {
   const firstDayOfMonth = getDay(startOfMonth(month));
 

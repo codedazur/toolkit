@@ -10,7 +10,7 @@ export class ToolkitSite extends StaticSite {
   constructor(
     scope: Construct,
     id: string,
-    { subdomain, ...props }: ToolkitSiteProps
+    { subdomain, ...props }: ToolkitSiteProps,
   ) {
     super(scope, id, {
       ...props,

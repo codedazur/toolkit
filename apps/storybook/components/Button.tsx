@@ -11,25 +11,27 @@ export interface ButtonProps extends BaseButtonProps {
   foreground?: keyof DefaultTheme["colors"] | Color;
 }
 
-export const Button = styled(BaseButton)<ButtonProps>(
-  ({ theme, background = "primary", foreground }) => {
-    const fg: Color | undefined =
-      typeof foreground === "string" ? theme.colors[foreground] : foreground;
+export const Button = styled(BaseButton)<ButtonProps>(({
+  theme,
+  background = "primary",
+  foreground,
+}) => {
+  const fg: Color | undefined =
+    typeof foreground === "string" ? theme.colors[foreground] : foreground;
 
-    const bg: Color =
-      typeof background === "string" ? theme.colors[background]! : background;
+  const bg: Color =
+    typeof background === "string" ? theme.colors[background]! : background;
 
-    return css`
-      color: ${(fg ?? highlight(bg, 1)).toString()};
-      background-color: ${bg.toString()};
-      border-color: ${bg.toString()};
+  return css`
+    color: ${(fg ?? highlight(bg, 1)).toString()};
+    background-color: ${bg.toString()};
+    border-color: ${bg.toString()};
 
-      :focus,
-      :active,
-      :hover {
-        background-color: ${highlight(bg).toString()};
-        border-color: ${highlight(bg).toString()};
-      }
-    `;
-  }
-);
+    :focus,
+    :active,
+    :hover {
+      background-color: ${highlight(bg).toString()};
+      border-color: ${highlight(bg).toString()};
+    }
+  `;
+});

@@ -51,7 +51,7 @@ export function useScroll<T extends HTMLElement>({
 
       element.scrollTo({ left: position.x, top: position.y });
     },
-    [ref]
+    [ref],
   );
 
   const setProgress = useCallback(
@@ -65,7 +65,7 @@ export function useScroll<T extends HTMLElement>({
         top: progress.y * (element.scrollHeight - element.clientHeight),
       });
     },
-    [ref]
+    [ref],
   );
 
   const addPosition = useCallback(
@@ -79,7 +79,7 @@ export function useScroll<T extends HTMLElement>({
         top: addition.y,
       });
     },
-    [ref]
+    [ref],
   );
 
   const addProgress = useCallback(
@@ -93,14 +93,14 @@ export function useScroll<T extends HTMLElement>({
         top: addition.y * (element.scrollHeight - element.clientHeight),
       });
     },
-    [ref]
+    [ref],
   );
 
   const useProgress = useCallback(
     function useProgress() {
       return useScrollProgress({ ref });
     },
-    [ref]
+    [ref],
   );
 
   return {
@@ -132,17 +132,17 @@ function getState(target: Document | HTMLElement): ScrollState {
 
   const position = new Vector2(
     Math.round(element.scrollLeft),
-    Math.round(element.scrollTop)
+    Math.round(element.scrollTop),
   );
 
   const overflow = new Vector2(
     element.scrollWidth - element.clientWidth,
-    element.scrollHeight - element.clientHeight
+    element.scrollHeight - element.clientHeight,
   );
 
   const progress = new Vector2(
     position.x / overflow.x || 0,
-    position.y / overflow.y || 0
+    position.y / overflow.y || 0,
   );
 
   return { position, overflow, progress };

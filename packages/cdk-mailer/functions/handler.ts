@@ -63,12 +63,12 @@ async function handleMessage(message: Message) {
   }
 
   const { recipient, subject, body }: EmailMessage = JSON.parse(
-    message.Body ?? ""
+    message.Body ?? "",
   );
 
   if (!recipient || !subject || !body) {
     throw new Error(
-      "The received message is missing some or all of the EmailMessage properties."
+      "The received message is missing some or all of the EmailMessage properties.",
     );
   }
 

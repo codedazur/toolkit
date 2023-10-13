@@ -96,7 +96,7 @@ export class Timer {
         ? (Date.now() - this._shiftedStartedAt!) / this._duration
         : 1 - this._remaining / this._duration,
       0,
-      1
+      1,
     );
 
     return progress || 0;
@@ -122,7 +122,7 @@ export class Timer {
   private _setTimeout = (): void => {
     if (this._hasTimeout) {
       throw new Error(
-        "Cannot start a new timeout while a timeout is still running."
+        "Cannot start a new timeout while a timeout is still running.",
       );
     }
 
@@ -150,10 +150,10 @@ export class Timer {
 
   public removeEventListener = (
     event: TimerEvent,
-    handler: () => void
+    handler: () => void,
   ): void => {
     this._eventListeners[event] = this._eventListeners[event].filter(
-      (entry) => entry !== handler
+      (entry) => entry !== handler,
     );
   };
 

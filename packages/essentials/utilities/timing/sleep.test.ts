@@ -1,4 +1,12 @@
-import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
+import {
+  afterAll,
+  afterEach,
+  beforeAll,
+  describe,
+  expect,
+  it,
+  vi,
+} from "vitest";
 import { sleep } from "./sleep";
 
 beforeAll(() => {
@@ -17,12 +25,12 @@ describe("sleep", () => {
   it("should wait for the specified time", async () => {
     const callback = vi.fn();
     sleep(1000).then(callback);
-    
+
     expect(callback).not.toHaveBeenCalled();
 
     await vi.advanceTimersByTimeAsync(500);
     expect(callback).not.toHaveBeenCalled();
-    
+
     await vi.advanceTimersByTimeAsync(500);
     expect(callback).toHaveBeenCalled();
   });

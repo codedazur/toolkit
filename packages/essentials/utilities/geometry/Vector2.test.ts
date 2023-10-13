@@ -102,18 +102,14 @@ describe("Vector", () => {
     expect(vector.rotate(Angle.degrees(45)).x).toBeCloseTo(Math.sqrt(2) / 2);
     expect(vector.rotate(Angle.degrees(45)).y).toBeCloseTo(Math.sqrt(2) / 2);
 
-    expect(vector.rotate(Angle.degrees(-45)).x).toBeCloseTo(
-      Math.sqrt(2) / 2
-    );
-    expect(vector.rotate(Angle.degrees(-45)).y).toBeCloseTo(
-      -Math.sqrt(2) / 2
-    );
+    expect(vector.rotate(Angle.degrees(-45)).x).toBeCloseTo(Math.sqrt(2) / 2);
+    expect(vector.rotate(Angle.degrees(-45)).y).toBeCloseTo(-Math.sqrt(2) / 2);
 
     expect(
-      vector.rotate(Angle.degrees(90)).rotate(Angle.degrees(-90)).x
+      vector.rotate(Angle.degrees(90)).rotate(Angle.degrees(-90)).x,
     ).toBeCloseTo(vector.x);
     expect(
-      vector.rotate(Angle.degrees(90)).rotate(Angle.degrees(-90)).y
+      vector.rotate(Angle.degrees(90)).rotate(Angle.degrees(-90)).y,
     ).toBeCloseTo(vector.y);
   });
 
