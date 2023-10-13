@@ -6,7 +6,7 @@ import {
   Row,
 } from "@codedazur/react-components";
 import { FunctionComponent, MouseEventHandler } from "react";
-import { Monospace } from "./Monospace";
+import { Monospace } from "../../../components/Monospace";
 
 interface NavigationProps {
   label?: string;

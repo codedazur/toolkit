@@ -6,7 +6,7 @@ import {
   UseDatePickerResult,
 } from "@codedazur/react-components";
 import { FunctionComponent } from "react";
-import { Monospace } from "./Monospace";
+import { Monospace } from "../../../components/Monospace";
 
 interface WeekdaysProps {
   weekdays: UseDatePickerResult["month"]["weekdays"];
