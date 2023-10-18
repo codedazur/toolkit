@@ -7,7 +7,7 @@ export class AssertionError extends Error {
 
 export function assert(
   condition: unknown,
-  errorMessage?: string
+  errorMessage?: string,
 ): asserts condition {
   if (condition === false) throw new AssertionError(errorMessage);
 }

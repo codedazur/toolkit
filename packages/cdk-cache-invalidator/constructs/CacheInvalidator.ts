@@ -20,7 +20,7 @@ export class CacheInvalidator extends Construct {
   constructor(
     scope: Construct,
     id: string,
-    { distribution, paths = ["/*"] }: CacheInvalidatorProps
+    { distribution, paths = ["/*"] }: CacheInvalidatorProps,
   ) {
     super(scope, id);
 
@@ -64,7 +64,7 @@ export class CacheInvalidator extends Construct {
     }).addTarget(
       new SfnStateMachine(stateMachine, {
         input: RuleTargetInput.fromEventPath("$.id"),
-      })
+      }),
     );
   }
 }

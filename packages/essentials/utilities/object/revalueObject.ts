@@ -6,7 +6,7 @@ import { mutateObject } from "./mutateObject";
  */
 export function revalueObject<T extends Record<keyof any, any>, U>(
   object: T,
-  callback: U | ((entry: [keyof T, T[keyof T]]) => U)
+  callback: U | ((entry: [keyof T, T[keyof T]]) => U),
 ): { [K in keyof T]: U } {
   return mutateObject(object, ([key, value]) => [
     key,

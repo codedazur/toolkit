@@ -26,7 +26,7 @@ export interface NotificationsContext {
     children: ReactNode,
     options?: {
       autoDismiss?: AutoDismiss;
-    }
+    },
   ) => NotificationProps;
   readonly remove: (group: string, id: number) => void;
   readonly clear: (group: string) => void;

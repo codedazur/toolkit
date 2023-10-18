@@ -67,12 +67,12 @@ export function getDaysData({
 
   const start = addDays(
     startOfThisMonth,
-    -getDaysInPreviousMonth(startOfThisMonth, weekStartsOn)
+    -getDaysInPreviousMonth(startOfThisMonth, weekStartsOn),
   );
 
   const end = addDays(
     endOfThisMonth,
-    7 - getDaysInPreviousMonth(startOfNextMonth, weekStartsOn)
+    7 - getDaysInPreviousMonth(startOfNextMonth, weekStartsOn),
   );
 
   const dayLabelFormat =
@@ -97,6 +97,6 @@ export function getDaysData({
           onMouseEnter: () => handleDateMouseEnter(day),
           onMouseLeave: handleDateMouseLeave,
         }
-      : null
+      : null,
   );
 }

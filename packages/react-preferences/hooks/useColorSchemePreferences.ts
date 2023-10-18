@@ -17,7 +17,7 @@ export enum ColorScheme {
  */
 export const useColorSchemePreferences = () => {
   const [colorScheme, setColorScheme] = useState<undefined | ColorScheme>(
-    undefined
+    undefined,
   );
 
   const updatePreferences = useCallback(() => {

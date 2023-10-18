@@ -7,7 +7,7 @@ import { mapObject } from "./mapObject";
  */
 export function mutateObject<T extends Record<keyof any, any>, U>(
   object: T,
-  callback: (entry: [keyof T, T[keyof T]]) => [keyof any, U]
+  callback: (entry: [keyof T, T[keyof T]]) => [keyof any, U],
 ): { [K in keyof any]: U } {
   return Object.fromEntries(mapObject(object, callback));
 }

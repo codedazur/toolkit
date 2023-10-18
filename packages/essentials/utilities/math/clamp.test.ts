@@ -18,7 +18,7 @@ describe("clamp", () => {
   });
   it("should throw an error if min is bigger than max", () => {
     expect(() => clamp(5, 10, 5)).toThrowError(
-      "The minimum value must not be larger than the maximum value."
+      "The minimum value must not be larger than the maximum value.",
     );
   });
 
