@@ -1,5 +1,11 @@
 # @codedazur/cdk-next-app
 
+## 0.0.2
+
+### Patch Changes
+
+- [`43029b6`](https://github.com/codedazur/toolkit/commit/43029b6f7d19422d889c0c608efd0064d584c2f3) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Added a main index file.
+
 ## 0.0.1
 
 ### Patch Changes

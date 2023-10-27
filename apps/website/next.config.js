@@ -11,6 +11,7 @@ const withTM = require("next-transpile-modules")([
 
 module.exports = withTM({
   reactStrictMode: true,
+  output: "export",
   compiler: {
     styledComponents: true,
   },
