@@ -1,5 +1,16 @@
 # @codedazur/cdk-static-site
 
+## 1.1.0
+
+### Minor Changes
+
+- [`dd2a6c9`](https://github.com/codedazur/toolkit/commit/dd2a6c9934b9b0ad2fb63e45e963d94d3ebf6dca) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Transpile TypeScript to CJS and ESM.
+
+### Patch Changes
+
+- Updated dependencies [[`dd2a6c9`](https://github.com/codedazur/toolkit/commit/dd2a6c9934b9b0ad2fb63e45e963d94d3ebf6dca)]:
+  - @codedazur/cdk-cache-invalidator@1.1.0
+
 ## 1.0.1
 
 ### Patch Changes
