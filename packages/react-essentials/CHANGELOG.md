@@ -1,5 +1,11 @@
 # @codedazur/react-essentials
 
+## 0.1.2
+
+### Patch Changes
+
+- [#210](https://github.com/codedazur/toolkit/pull/210) [`21e0fed`](https://github.com/codedazur/toolkit/commit/21e0fed0ef829aa9c986512d038c13f82dac4481) Thanks [@sayinserdar](https://github.com/sayinserdar)! - fix resolveMaybeRef SSR issue
+
 ## 0.1.1
 
 ### Patch Changes

@@ -1,12 +1,6 @@
+import { Meta, Stories } from "@storybook/blocks";
 
+import meta from "./MediaProvider.stories";
 
-import { Canvas, Meta, Story } from '@storybook/blocks';
-
-import * as MediaProviderStories from './MediaProvider.stories';
-
-<Meta of={MediaProviderStories} />
-
-<Canvas of={MediaProviderStories.Default} />
-
-
-<Canvas of={MediaProviderStories.WithVolumeControls} />
+<Meta of={meta} />
+<Stories />

@@ -1,5 +1,22 @@
 # @codedazur/cdk-next-app
 
+## 0.1.0
+
+### Minor Changes
+
+- [`dd2a6c9`](https://github.com/codedazur/toolkit/commit/dd2a6c9934b9b0ad2fb63e45e963d94d3ebf6dca) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Transpile TypeScript to CJS and ESM.
+
+### Patch Changes
+
+- Updated dependencies [[`dd2a6c9`](https://github.com/codedazur/toolkit/commit/dd2a6c9934b9b0ad2fb63e45e963d94d3ebf6dca)]:
+  - @codedazur/cdk-amplify-app@0.1.0
+
+## 0.0.2
+
+### Patch Changes
+
+- [`43029b6`](https://github.com/codedazur/toolkit/commit/43029b6f7d19422d889c0c608efd0064d584c2f3) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Added a main index file.
+
 ## 0.0.1
 
 ### Patch Changes

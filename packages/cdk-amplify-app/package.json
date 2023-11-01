@@ -1,13 +1,24 @@
 {
   "name": "@codedazur/cdk-amplify-app",
-  "version": "0.0.1",
-  "main": "./index.ts",
-  "types": "./index.ts",
+  "version": "0.1.0",
+  "main": ".dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "license": "MIT",
   "scripts": {
+    "dev": "tsup src/index.ts --format esm,cjs --dts --watch",
+    "build": "tsup src/index.ts --format esm,cjs --dts",
     "lint": "TIMING=1 eslint \"**/*.ts*\"",
-    "test": "echo \"No tests configured.\"",
-    "release": "echo \"No releases configured.\""
+    "test": "echo \"No tests configured.\""
   },
   "peerDependencies": {
     "aws-cdk-lib": ">=2",

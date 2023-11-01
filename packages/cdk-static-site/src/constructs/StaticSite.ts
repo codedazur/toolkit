@@ -131,7 +131,7 @@ export class StaticSite extends Construct {
 
   protected createBucket() {
     const bucket = new Bucket(this, "Bucket", {
-      // publicReadAccess: true,
+      publicReadAccess: true,
       blockPublicAccess: new BlockPublicAccess({
         blockPublicAcls: false,
         ignorePublicAcls: false,
@@ -145,11 +145,19 @@ export class StaticSite extends Construct {
       autoDeleteObjects: true,
     });
 
-    const grant = bucket.grantPublicAccess();
-
-    grant.resourceStatement!.addCondition("StringLike", {
-      "aws:Referer": this.refererSecret.secretValue.toString(),
-    });
+    bucket.addToResourcePolicy(
+      new PolicyStatement({
+        effect: Effect.DENY,
+        principals: [new AnyPrincipal()],
+        actions: ["s3:GetObject"],
+        resources: [bucket.arnForObjects("*")],
+        conditions: {
+          StringNotLike: {
+            "aws:Referer": this.refererSecret.secretValue.toString(),
+          },
+        },
+      }),
+    );
 
     new CfnOutput(this, "BucketName", { value: bucket.bucketName });
 
