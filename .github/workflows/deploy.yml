@@ -1,4 +1,4 @@
-name: Release
+name: Deploy
 
 on:
   push:
@@ -8,44 +8,10 @@ on:
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
-  publish:
-    name: Publish Packages
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-
-      - name: Setup Node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-
-      - name: Install Dependencies
-        run: |
-          npm config set //registry.npmjs.org/:_authToken ${{ secrets.NPM_TOKEN }}
-          npm ci
-
-      - name: Build Packages
-        run: |
-          npm run build:packages
-
-      - name: Commit or Publish
-        uses: changesets/action@v1
-        with:
-          commit: "chore(changesets): release packages"
-          publish: npm run publish
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-
   deploy:
     name: Deploy Apps
+    if: "github.event.commit.message != 'chore: publish'"
     runs-on: ubuntu-latest
-
-    concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}-deploy
-      cancel-in-progress: true
 
     steps:
       - name: Checkout Repository
