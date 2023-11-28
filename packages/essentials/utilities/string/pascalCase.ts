@@ -1,3 +1,6 @@
+/**
+ * Converts a string to PascalCase.
+ */
 export function pascalCase(string: string) {
   if (string === string.toUpperCase()) {
     string = string.toLowerCase();
