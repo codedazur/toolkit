@@ -1,5 +1,11 @@
 # @codedazur/essentials
 
+## 1.4.0
+
+### Minor Changes
+
+- [`831812d`](https://github.com/codedazur/toolkit/commit/831812d3593bc17da5ad7597e9e6d517d6a3d119) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The camelCase string helper was added.
+
 ## 1.3.0
 
 ### Minor Changes
