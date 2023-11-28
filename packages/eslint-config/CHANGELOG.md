@@ -1,5 +1,11 @@
 # eslint-config-custom
 
+## 0.1.0
+
+### Minor Changes
+
+- [`2734a05`](https://github.com/codedazur/toolkit/commit/2734a05441adf6fb7825b88a43da7c255da9ccf9) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Ignore .tsbuildinfo artifacts.
+
 ## 0.0.6
 
 ### Patch Changes
