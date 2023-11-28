@@ -3,9 +3,10 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "storybook dev -c . -p 6006",
+    "develop": "storybook dev -c . -p 6006",
     "build": "storybook build -c . -o .storybook",
     "lint": "TIMING=1 eslint \"**/*.ts*\"",
+    "types": "tsc --noEmit",
     "test": "echo \"No tests configured.\""
   },
   "dependencies": {

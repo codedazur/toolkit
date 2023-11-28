@@ -103,7 +103,7 @@ export const WithDisabledDates = (args: UseSingleDatePickerProps) => {
 WithDisabledDates.argTypes = defaultArgTypes;
 
 export const Localized = (args: UseSingleDatePickerProps) => {
-  return <DatePicker {...args} locale={"es"} />;
+  return <DatePicker {...args} locale={es} />;
 };
 Localized.argTypes = defaultArgTypes;
 
@@ -120,14 +120,17 @@ export const CustomFormatting = (args: UseSingleDatePickerProps) => {
 CustomFormatting.argTypes = defaultArgTypes;
 
 export const CustomFormattingFunction = (args: UseSingleDatePickerProps) => {
-  const dayLabelFormat = (date) =>
+  const dayLabelFormat = (date: Date) =>
     [12, 16].includes(date.getDate()) ? "😄" : date.getDate().toString();
-  const weekdayLabelFormat = (date) =>
+
+  const weekdayLabelFormat = (date: Date) =>
     ["S", "Mon", "Tue", "Wed", "Thu", "Fri", "S"][date.getDay()];
-  const monthLabelFormat = (date) =>
+
+  const monthLabelFormat = (date: Date) =>
     `Q${Math.ceil((date.getMonth() + 1) / 3)}-${
       (date.getMonth() % 3) + 1
     } ${date.getFullYear()}`;
+
   return (
     <DatePicker
       {...args}

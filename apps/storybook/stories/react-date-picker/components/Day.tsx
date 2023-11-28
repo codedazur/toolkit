@@ -10,7 +10,7 @@ interface DayProps {
   isLastDate: boolean;
 }
 
-export const Day = styled.div.attrs<DayProps>((props) => ({
+export const Day = styled.button.attrs<DayProps>((props) => ({
   background: props.isSelected ? "primary" : transparent,
   foreground: "foreground",
   ...props,

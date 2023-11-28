@@ -1,12 +1,13 @@
 {
   "$schema": "https://turborepo.org/schema.json",
   "pipeline": {
-    "dev": {
+    "develop": {
       "cache": false,
       "persistent": true
     },
     "audit": {},
     "lint": {},
+    "types": {},
     "test": {
       "dependsOn": ["^build"]
     },

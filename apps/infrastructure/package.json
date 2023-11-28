@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "lint": "TIMING=1 eslint \"**/*.ts*\"",
+    "types": "tsc --noEmit",
     "test": "jest --passWithNoTests",
     "synth": "cdk synth",
     "diff": "cdk diff",

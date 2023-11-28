@@ -14,14 +14,15 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "turbo run dev --parallel --concurrency=20",
+    "develop": "turbo run dev --parallel --concurrency=20",
     "packages": "turbo run dev --filter @codedazur/* --parallel --concurrency=20",
     "storybook": "turbo run dev --filter @apps/storybook",
     "website": "turbo run dev --filter @apps/website",
     "audit": "npm audit --omit-dev",
     "lint": "turbo run lint",
+    "types": "turbo run types",
     "test": "turbo run test",
-    "check": "turbo run lint test",
+    "check": "turbo run audit lint types test",
     "check:apps": "npm run check -- --filter=@apps/*",
     "check:packages": "npm run check -- --filter=@codedazur/*",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
@@ -30,6 +31,7 @@
     "build:packages": "turbo run build --filter=@codedazur/*",
     "deploy": "turbo run deploy --filter=@apps/infrastructure",
     "destroy": "turbo run destroy --filter=@apps/infrastructure",
+    "version": "changeset version",
     "publish": "changeset publish"
   },
   "devDependencies": {

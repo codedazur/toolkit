@@ -15,9 +15,10 @@
   },
   "license": "MIT",
   "scripts": {
-    "dev": "tsup src/index.ts --format esm,cjs --dts --watch",
+    "develop": "tsup src/index.ts --format esm,cjs --dts --watch",
     "build": "tsup src/index.ts --format esm,cjs --dts",
     "lint": "TIMING=1 eslint \"**/*.ts*\"",
+    "types": "tsc --noEmit",
     "test": "echo \"No tests configured.\""
   },
   "dependencies": {

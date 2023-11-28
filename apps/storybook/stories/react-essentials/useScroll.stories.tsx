@@ -1,4 +1,3 @@
-import { Vector2 } from "@codedazur/essentials";
 import {
   Button,
   Column,
@@ -10,6 +9,7 @@ import {
   Row,
   ScrollView,
   SizedBox,
+  Vector2,
   amber,
   background,
   deepPurple,
