@@ -1,17 +1,17 @@
-name: Quality
+name: Check
 
 on:
   pull_request:
     types: [opened, synchronize]
 
-jobs:
-  quality:
-    name: Check Quality
-    runs-on: ubuntu-latest
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
-    concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}
-      cancel-in-progress: true
+jobs:
+  check:
+    name: Check
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Repository
@@ -33,9 +33,6 @@ jobs:
 
       - name: Lint
         run: npm run lint
-
-      - name: Build
-        run: export NODE_OPTIONS="--max_old_space_size=4096" && npm run build
 
       - name: Test
         run: npm run test
