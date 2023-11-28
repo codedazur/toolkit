@@ -13,6 +13,7 @@ export * from "./utilities/object/omit";
 export * from "./utilities/object/pick";
 export * from "./utilities/object/rekeyObject";
 export * from "./utilities/object/revalueObject";
+export * from "./utilities/string/camelCase";
 export * from "./utilities/string/pascalCase";
 export * from "./utilities/system/env";
 export * from "./utilities/timing/sleep";
