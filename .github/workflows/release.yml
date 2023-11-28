@@ -41,7 +41,6 @@ jobs:
 
   version:
     name: Publish Packages
-    if: "github.event.commit.message != 'chore: publish'"
     runs-on: ubuntu-latest
 
     steps:
