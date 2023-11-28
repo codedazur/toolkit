@@ -1,5 +1,11 @@
 # @codedazur/essentials
 
+## 1.4.1
+
+### Patch Changes
+
+- [`f4715a1`](https://github.com/codedazur/toolkit/commit/f4715a15324b2d03b8060de2d34a786355be0425) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The camelCase helper is now exported from the index.
+
 ## 1.4.0
 
 ### Minor Changes
