@@ -31,7 +31,7 @@
     "build:packages": "turbo run build --filter=@codedazur/*",
     "deploy": "turbo run deploy --filter=@apps/infrastructure",
     "destroy": "turbo run destroy --filter=@apps/infrastructure",
-    "pre:publish": "npm run build:packages",
+    "prepublish": "npm run build:packages",
     "publish": "changeset publish"
   },
   "devDependencies": {
