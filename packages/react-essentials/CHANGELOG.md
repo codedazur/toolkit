@@ -1,5 +1,14 @@
 # @codedazur/react-essentials
 
+## 0.2.1
+
+### Patch Changes
+
+- [`8c0b218`](https://github.com/codedazur/toolkit/commit/8c0b218eb2b6e885dfebf263d6ea75c11b480674) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Include missing dist folder.
+
+- Updated dependencies [[`8c0b218`](https://github.com/codedazur/toolkit/commit/8c0b218eb2b6e885dfebf263d6ea75c11b480674)]:
+  - @codedazur/essentials@1.5.1
+
 ## 0.2.0
 
 ### Minor Changes
