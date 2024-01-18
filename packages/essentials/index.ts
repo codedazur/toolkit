@@ -1,6 +1,7 @@
 export * from "./types/optional";
 export * from "./utilities/array/shuffle";
 export * from "./utilities/geometry/Angle";
+export * from "./utilities/geometry/Rectangle";
 export * from "./utilities/geometry/Vector2";
 export * from "./utilities/math/clamp";
 export * from "./utilities/math/deg2rad";
