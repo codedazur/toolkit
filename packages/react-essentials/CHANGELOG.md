@@ -1,5 +1,16 @@
 # @codedazur/react-essentials
 
+## 0.2.0
+
+### Minor Changes
+
+- [`494507a`](https://github.com/codedazur/toolkit/commit/494507a937509453c1399652398c31f7dabca588) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Added useRectangle hook.
+
+### Patch Changes
+
+- Updated dependencies [[`87e38c1`](https://github.com/codedazur/toolkit/commit/87e38c18e4addf8f49f28bbb22d66236b9b01abd)]:
+  - @codedazur/essentials@1.5.0
+
 ## 0.1.2
 
 ### Patch Changes

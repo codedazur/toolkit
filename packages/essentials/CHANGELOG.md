@@ -1,5 +1,11 @@
 # @codedazur/essentials
 
+## 1.5.0
+
+### Minor Changes
+
+- [`87e38c1`](https://github.com/codedazur/toolkit/commit/87e38c18e4addf8f49f28bbb22d66236b9b01abd) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Added Rectangle geometry class.
+
 ## 1.4.1
 
 ### Patch Changes
