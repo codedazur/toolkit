@@ -16,6 +16,7 @@
     "amplify-app",
     "next-app",
     "mailer",
-    "eslint-config"
+    "eslint-config",
+    "react-essentials"
   ]
 }
