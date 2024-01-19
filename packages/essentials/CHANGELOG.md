@@ -1,5 +1,11 @@
 # @codedazur/essentials
 
+## 1.6.0
+
+### Minor Changes
+
+- [`7d5a28d`](https://github.com/codedazur/toolkit/commit/7d5a28dcbce9f02f7d8a80666cd03b23040fafee) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Added timecode string helper.
+
 ## 1.5.1
 
 ### Patch Changes
