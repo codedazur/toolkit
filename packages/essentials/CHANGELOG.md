@@ -1,5 +1,11 @@
 # @codedazur/essentials
 
+## 1.6.1
+
+### Patch Changes
+
+- [`33e81eb`](https://github.com/codedazur/toolkit/commit/33e81ebc9cdf0a2ecbf54cba2aea9f54cf4b805a) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Export timecode utility.
+
 ## 1.6.0
 
 ### Minor Changes
