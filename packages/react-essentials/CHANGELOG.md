@@ -1,5 +1,11 @@
 # @codedazur/react-essentials
 
+## 0.4.0
+
+### Minor Changes
+
+- [`199e724`](https://github.com/codedazur/toolkit/commit/199e72456fdaf4048d056d0dc10f1ceeb030f48a) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Add useCursor hook.
+
 ## 0.3.0
 
 ### Minor Changes
