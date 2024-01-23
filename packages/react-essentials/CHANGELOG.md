@@ -1,5 +1,11 @@
 # @codedazur/react-essentials
 
+## 0.3.0
+
+### Minor Changes
+
+- [`199d613`](https://github.com/codedazur/toolkit/commit/199d6135be1b21f90aacef37ecb207437f40a2de) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Added useMergedRef hook.
+
 ## 0.2.1
 
 ### Patch Changes
