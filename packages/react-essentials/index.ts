@@ -1,4 +1,6 @@
+export * from "./hooks/useCursor";
 export * from "./hooks/useDelta";
+export * from "./hooks/useMergedRef";
 export * from "./hooks/usePrevious";
 export * from "./hooks/useRectangle";
 export * from "./hooks/useScroll";
