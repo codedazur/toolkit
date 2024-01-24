@@ -1,5 +1,11 @@
 # @codedazur/react-audio
 
+## 1.0.0
+
+### Major Changes
+
+- [`7c1f718`](https://github.com/codedazur/toolkit/commit/7c1f718b6d4bbe51fc49e812ddfff75c7254d3dd) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Added mute support.
+
 ## 0.0.3
 
 ### Patch Changes
