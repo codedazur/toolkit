@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "develop": "storybook dev -c . -p 6006",
+    "develop": "storybook dev -c . -p 6006 --quiet --no-open",
     "build": "storybook build -c . -o .storybook",
     "lint": "TIMING=1 eslint \"**/*.ts*\"",
     "types": "tsc --noEmit",
@@ -12,7 +12,7 @@
   "dependencies": {
     "@codedazur/essentials": "*",
     "@codedazur/react-media": "*",
-    "@codedazur/react-components": "^24.5.9",
+    "@codedazur/react-components": "^25.2.0",
     "@codedazur/react-date-picker": "*",
     "@codedazur/react-dictionary": "*",
     "@codedazur/react-essentials": "*",
@@ -27,7 +27,7 @@
     "color": "^4.2.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "styled-components": "^5.3.6",
+    "styled-components": "^6.1.8",
     "yaml": "^2.3.1",
     "date-fns": "^2.30.0"
   },

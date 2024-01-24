@@ -32,6 +32,7 @@ export function MediaProvider({
   element: initialElement,
   tracks: initialTracks = [],
   cursor: initialCursor = 0,
+  volume: initialVolume,
   autoPlay: initialAutoPlay = true,
   repeat: initialRepeat = false,
   shuffle: initialShuffle = false,
@@ -64,6 +65,7 @@ export function MediaProvider({
   const [repeat, setRepeat] = useState<boolean>(initialRepeat);
   const repeatRef = useSynchronizedRef(repeat);
   const [duration, _setDuration] = useState(0);
+  const [isMuted, _setIsMuted] = useState(false);
 
   const play = useCallback(() => {
     setIsPlaying(true);
@@ -82,6 +84,41 @@ export function MediaProvider({
       element.currentTime = 0;
     }
   }, [pause, elementRef]);
+
+  const setIsMuted = useCallback(
+    (muted: boolean) => {
+      const element = resolveMaybeRef(elementRef);
+
+      if (!element) return;
+
+      element.muted = muted;
+    },
+    [elementRef],
+  );
+
+  const mute = useCallback(() => {
+    setIsMuted(true);
+  }, [setIsMuted]);
+
+  const unmute = useCallback(() => {
+    setIsMuted(false);
+  }, [setIsMuted]);
+
+  useEffect(() => {
+    const element = resolveMaybeRef(elementRef);
+
+    if (!element) return;
+
+    const handleColumeChange = () => {
+      _setIsMuted(element.muted);
+    };
+
+    element.addEventListener("volumechange", handleColumeChange);
+
+    return () => {
+      element.removeEventListener("volumechange", handleColumeChange);
+    };
+  }, [elementRef, isMuted]);
 
   const setVolume = useCallback(
     (volume: number) => {
@@ -306,6 +343,10 @@ export function MediaProvider({
     play,
     pause,
     stop,
+    isMuted,
+    setIsMuted,
+    mute,
+    unmute,
     setVolume,
     addTrack,
     insertTrack,

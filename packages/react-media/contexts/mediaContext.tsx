@@ -13,6 +13,10 @@ export interface MediaContext<T extends MediaTrack = MediaTrack> {
   play: () => void;
   pause: () => void;
   stop: () => void;
+  isMuted: boolean;
+  setIsMuted(muted: boolean): void;
+  mute: () => void;
+  unmute: () => void;
   setVolume: (volume: number) => void;
   addTrack: (track: T) => void;
   insertTrack: (track: T) => void;
@@ -49,6 +53,10 @@ export const mediaContext = createContext<MediaContext>({
   play: error,
   pause: error,
   stop: error,
+  isMuted: false,
+  setIsMuted: error,
+  mute: error,
+  unmute: error,
   setVolume: error,
   addTrack: error,
   insertTrack: error,

@@ -1,9 +1,6 @@
-import {
-  MediaProvider,
-  useMedia,
-  useMediaProgress,
-  useMediaVolume,
-} from "@codedazur/react-media";
+import { Bar } from "@apps/storybook/components/Bar";
+import { List } from "@apps/storybook/components/List";
+import { WithCenter } from "@apps/storybook/decorators/WithCenter";
 import {
   AbsorbPointer,
   Avatar,
@@ -30,15 +27,20 @@ import {
   Stack,
   StopIcon,
   Text,
+  VolumeOffIcon,
   VolumeUpIcon,
   pick,
   timecode,
 } from "@codedazur/react-components";
+import {
+  MediaProvider,
+  useMedia,
+  useMediaProgress,
+  useMediaVolume,
+} from "@codedazur/react-media";
 import { Meta, StoryObj } from "@storybook/react";
 import { FunctionComponent, useMemo, useRef } from "react";
-import { Bar } from "@apps/storybook/components/Bar";
-import { List } from "@apps/storybook/components/List";
-import { WithCenter } from "@apps/storybook/decorators/WithCenter";
+import { DebugOverlay } from "../../components/DebugOverlay";
 import docs from "./MediaProvider.docs.mdx";
 import distantWorldsIi from "./artworks/distant-worlds-ii.jpg";
 import distantWorlds from "./artworks/distant-worlds.jpg";
@@ -47,9 +49,7 @@ import alienated from "./tracks/alienated.mp3";
 import meteorites from "./tracks/meteorites.mp3";
 import tabulaRasa from "./tracks/tabula-rasa.mp3";
 import bigBuckBunny from "./videos/big-buck-bunny.mp4";
-import ships from "./videos/ships.mp4";
-import guitar from "./videos/guitar.mp4";
-import { DebugOverlay } from "../../components/DebugOverlay";
+import { Monospace } from "../../components/Monospace";
 
 const meta: Meta = {
   title: "React-Media/MediaProvider",
@@ -111,50 +111,30 @@ export const WithVolumeControls = () => (
       <VolumeControls />
     </Row>
     <TrackAttributionOverlay />
-    <MediaDebugOverlay isPlaying volume />
+    <MediaDebugOverlay isPlaying isMuted volume />
   </MediaProvider>
 );
 
-export const Video = () => {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  return (
-    <MediaProvider tracks={[bigBuckBunny]} element={videoRef}>
-      <Stack justify={"center"} align={"center"}>
-        <video
-          style={{ height: "15rem", width: "25rem" }}
-          controls
-          ref={videoRef}
-        />
-      </Stack>
-
-      <MediaDebugOverlay tracks cursor isPlaying volume time duration />
-    </MediaProvider>
-  );
-};
-export const MultipleVideos = () => {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  return (
-    <MediaProvider tracks={[bigBuckBunny, ships, guitar]} element={videoRef}>
-      <Stack justify={"center"} align={"center"}>
-        <video
-          style={{ height: "15rem", width: "25rem" }}
-          controls
-          ref={videoRef}
-        />
-      </Stack>
-      <TrackList />
-      <PlaylistControls />
-      <MediaDebugOverlay tracks cursor isPlaying volume time duration />
-    </MediaProvider>
-  );
-};
-
 const VolumeControls = () => (
   <Bar>
-    <VolumeUpIcon />
+    <MuteButton />
     <VolumeSlider />
   </Bar>
 );
+
+const MuteButton = () => {
+  const { isMuted, mute, unmute } = useMedia();
+
+  return isMuted ? (
+    <IconButton onClick={unmute}>
+      <VolumeOffIcon />
+    </IconButton>
+  ) : (
+    <IconButton onClick={mute}>
+      <VolumeUpIcon />
+    </IconButton>
+  );
+};
 
 const VolumeSlider = () => {
   const { volume, setVolume } = useMediaVolume();
@@ -176,7 +156,7 @@ export const WithSeekControls = () => (
       <SeekControls />
     </Column>
     <TrackAttributionOverlay />
-    <MediaDebugOverlay isPlaying volume time duration />
+    <MediaDebugOverlay isPlaying isMuted volume time duration />
   </MediaProvider>
 );
 
@@ -268,7 +248,7 @@ export const WithPlaylist = () => (
       </Column>
     </Column>
     <TrackAttributionOverlay />
-    <MediaDebugOverlay tracks cursor isPlaying volume time duration />
+    <MediaDebugOverlay tracks cursor isPlaying isMuted volume time duration />
   </MediaProvider>
 );
 
@@ -406,7 +386,7 @@ export const WithMetadata = () => (
       </Column>
     </Column>
     <TrackAttributionOverlay />
-    <MediaDebugOverlay tracks cursor isPlaying volume time duration />
+    <MediaDebugOverlay tracks cursor isPlaying isMuted volume time duration />
   </MediaProvider>
 );
 
@@ -493,6 +473,18 @@ const TrackData = () => {
   );
 };
 
+export const WithVideo = () => {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  return (
+    <MediaProvider tracks={[bigBuckBunny]} element={videoRef}>
+      <video ref={videoRef} controls />
+      <TrackAttributionOverlay />
+      <MediaDebugOverlay tracks cursor isPlaying isMuted volume time duration />
+    </MediaProvider>
+  );
+};
+
 const attributions = {
   [meteorites]: [
     "Meteorites by Purrple Cat",
@@ -509,10 +501,10 @@ const attributions = {
     "https://soundcloud.com/purrplecat/tabula-rasa",
     "Licensed under CC BY-SA 3.0",
   ],
-  [ships]: ["Stock video by Videezy", "http://videezy.com/"],
-  [guitar]: [
-    "Video by Nino Souza",
-    "https://www.pexels.com/video/rock-audio-pedal-banda-4142301/",
+  [bigBuckBunny]: [
+    "Big Buck Bunny by Peach",
+    "https://peach.blender.org/",
+    "Licensed under CC BY 3.0",
   ],
 };
 
@@ -531,7 +523,7 @@ const TrackAttributionOverlay = () => {
         <Opacity opacity={0.5}>
           <Column style={{ fontSize: "smaller", lineHeight: "1.5em" }}>
             {attributions[source]?.map((line) => (
-              <Text key={line}>{line}</Text>
+              <Monospace key={line}>{line}</Monospace>
             ))}
           </Column>
         </Opacity>
