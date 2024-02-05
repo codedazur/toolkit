@@ -1,5 +1,11 @@
 # @codedazur/react-essentials
 
+## 1.0.2
+
+### Patch Changes
+
+- [`bfff541`](https://github.com/codedazur/toolkit/commit/bfff541bc047d12942b1a494aa26a2a81de33d62) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Revert useRectangle listen option to optional.
+
 ## 1.0.1
 
 ### Patch Changes
