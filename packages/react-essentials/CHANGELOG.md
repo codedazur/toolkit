@@ -1,5 +1,11 @@
 # @codedazur/react-essentials
 
+## 1.0.0
+
+### Major Changes
+
+- [`dcfdcf7`](https://github.com/codedazur/toolkit/commit/dcfdcf740bb529f3929fa3ed821dcb2418772b66) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The useSize and useWindowSize hooks were added.
+
 ## 0.4.0
 
 ### Minor Changes
