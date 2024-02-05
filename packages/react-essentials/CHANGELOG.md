@@ -1,5 +1,11 @@
 # @codedazur/react-essentials
 
+## 1.0.1
+
+### Patch Changes
+
+- [`02dd1fb`](https://github.com/codedazur/toolkit/commit/02dd1fba6d7b4f5e9ba4c7aae9e0e00918fc7b57) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The useSize hook is now exported.
+
 ## 1.0.0
 
 ### Major Changes
