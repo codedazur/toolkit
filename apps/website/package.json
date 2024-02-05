@@ -27,7 +27,7 @@
   "devDependencies": {
     "@babel/core": "^7.22.9",
     "@types/node": "^20.4.5",
-    "@types/react": "18.2.33",
+    "@types/react": "18.2.53",
     "@types/styled-components": "^5.1.26",
     "eslint": "8.52.0",
     "@codedazur/eslint-config": "*",
