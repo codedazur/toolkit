@@ -30,11 +30,9 @@ export const useSize = <T extends HTMLElement>({
 
     handleResize();
 
-    console.log("add window event listener");
     window.addEventListener("resize", handleResize);
 
     return () => {
-      console.log("remove window event listener");
       window.removeEventListener("resize", handleResize);
     };
   }, [ref]);
@@ -63,11 +61,9 @@ export const useSize = <T extends HTMLElement>({
     };
 
     const observer = new ResizeObserver(handler);
-    console.log("connect observer");
     observer.observe(element, options);
 
     return () => {
-      console.log("disconnect observer");
       observer.disconnect();
     };
   }, [ref, options]);
