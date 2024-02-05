@@ -29,7 +29,7 @@
     "constructs": ">=10"
   },
   "devDependencies": {
-    "@types/node": "^16.18.3 || ^18.18.0",
+    "@types/node": "^16.18.3 || ^18.18.0 || ^20.4.5",
     "aws-cdk-lib": "^2.55.1",
     "constructs": "^10.1.194",
     "esbuild": "^0.16.9 || ^0.19.1",
