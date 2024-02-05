@@ -1,7 +1,7 @@
+import { Vector2 } from "@codedazur/essentials";
 import {
   Button,
   Column,
-  Direction,
   LinearProgress,
   LinearProgressBar,
   Placeholder,
@@ -9,12 +9,11 @@ import {
   Row,
   ScrollView,
   SizedBox,
-  Vector2,
   amber,
   background,
   deepPurple,
-  useScroll,
 } from "@codedazur/react-components";
+import { useScroll } from "@codedazur/react-essentials";
 import { Meta, StoryObj } from "@storybook/react";
 import { motion, transform } from "framer-motion";
 import { useMemo, useRef } from "react";
@@ -34,7 +33,7 @@ export const Default = () => {
   return (
     <>
       <Placeholder width="150vw" height="150vh" crossed />
-      <DebugOverlay value={{ useScroll: scroll }} />
+      <ScrollDebugOverlay scroll={scroll} />
     </>
   );
 };
@@ -42,14 +41,14 @@ export const Default = () => {
 export const WithScrollView: StoryObj = {
   render: function WithScrollView() {
     const ref = useRef<HTMLDivElement>(null);
-    const scroll = useScroll(ref);
+    const scroll = useScroll({ ref });
 
     return (
       <>
         <ScrollView ref={ref} width="75vw" height="75vh">
           <Placeholder width="100vw" height="100vh" crossed />
         </ScrollView>
-        <DebugOverlay value={{ useScroll: scroll }} />
+        <ScrollDebugOverlay scroll={scroll} />
       </>
     );
   },
@@ -59,8 +58,8 @@ export const WithScrollView: StoryObj = {
 export const WithControls: StoryObj = {
   render: function WithControls() {
     const ref = useRef<HTMLDivElement>(null);
-
-    const scroll = useScroll(ref);
+    const scroll = useScroll({ ref });
+    const scrollProgress = scroll.useProgress();
 
     const {
       position,
@@ -69,7 +68,7 @@ export const WithControls: StoryObj = {
       addPosition,
       setProgress,
       addProgress,
-    } = scroll;
+    } = { ...scroll, ...scrollProgress };
 
     const contents = useMemo(
       () => (
@@ -93,7 +92,7 @@ export const WithControls: StoryObj = {
       <>
         <SizedBox width="80vw">
           <Column gap="1rem">
-            <Row gap="1rem" mainAxisAlignment="center">
+            <Row gap="1rem" justify="center">
               <Button
                 disabled={position.x === 1600}
                 onClick={() => setPosition(new Vector2(1600, 0))}
@@ -107,17 +106,17 @@ export const WithControls: StoryObj = {
                 50%
               </Button>
             </Row>
-            <Row gap="1rem" crossAxisAlignment="center">
+            <Row gap="1rem" align="center">
               <Column gap="1rem">
                 <Button
                   disabled={progress.x === 0}
-                  onClick={() => addPosition(Direction.left.multiply(300))}
+                  onClick={() => addPosition(new Vector2(-1, 0).multiply(300))}
                 >
                   -300px
                 </Button>
                 <Button
                   disabled={progress.x === 0}
-                  onClick={() => addProgress(Direction.left.multiply(0.1))}
+                  onClick={() => addProgress(new Vector2(-1, 0).multiply(0.1))}
                 >
                   -10%
                 </Button>
@@ -126,13 +125,13 @@ export const WithControls: StoryObj = {
               <Column gap="1rem">
                 <Button
                   disabled={progress.x === 1}
-                  onClick={() => addPosition(Direction.right.multiply(300))}
+                  onClick={() => addPosition(new Vector2(1, 0).multiply(300))}
                 >
                   +300px
                 </Button>
                 <Button
                   disabled={progress.x === 1}
-                  onClick={() => addProgress(Direction.right.multiply(0.1))}
+                  onClick={() => addProgress(new Vector2(1, 0).multiply(0.1))}
                 >
                   +10%
                 </Button>
@@ -140,7 +139,7 @@ export const WithControls: StoryObj = {
             </Row>
           </Column>
         </SizedBox>
-        <DebugOverlay value={{ useScroll: scroll }} />
+        <ScrollDebugOverlay scroll={scroll} />
       </>
     );
   },
@@ -151,6 +150,7 @@ export const WithControls: StoryObj = {
 
 export const WithLinearProgress = () => {
   const scroll = useScroll();
+  const { progress } = scroll.useProgress();
 
   return (
     <>
@@ -158,12 +158,12 @@ export const WithLinearProgress = () => {
         <ScrollProgress
           shape="square"
           height="0.5rem"
-          progress={scroll.progress.y}
+          progress={progress.y}
           transition={{ ease: "easeOut", duration: 0.1 }}
         />
       </Positioned>
       <Placeholder height="150vh" crossed />
-      <DebugOverlay value={{ useScroll: scroll }} />
+      <ScrollDebugOverlay scroll={scroll} />
     </>
   );
 };
@@ -175,7 +175,8 @@ const ScrollProgress = styled(LinearProgress)`
 `;
 
 export const WithAnimatedBackground = () => {
-  const { progress } = useScroll();
+  const scroll = useScroll();
+  const { progress } = scroll.useProgress();
 
   const background = transform(
     progress.y,
@@ -184,8 +185,23 @@ export const WithAnimatedBackground = () => {
   );
 
   return (
-    <motion.div style={{ background }}>
-      <SizedBox height="200vh" />
-    </motion.div>
+    <>
+      <motion.div style={{ background }}>
+        <SizedBox height="200vh" />
+      </motion.div>
+      <ScrollDebugOverlay scroll={scroll} />
+    </>
   );
 };
+
+function ScrollDebugOverlay({
+  scroll,
+}: {
+  scroll: ReturnType<typeof useScroll>;
+}) {
+  const progress = scroll.useProgress();
+
+  return (
+    <DebugOverlay value={{ useScroll: { ...scroll, useProgress: progress } }} />
+  );
+}

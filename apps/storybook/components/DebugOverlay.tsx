@@ -1,4 +1,9 @@
-import { Padding, Portal, Positioned } from "@codedazur/react-components";
+import {
+  Padding,
+  Portal,
+  Positioned,
+  PositionedProps,
+} from "@codedazur/react-components";
 import { FunctionComponent, useEffect, useState } from "react";
 import styled from "styled-components";
 import YAML, { ScalarTag } from "yaml";
@@ -34,7 +39,9 @@ export const DebugOverlay: FunctionComponent<DebugOverlayProps> = ({
   );
 };
 
-const DebugBox = styled(Positioned).attrs({ mode: "fixed" })`
+const DebugBox = styled(Positioned).attrs<PositionedProps>({
+  mode: "fixed",
+})<PositionedProps>`
   pointer-events: none;
   font-size: smaller;
   line-height: 1.5em;

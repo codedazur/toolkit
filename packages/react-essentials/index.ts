@@ -4,6 +4,7 @@ export * from "./hooks/useMergedRef";
 export * from "./hooks/usePrevious";
 export * from "./hooks/useRectangle";
 export * from "./hooks/useScroll";
+export * from "./hooks/useSize";
 export * from "./hooks/useSynchronizedRef";
 export * from "./hooks/useTimer";
 export * from "./hooks/useUpdateLoop";

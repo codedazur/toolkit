@@ -52,10 +52,13 @@ const listeningPresets: Record<
  * However, returning `{}` or `new Rectangle(0, 0, 0|1, 0|1)` doesn't seem ideal
  * either.
  */
-export function useRectangle(
-  ref: MaybeRef<HTMLElement>,
-  listen: boolean | RectangleUpdateOptions = listeningPresets.default,
-): Rectangle | undefined {
+export function useRectangle({
+  ref,
+  listen = listeningPresets.default,
+}: {
+  ref: MaybeRef<HTMLElement>;
+  listen: boolean | RectangleUpdateOptions;
+}): Rectangle | undefined {
   const [rectangle, setRectangle] = useState<Rectangle>();
   const rectangleRef = useSynchronizedRef(rectangle);
 

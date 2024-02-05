@@ -3,44 +3,74 @@ import { MaybeRef } from "../types/MaybeRef";
 import { resolveMaybeRef } from "../utilities/resolveMaybeRef";
 
 interface Size {
-  width: number;
-  height: number;
+  width: number | undefined;
+  height: number | undefined;
 }
 
-export const useSize = <T extends HTMLElement>(
-  ref: MaybeRef<T>,
-  { box }: ResizeObserverOptions = {},
-): Size | null => {
-  const [entry, setEntry] = useState<ResizeObserverEntry | null>(null);
+export const useSize = <T extends HTMLElement>({
+  ref,
+  options,
+}: { ref?: MaybeRef<T>; options?: ResizeObserverOptions } = {}): Size => {
+  const [size, setSize] = useState<Size>({
+    width: undefined,
+    height: undefined,
+  });
 
   useEffect(() => {
-    const element = resolveMaybeRef(ref);
-
-    if (element !== null && "ResizeObserver" in window) {
-      const handler = (entries: ResizeObserverEntry[]) => {
-        setEntry(entries[0] ?? null);
-      };
-
-      const observer = new ResizeObserver(handler);
-      observer.observe(element, { box });
-
-      return () => {
-        setEntry(null);
-        observer.disconnect();
-      };
+    if (ref) {
+      return;
     }
 
-    setEntry(null);
-  }, [ref, box]);
+    function handleResize() {
+      setSize({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    }
 
-  return useMemo(
-    () =>
-      entry
-        ? {
-            width: entry.contentRect.width,
-            height: entry.contentRect.height,
-          }
-        : null,
-    [entry],
-  );
+    handleResize();
+
+    console.log("add window event listener");
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      console.log("remove window event listener");
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [ref]);
+
+  useEffect(() => {
+    if (!ref) {
+      return;
+    }
+
+    const element = resolveMaybeRef(ref);
+
+    if (element === null) {
+      return;
+    }
+
+    setSize({
+      width: element.clientWidth,
+      height: element.clientHeight,
+    });
+
+    const handler = (entries: ResizeObserverEntry[]) => {
+      setSize({
+        width: entries[0]?.contentRect.width,
+        height: entries[0]?.contentRect.height,
+      });
+    };
+
+    const observer = new ResizeObserver(handler);
+    console.log("connect observer");
+    observer.observe(element, options);
+
+    return () => {
+      console.log("disconnect observer");
+      observer.disconnect();
+    };
+  }, [ref, options]);
+
+  return size;
 };

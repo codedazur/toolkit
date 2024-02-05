@@ -15,7 +15,7 @@ export function useScroll<T extends HTMLElement>({
 }: {
   ref?: MaybeRef<T>;
   onScroll?: (state: ScrollState) => void;
-}): {
+} = {}): {
   setPosition: (position: Vector2) => void;
   setProgress: (progress: Vector2) => void;
   addPosition: (position: Vector2) => void;

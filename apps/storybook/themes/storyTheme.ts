@@ -1,5 +1,4 @@
 import { darkTheme, deepPurple, Theme } from "@codedazur/react-components";
-import Color from "color";
 
 export const storyTheme: Theme = {
   ...darkTheme,
@@ -14,7 +13,7 @@ export const storyTheme: Theme = {
 
     body: {
       ...darkTheme.text.body,
-      fontFamily: "monospace",
+      font: "monospace",
     },
   },
 };

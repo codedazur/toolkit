@@ -44,7 +44,7 @@ export const Default: StoryObj = {
           {[-0.5, 0, 0.5, 1, 1.5].map((factor, index) => (
             <Placeholder
               key={index}
-              ref={useParallax({ factor })}
+              ref={useParallax<HTMLDivElement>({ factor })}
               width="10rem"
               height="10rem"
             >

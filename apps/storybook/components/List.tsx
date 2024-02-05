@@ -1,4 +1,9 @@
-import { border, Column, Placeholder } from "@codedazur/react-components";
+import {
+  border,
+  Column,
+  ColumnProps,
+  Placeholder,
+} from "@codedazur/react-components";
 import { Children, ReactNode } from "react";
 import styled from "styled-components";
 
@@ -12,7 +17,7 @@ export const List = ({ children }: { children?: ReactNode }) => (
   </ListColumn>
 );
 
-const ListColumn = styled(Column)`
+const ListColumn = styled(Column)<ColumnProps>`
   ${Placeholder}:first-child {
     ${border({ radius: { top: "0.75rem" } })}
   }
