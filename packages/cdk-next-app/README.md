@@ -10,9 +10,9 @@ Your `next.config.js` needs to set the build output to `standalone` so that it i
 
 ```js
 module.exports = {
-  ...
+  // ...
   output: "standalone",
-  ...
+  // ...
 }
 ```
 
@@ -22,13 +22,13 @@ If your Next.js application is not located in the root of your project, for exam
 
 ```js
 module.exports = {
-  ...
+  // ...
   experimental: {
     /**
      * This includes files from the monorepo base two directories up.
      * @see https://nextjs.org/docs/pages/api-reference/next-config-js/output#caveats
      */
-    outputFileTracingRoot: path.join(__dirname, '../../'),
+    outputFileTracingRoot: path.join(__dirname, "../../"),
   },
-  ...
+  // ...
 };
