@@ -1,5 +1,11 @@
 # @codedazur/essentials
 
+## 1.7.0
+
+### Minor Changes
+
+- [`ec2d59c`](https://github.com/codedazur/toolkit/commit/ec2d59c1c572071bf4184669b86055fb82774e55) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The Direction and Origin geometry classes were added.
+
 ## 1.6.1
 
 ### Patch Changes
