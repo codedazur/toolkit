@@ -19,7 +19,7 @@
     "build": "tsup src/index.ts --format esm,cjs --dts",
     "lint": "TIMING=1 eslint \"**/*.ts*\"",
     "types": "tsc --noEmit",
-    "test": "echo \"No tests configured.\""
+    "test": "vitest run --passWithNoTests"
   },
   "peerDependencies": {
     "aws-cdk-lib": ">=2",

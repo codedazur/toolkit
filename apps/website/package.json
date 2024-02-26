@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "types": "tsc --noEmit",
-    "test": "echo \"No tests configured.\""
+    "test": "vitest run --passWithNoTests"
   },
   "dependencies": {
     "@codedazur/essentials": "*",

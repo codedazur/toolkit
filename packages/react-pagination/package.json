@@ -19,7 +19,7 @@
     "build": "tsup index.ts --format esm,cjs --dts",
     "lint": "TIMING=1 eslint \"**/*.ts*\"",
     "types": "tsc --noEmit",
-    "test": "vitest run --coverage"
+    "test": "vitest run"
   },
   "dependencies": {
     "@codedazur/essentials": "*"

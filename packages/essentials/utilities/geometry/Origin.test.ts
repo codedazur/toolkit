@@ -3,7 +3,7 @@ import { Origin } from "./Origin";
 import { Vector2 } from "./Vector2";
 
 describe("Origin", () => {
-  it("should use the topLeft corner as the origin", () => {
+  it("should provide common origins relative to the top left corner", () => {
     expect(Origin.topLeft).toEqual(new Vector2(0, 0));
     expect(Origin.top).toEqual(new Vector2(0.5, 0));
     expect(Origin.topRight).toEqual(new Vector2(1, 0));
@@ -15,7 +15,7 @@ describe("Origin", () => {
     expect(Origin.center).toEqual(new Vector2(0.5, 0.5));
   });
 
-  it("should support using the center as the origin", () => {
+  it("should support origins relative to the center", () => {
     expect(Origin.fromCenter(Origin.topLeft)).toEqual(new Vector2(-0.5, -0.5));
     expect(Origin.fromCenter(Origin.top)).toEqual(new Vector2(0, -0.5));
     expect(Origin.fromCenter(Origin.topRight)).toEqual(new Vector2(0.5, -0.5));
