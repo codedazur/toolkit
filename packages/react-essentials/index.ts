@@ -1,3 +1,4 @@
+export * from "./hooks/useClickOutside";
 export * from "./hooks/useCursor";
 export * from "./hooks/useDelta";
 export * from "./hooks/useMergedRef";
