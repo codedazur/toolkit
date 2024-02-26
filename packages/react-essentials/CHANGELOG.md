@@ -1,5 +1,11 @@
 # @codedazur/react-essentials
 
+## 1.1.0
+
+### Minor Changes
+
+- [`9923059`](https://github.com/codedazur/toolkit/commit/992305943eb6219c19d2a3b03c369f91068398b6) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The useClickOutside hook was added.
+
 ## 1.0.2
 
 ### Patch Changes
