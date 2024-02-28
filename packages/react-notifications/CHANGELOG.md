@@ -1,5 +1,11 @@
 # @codedazur/react-notifications
 
+## 0.1.3
+
+### Patch Changes
+
+- [`3fa49d9`](https://github.com/codedazur/toolkit/commit/3fa49d9873760a102ae359a10fe2a8d76b27f432) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Remove redundant readonly marker from props.
+
 ## 0.1.2
 
 ### Patch Changes
