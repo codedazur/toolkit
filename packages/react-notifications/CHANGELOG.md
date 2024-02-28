@@ -1,5 +1,11 @@
 # @codedazur/react-notifications
 
+## 0.1.1
+
+### Patch Changes
+
+- [`6ed81ad`](https://github.com/codedazur/toolkit/commit/6ed81ad99d123a2cfa1618e63db5b4e10b98b0f0) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The NotificationProps have been simplified.
+
 ## 0.1.0
 
 ### Minor Changes
