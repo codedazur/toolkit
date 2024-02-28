@@ -1,5 +1,11 @@
 # @codedazur/react-notifications
 
+## 0.1.2
+
+### Patch Changes
+
+- [`8c88544`](https://github.com/codedazur/toolkit/commit/8c885444b7bb679dbe74446f387f9ece679d51b4) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The children and onDismiss props are now optional.
+
 ## 0.1.1
 
 ### Patch Changes
