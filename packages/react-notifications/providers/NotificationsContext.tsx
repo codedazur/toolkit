@@ -2,18 +2,16 @@ import { Timer } from "@codedazur/essentials";
 import { ReactNode, createContext } from "react";
 
 export interface NotificationProps {
-  readonly id: number;
-  readonly children: ReactNode;
-  readonly dismiss: () => void;
+  readonly onDismiss: () => void;
   readonly timer?: Timer;
-  readonly useProgress: (options?: { targetFps?: number }) => {
-    progress: number;
-    elapsed: number;
-    remaining: number;
-  };
+  readonly children: ReactNode;
 }
 
-export type NotificationGroup = Array<NotificationProps>;
+export type NotificationGroup = Array<{
+  id: number;
+  notification: NotificationProps;
+}>;
+
 export type Notifications = Record<string, NotificationGroup>;
 
 export type AutoDismiss = number | false;

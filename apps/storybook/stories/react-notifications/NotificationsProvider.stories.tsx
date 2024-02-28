@@ -10,6 +10,7 @@ import {
   Positioned,
   Row,
 } from "@codedazur/react-components";
+import { useTimerProgress } from "@codedazur/react-essentials";
 import {
   NotificationProps,
   NotificationsProvider,
@@ -147,8 +148,8 @@ const Notifications = () => {
       <AbsorbPointer>
         <Positioned bottom="1rem" right="1rem">
           <Column gap="1rem" align="flex-end">
-            {entries.map((notification) => (
-              <AbsorbPointer key={notification.id} absorbing={false}>
+            {entries.map(({ id, notification }) => (
+              <AbsorbPointer key={id} absorbing={false}>
                 <Notification {...notification} />
               </AbsorbPointer>
             ))}
@@ -167,8 +168,7 @@ const Notifications = () => {
 const Notification: FunctionComponent<NotificationProps> = ({
   children,
   timer,
-  dismiss,
-  useProgress,
+  onDismiss,
 }) => (
   <Placeholder
     width="auto"
@@ -180,18 +180,18 @@ const Notification: FunctionComponent<NotificationProps> = ({
       <EdgeInset all="0.5rem" left="1rem">
         <Row justify="space-between" align="center" gap="1rem">
           {children}
-          <Button onClick={dismiss}>Dismiss</Button>
+          <Button onClick={onDismiss}>Dismiss</Button>
         </Row>
       </EdgeInset>
-      {timer && <NotificationProgress useProgress={useProgress} />}
+      {timer && <NotificationProgress timer={timer} />}
     </Column>
   </Placeholder>
 );
 
 const NotificationProgress = ({
-  useProgress,
-}: Pick<NotificationProps, "useProgress">) => {
-  const { progress } = useProgress();
+  timer,
+}: Pick<Required<NotificationProps>, "timer">) => {
+  const { progress } = useTimerProgress(timer);
 
   return <LinearProgress progress={1 - progress} height="1px" shape="square" />;
 };
@@ -290,9 +290,9 @@ const Snackbars = () => {
       <AbsorbPointer>
         <Positioned bottom="1rem" right="1rem">
           <Column gap="1rem" align="flex-end">
-            {snackbars.map((snackbar) => (
-              <AbsorbPointer key={snackbar.id} absorbing={false}>
-                <Snackbar {...snackbar} />
+            {snackbars.map(({ id, notification }) => (
+              <AbsorbPointer key={id} absorbing={false}>
+                <Snackbar {...notification} />
               </AbsorbPointer>
             ))}
             {queue.length > 0 && (
@@ -310,8 +310,7 @@ const Snackbars = () => {
 const Snackbar: FunctionComponent<NotificationProps> = ({
   children,
   timer,
-  dismiss,
-  useProgress,
+  onDismiss,
 }) => (
   <Placeholder
     width="auto"
@@ -323,10 +322,10 @@ const Snackbar: FunctionComponent<NotificationProps> = ({
       <EdgeInset all="0.5rem" left="1rem">
         <Row justify="space-between" align="center" gap="1rem">
           {children}
-          <Button onClick={dismiss}>Dismiss</Button>
+          <Button onClick={onDismiss}>Dismiss</Button>
         </Row>
       </EdgeInset>
-      {timer && <NotificationProgress useProgress={useProgress} />}
+      {timer && <NotificationProgress timer={timer} />}
     </Column>
   </Placeholder>
 );
@@ -343,9 +342,9 @@ const Banners = () => {
       <AbsorbPointer>
         <Positioned top="1rem" left="1rem" right="1rem">
           <Column reverse gap="0.5rem">
-            {banners.map((banner) => (
-              <AbsorbPointer key={banner.id} absorbing={false}>
-                <Banner {...banner} />
+            {banners.map(({ id, notification }) => (
+              <AbsorbPointer key={id} absorbing={false}>
+                <Banner {...notification} />
               </AbsorbPointer>
             ))}
             {queue.length > 0 && (
@@ -362,14 +361,14 @@ const Banners = () => {
 
 const Banner: FunctionComponent<NotificationProps> = ({
   children,
-  dismiss,
+  onDismiss,
 }) => (
   <Placeholder width="auto" data-testid="banner">
     <Column width="100%">
       <EdgeInset all="0.5rem" left="1rem">
         <Row justify="space-between" align="center" gap="1rem">
           {children}
-          <Button onClick={dismiss}>Dismiss</Button>
+          <Button onClick={onDismiss}>Dismiss</Button>
         </Row>
       </EdgeInset>
     </Column>

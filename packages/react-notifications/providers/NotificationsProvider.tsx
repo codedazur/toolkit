@@ -19,6 +19,7 @@ import {
 interface AddAction {
   operation: "add";
   group: string;
+  id: number;
   notification: NotificationProps;
 }
 
@@ -47,23 +48,27 @@ type Option = AutoDismiss | Limit;
 type Limit = number | false;
 
 /**
+ * @param autoDismiss: dismisses the notification after the given number of milliseconds defaults to 5000
+ * @param limit: limits the number of notifications in the group defaults to false (no limit)
+ * @example ```
+ * <NotificationsProvider autoDismiss={5000}>
  *
- * <NotificationGroupsProvider groups={{
- *   snackbars: useNotifications({ limit: 3 }),
- *   banners: useNotifications({ autoDismiss: false })
- * }}>
- *
- * const groups = useNotificationGroups();
- * const snackbars = useNotificationGroup("snackbars");
- *
- * const localNotifications = useNotifications();
+ * const { entries } = useNotifications();
+ * entries.map(props) => <Notification {...props} />
  * ```
+ * @example ```
+ * <NotificationsProvider
+ *   autoDismiss={{ snackbars: 5000, banners: false }}
+ *   limit={{ snackbars: false, banners: 1 }}
+ * >
  *
- *  @param autoDismiss: dismisses the notification after the given number of milliseconds defaults to 5000
- *  @param limit: limits the number of notifications in the group defaults to false (no limit)
+ * const { entries } = useNotifications("snackbars");
+ * entries.map(props) => <Snackbar {...props} />
  *
+ * const { entries } = useNotifications("banners");
+ * entries.map(props) => <Banner {...props} />
+ * ```
  */
-
 export const NotificationsProvider: FunctionComponent<
   NotificationsProviderProps
 > = ({ autoDismiss, limit, children }) => {
@@ -75,7 +80,7 @@ export const NotificationsProvider: FunctionComponent<
             ...state,
             [action.group]: [
               ...(state[action.group] ?? []),
-              action.notification,
+              { id: action.id, notification: action.notification },
             ],
           };
         case "remove":
@@ -130,7 +135,7 @@ export const NotificationsProvider: FunctionComponent<
         const groupLimit = getGroupLimit(group);
         const entries = groupLimit !== false ? all.slice(0, groupLimit) : all;
 
-        entries.forEach((entry) => entry.timer?.resume());
+        entries.forEach((entry) => entry.notification.timer?.resume());
 
         return entries;
       }),
@@ -162,32 +167,23 @@ export const NotificationsProvider: FunctionComponent<
     ) => {
       const id = Date.now();
 
-      const dismiss = () => remove(group, id);
+      const handleDismiss = () => remove(group, id);
 
-      const timer = autoDismiss ? new Timer(dismiss, autoDismiss) : undefined;
-
-      const useProgress = timer
-        ? function useProgress(options: { targetFps?: number } = {}) {
-            return useTimerProgress(timer, {
-              ...options,
-              immediately: !!autoDismiss,
-            });
-          }
-        : function useProgress() {
-            return { progress: 0, elapsed: 0, remaining: 0 };
-          };
+      const timer = autoDismiss
+        ? new Timer(handleDismiss, autoDismiss)
+        : undefined;
 
       const notification = {
         id,
         timer,
         children,
-        dismiss,
-        useProgress,
+        onDismiss: handleDismiss,
       };
 
       dispatch({
         operation: "add",
         group,
+        id,
         notification,
       });
 

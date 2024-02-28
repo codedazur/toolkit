@@ -2,7 +2,6 @@ import { ReactNode, useContext } from "react";
 import { notificationsContext } from "../providers/NotificationsContext";
 
 /**
- *
  * @param {string} [group="default"] - The notification group to associate with.
  * @returns {Object} - An object containing various functions and data related to notifications.
  * @property {Array} entries - An array of notification entries for the specified group.
@@ -10,8 +9,7 @@ import { notificationsContext } from "../providers/NotificationsContext";
  * @property {Function} add - Adds a new notification to the specified group.
  * @property {Function} remove - Removes a notification with the specified ID from the group.
  * @property {Function} clear - Clears all notifications in the specified group.
- *
- * **/
+ */
 export const useNotifications = (group: string = "default") => {
   const context = useContext(notificationsContext);
 
