@@ -2,9 +2,9 @@ import { Timer } from "@codedazur/essentials";
 import { ReactNode, createContext } from "react";
 
 export interface NotificationProps {
-  readonly onDismiss?: () => void;
-  readonly timer?: Timer;
-  readonly children?: ReactNode;
+  onDismiss?: () => void;
+  timer?: Timer;
+  children?: ReactNode;
 }
 
 export type NotificationGroup = Array<{
@@ -17,17 +17,17 @@ export type Notifications = Record<string, NotificationGroup>;
 export type AutoDismiss = number | false;
 
 export interface NotificationsContext {
-  readonly entries: Notifications;
-  readonly queue: Notifications;
-  readonly add: (
+  entries: Notifications;
+  queue: Notifications;
+  add: (
     group: string,
     children: ReactNode,
     options?: {
       autoDismiss?: AutoDismiss;
     },
   ) => NotificationProps;
-  readonly remove: (group: string, id: number) => void;
-  readonly clear: (group: string) => void;
+  remove: (group: string, id: number) => void;
+  clear: (group: string) => void;
 }
 
 const error = () => {
