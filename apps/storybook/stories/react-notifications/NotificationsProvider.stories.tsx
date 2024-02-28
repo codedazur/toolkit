@@ -180,7 +180,7 @@ const Notification: FunctionComponent<NotificationProps> = ({
       <EdgeInset all="0.5rem" left="1rem">
         <Row justify="space-between" align="center" gap="1rem">
           {children}
-          <Button onClick={onDismiss}>Dismiss</Button>
+          {onDismiss && <Button onClick={onDismiss}>Dismiss</Button>}
         </Row>
       </EdgeInset>
       {timer && <NotificationProgress timer={timer} />}

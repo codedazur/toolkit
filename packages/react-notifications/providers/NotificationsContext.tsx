@@ -2,9 +2,9 @@ import { Timer } from "@codedazur/essentials";
 import { ReactNode, createContext } from "react";
 
 export interface NotificationProps {
-  readonly onDismiss: () => void;
+  readonly onDismiss?: () => void;
   readonly timer?: Timer;
-  readonly children: ReactNode;
+  readonly children?: ReactNode;
 }
 
 export type NotificationGroup = Array<{
