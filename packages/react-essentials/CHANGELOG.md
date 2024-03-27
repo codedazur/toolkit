@@ -1,5 +1,11 @@
 # @codedazur/react-essentials
 
+## 1.2.0
+
+### Minor Changes
+
+- [`97430f9`](https://github.com/codedazur/toolkit/commit/97430f9e71d7821949f050a366598ba254dbad09) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The useIntersection and useIsIntersecting hooks were added.
+
 ## 1.1.1
 
 ### Patch Changes

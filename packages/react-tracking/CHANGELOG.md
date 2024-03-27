@@ -1,5 +1,16 @@
 # @codedazur/react-notifications
 
+## 0.1.0
+
+### Minor Changes
+
+- [`f678da3`](https://github.com/codedazur/toolkit/commit/f678da38172be915d754f2317f00f1c3782f6643) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The experimental release of the TrackingProvider and associated hooks and utilities.
+
+### Patch Changes
+
+- Updated dependencies [[`97430f9`](https://github.com/codedazur/toolkit/commit/97430f9e71d7821949f050a366598ba254dbad09)]:
+  - @codedazur/react-essentials@1.2.0
+
 ## 0.1.3
 
 ### Patch Changes
