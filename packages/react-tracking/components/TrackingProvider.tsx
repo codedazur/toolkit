@@ -25,7 +25,7 @@ import {
 } from "../contexts/trackingContext";
 
 export interface TrackingProviderProps {
-  slug: string;
+  slug?: string;
   tracker?: Tracker | Promise<Tracker> | false;
   children?: ReactNode;
 }
@@ -42,11 +42,14 @@ export function TrackingProvider({
   const parent = usePrivateTracker();
 
   const inheritedTracker = useMemo(
-    () => (tracker === undefined ? parent.tracker : tracker),
+    () => tracker ?? parent.tracker,
     [parent.tracker, tracker],
   );
 
-  const path = useMemo(() => [...parent.path, slug], [parent.path, slug]);
+  const path = useMemo(
+    () => (slug ? [...parent.path, slug] : parent.path),
+    [parent.path, slug],
+  );
 
   const track = useCallback(
     async function track<E extends BaseEvent>(event: E) {
