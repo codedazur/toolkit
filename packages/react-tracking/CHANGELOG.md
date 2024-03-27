@@ -1,5 +1,11 @@
 # @codedazur/react-notifications
 
+## 0.2.1
+
+### Patch Changes
+
+- [`ef5ce7b`](https://github.com/codedazur/toolkit/commit/ef5ce7b396ab6230c55f678e4f00ed1de2bc155e) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The dist folder is now included in the release.
+
 ## 0.2.0
 
 ### Minor Changes
