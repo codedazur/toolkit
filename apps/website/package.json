@@ -6,6 +6,7 @@
     "develop": "next dev",
     "build": "next build",
     "start": "next start",
+    "audit": "npm audit --omit dev",
     "lint": "next lint",
     "types": "tsc --noEmit",
     "test": "vitest run --passWithNoTests"

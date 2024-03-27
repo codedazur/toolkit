@@ -5,6 +5,7 @@
   "scripts": {
     "develop": "storybook dev -c . -p 6006 --quiet --no-open",
     "build": "storybook build -c . -o .storybook",
+    "audit": "npm audit --omit dev",
     "lint": "TIMING=1 eslint \"**/*.ts*\"",
     "types": "tsc --noEmit",
     "test": "vitest run --passWithNoTests"

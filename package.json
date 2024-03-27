@@ -18,7 +18,7 @@
     "packages": "turbo run develop --filter @codedazur/* --parallel --concurrency=20",
     "storybook": "turbo run develop --filter @apps/storybook",
     "website": "turbo run develop --filter @apps/website",
-    "audit": "npm audit --omit-dev",
+    "audit": "npm audit --omit dev",
     "update": "npx npm-check-updates@latest --deep -u -i",
     "lint": "turbo run lint",
     "types": "turbo run types",

@@ -17,6 +17,7 @@
   "scripts": {
     "develop": "tsup index.ts --format esm,cjs --dts --watch",
     "build": "tsup index.ts --format esm,cjs --dts",
+    "audit": "npm audit --omit dev",
     "lint": "TIMING=1 eslint \"**/*.ts*\"",
     "types": "tsc --noEmit",
     "test": "vitest run"

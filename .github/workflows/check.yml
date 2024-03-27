@@ -28,11 +28,5 @@ jobs:
           npm config set //registry.npmjs.org/:_authToken ${{ secrets.NPM_TOKEN }}
           npm ci
 
-      - name: Audit
-        run: npm run audit --audit-level=high
-
-      - name: Lint
-        run: npm run lint
-
-      - name: Test
-        run: npm run test
+      - name: Check
+        run: npm run check
