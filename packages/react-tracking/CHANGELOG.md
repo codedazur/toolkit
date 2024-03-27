@@ -1,5 +1,11 @@
 # @codedazur/react-notifications
 
+## 0.3.0
+
+### Minor Changes
+
+- [`9ddc712`](https://github.com/codedazur/toolkit/commit/9ddc71281d71478bc1e19ddddfd5016290f36ee0) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Trackers can now be synchronous as wel as asynchronous.
+
 ## 0.2.1
 
 ### Patch Changes
