@@ -9,7 +9,7 @@ declare global {
 export function createGtmTracker({
   prefix,
 }: { prefix?: string } = {}): Tracker {
-  return async function gtmTracker({ type, ...event }) {
+  return function gtmTracker({ type, ...event }) {
     window.dataLayer.push({
       event: [prefix, type].filter(Boolean).join("."),
       ...event,

@@ -30,7 +30,9 @@ export interface TrackingProviderProps {
   children?: ReactNode;
 }
 
-export type Tracker = (event: BaseEvent & EventMetadata) => Promise<void>;
+export type Tracker = (
+  event: BaseEvent & EventMetadata,
+) => void | Promise<void>;
 
 export function TrackingProvider({
   slug,
