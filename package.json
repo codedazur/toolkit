@@ -30,10 +30,9 @@
     "build": "turbo run build",
     "build:apps": "turbo run build --filter=@apps/*",
     "build:packages": "turbo run build --filter=@codedazur/*",
-    "deploy:apps": "turbo run deploy --filter=@apps/infrastructure",
-    "destroy:apps": "turbo run destroy --filter=@apps/infrastructure",
-    "prepublish:packages": "npm run build:packages",
-    "publish:packages": "changeset publish"
+    "deploy": "turbo run deploy --filter=@apps/infrastructure",
+    "destroy": "turbo run destroy --filter=@apps/infrastructure",
+    "publish": "changeset publish"
   },
   "devDependencies": {
     "@changesets/changelog-github": "0.4.8",
