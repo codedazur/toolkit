@@ -26,13 +26,13 @@
     "constructs": ">=10"
   },
   "devDependencies": {
+    "@codedazur/eslint-config": "*",
+    "@codedazur/tsconfig": "*",
     "@types/node": "^20.4.5",
     "aws-cdk-lib": "^2.89.0",
     "constructs": "^10.2.69",
     "esbuild": "^0.18.17 || ^0.19.0",
     "eslint": "^8.46.0",
-    "@codedazur/eslint-config": "*",
-    "@codedazur/tsconfig": "*",
     "typescript": "^5.1.6"
   }
 }

@@ -10,6 +10,9 @@
       "import": "./dist/index.mjs"
     }
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "license": "MIT",
   "scripts": {
     "develop": "tsup index.ts --format esm,cjs --dts --watch --external react",
@@ -18,12 +21,12 @@
     "types": "tsc --noEmit",
     "test": "vitest run --passWithNoTests"
   },
+  "peerDependencies": {
+    "react": ">=16.8.0"
+  },
   "dependencies": {
     "@codedazur/essentials": "*",
     "@codedazur/react-essentials": "*"
-  },
-  "peerDependencies": {
-    "react": ">=16.8.0"
   },
   "devDependencies": {
     "@codedazur/eslint-config": "*",
@@ -33,8 +36,5 @@
     "eslint": "^8.46.0",
     "react": "^18.2.0",
     "typescript": "^5.1.6"
-  },
-  "publishConfig": {
-    "access": "public"
   }
 }

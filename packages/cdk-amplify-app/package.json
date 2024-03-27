@@ -25,6 +25,10 @@
     "aws-cdk-lib": ">=2",
     "constructs": ">=10"
   },
+  "dependencies": {
+    "@codedazur/essentials": "*",
+    "yaml": "^2.1.3"
+  },
   "devDependencies": {
     "@codedazur/eslint-config": "*",
     "@codedazur/tsconfig": "*",
@@ -34,9 +38,5 @@
     "esbuild": "^0.16.9 || ^0.19.1",
     "eslint": "^8.30.0",
     "typescript": "^4.9.4 || ^5.2.2"
-  },
-  "dependencies": {
-    "@codedazur/essentials": "*",
-    "yaml": "^2.1.3"
   }
 }

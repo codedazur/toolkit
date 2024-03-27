@@ -22,9 +22,9 @@
     "test": "vitest run"
   },
   "devDependencies": {
-    "eslint": "^8.46.0",
     "@codedazur/eslint-config": "*",
     "@codedazur/tsconfig": "*",
+    "eslint": "^8.46.0",
     "typescript": "^5.1.6"
   }
 }
