@@ -1,0 +1,46 @@
+{
+  "name": "@codedazur/react-tracking",
+  "version": "0.0.0",
+  "main": ".dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT",
+  "scripts": {
+    "develop": "tsup index.ts --format esm,cjs --dts --watch --external react",
+    "build": "tsup index.ts --format esm,cjs --dts",
+    "lint": "TIMING=1 eslint \"**/*.ts*\"",
+    "types": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests"
+  },
+  "peerDependencies": {
+    "react": ">=16.8.0",
+    "@storybook/addon-actions": ">=6"
+  },
+  "peerDependenciesMeta": {
+    "@storybook/addon-actions": {
+      "optional": true
+    }
+  },
+  "dependencies": {
+    "@codedazur/essentials": "*",
+    "@codedazur/react-essentials": "*"
+  },
+  "devDependencies": {
+    "@codedazur/eslint-config": "*",
+    "@codedazur/tsconfig": "*",
+    "@types/react-dom": "^18.2.7",
+    "@types/react": "^18.2.18",
+    "eslint": "^8.46.0",
+    "react": "^18.2.0",
+    "typescript": "^5.1.6"
+  }
+}
