@@ -1,3 +1,3 @@
+export * from "./components/NotificationsProvider";
+export * from "./contexts/notificationsContext";
 export * from "./hooks/useNotifications";
-export * from "./providers/NotificationsProvider";
-export * from "./providers/NotificationsContext";

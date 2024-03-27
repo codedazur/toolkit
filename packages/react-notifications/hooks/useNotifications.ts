@@ -1,5 +1,5 @@
 import { ReactNode, useContext } from "react";
-import { notificationsContext } from "../providers/NotificationsContext";
+import { notificationsContext } from "../contexts/notificationsContext";
 
 /**
  * @param {string} [group="default"] - The notification group to associate with.

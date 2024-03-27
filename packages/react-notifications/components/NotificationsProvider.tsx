@@ -14,7 +14,7 @@ import {
   NotificationProps,
   Notifications,
   notificationsContext,
-} from "./NotificationsContext";
+} from "../contexts/notificationsContext";
 
 interface AddAction {
   operation: "add";
