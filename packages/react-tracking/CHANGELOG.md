@@ -1,5 +1,11 @@
 # @codedazur/react-notifications
 
+## 0.4.0
+
+### Minor Changes
+
+- [`b5cf8c8`](https://github.com/codedazur/toolkit/commit/b5cf8c87c5ea171aa1073254fb9ecfecda54a475) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The TrackingProvider's slug prop is now optional.
+
 ## 0.3.0
 
 ### Minor Changes
