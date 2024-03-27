@@ -1,5 +1,15 @@
 # @codedazur/react-notifications
 
+## 0.2.0
+
+### Minor Changes
+
+- [`c76ae5c`](https://github.com/codedazur/toolkit/commit/c76ae5c1fd8db4d7caff8b60bfbb6b1c44a678cd) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Trackers and tracking methods are now asynchronous.
+
+### Patch Changes
+
+- [`52458b0`](https://github.com/codedazur/toolkit/commit/52458b0ab7c0db0b5dbab5c22adeca5cb0dc4423) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The TrackingProvider is now exported.
+
 ## 0.1.0
 
 ### Minor Changes
