@@ -1,5 +1,5 @@
 import { MouseEvent, SyntheticEvent, createContext } from "react";
-import { Tracker } from "../providers/TrackingProvider";
+import { Tracker } from "../components/TrackingProvider";
 
 export interface TrackingContext {
   path: string[];

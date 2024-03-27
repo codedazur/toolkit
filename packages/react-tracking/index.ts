@@ -1,3 +1,4 @@
+export * from "./components/TrackingProvider";
 export * from "./contexts/trackingContext";
 export * from "./hooks/useIntersectionTracker";
 export * from "./hooks/useLoadTracker";

@@ -1,4 +1,4 @@
-import { Tracker } from "../providers/TrackingProvider";
+import { Tracker } from "../components/TrackingProvider";
 
 export function createConsoleTracker({
   method = "dir",
