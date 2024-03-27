@@ -1,5 +1,6 @@
+"use client";
+
 import {
-  FunctionComponent,
   MouseEvent,
   ReactNode,
   SyntheticEvent,
@@ -19,23 +20,23 @@ import {
   MediaElementData,
   PageData,
   PageEvent,
-  trackingContext,
   TrackingEventType,
+  trackingContext,
 } from "../contexts/trackingContext";
 
 export interface TrackingProviderProps {
   slug: string;
-  tracker?: Tracker | false;
+  tracker?: Tracker | Promise<Tracker> | false;
   children?: ReactNode;
 }
 
-export type Tracker = (event: BaseEvent & EventMetadata) => void;
+export type Tracker = (event: BaseEvent & EventMetadata) => Promise<void>;
 
-export const TrackingProvider: FunctionComponent<TrackingProviderProps> = ({
+export function TrackingProvider({
   slug,
   tracker,
   children,
-}) => {
+}: TrackingProviderProps) {
   const parent = usePrivateTracker();
 
   const inheritedTracker = useMemo(
@@ -46,19 +47,26 @@ export const TrackingProvider: FunctionComponent<TrackingProviderProps> = ({
   const path = useMemo(() => [...parent.path, slug], [parent.path, slug]);
 
   const track = useCallback(
-    <E extends BaseEvent>(event: E) =>
-      inheritedTracker instanceof Function &&
-      inheritedTracker({
-        timestamp: new Date().getTime(),
-        path: path.join("."),
-        ...event,
-      }),
+    async function track<E extends BaseEvent>(event: E) {
+      let resolvedTracker =
+        inheritedTracker instanceof Promise
+          ? await inheritedTracker
+          : inheritedTracker;
+
+      if (resolvedTracker instanceof Function) {
+        return resolvedTracker({
+          timestamp: new Date().getTime(),
+          path: path.join("."),
+          ...event,
+        });
+      }
+    },
     [inheritedTracker, path],
   );
 
   const trackElement = useCallback(
     (type: string, element: HTMLElement) => {
-      track<ElementEvent>({
+      return track<ElementEvent>({
         type,
         data: {
           page: getDataForPage(),
@@ -71,14 +79,14 @@ export const TrackingProvider: FunctionComponent<TrackingProviderProps> = ({
 
   const trackEvent = useCallback(
     (type: string, event: SyntheticEvent<HTMLElement>) => {
-      trackElement(type, event.currentTarget as HTMLElement);
+      return trackElement(type, event.currentTarget as HTMLElement);
     },
     [trackElement],
   );
 
   const trackNavigate = useCallback(
     (data: Partial<PageData>) => {
-      track<PageEvent>({
+      return track<PageEvent>({
         type: TrackingEventType.navigate,
         data: {
           page: { ...getDataForPage(), ...data },
@@ -90,28 +98,28 @@ export const TrackingProvider: FunctionComponent<TrackingProviderProps> = ({
 
   const trackClick = useCallback(
     (event: MouseEvent<HTMLElement>) => {
-      trackEvent(TrackingEventType.click, event);
+      return trackEvent(TrackingEventType.click, event);
     },
     [trackEvent],
   );
 
   const trackEnter = useCallback(
     (element: HTMLElement) => {
-      trackElement(TrackingEventType.enter, element);
+      return trackElement(TrackingEventType.enter, element);
     },
     [trackElement],
   );
 
   const trackExit = useCallback(
     (element: HTMLElement) => {
-      trackElement(TrackingEventType.exit, element);
+      return trackElement(TrackingEventType.exit, element);
     },
     [trackElement],
   );
 
   const trackLoad = useCallback(
     (event: SyntheticEvent<HTMLElement>) => {
-      trackEvent(TrackingEventType.load, event);
+      return trackEvent(TrackingEventType.load, event);
     },
     [trackEvent],
   );
@@ -134,7 +142,7 @@ export const TrackingProvider: FunctionComponent<TrackingProviderProps> = ({
       {children}
     </trackingContext.Provider>
   );
-};
+}
 
 const usePrivateTracker = () => useContext(trackingContext);
 

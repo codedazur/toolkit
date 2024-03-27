@@ -11,7 +11,7 @@ export async function createStorybookTracker({
 }: { name?: string } = {}): Promise<Tracker> {
   const { action } = await import("@storybook/addon-actions");
 
-  return function storybookTracker(event) {
+  return async function storybookTracker(event) {
     action(name)(event);
   };
 }

@@ -3,15 +3,18 @@ import { Tracker } from "../components/TrackingProvider";
 
 export interface TrackingContext {
   path: string[];
-  tracker: Tracker | false;
-  track: (event: TrackingEvent) => void;
-  trackElement: (type: string, element: HTMLElement) => void;
-  trackEvent: (type: string, event: SyntheticEvent<HTMLElement>) => void;
-  trackNavigate: (data: Partial<PageData>) => void;
-  trackClick: (event: MouseEvent<HTMLElement>) => void;
-  trackEnter: (element: HTMLElement) => void;
-  trackExit: (element: HTMLElement) => void;
-  trackLoad: (event: SyntheticEvent<HTMLElement>) => void;
+  tracker: Tracker | Promise<Tracker> | false;
+  track: (event: TrackingEvent) => Promise<void>;
+  trackElement: (type: string, element: HTMLElement) => Promise<void>;
+  trackEvent: (
+    type: string,
+    event: SyntheticEvent<HTMLElement>,
+  ) => Promise<void>;
+  trackNavigate: (data: Partial<PageData>) => Promise<void>;
+  trackClick: (event: MouseEvent<HTMLElement>) => Promise<void>;
+  trackEnter: (element: HTMLElement) => Promise<void>;
+  trackExit: (element: HTMLElement) => Promise<void>;
+  trackLoad: (event: SyntheticEvent<HTMLElement>) => Promise<void>;
 }
 
 export enum TrackingEventType {
@@ -101,12 +104,12 @@ export interface FrameElementData extends BaseElementData {
 export const trackingContext = createContext<TrackingContext>({
   path: [],
   tracker: false,
-  track: () => undefined,
-  trackElement: () => undefined,
-  trackEvent: () => undefined,
-  trackNavigate: () => undefined,
-  trackClick: () => undefined,
-  trackEnter: () => undefined,
-  trackExit: () => undefined,
-  trackLoad: () => undefined,
+  track: async () => undefined,
+  trackElement: async () => undefined,
+  trackEvent: async () => undefined,
+  trackNavigate: async () => undefined,
+  trackClick: async () => undefined,
+  trackEnter: async () => undefined,
+  trackExit: async () => undefined,
+  trackLoad: async () => undefined,
 });
