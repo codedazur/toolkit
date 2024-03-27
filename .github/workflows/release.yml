@@ -37,7 +37,7 @@ jobs:
       - name: Deploy Apps
         run: |
           export NODE_OPTIONS="--max_old_space_size=4096"
-          npm run deploy
+          npm run deploy:apps
 
   version:
     name: Publish Packages
@@ -61,7 +61,7 @@ jobs:
         uses: changesets/action@v1
         with:
           commit: "chore: publish"
-          publish: npm run publish
+          publish: npm run publish:packages
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
