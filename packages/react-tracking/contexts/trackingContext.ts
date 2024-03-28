@@ -5,16 +5,13 @@ export interface TrackingContext {
   path: string[];
   tracker: Tracker | Promise<Tracker> | false;
   track: (event: TrackingEvent) => Promise<void>;
-  trackElement: (type: string, element: HTMLElement) => Promise<void>;
-  trackEvent: (
-    type: string,
-    event: SyntheticEvent<HTMLElement>,
-  ) => Promise<void>;
+  trackElement: (type: string, element: Element) => Promise<void>;
+  trackEvent: (type: string, event: SyntheticEvent<Element>) => Promise<void>;
   trackNavigate: (data: Partial<PageData>) => Promise<void>;
-  trackClick: (event: MouseEvent<HTMLElement>) => Promise<void>;
-  trackEnter: (element: HTMLElement) => Promise<void>;
-  trackExit: (element: HTMLElement) => Promise<void>;
-  trackLoad: (event: SyntheticEvent<HTMLElement>) => Promise<void>;
+  trackClick: (event: MouseEvent<Element>) => Promise<void>;
+  trackEnter: (element: Element) => Promise<void>;
+  trackExit: (element: Element) => Promise<void>;
+  trackLoad: (event: SyntheticEvent<Element>) => Promise<void>;
 }
 
 export enum TrackingEventType {

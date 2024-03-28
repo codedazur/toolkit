@@ -2,7 +2,7 @@ import { useLayoutEffect } from "react";
 import { MaybeRef } from "../types/MaybeRef";
 import { resolveMaybeRef } from "../utilities/resolveMaybeRef";
 
-export function useClickOutside<T extends HTMLElement>({
+export function useClickOutside<T extends Element>({
   ref,
   callback,
 }: {

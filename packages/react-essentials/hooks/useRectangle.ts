@@ -56,7 +56,7 @@ export function useRectangle({
   ref,
   listen = listeningPresets.default,
 }: {
-  ref: MaybeRef<HTMLElement>;
+  ref: MaybeRef<Element>;
   listen?: boolean | RectangleUpdateOptions;
 }): Rectangle | undefined {
   const [rectangle, setRectangle] = useState<Rectangle>();

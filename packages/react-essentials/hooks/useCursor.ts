@@ -15,7 +15,7 @@ export function useCursor({
   ref,
   context = "viewport",
 }: {
-  ref?: MaybeRef<HTMLElement>;
+  ref?: MaybeRef<Element>;
   context?: CursorContext;
 } = {}) {
   const [hover, setHover] = useState(false);

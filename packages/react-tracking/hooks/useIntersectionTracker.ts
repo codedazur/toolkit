@@ -8,7 +8,7 @@ import { useEffect, useRef } from "react";
 import { useTracker } from "./useTracker";
 
 export function useIntersectionTracker(
-  ref: MaybeRef<HTMLElement>,
+  ref: MaybeRef<Element>,
   {
     threshold = 0.5,
     frequency = "once",

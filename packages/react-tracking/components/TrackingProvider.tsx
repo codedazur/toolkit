@@ -70,7 +70,7 @@ export function TrackingProvider({
   );
 
   const trackElement = useCallback(
-    (type: string, element: HTMLElement) => {
+    (type: string, element: Element) => {
       return track<ElementEvent>({
         type,
         data: {
@@ -83,8 +83,8 @@ export function TrackingProvider({
   );
 
   const trackEvent = useCallback(
-    (type: string, event: SyntheticEvent<HTMLElement>) => {
-      return trackElement(type, event.currentTarget as HTMLElement);
+    (type: string, event: SyntheticEvent<Element>) => {
+      return trackElement(type, event.currentTarget as Element);
     },
     [trackElement],
   );
@@ -102,28 +102,28 @@ export function TrackingProvider({
   );
 
   const trackClick = useCallback(
-    (event: MouseEvent<HTMLElement>) => {
+    (event: MouseEvent<Element>) => {
       return trackEvent(TrackingEventType.click, event);
     },
     [trackEvent],
   );
 
   const trackEnter = useCallback(
-    (element: HTMLElement) => {
+    (element: Element) => {
       return trackElement(TrackingEventType.enter, element);
     },
     [trackElement],
   );
 
   const trackExit = useCallback(
-    (element: HTMLElement) => {
+    (element: Element) => {
       return trackElement(TrackingEventType.exit, element);
     },
     [trackElement],
   );
 
   const trackLoad = useCallback(
-    (event: SyntheticEvent<HTMLElement>) => {
+    (event: SyntheticEvent<Element>) => {
       return trackEvent(TrackingEventType.load, event);
     },
     [trackEvent],
@@ -159,7 +159,7 @@ function getDataForPage(): PageData {
   };
 }
 
-function getDataForElement(element: HTMLElement): ElementData {
+function getDataForElement(element: Element): ElementData {
   if (element instanceof HTMLAnchorElement) {
     return anchorElementData(element);
   } else if (element instanceof HTMLImageElement) {
@@ -173,7 +173,7 @@ function getDataForElement(element: HTMLElement): ElementData {
   }
 }
 
-function elementData(element: HTMLElement): BaseElementData {
+function elementData(element: Element): BaseElementData {
   return {
     tag: element.tagName.toLowerCase(),
     id: element.id || null,
@@ -182,7 +182,10 @@ function elementData(element: HTMLElement): BaseElementData {
      * business value. Maybe the `context` is good enough.
      */
     path: cssPath(element),
-    label: element.title || element.ariaLabel || null,
+    label:
+      (element instanceof HTMLElement ? element.title : undefined) ||
+      element.ariaLabel ||
+      null,
     text: element.textContent || null,
   };
 }
@@ -233,7 +236,7 @@ function frameElementData(element: HTMLIFrameElement): FrameElementData {
  * @todo Write unit tests for this function.
  * @todo Determine the performance cost of this function.
  */
-function cssPath(element: HTMLElement) {
+function cssPath(element: Element) {
   const path = [];
 
   let node: Node | null = element;

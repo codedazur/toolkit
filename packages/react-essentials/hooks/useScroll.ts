@@ -9,7 +9,7 @@ export interface ScrollState {
   progress: Vector2;
 }
 
-export function useScroll<T extends HTMLElement>({
+export function useScroll<T extends Element>({
   ref,
   onScroll,
 }: {
@@ -112,7 +112,7 @@ export function useScroll<T extends HTMLElement>({
   };
 }
 
-export function useScrollProgress({ ref }: { ref?: MaybeRef<HTMLElement> }) {
+export function useScrollProgress({ ref }: { ref?: MaybeRef<Element> }) {
   const [state, setState] = useState<ScrollState>({
     position: Vector2.zero,
     overflow: Vector2.zero,
@@ -126,7 +126,7 @@ export function useScrollProgress({ ref }: { ref?: MaybeRef<HTMLElement> }) {
   return state;
 }
 
-function getState(target: Document | HTMLElement): ScrollState {
+function getState(target: Document | Element): ScrollState {
   const element =
     target instanceof Document ? window.document.documentElement : target;
 

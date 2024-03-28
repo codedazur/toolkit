@@ -1,12 +1,10 @@
 import { MaybeRef } from "../types/MaybeRef";
 
-export function resolveMaybeRef<T extends HTMLElement>(
-  ref: MaybeRef<T>,
-): T | null {
+export function resolveMaybeRef<T extends Element>(ref: MaybeRef<T>): T | null {
   if (
     typeof window !== "undefined" &&
-    "HTMLElement" in window &&
-    ref instanceof window.HTMLElement
+    "Element" in window &&
+    ref instanceof window.Element
   ) {
     return ref;
   } else if (

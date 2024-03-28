@@ -10,7 +10,7 @@ import { resolveMaybeRef } from "../utilities/resolveMaybeRef";
  * @see useIsIntersecting If you just need a boolean to check whether the
  * referenced element is intersecting or not.
  */
-export const useIntersection = <T extends HTMLElement>(
+export const useIntersection = <T extends Element>(
   ref: MaybeRef<T>,
   options: IntersectionObserverInit = {},
 ): {

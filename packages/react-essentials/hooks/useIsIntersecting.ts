@@ -6,12 +6,12 @@ const defaultOptions = {};
 
 /**
  * Use this hook for checking for intersections with viewport or a passed custom
- * root element. The returned ref can be passed to any HTMLElement.
+ * root element. The returned ref can be passed to any Element.
  *
  * @see {@link useIntersection} when you need more details on the intersection
  * than just the `isIntersecting` boolean.
  */
-export const useIsIntersecting = <T extends HTMLElement>(
+export const useIsIntersecting = <T extends Element>(
   ref: MaybeRef<T>,
   options: IntersectionObserverInit = defaultOptions,
 ): boolean | undefined => {

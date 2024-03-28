@@ -7,7 +7,7 @@ interface Size {
   height: number | undefined;
 }
 
-export const useSize = <T extends HTMLElement>({
+export const useSize = <T extends Element>({
   ref,
   options,
 }: { ref?: MaybeRef<T>; options?: ResizeObserverOptions } = {}): Size => {
