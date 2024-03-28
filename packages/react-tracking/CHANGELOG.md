@@ -1,5 +1,16 @@
 # @codedazur/react-notifications
 
+## 0.5.0
+
+### Minor Changes
+
+- [`1b1f042`](https://github.com/codedazur/toolkit/commit/1b1f042a7d9f672038e22cb8ffd0c8b673dae7b5) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Broaden support to generic Element rather than HTMLElement.
+
+### Patch Changes
+
+- Updated dependencies [[`1b1f042`](https://github.com/codedazur/toolkit/commit/1b1f042a7d9f672038e22cb8ffd0c8b673dae7b5)]:
+  - @codedazur/react-essentials@1.3.0
+
 ## 0.4.0
 
 ### Minor Changes
