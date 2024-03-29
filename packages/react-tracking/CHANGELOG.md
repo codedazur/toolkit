@@ -1,5 +1,11 @@
 # @codedazur/react-notifications
 
+## 0.5.1
+
+### Patch Changes
+
+- [`ca186a9`](https://github.com/codedazur/toolkit/commit/ca186a998e369f0db4b5b0171514bdca0244d6a5) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Remove dynamically imported storybook dependency.
+
 ## 0.5.0
 
 ### Minor Changes
