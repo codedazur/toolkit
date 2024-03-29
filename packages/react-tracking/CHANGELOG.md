@@ -1,5 +1,11 @@
 # @codedazur/react-notifications
 
+## 0.5.2
+
+### Patch Changes
+
+- [`e741a22`](https://github.com/codedazur/toolkit/commit/e741a229283b813e5036cb0072ad1fd010ab5109) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Added the "use client" directive to several modules.
+
 ## 0.5.1
 
 ### Patch Changes
