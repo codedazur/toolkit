@@ -24,13 +24,7 @@
     "test": "vitest run --passWithNoTests"
   },
   "peerDependencies": {
-    "react": ">=16.8.0",
-    "@storybook/addon-actions": ">=6"
-  },
-  "peerDependenciesMeta": {
-    "@storybook/addon-actions": {
-      "optional": true
-    }
+    "react": ">=16.8.0"
   },
   "dependencies": {
     "@codedazur/essentials": "*",

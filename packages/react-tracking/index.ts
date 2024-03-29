@@ -6,4 +6,3 @@ export * from "./hooks/useMediaTracker";
 export * from "./hooks/useTracker";
 export * from "./utilities/createConsoleTracker";
 export * from "./utilities/createGtmTracker";
-export * from "./utilities/createStorybookTracker";
