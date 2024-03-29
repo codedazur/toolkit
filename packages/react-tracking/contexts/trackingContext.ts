@@ -1,3 +1,5 @@
+"use client";
+
 import { MouseEvent, SyntheticEvent, createContext } from "react";
 import { Tracker } from "../components/TrackingProvider";
 

@@ -1,3 +1,5 @@
+"use client";
+
 import { MaybeRef, resolveMaybeRef } from "@codedazur/react-essentials";
 import { useEffect, useRef } from "react";
 import { useTracker } from "./useTracker";
