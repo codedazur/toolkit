@@ -15,7 +15,7 @@
   },
   "license": "MIT",
   "scripts": {
-    "prepare": "npm run build",
+    "prepublishOnly": "npm run build",
     "develop": "tsup index.ts --format esm,cjs --dts --watch",
     "build": "tsup index.ts --format esm,cjs --dts",
     "audit": "npm audit --omit dev",
