@@ -15,13 +15,13 @@
   },
   "license": "MIT",
   "scripts": {
-    "prepare": "npm run build",
     "develop": "tsup src/index.ts --format esm,cjs --dts --watch",
     "build": "tsup src/index.ts --format esm,cjs --dts",
     "audit": "npm audit --omit dev",
     "lint": "TIMING=1 eslint \"**/*.ts*\"",
     "types": "tsc --noEmit",
-    "test": "vitest run --passWithNoTests"
+    "test": "vitest run --passWithNoTests",
+    "prepublishOnly": "npm run build"
   },
   "peerDependencies": {
     "aws-cdk-lib": ">=2",
