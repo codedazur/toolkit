@@ -2,4 +2,4 @@
 "@codedazur/react-essentials": minor
 ---
 
-Add the useHover hook
+The useHover hook was added.
