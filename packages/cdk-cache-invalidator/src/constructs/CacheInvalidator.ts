@@ -8,7 +8,7 @@ import { Construct } from "constructs";
 
 interface CacheInvalidatorProps {
   distribution: IDistribution;
-  paths: string[];
+  paths?: string[];
 }
 
 /**
