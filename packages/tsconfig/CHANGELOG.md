@@ -1,5 +1,11 @@
 # tsconfig
 
+## 0.0.6
+
+### Patch Changes
+
+- [`ee7a3c9`](https://github.com/codedazur/toolkit/commit/ee7a3c98842d03550678740d260df684e30f5188) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The CDK configuration now excludes build artifacts.
+
 ## 0.0.5
 
 ### Patch Changes

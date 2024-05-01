@@ -1,5 +1,11 @@
 # @codedazur/cdk-cache-invalidator
 
+## 1.2.0
+
+### Minor Changes
+
+- [`c91b812`](https://github.com/codedazur/toolkit/commit/c91b812e05f5bb36182f8b17d3d70e72ebb67fbd) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The CacheInvalidator's paths prop is now optional.
+
 ## 1.1.0
 
 ### Minor Changes
