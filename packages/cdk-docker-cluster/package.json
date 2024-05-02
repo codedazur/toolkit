@@ -1,0 +1,43 @@
+{
+  "name": "@codedazur/cdk-docker-cluster",
+  "version": "0.0.0",
+  "main": ".dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT",
+  "scripts": {
+    "develop": "tsup src/index.ts --format esm,cjs --dts --watch",
+    "build": "tsup src/index.ts --format esm,cjs --dts",
+    "audit": "npm audit --omit dev",
+    "lint": "TIMING=1 eslint \"**/*.ts*\"",
+    "types": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "@codedazur/cdk-cache-invalidator": "*"
+  },
+  "peerDependencies": {
+    "aws-cdk-lib": ">=2",
+    "constructs": ">=10"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.8",
+    "aws-cdk-lib": "^2.139.1",
+    "constructs": "^10.3.0",
+    "esbuild": "^0.20.2",
+    "eslint-config-custom": "*",
+    "eslint": "^8.30.0",
+    "tsconfig": "*",
+    "typescript": "^5.4.5"
+  }
+}
