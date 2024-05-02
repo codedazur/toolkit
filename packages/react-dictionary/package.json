@@ -31,6 +31,7 @@
     "@codedazur/essentials": "^1.6.1"
   },
   "devDependencies": {
-    "@codedazur/tsconfig": "^0.0.6"
+    "@codedazur/eslint-config": "*",
+    "@codedazur/tsconfig": "*"
   }
 }

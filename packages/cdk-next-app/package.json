@@ -31,13 +31,13 @@
     "constructs": ">=10"
   },
   "devDependencies": {
+    "@codedazur/eslint-config": "*",
+    "@codedazur/tsconfig": "*",
     "@types/node": "^20.12.8",
     "aws-cdk-lib": "^2.139.1",
     "constructs": "^10.3.0",
     "esbuild": "^0.20.2",
-    "eslint-config-custom": "*",
     "eslint": "^8.30.0",
-    "tsconfig": "*",
     "typescript": "^5.4.5"
   }
 }

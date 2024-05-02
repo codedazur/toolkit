@@ -13,10 +13,10 @@
   },
   "dependencies": {
     "@codedazur/essentials": "*",
-    "@codedazur/react-media": "*",
     "@codedazur/react-components": "^25.2.0",
     "@codedazur/react-date-picker": "*",
     "@codedazur/react-essentials": "*",
+    "@codedazur/react-media": "*",
     "@codedazur/react-notifications": "*",
     "@codedazur/react-pagination": "*",
     "@codedazur/react-parallax": "*",
@@ -27,13 +27,13 @@
   },
   "devDependencies": {
     "@babel/core": "^7.22.9",
+    "@codedazur/eslint-config": "*",
+    "@codedazur/tsconfig": "*",
     "@types/node": "^20.4.5",
     "@types/react": "18.2.33",
     "@types/styled-components": "^5.1.26",
     "eslint": "8.52.0",
-    "@codedazur/eslint-config": "*",
     "next-transpile-modules": "10.0.1",
-    "@codedazur/tsconfig": "*",
     "typescript": "^5.1.6"
   }
 }

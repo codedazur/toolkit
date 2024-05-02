@@ -21,6 +21,7 @@
     "constructs": "^10.2.69"
   },
   "devDependencies": {
+    "@codedazur/tsconfig": "*",
     "aws-cdk": "^2.89.0",
     "dotenv": "^16.3.1",
     "ts-jest": "^29.1.1",
