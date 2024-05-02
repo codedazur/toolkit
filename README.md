@@ -17,6 +17,7 @@ In addition, it contains a storybook and a website to showcase these packages.
 - `cdk-amplify-app` An AWS Amplify application.
 - `cdk-bastion-host` A jump server to provide an SSH tunnel to a private server.
 - `cdk-cache-invalidator` A step function that invalidates a CloudFront distribution's cache.
+- `cdk-docker-cluster` A scalable cluster of docker containers.
 - `cdk-mailer` A leaky-bucket queue for sending emails at a configured rate.
 - `cdk-next-app` An AWS Amplify application pre-configured for Next.js.
 - `cdk-rpc-api` An AWS ApiGateway application pre-configured for the RPC protocol.
