@@ -13,7 +13,12 @@ export interface DockerClusterProps {
   path: string;
   secrets?: Record<string, string>;
   port?: number;
-  tasks?: number;
+  tasks?:
+    | number
+    | {
+        minimum: number;
+        maximum: number;
+      };
   cpu?: ApplicationLoadBalancedFargateServiceProps["cpu"];
   memory?: ApplicationLoadBalancedFargateServiceProps["memoryLimitMiB"];
 }
@@ -32,11 +37,14 @@ export class DockerCluster extends Construct {
       platform: Platform.LINUX_AMD64,
     });
 
-    const service = new ApplicationLoadBalancedFargateService(this, "Service", {
+    const desiredTasks =
+      typeof props.tasks === "number" ? props.tasks : props.tasks?.minimum;
+
+    const fargate = new ApplicationLoadBalancedFargateService(this, "Service", {
       cluster: new Cluster(this, "Cluster"),
       cpu: props.cpu,
       memoryLimitMiB: props.memory,
-      desiredCount: props.tasks,
+      desiredCount: desiredTasks,
       taskImageOptions: {
         // image: ContainerImage.fromEcrRepository(image.repository, image.imageTag),
         image: ContainerImage.fromDockerImageAsset(image),
@@ -50,9 +58,16 @@ export class DockerCluster extends Construct {
       // @todo publicLoadBalancer: false,
     });
 
+    if (typeof props.tasks === "object") {
+      fargate.service.autoScaleTaskCount({
+        minCapacity: props.tasks.minimum,
+        maxCapacity: props.tasks.maximum,
+      });
+    }
+
     const distribution = new Distribution(this, "Distribution", {
       defaultBehavior: {
-        origin: new LoadBalancerV2Origin(service.loadBalancer, {
+        origin: new LoadBalancerV2Origin(fargate.loadBalancer, {
           protocolPolicy: OriginProtocolPolicy.HTTP_ONLY, // @todo OriginProtocolPolicy.HTTPS_ONLY
         }),
       },
