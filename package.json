@@ -19,7 +19,7 @@
     "storybook": "turbo run develop --filter @apps/storybook",
     "website": "turbo run develop --filter @apps/website",
     "audit": "npm audit --omit dev",
-    "update": "npx npm-check-updates@latest --deep -u -i",
+    "update": "npx npm-check-updates@latest --format group --deep -u -i",
     "lint": "turbo run lint",
     "types": "turbo run types",
     "test": "turbo run test",

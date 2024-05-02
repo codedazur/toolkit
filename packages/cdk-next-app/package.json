@@ -24,20 +24,20 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "@codedazur/cdk-amplify-app": "*"
+    "@codedazur/cdk-docker-cluster": "*"
   },
   "peerDependencies": {
     "aws-cdk-lib": ">=2",
     "constructs": ">=10"
   },
   "devDependencies": {
-    "@types/node": "^16.18.3 || ^18.18.0",
-    "aws-cdk-lib": "^2.55.1",
-    "constructs": "^10.1.194",
-    "esbuild": "^0.16.9 || ^0.19.1",
+    "@types/node": "^20.12.8",
+    "aws-cdk-lib": "^2.139.1",
+    "constructs": "^10.3.0",
+    "esbuild": "^0.20.2",
     "eslint-config-custom": "*",
     "eslint": "^8.30.0",
     "tsconfig": "*",
-    "typescript": "^4.9.4 || ^5.2.2"
+    "typescript": "^5.4.5"
   }
 }
