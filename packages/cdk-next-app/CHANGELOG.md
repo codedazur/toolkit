@@ -1,5 +1,16 @@
 # @codedazur/cdk-next-app
 
+## 0.2.0
+
+### Minor Changes
+
+- [`36a8727`](https://github.com/codedazur/toolkit/commit/36a87277e9150970420b6ac046f297653f95f087) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The NextApp now uses a DockerCluster instead of an AmplifyApp. This completely changes the entire infrastructure and is a major breaking change.
+
+### Patch Changes
+
+- Updated dependencies [[`bcb3361`](https://github.com/codedazur/toolkit/commit/bcb33613b40edcfb0097d961fa16511035c18b83)]:
+  - @codedazur/cdk-docker-cluster@0.1.0
+
 ## 0.1.0
 
 ### Minor Changes
