@@ -20,8 +20,7 @@
     "audit": "npm audit --omit dev",
     "lint": "TIMING=1 eslint \"**/*.ts*\"",
     "types": "tsc --noEmit",
-    "test": "vitest run --passWithNoTests",
-    "prepublishOnly": "npm run build"
+    "test": "vitest run --passWithNoTests"
   },
   "dependencies": {
     "@codedazur/cdk-cache-invalidator": "*"
