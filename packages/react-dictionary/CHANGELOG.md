@@ -1,5 +1,11 @@
 # @codedazur/react-dictionary
 
+## 0.2.1
+
+### Patch Changes
+
+- [`891c530`](https://github.com/codedazur/toolkit/commit/891c530e58caf82e027a87462ad12c2c6bfdfc9b) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The provider is now marked as a client component.
+
 ## 0.2.0
 
 ### Minor Changes
