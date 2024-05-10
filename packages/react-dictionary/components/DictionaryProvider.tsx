@@ -1,3 +1,5 @@
+"use client";
+
 import { FunctionComponent, ReactNode, useMemo } from "react";
 import {
   Dictionary,
