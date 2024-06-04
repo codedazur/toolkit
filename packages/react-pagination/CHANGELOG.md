@@ -1,5 +1,11 @@
 # @codedazur/react-pagination
 
+## 1.0.1
+
+### Patch Changes
+
+- [`e6e17d3`](https://github.com/codedazur/toolkit/commit/e6e17d31a2e2f6db3cb05ad2001236629c129acb) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The computed page count is now calculated correctly when zero items are provided.
+
 ## 1.0.0
 
 ### Major Changes
