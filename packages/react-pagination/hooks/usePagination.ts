@@ -89,7 +89,7 @@ export function usePagination<T>(
   );
 
   const clampIndex = useCallback(
-    (index: number) => clamp(index, 1, computedPages),
+    (index: number) => clamp(index, 1, Math.max(1, computedPages)),
     [computedPages],
   );
 
