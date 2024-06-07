@@ -1,5 +1,11 @@
 # @codedazur/react-select
 
+## 0.0.3
+
+### Patch Changes
+
+- [`55b7ca8`](https://github.com/codedazur/toolkit/commit/55b7ca83ad971962e4a76da0e2ff9088e64e8e26) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The dist folder is now included.
+
 ## 0.0.2
 
 ### Patch Changes
