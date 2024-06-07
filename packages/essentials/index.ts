@@ -1,5 +1,6 @@
 export * from "./types/optional";
 export * from "./utilities/array/shuffle";
+export * from "./utilities/assert";
 export * from "./utilities/geometry/Angle";
 export * from "./utilities/geometry/Direction";
 export * from "./utilities/geometry/Origin";
@@ -20,6 +21,6 @@ export * from "./utilities/string/camelCase";
 export * from "./utilities/string/pascalCase";
 export * from "./utilities/string/timecode";
 export * from "./utilities/system/env";
-export * from "./utilities/timing/sleep";
 export * from "./utilities/timing/Timer";
-export * from "./utilities/assert";
+export * from "./utilities/timing/debounce";
+export * from "./utilities/timing/sleep";
