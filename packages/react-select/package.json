@@ -1,0 +1,44 @@
+{
+  "name": "@codedazur/react-select",
+  "version": "0.0.0",
+  "main": ".dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT",
+  "scripts": {
+    "develop": "tsup index.ts --format esm,cjs --dts --watch --external react",
+    "build": "tsup index.ts --format esm,cjs --dts",
+    "audit": "npm audit --omit dev",
+    "lint": "TIMING=1 eslint \"**/*.ts*\"",
+    "types": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "peerDependencies": {
+    "react": ">=16.8.0"
+  },
+  "dependencies": {
+    "@codedazur/essentials": "*",
+    "@codedazur/react-essentials": "*"
+  },
+  "devDependencies": {
+    "@codedazur/eslint-config": "*",
+    "@codedazur/tsconfig": "*",
+    "@testing-library/dom": "9.3.3",
+    "@testing-library/react": "alpha",
+    "@types/react-dom": "^18.2.7",
+    "@types/react": "^18.2.18",
+    "eslint": "^8.46.0",
+    "jsdom": "^22.1.0",
+    "react": "^18.2.0",
+    "typescript": "^5.1.6"
+  }
+}

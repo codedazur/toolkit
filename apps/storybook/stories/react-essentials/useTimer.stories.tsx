@@ -1,3 +1,4 @@
+import { Bar } from "@apps/storybook/components/Bar";
 import {
   AddIcon,
   background,
@@ -14,16 +15,15 @@ import {
   StopIcon,
   Text,
 } from "@codedazur/react-components";
-import { useTimer, TimerStatus } from "@codedazur/react-essentials";
+import { TimerStatus, useTimer } from "@codedazur/react-essentials";
 import { action } from "@storybook/addon-actions";
 import { Meta } from "@storybook/react";
-import { Bar } from "@apps/storybook/components/Bar";
 import styled from "styled-components";
-import docs from "./useTimer.docs.mdx";
 import { DebugOverlay } from "../../components/DebugOverlay";
+import docs from "./useTimer.docs.mdx";
 
 const meta: Meta = {
-  title: "react-essentials/useTimer",
+  title: "React/Essentials/useTimer",
   parameters: {
     docs: {
       page: docs,

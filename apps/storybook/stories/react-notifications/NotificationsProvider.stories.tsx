@@ -24,7 +24,7 @@ import { FunctionComponent, ReactNode } from "react";
 import docs from "./NotificationsProvider.docs.mdx";
 
 const meta: Meta = {
-  title: "react-notifications/NotificationsProvider",
+  title: "React/Notifications/NotificationsProvider",
   parameters: {
     docs: {
       page: docs,

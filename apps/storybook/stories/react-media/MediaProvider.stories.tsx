@@ -41,6 +41,7 @@ import {
 import { Meta, StoryObj } from "@storybook/react";
 import { FunctionComponent, useMemo, useRef } from "react";
 import { DebugOverlay } from "../../components/DebugOverlay";
+import { Monospace } from "../../components/Monospace";
 import docs from "./MediaProvider.docs.mdx";
 import distantWorldsIi from "./artworks/distant-worlds-ii.jpg";
 import distantWorlds from "./artworks/distant-worlds.jpg";
@@ -49,10 +50,9 @@ import alienated from "./tracks/alienated.mp3";
 import meteorites from "./tracks/meteorites.mp3";
 import tabulaRasa from "./tracks/tabula-rasa.mp3";
 import bigBuckBunny from "./videos/big-buck-bunny.mp4";
-import { Monospace } from "../../components/Monospace";
 
 const meta: Meta = {
-  title: "React-Media/MediaProvider",
+  title: "React/Media/MediaProvider",
   decorators: [WithCenter],
   parameters: {
     docs: {

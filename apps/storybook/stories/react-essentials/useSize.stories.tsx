@@ -11,7 +11,7 @@ import { useRef, useState } from "react";
 import { DebugOverlay } from "../../components/DebugOverlay";
 
 export default {
-  title: "react-essentials/useSize",
+  title: "React/Essentials/useSize",
 } as Meta;
 
 export const Default = () => {

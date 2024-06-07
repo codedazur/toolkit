@@ -17,7 +17,7 @@ import { DebugOverlay } from "../../components/DebugOverlay";
 import docs from "./useForm.docs.mdx";
 
 const meta: Meta = {
-  title: "react-forms/useForm",
+  title: "React/Forms/useForm",
   parameters: {
     docs: {
       page: docs,

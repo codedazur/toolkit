@@ -1,13 +1,12 @@
-import { Button, Column, Row } from "@codedazur/react-components";
+import { Button, Row } from "@codedazur/react-components";
 import { useDelta } from "@codedazur/react-essentials";
 import { Meta, StoryObj } from "@storybook/react";
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState } from "react";
 import { DebugOverlay } from "../../components/DebugOverlay";
-import { Monospace } from "../../components/Monospace";
 import docs from "./useDelta.docs.mdx";
 
 const meta: Meta = {
-  title: "react-essentials/useDelta",
+  title: "React/Essentials/useDelta",
   parameters: {
     docs: {
       page: docs,

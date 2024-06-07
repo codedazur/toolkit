@@ -24,13 +24,13 @@ import { FunctionComponent, useMemo, useRef, useState } from "react";
 import { DebugOverlay } from "../../components/DebugOverlay";
 import { Weekdays } from "./components/Weekdays";
 
-import { Days } from "./components/Days";
-import { Navigation } from "./components/Navigation";
 import {
   UseDatePickerProps,
   useDatePicker,
 } from "@codedazur/react-date-picker";
 import { Monospace } from "../../components/Monospace";
+import { Days } from "./components/Days";
+import { Navigation } from "./components/Navigation";
 
 const DatePicker: FunctionComponent<UseDatePickerProps> = (props) => {
   const { cursor, dates, month, toNextMonth, toPreviousMonth } =
@@ -105,7 +105,7 @@ const defaultArgTypes = {
 };
 
 const meta: Meta = {
-  title: "React Date Picker/useDatePicker",
+  title: "React/DatePicker/useDatePicker",
   parameters: {
     docs: {
       page: docs,

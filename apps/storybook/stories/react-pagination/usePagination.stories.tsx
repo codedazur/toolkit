@@ -20,7 +20,7 @@ import docs from "./usePagination.docs.mdx";
 import { DebugOverlay } from "../../components/DebugOverlay";
 
 const meta: Meta<UsePaginationProps<string>> = {
-  title: "React-Pagination/usePagination",
+  title: "React/Pagination/usePagination",
   parameters: {
     docs: {
       page: docs,

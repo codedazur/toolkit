@@ -6,7 +6,7 @@ import docs from "./useMotionPreferences.docs.mdx";
 import { Meta, StoryObj } from "@storybook/react";
 
 const meta: Meta = {
-  title: "Preferences/useMotionPreferences",
+  title: "React/Preferences/useMotionPreferences",
   parameters: {
     docs: {
       page: docs,

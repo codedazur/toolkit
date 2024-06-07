@@ -15,14 +15,14 @@ import {
   useSingleDatePicker,
 } from "@codedazur/react-date-picker";
 import { Meta } from "@storybook/react";
-import docs from "./useSingleDatePicker.docs.mdx";
-import { addDays, Day } from "date-fns";
+import { Day, addDays } from "date-fns";
 import { enGB, enUS, es, nl, ru } from "date-fns/locale";
 import { FunctionComponent, useMemo, useRef, useState } from "react";
-import { Weekdays } from "./components/Weekdays";
+import { Monospace } from "../../components/Monospace";
 import { Days } from "./components/Days";
 import { Navigation } from "./components/Navigation";
-import { Monospace } from "../../components/Monospace";
+import { Weekdays } from "./components/Weekdays";
+import docs from "./useSingleDatePicker.docs.mdx";
 
 const localeMap: Record<string, Locale> = {
   "en-US": enUS,
@@ -61,7 +61,7 @@ const defaultArgTypes = {
 };
 
 const meta: Meta = {
-  title: "React Date Picker/useSingleDatePicker",
+  title: "React/DatePicker/useSingleDatePicker",
   parameters: {
     docs: {
       page: docs,

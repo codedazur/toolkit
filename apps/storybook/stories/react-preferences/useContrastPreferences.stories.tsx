@@ -6,7 +6,7 @@ import docs from "./useContrastPreferences.docs.mdx";
 import { Meta, StoryObj } from "@storybook/react";
 
 const meta: Meta = {
-  title: "Preferences/useContrastPreferences",
+  title: "React/Preferences/useContrastPreferences",
   parameters: {
     docs: {
       page: docs,

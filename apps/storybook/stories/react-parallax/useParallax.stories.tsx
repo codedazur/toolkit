@@ -25,7 +25,7 @@ import layerTwo from "./diorama/layer-two.png";
 import docs from "./useParallax.docs.mdx";
 
 const meta: Meta = {
-  title: "react-parallax/useParallax",
+  title: "React/Parallax/useParallax",
   parameters: {
     layout: "fullscreen",
     docs: {

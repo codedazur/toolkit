@@ -21,7 +21,7 @@ import styled from "styled-components";
 import { DebugOverlay } from "../../components/DebugOverlay";
 
 export default {
-  title: "react-essentials/useScroll",
+  title: "React/Essentials/useScroll",
   parameters: {
     layout: "fullscreen",
   },

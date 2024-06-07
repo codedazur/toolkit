@@ -6,7 +6,7 @@ import docs from "./useColorSchemePreferences.docs.mdx";
 import { Meta, StoryObj } from "@storybook/react";
 
 const meta: Meta = {
-  title: "Preferences/useColorSchemePreferences",
+  title: "React/Preferences/useColorSchemePreferences",
   parameters: {
     docs: {
       page: docs,
