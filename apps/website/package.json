@@ -20,9 +20,9 @@
     "@codedazur/react-notifications": "*",
     "@codedazur/react-pagination": "*",
     "@codedazur/react-parallax": "*",
-    "next": "13.5.6",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
+    "next": "^14.2.3",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "styled-components": "^6.1.8"
   },
   "devDependencies": {
@@ -30,10 +30,10 @@
     "@codedazur/eslint-config": "*",
     "@codedazur/tsconfig": "*",
     "@types/node": "^20.4.5",
-    "@types/react": "18.2.33",
+    "@types/react": "^18.2.33",
     "@types/styled-components": "^5.1.26",
-    "eslint": "8.52.0",
-    "next-transpile-modules": "10.0.1",
+    "eslint": "^8.52.0",
+    "next-transpile-modules": "^10.0.1",
     "typescript": "^5.1.6"
   }
 }
