@@ -1,5 +1,11 @@
 # @codedazur/essentials
 
+## 1.8.0
+
+### Minor Changes
+
+- [`451e83c`](https://github.com/codedazur/toolkit/commit/451e83cde92da44c1e1b6058784664db27ebdc5c) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The debounce utility was added.
+
 ## 1.7.0
 
 ### Minor Changes
