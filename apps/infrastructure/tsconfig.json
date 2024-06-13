@@ -1,5 +1,26 @@
 {
-  "extends": "@codedazur/tsconfig/cdk.json",
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "CDK",
   "include": ["**/*.ts"],
-  "exclude": ["cdk.out", "node_modules"]
+  "exclude": ["cdk.out", "node_modules"],
+  "compilerOptions": {
+    "composite": false,
+    "declaration": true,
+    "declarationMap": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "forceConsistentCasingInFileNames": true,
+    "inlineSourceMap": true,
+    "inlineSources": true,
+    "isolatedModules": true,
+    "lib": ["es2018", "dom"],
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "preserveWatchOutput": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "es2018"
+  }
 }
