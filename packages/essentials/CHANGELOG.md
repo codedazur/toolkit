@@ -1,5 +1,11 @@
 # @codedazur/essentials
 
+## 1.9.0
+
+### Minor Changes
+
+- [`6a38196`](https://github.com/codedazur/toolkit/commit/6a381969c639ebe8a6845c4d4bc1fbb192716650) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The array chunk utility was added.
+
 ## 1.8.0
 
 ### Minor Changes
