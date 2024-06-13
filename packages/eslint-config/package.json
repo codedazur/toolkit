@@ -6,14 +6,12 @@
     "access": "public"
   },
   "license": "MIT",
-  "dependencies": {
-    "eslint": "^8.46.0",
-    "eslint-config-next": "latest",
-    "eslint-config-prettier": "9.1.0",
-    "eslint-config-turbo": "latest",
-    "eslint-plugin-react": "latest"
-  },
   "devDependencies": {
+    "eslint": "^8.46.0",
+    "eslint-config-next": "^14.2.4",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-config-react": "^1.1.7",
+    "eslint-config-turbo": "^2.0.3",
     "typescript": "^5.4.5"
   }
 }
