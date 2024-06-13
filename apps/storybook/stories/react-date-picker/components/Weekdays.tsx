@@ -3,8 +3,8 @@ import {
   Expanded,
   Grid,
   GridItem,
-  UseDatePickerResult,
 } from "@codedazur/react-components";
+import { UseDatePickerResult } from "@codedazur/react-date-picker";
 import { FunctionComponent } from "react";
 import { Monospace } from "../../../components/Monospace";
 

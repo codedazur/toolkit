@@ -23,9 +23,9 @@
     "test": "vitest run --passWithNoTests"
   },
   "dependencies": {
-    "@aws-sdk/client-lambda": "^3.231.0",
-    "@aws-sdk/client-ses": "^3.231.0",
-    "@aws-sdk/client-sqs": "^3.231.0",
+    "@aws-sdk/client-lambda": "^3.596.0",
+    "@aws-sdk/client-ses": "^3.596.0",
+    "@aws-sdk/client-sqs": "^3.596.0",
     "@codedazur/essentials": "*"
   },
   "peerDependencies": {
@@ -36,8 +36,8 @@
     "@codedazur/eslint-config": "*",
     "@codedazur/tsconfig": "*",
     "@types/node": "^16.18.3",
-    "aws-cdk-lib": "^2.55.1",
-    "constructs": "^10.1.194",
+    "aws-cdk-lib": "^2.145.0",
+    "constructs": "^10.3.0",
     "esbuild": "^0.16.9 || ^0.19.1",
     "eslint": "^8.30.0",
     "typescript": "^4.9.4 || ^5.2.2"

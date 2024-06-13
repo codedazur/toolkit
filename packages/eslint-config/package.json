@@ -9,11 +9,11 @@
   "dependencies": {
     "eslint": "^8.46.0",
     "eslint-config-next": "latest",
-    "eslint-config-prettier": "9.0.0",
+    "eslint-config-prettier": "9.1.0",
     "eslint-config-turbo": "latest",
     "eslint-plugin-react": "latest"
   },
   "devDependencies": {
-    "typescript": "^5.1.6"
+    "typescript": "^5.4.5"
   }
 }

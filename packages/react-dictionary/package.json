@@ -27,7 +27,7 @@
     "react-dom": ">=16.8.0"
   },
   "dependencies": {
-    "@codedazur/essentials": "^1.6.1"
+    "@codedazur/essentials": "^1.9.0"
   },
   "devDependencies": {
     "@codedazur/eslint-config": "*",

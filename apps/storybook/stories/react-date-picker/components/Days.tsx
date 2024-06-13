@@ -1,8 +1,5 @@
-import {
-  Grid,
-  GridItem,
-  UseDatePickerResult,
-} from "@codedazur/react-components";
+import { Grid, GridItem } from "@codedazur/react-components";
+import { UseDatePickerResult } from "@codedazur/react-date-picker";
 import { FunctionComponent } from "react";
 import { Day } from "./Day";
 

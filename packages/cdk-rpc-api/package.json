@@ -29,10 +29,10 @@
   "devDependencies": {
     "@codedazur/eslint-config": "*",
     "@codedazur/tsconfig": "*",
-    "@types/node": "^20.4.5",
-    "aws-cdk-lib": "^2.89.0",
-    "constructs": "^10.2.69",
+    "@types/node": "^20.14.2",
+    "aws-cdk-lib": "^2.145.0",
+    "constructs": "^10.3.0",
     "eslint": "^8.46.0",
-    "typescript": "^5.1.6"
+    "typescript": "^5.4.5"
   }
 }
