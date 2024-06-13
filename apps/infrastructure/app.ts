@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 
+import { config as dotenv } from "dotenv";
+dotenv();
+
 import { App } from "aws-cdk-lib";
-import * as dotenv from "dotenv";
 import { Website } from "./stacks/Website";
 import { Storybook } from "./stacks/Storybook";
-
-dotenv.config();
 
 const app = new App();
 
