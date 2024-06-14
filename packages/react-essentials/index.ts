@@ -11,5 +11,6 @@ export * from "./hooks/useSize";
 export * from "./hooks/useSynchronizedRef";
 export * from "./hooks/useTimer";
 export * from "./hooks/useUpdateLoop";
+export * from "./hooks/useUserAgent";
 export * from "./types/MaybeRef";
 export * from "./utilities/resolveMaybeRef";
