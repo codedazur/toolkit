@@ -1,5 +1,11 @@
 # @codedazur/react-essentials
 
+## 1.4.1
+
+### Patch Changes
+
+- [`832df57014266b91c2020aa14c8cbf0e964a5c16`](https://github.com/codedazur/toolkit/commit/832df57014266b91c2020aa14c8cbf0e964a5c16) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The useUserAgent hook is now exported from the index.
+
 ## 1.4.0
 
 ### Minor Changes
