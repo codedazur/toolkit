@@ -1,5 +1,11 @@
 # eslint-config-custom
 
+## 0.1.1
+
+### Patch Changes
+
+- [`ff7ffbc4cec382286f87fb3c878d16693ceff93b`](https://github.com/codedazur/toolkit/commit/ff7ffbc4cec382286f87fb3c878d16693ceff93b) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Dependencies were fixed to current major versions.
+
 ## 0.1.0
 
 ### Minor Changes

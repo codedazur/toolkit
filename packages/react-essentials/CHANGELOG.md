@@ -1,5 +1,11 @@
 # @codedazur/react-essentials
 
+## 1.4.0
+
+### Minor Changes
+
+- [`78a85e3f9ea7a5d96f7160ab3a54f36c0036a225`](https://github.com/codedazur/toolkit/commit/78a85e3f9ea7a5d96f7160ab3a54f36c0036a225) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The useUserAgent hook has been added.
+
 ## 1.3.0
 
 ### Minor Changes
