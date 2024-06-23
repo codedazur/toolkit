@@ -35,6 +35,7 @@ export class DockerCluster extends Construct {
     const image = new DockerImageAsset(this, "Image", {
       directory: props.path,
       file: props.file,
+      exclude: ["**/cdk.out"],
       buildSecrets: props.secrets,
       platform: Platform.LINUX_AMD64,
     });
