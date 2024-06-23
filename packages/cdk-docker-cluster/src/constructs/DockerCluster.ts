@@ -11,6 +11,7 @@ import { Construct } from "constructs";
 
 export interface DockerClusterProps {
   path: string;
+  file?: string;
   secrets?: Record<string, string>;
   port?: number;
   tasks?:
@@ -33,6 +34,7 @@ export class DockerCluster extends Construct {
 
     const image = new DockerImageAsset(this, "Image", {
       directory: props.path,
+      file: props.file,
       buildSecrets: props.secrets,
       platform: Platform.LINUX_AMD64,
     });
