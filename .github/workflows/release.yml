@@ -37,8 +37,8 @@ jobs:
       - name: Deploy Apps
         run: |
           export NODE_OPTIONS="--max_old_space_size=4096"
-          npm run build
-          npm run deploy
+          npm run build -- --env-mode=loose
+          npm run deploy -- --env-mode=loose
 
   version:
     name: Publish Packages
