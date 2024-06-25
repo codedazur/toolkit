@@ -1,5 +1,11 @@
 # @codedazur/cdk-next-app
 
+## 0.2.1
+
+### Patch Changes
+
+- [`4aad27259400d8c8c4fd6825ee20ef970b6ad718`](https://github.com/codedazur/toolkit/commit/4aad27259400d8c8c4fd6825ee20ef970b6ad718) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The construct name was corrected.
+
 ## 0.2.0
 
 ### Minor Changes
