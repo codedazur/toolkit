@@ -1,5 +1,11 @@
 # @codedazur/cdk-static-site
 
+## 1.1.1
+
+### Patch Changes
+
+- [`7789bf2c5dfbda3420d9ce69057e5310b8a32e4b`](https://github.com/codedazur/toolkit/commit/7789bf2c5dfbda3420d9ce69057e5310b8a32e4b) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Cache invalidations are no longer awaited when awaitCacheInvalidations is not set to true.
+
 ## 1.1.0
 
 ### Minor Changes
