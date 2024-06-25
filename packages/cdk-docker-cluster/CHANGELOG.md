@@ -1,5 +1,11 @@
 # @codedazur/cdk-docker-cluster
 
+## 0.4.0
+
+### Minor Changes
+
+- [`17d19aea004254b214364caef8fa02f9a6019f8f`](https://github.com/codedazur/toolkit/commit/17d19aea004254b214364caef8fa02f9a6019f8f) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Buildtime and runtime environment variables are now supported.
+
 ## 0.3.0
 
 ### Minor Changes

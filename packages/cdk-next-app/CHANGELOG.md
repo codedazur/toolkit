@@ -1,5 +1,14 @@
 # @codedazur/cdk-next-app
 
+## 0.2.2
+
+### Patch Changes
+
+- [`17d19aea004254b214364caef8fa02f9a6019f8f`](https://github.com/codedazur/toolkit/commit/17d19aea004254b214364caef8fa02f9a6019f8f) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The version of the DockerCluster dependency is now explicit.
+
+- Updated dependencies [[`17d19aea004254b214364caef8fa02f9a6019f8f`](https://github.com/codedazur/toolkit/commit/17d19aea004254b214364caef8fa02f9a6019f8f)]:
+  - @codedazur/cdk-docker-cluster@0.4.0
+
 ## 0.2.1
 
 ### Patch Changes
