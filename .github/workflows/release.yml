@@ -41,28 +41,58 @@ jobs:
           npm run deploy -- --env-mode=loose
 
   version:
-    name: Publish Packages
+    name: Version Packages
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
 
       - name: Install Dependencies
         run: |
           npm config set //registry.npmjs.org/:_authToken ${{ secrets.NPM_TOKEN }}
           npm ci
 
-      - name: Version or Publish
+      - name: Version Packages
         uses: changesets/action@v1
         with:
-          commit: "version packages"
-          publish: npm run publish
+          commit: version packages
+          publish: echo "This step is not configured for publishing."
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  publish:
+    name: Publish Packages
+    runs-on: ubuntu-latest
+    if: github.event.head_commit.message == 'version packages'
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Dependencies
+        run: |
+          npm config set //registry.npmjs.org/:_authToken ${{ secrets.NPM_TOKEN }}
+          npm ci
+
+      - name: Build Packages
+        run: |
+          npm run build:packages
+
+      - name: Publish Packages
+        uses: changesets/action@v1
+        with:
+          publish: npx changeset publish
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
