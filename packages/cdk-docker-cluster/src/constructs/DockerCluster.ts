@@ -40,9 +40,9 @@ export class DockerCluster extends Construct {
       directory: props.path,
       file: props.file,
       exclude: ["**/cdk.out"],
+      buildArgs: props.environment?.buildtime,
       buildSecrets: props.secrets,
       platform: Platform.LINUX_AMD64,
-      buildArgs: props.environment?.buildtime,
     });
 
     const desiredTasks =

@@ -399,7 +399,7 @@ export class StaticSite extends Construct {
       destinationBucket: this.bucket,
       destinationKeyPrefix: this.props.deployment?.prefix,
       memoryLimit: this.props.deployment?.memoryLimit,
-      distribution: !this.props.deployment?.awaitCacheInvalidations
+      distribution: this.props.deployment?.awaitCacheInvalidations
         ? this.distribution
         : undefined,
       distributionPaths: this.props.deployment?.cacheInvalidations,
