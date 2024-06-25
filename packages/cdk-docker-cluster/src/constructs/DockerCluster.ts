@@ -22,6 +22,10 @@ export interface DockerClusterProps {
       };
   cpu?: ApplicationLoadBalancedFargateServiceProps["cpu"];
   memory?: ApplicationLoadBalancedFargateServiceProps["memoryLimitMiB"];
+  environment?: {
+    buildtime?: Record<string, string>;
+    runtime?: Record<string, string>;
+  };
 }
 
 /**
@@ -38,6 +42,7 @@ export class DockerCluster extends Construct {
       exclude: ["**/cdk.out"],
       buildSecrets: props.secrets,
       platform: Platform.LINUX_AMD64,
+      buildArgs: props.environment?.buildtime,
     });
 
     const desiredTasks =
@@ -52,6 +57,7 @@ export class DockerCluster extends Construct {
         // image: ContainerImage.fromEcrRepository(image.repository, image.imageTag),
         image: ContainerImage.fromDockerImageAsset(image),
         containerPort: props.port,
+        environment: props.environment?.runtime,
       },
       circuitBreaker: {
         enable: true,

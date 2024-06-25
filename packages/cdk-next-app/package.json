@@ -23,7 +23,7 @@
     "test": "vitest run --passWithNoTests"
   },
   "dependencies": {
-    "@codedazur/cdk-docker-cluster": "*"
+    "@codedazur/cdk-docker-cluster": "^0.3.0"
   },
   "peerDependencies": {
     "aws-cdk-lib": ">=2",
