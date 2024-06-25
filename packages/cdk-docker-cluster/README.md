@@ -4,11 +4,12 @@ This construct creates a load balanced Fargate service, for which it builds a Do
 
 ```ts
 new DockerCluster({
-  path: "../my/directory", // Must contain a Dockerfile.
+  path: "../../", // path to Docker build context
+  file: "apps/myApp/DockerFile", // path to Dockerfile
   port: 3000,
-  cpu: 256,
-  memory: 512,
-  instances: 1,
+  cpu: 1024, // 1vCPU
+  memory: 4096, // 4GB
+  tasks: { minimum: 1, maximum: 10 },
   secrets: {
     foo: DockerBuildSecret.fromSrc("./foo"),
   },
