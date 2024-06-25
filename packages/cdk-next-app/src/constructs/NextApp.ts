@@ -8,17 +8,17 @@ import {
 import { DockerBuildSecret } from "aws-cdk-lib";
 import { Construct } from "constructs";
 
-export interface NextDockerClusterProps extends DockerClusterProps {}
+export interface NextAppProps extends DockerClusterProps {}
 
 /**
  * A docker cluster preconfigured for running a Next.js application with support
  * for private NPM packages using a build-time secret.
  */
-export class NextDockerCluster extends DockerCluster {
+export class NextApp extends DockerCluster {
   constructor(
     scope: Construct,
     id: string,
-    { port = 3000, secrets, ...props }: NextDockerClusterProps,
+    { port = 3000, secrets, ...props }: NextAppProps,
   ) {
     super(scope, id, {
       port,
