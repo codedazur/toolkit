@@ -16,7 +16,7 @@ Your `next.config.js` file needs to be configured for standalone output.
 const nextConfig = {
   // ...
   output: "standalone",
-}
+};
 // ...
 ```
 
@@ -47,15 +47,47 @@ new NextApp(this, "NextApp", {
 });
 ```
 
+### Arguments and Secrets
+
+The NextApp is based on the [DockerCluster](https://github.com/codedazur/toolkit/tree/main/packages/cdk-docker-cluster) construct and supports all of its features related to Docker's build arguments and secrets.
+
+These arguments and secrets need to be handled appropriately by your Dockerfile in order for them to have any effect.
+
+```ts
+import { DockerBuildSecret } from "aws-cdk-lib";
+
+new NextApp(this, "NextApp", {
+  // ...
+  arguments: {
+    MY_BUILD_ARGUMENT: process.env.MY_BUILD_ARGUMENT,
+  },
+  secrets: {
+    myBuildSecret: new DockerBuildSecret.fromEnvironment("MY_BUILD_SECRET"),
+  },
+});
+```
+
 ### Scaling
 
-The NextApp is based on the [DockerCluster](https://github.com/codedazur/toolkit/tree/main/packages/cdk-docker-cluster) construct and supports all of its features for horizontal and vertical scaling.
+The NextApp is based on the [DockerCluster](https://github.com/codedazur/toolkit/tree/main/packages/cdk-docker-cluster) construct and supports all of its features for vertical scaling and horizontal (auto-)scaling.
 
 ```ts
 new NextApp(this, "NextApp", {
   // ...
   cpu: 1024,
   memory: 4096,
-  tasks: { min: 1, max: 10 },
+  tasks: 3,
+});
+```
+
+```ts
+new NextApp(this, "NextApp", {
+  // ...
+  cpu: 1024,
+  memory: 4096,
+  tasks: {
+    minimum: 1,
+    maximum: 5,
+  },
 });
 ```

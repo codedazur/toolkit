@@ -12,6 +12,7 @@ import { Construct } from "constructs";
 export interface DockerClusterProps {
   path: string;
   file?: string;
+  arguments?: Record<string, string>;
   secrets?: Record<string, string>;
   port?: number;
   tasks?:
@@ -22,10 +23,6 @@ export interface DockerClusterProps {
       };
   cpu?: ApplicationLoadBalancedFargateServiceProps["cpu"];
   memory?: ApplicationLoadBalancedFargateServiceProps["memoryLimitMiB"];
-  environment?: {
-    buildtime?: Record<string, string>;
-    runtime?: Record<string, string>;
-  };
 }
 
 /**
@@ -40,7 +37,7 @@ export class DockerCluster extends Construct {
       directory: props.path,
       file: props.file,
       exclude: ["**/cdk.out"],
-      buildArgs: props.environment?.buildtime,
+      buildArgs: props.arguments,
       buildSecrets: props.secrets,
       platform: Platform.LINUX_AMD64,
     });
@@ -57,7 +54,6 @@ export class DockerCluster extends Construct {
         // image: ContainerImage.fromEcrRepository(image.repository, image.imageTag),
         image: ContainerImage.fromDockerImageAsset(image),
         containerPort: props.port,
-        environment: props.environment?.runtime,
       },
       circuitBreaker: {
         enable: true,
