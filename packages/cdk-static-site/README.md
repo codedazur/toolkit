@@ -2,7 +2,7 @@
 
 ## Examples
 
-The minimum needed to get a StaticSite up and running is to provide the path to the directory that you want to deploy as your website.
+The minimum needed to get a `StaticSite` up and running is to provide the path to the directory that you want to deploy as your website.
 
 ```ts
 new StaticSite({
@@ -12,7 +12,7 @@ new StaticSite({
 });
 ```
 
-### With a Custom Domain Name
+### With Custom Domain Name
 
 If you provide a domain name and an optional subdomain, Route53 and Certificate Manager will be used to create the necessary resources.
 
@@ -112,5 +112,16 @@ Or, you can provide the specific routes that you want to flush.
 new StaticSite(this, "StaticSite", {
   // ...
   invalidateCache: ["/foo/*", "/bar/baz"],
+});
+```
+
+### With Custom Error Document
+
+By default, the `StaticSite` will load a `404.html` document when the requested path does not exist. If your application uses a different document, you can override it.
+
+```ts
+new StaticSite(this, "StaticSite", {
+  // ...
+  errorDocument: "error.html",
 });
 ```

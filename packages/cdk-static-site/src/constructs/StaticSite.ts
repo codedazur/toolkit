@@ -14,14 +14,12 @@ import { Construct } from "constructs";
 export interface StaticSiteProps {
   source: {
     directory: string;
+    exclude?: string[];
   };
   bucket?: {
     accelerate?: boolean;
   };
-  website?: {
-    indexDocument?: string;
-    errorDocument?: string;
-  };
+  errorDocument?: string;
   distribution?: Omit<SiteDistributionProps, "origin">;
   deployment?: {
     memoryLimit?: number;
@@ -75,8 +73,8 @@ export class StaticSite extends Construct {
         blockPublicPolicy: false,
         restrictPublicBuckets: false,
       }),
-      websiteIndexDocument: this.props.website?.indexDocument ?? "index.html",
-      websiteErrorDocument: this.props.website?.errorDocument ?? "404.html",
+      websiteIndexDocument: "index.html",
+      websiteErrorDocument: this.props.errorDocument ?? "404.html",
       transferAcceleration: this.props.bucket?.accelerate,
       removalPolicy: RemovalPolicy.DESTROY,
       autoDeleteObjects: true,
@@ -115,7 +113,11 @@ export class StaticSite extends Construct {
 
   protected createDeployment() {
     return new BucketDeployment(this, "BucketDeployment", {
-      sources: [Source.asset(this.props.source.directory)],
+      sources: [
+        Source.asset(this.props.source.directory, {
+          exclude: this.props.source.exclude,
+        }),
+      ],
       destinationBucket: this.bucket,
       destinationKeyPrefix: this.props.deployment?.prefix,
       memoryLimit: this.props.deployment?.memoryLimit,
