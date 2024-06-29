@@ -3,7 +3,6 @@ import {
   SiteDistributionProps,
 } from "@codedazur/cdk-site-distribution";
 import { App } from "aws-cdk-lib";
-import { Certificate } from "aws-cdk-lib/aws-certificatemanager";
 import { OriginProtocolPolicy } from "aws-cdk-lib/aws-cloudfront";
 import { LoadBalancerV2Origin } from "aws-cdk-lib/aws-cloudfront-origins";
 import { Platform } from "aws-cdk-lib/aws-ecr-assets";
@@ -100,9 +99,6 @@ export class DockerCluster extends Construct {
         rollback: true,
       },
       publicLoadBalancer: false,
-      certificate: new Certificate(this, "Certificate", {
-        domainName: "example.com",
-      }),
     });
 
     if (typeof this.props.tasks === "object") {

@@ -1,7 +1,8 @@
 import { CacheInvalidator } from "@codedazur/cdk-cache-invalidator";
 import { CfnOutput } from "aws-cdk-lib";
 import {
-  DnsValidatedCertificate,
+  Certificate,
+  CertificateValidation,
   ICertificate,
 } from "aws-cdk-lib/aws-certificatemanager";
 import {
@@ -9,6 +10,7 @@ import {
   Distribution,
   FunctionCode,
   FunctionEventType,
+  FunctionRuntime,
   IOrigin,
   PriceClass,
   ViewerProtocolPolicy,
@@ -42,6 +44,10 @@ export interface SiteDistributionProps {
   invalidateCache?: boolean | string[];
 }
 
+/**
+ * @todo Make use of KeyValueStores for CloudFront functions to store the Basic
+ * authentication password.
+ */
 export class SiteDistribution extends Construct {
   public readonly domain?: string;
   public readonly zone?: IHostedZone;
@@ -105,10 +111,9 @@ export class SiteDistribution extends Construct {
   protected createCertificate() {
     const certificate =
       this.domain && this.zone
-        ? new DnsValidatedCertificate(this, "Certificate", {
+        ? new Certificate(this, "Certificate", {
             domainName: this.domain,
-            hostedZone: this.zone,
-            region: "us-east-1",
+            validation: CertificateValidation.fromDns(this.zone),
           })
         : undefined;
 
@@ -147,6 +152,7 @@ export class SiteDistribution extends Construct {
 
     return new CloudFrontFunction(this, "ViewerRequestFunction", {
       code: this.getHandlerChainCode(handlers, "request"),
+      runtime: FunctionRuntime.JS_2_0,
     });
   }
 
@@ -162,6 +168,7 @@ export class SiteDistribution extends Construct {
 
     return new CloudFrontFunction(this, "ViewerResponseFunction", {
       code: this.getHandlerChainCode(handlers, "response"),
+      runtime: FunctionRuntime.JS_2_0,
     });
   }
 

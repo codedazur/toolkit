@@ -36,8 +36,8 @@
   "devDependencies": {
     "@changesets/changelog-github": "0.5.0",
     "@changesets/cli": "^2.27.6",
-    "@codedazur/eslint-config": "^0.1.1",
-    "@codedazur/tsconfig": "^0.0.6",
+    "@codedazur/eslint-config": "^0.2.0",
+    "@codedazur/tsconfig": "^0.1.0",
     "@vitest/coverage-v8": "^1.6.0",
     "eslint": "^8.46.0",
     "jsdom": "^24.1.0",
