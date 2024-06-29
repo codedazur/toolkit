@@ -1,5 +1,11 @@
 # eslint-config-custom
 
+## 0.2.0
+
+### Minor Changes
+
+- [`17034ee`](https://github.com/codedazur/toolkit/commit/17034ee5fcbc026fc779a12130572d515d2b8298) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The typescript-eslint plugin and parser are now used by default.
+
 ## 0.1.1
 
 ### Patch Changes

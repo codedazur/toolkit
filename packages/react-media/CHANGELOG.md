@@ -1,5 +1,17 @@
 # @codedazur/react-audio
 
+## 1.0.1
+
+### Patch Changes
+
+- [`17034ee`](https://github.com/codedazur/toolkit/commit/17034ee5fcbc026fc779a12130572d515d2b8298) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Dependency versions were made explicit.
+
+- [`17034ee`](https://github.com/codedazur/toolkit/commit/17034ee5fcbc026fc779a12130572d515d2b8298) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The initial volume is no longer ignored.
+
+- Updated dependencies [[`17034ee`](https://github.com/codedazur/toolkit/commit/17034ee5fcbc026fc779a12130572d515d2b8298)]:
+  - @codedazur/react-essentials@1.4.2
+  - @codedazur/essentials@1.9.1
+
 ## 1.0.0
 
 ### Major Changes

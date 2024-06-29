@@ -1,5 +1,15 @@
 # @codedazur/react-select
 
+## 0.0.4
+
+### Patch Changes
+
+- [`17034ee`](https://github.com/codedazur/toolkit/commit/17034ee5fcbc026fc779a12130572d515d2b8298) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Dependency versions were made explicit.
+
+- Updated dependencies [[`17034ee`](https://github.com/codedazur/toolkit/commit/17034ee5fcbc026fc779a12130572d515d2b8298)]:
+  - @codedazur/react-essentials@1.4.2
+  - @codedazur/essentials@1.9.1
+
 ## 0.0.3
 
 ### Patch Changes

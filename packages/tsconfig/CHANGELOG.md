@@ -1,5 +1,11 @@
 # tsconfig
 
+## 0.1.0
+
+### Minor Changes
+
+- [`17034ee`](https://github.com/codedazur/toolkit/commit/17034ee5fcbc026fc779a12130572d515d2b8298) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - An NPM packages' dist folder is excluded by default.
+
 ## 0.0.6
 
 ### Patch Changes

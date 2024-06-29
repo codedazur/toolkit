@@ -1,5 +1,20 @@
 # @codedazur/cdk-docker-cluster
 
+## 0.5.0
+
+### Minor Changes
+
+- [`d1f3d51`](https://github.com/codedazur/toolkit/commit/d1f3d512d31d659ffdc115147d9631057fe8d073) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Support for a custom domain name was added.
+
+### Patch Changes
+
+- [`17034ee`](https://github.com/codedazur/toolkit/commit/17034ee5fcbc026fc779a12130572d515d2b8298) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Dependency versions were made explicit.
+
+- [`737fe0d`](https://github.com/codedazur/toolkit/commit/737fe0ddd4d353db1e005d2dab886a4a60bc02d8) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The build environment prop was renamed to arguments.
+
+- Updated dependencies [[`17034ee`](https://github.com/codedazur/toolkit/commit/17034ee5fcbc026fc779a12130572d515d2b8298), [`d1f3d51`](https://github.com/codedazur/toolkit/commit/d1f3d512d31d659ffdc115147d9631057fe8d073)]:
+  - @codedazur/cdk-site-distribution@0.1.0
+
 ## 0.4.0
 
 ### Minor Changes

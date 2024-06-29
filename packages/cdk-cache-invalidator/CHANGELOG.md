@@ -1,5 +1,11 @@
 # @codedazur/cdk-cache-invalidator
 
+## 1.2.1
+
+### Patch Changes
+
+- [`17034ee`](https://github.com/codedazur/toolkit/commit/17034ee5fcbc026fc779a12130572d515d2b8298) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Dependency versions were made explicit.
+
 ## 1.2.0
 
 ### Minor Changes

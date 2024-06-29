@@ -1,5 +1,22 @@
 # @codedazur/cdk-static-site
 
+## 2.0.0
+
+### Major Changes
+
+- [`d1f3d51`](https://github.com/codedazur/toolkit/commit/d1f3d512d31d659ffdc115147d9631057fe8d073) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The props were reorganized into source and distribution.
+
+### Minor Changes
+
+- [`754365d`](https://github.com/codedazur/toolkit/commit/754365d273433d82aa30769c5a5168394a26e53a) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Particular file patterns can now be excluded from deployment.
+
+### Patch Changes
+
+- [`17034ee`](https://github.com/codedazur/toolkit/commit/17034ee5fcbc026fc779a12130572d515d2b8298) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Dependency versions were made explicit.
+
+- Updated dependencies [[`17034ee`](https://github.com/codedazur/toolkit/commit/17034ee5fcbc026fc779a12130572d515d2b8298), [`d1f3d51`](https://github.com/codedazur/toolkit/commit/d1f3d512d31d659ffdc115147d9631057fe8d073)]:
+  - @codedazur/cdk-site-distribution@0.1.0
+
 ## 1.1.1
 
 ### Patch Changes
