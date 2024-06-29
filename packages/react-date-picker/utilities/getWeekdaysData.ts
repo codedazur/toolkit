@@ -1,4 +1,11 @@
-import { addDays, eachDayOfInterval, endOfWeek, startOfWeek } from "date-fns";
+import {
+  Day,
+  Locale,
+  addDays,
+  eachDayOfInterval,
+  endOfWeek,
+  startOfWeek,
+} from "date-fns";
 import { getFormattingFn } from "./getFormattingFn";
 
 interface GetWeekdaysDataProps {

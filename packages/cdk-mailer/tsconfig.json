@@ -1,5 +1,3 @@
 {
-  "extends": "@codedazur/tsconfig/cdk.json",
-  "include": ["."],
-  "exclude": ["dist", "build", "node_modules"]
+  "extends": "@codedazur/tsconfig/cdk.json"
 }

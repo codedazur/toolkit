@@ -1,7 +1,7 @@
-import { Day } from "date-fns";
+import { Day, Locale } from "date-fns";
 import { DayData, getDaysData } from "./getDaysData";
 import { getFormattingFn } from "./getFormattingFn";
-import { getWeekdaysData, WeekdayData } from "./getWeekdaysData";
+import { WeekdayData, getWeekdaysData } from "./getWeekdaysData";
 
 interface GetMonthDataProps {
   date: Date;

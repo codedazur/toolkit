@@ -2,11 +2,11 @@ import {
   SiteDistribution,
   SiteDistributionProps,
 } from "@codedazur/cdk-site-distribution";
-import { App, Stack } from "aws-cdk-lib";
+import { App } from "aws-cdk-lib";
 import { Certificate } from "aws-cdk-lib/aws-certificatemanager";
 import { OriginProtocolPolicy } from "aws-cdk-lib/aws-cloudfront";
 import { LoadBalancerV2Origin } from "aws-cdk-lib/aws-cloudfront-origins";
-import { DockerImageAsset, Platform } from "aws-cdk-lib/aws-ecr-assets";
+import { Platform } from "aws-cdk-lib/aws-ecr-assets";
 import { AssetImageProps, Cluster, ContainerImage } from "aws-cdk-lib/aws-ecs";
 import {
   ApplicationLoadBalancedFargateService,

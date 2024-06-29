@@ -21,11 +21,5 @@
     "lint": "TIMING=1 eslint \"**/*.ts*\"",
     "types": "tsc --noEmit",
     "test": "vitest run"
-  },
-  "devDependencies": {
-    "@codedazur/eslint-config": "*",
-    "@codedazur/tsconfig": "*",
-    "eslint": "^8.46.0",
-    "typescript": "^5.4.5"
   }
 }

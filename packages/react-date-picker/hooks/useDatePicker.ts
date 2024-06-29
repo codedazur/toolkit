@@ -1,5 +1,7 @@
 import { clamp } from "@codedazur/essentials";
 import {
+  Day,
+  Locale,
   addDays,
   addMonths,
   differenceInCalendarDays,
@@ -14,7 +16,7 @@ import {
   startOfMonth,
 } from "date-fns";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { getMonthData, MonthData } from "../utilities/getMonthData";
+import { MonthData, getMonthData } from "../utilities/getMonthData";
 import { isInRange } from "../utilities/isInRange";
 
 export interface UseDatePickerProps extends UseDatePickerFlags {

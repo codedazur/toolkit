@@ -7,37 +7,21 @@
     },
     "audit": {},
     "lint": {},
-    "types": {},
+    "types": {
+      "dependsOn": ["^build"]
+    },
     "test": {
-      "dependsOn": [
-        "^build"
-      ]
+      "dependsOn": ["^build"]
     },
     "build": {
-      "dependsOn": [
-        "^build",
-        "audit",
-        "lint",
-        "test"
-      ],
-      "outputs": [
-        "dist/**",
-        ".next/**",
-        ".storybook/**"
-      ]
+      "dependsOn": ["^build", "audit", "lint", "test"],
+      "outputs": ["dist/**", ".next/**", ".storybook/**"]
     },
     "deploy": {
-      "env": [
-        "CDK_DEFAULT_ACCOUNT",
-        "CDK_DEFAULT_REGION",
-        "DOMAIN_NAME"
-      ]
+      "env": ["CDK_DEFAULT_ACCOUNT", "CDK_DEFAULT_REGION", "DOMAIN_NAME"]
     },
     "destroy": {
-      "env": [
-        "CDK_DEFAULT_ACCOUNT",
-        "CDK_DEFAULT_REGION"
-      ]
+      "env": ["CDK_DEFAULT_ACCOUNT", "CDK_DEFAULT_REGION"]
     }
   }
 }

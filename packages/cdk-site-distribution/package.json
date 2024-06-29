@@ -1,6 +1,6 @@
 {
   "name": "@codedazur/cdk-site-distribution",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "main": ".dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -22,22 +22,17 @@
     "types": "tsc --noEmit",
     "test": "vitest run --passWithNoTests"
   },
-  "dependencies": {
-    "@codedazur/cdk-cache-invalidator": "^1.2.0"
-  },
   "peerDependencies": {
     "aws-cdk-lib": ">=2",
     "constructs": ">=10"
   },
+  "dependencies": {
+    "@codedazur/cdk-cache-invalidator": "^1.2.0"
+  },
   "devDependencies": {
-    "@codedazur/eslint-config": "*",
-    "@codedazur/tsconfig": "*",
-    "@types/node": "^20.14.2",
-    "aws-cdk-lib": "^2.145.0",
+    "@types/node": "^20.14.9",
+    "aws-cdk-lib": "^2.147.2",
     "constructs": "^10.3.0",
-    "esbuild": "^0.20.2",
-    "eslint": "^8.30.0",
-    "tsconfig": "*",
-    "typescript": "^5.4.5"
+    "esbuild": "^0.21.5"
   }
 }

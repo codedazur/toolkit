@@ -1,4 +1,4 @@
-import { MutableRefObject, RefObject, useEffect, useRef } from "react";
+import { MutableRefObject, useEffect, useRef } from "react";
 
 /**
  * The `useSynchronizedRef` hook takes a variable and creates a reference to it

@@ -16,13 +16,14 @@ describe("pick", () => {
 
   it("should handle missing properties gracefully", () => {
     const obj = { a: 1, b: "hello", c: true };
-    const result = pick(obj, ["a", "d"] as any);
+    // @ts-expect-error "d" is not a valid key
+    const result = pick(obj, ["a", "d"]);
     expect(result).toEqual({ a: 1 });
   });
 
   it("should not modify the original object", () => {
     const obj = { a: 1, b: "hello", c: true };
-    pick(obj, ["a", "b"] as any);
+    pick(obj, ["a", "b"]);
     expect(obj).toEqual({ a: 1, b: "hello", c: true });
   });
 });

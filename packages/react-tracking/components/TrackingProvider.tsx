@@ -53,7 +53,7 @@ export function TrackingProvider({
 
   const track = useCallback(
     async function track<E extends BaseEvent>(event: E) {
-      let resolvedTracker =
+      const resolvedTracker =
         inheritedTracker instanceof Promise
           ? await inheritedTracker
           : inheritedTracker;
@@ -248,19 +248,19 @@ function cssPath(element: Element) {
       selector += "#" + node.id;
       path.unshift(selector);
       break;
-    } else {
-      let sibling: Element | null = node;
-      let n = 1;
+    }
 
-      while ((sibling = sibling.previousElementSibling)) {
-        if (sibling.nodeName.toLowerCase() == selector) {
-          n++;
-        }
-      }
+    let sibling: Element | null = node;
+    let n = 1;
 
-      if (n != 1) {
-        selector += `:nth-of-type(${n})`;
+    while ((sibling = sibling.previousElementSibling)) {
+      if (sibling.nodeName.toLowerCase() === selector) {
+        n++;
       }
+    }
+
+    if (n !== 1) {
+      selector += `:nth-of-type(${n})`;
     }
 
     path.unshift(selector);

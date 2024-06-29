@@ -1,4 +1,4 @@
-import { StaticSite, StaticSiteProps } from "@codedazur/cdk-static-site";
+import { StaticSite } from "@codedazur/cdk-static-site";
 import { env } from "@codedazur/essentials";
 import { Construct } from "constructs";
 

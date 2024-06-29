@@ -26,6 +26,7 @@ export const Default: StoryObj = {
         <Row gap="1rem">
           {[1, 2, 3, 4, 5].map((target) => (
             <Button
+              key={target}
               onClick={() => setValue(target)}
               disabled={value === target}
             >

@@ -23,22 +23,20 @@
     "test": "vitest run"
   },
   "peerDependencies": {
-    "react": ">=16.8.0"
+    "react": ">=16.8.0",
+    "react-dom": ">=16.8.0"
   },
   "dependencies": {
-    "@codedazur/essentials": "*",
+    "@codedazur/essentials": "^1.9.0",
     "bowser": "^2.11.0"
   },
   "devDependencies": {
-    "@codedazur/eslint-config": "*",
-    "@codedazur/tsconfig": "*",
-    "@testing-library/dom": "9.3.3",
+    "@testing-library/dom": "10.2.0",
     "@testing-library/react": "alpha",
-    "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
-    "eslint": "^8.46.0",
-    "jsdom": "^22.1.0",
-    "react": "^18.3.1",
-    "typescript": "^5.4.5"
+    "@types/react": "^18.3.3",
+    "@vitejs/plugin-react": "^4.3.1",
+    "react-dom": "^18.3.1",
+    "react": "^18.3.1"
   }
 }

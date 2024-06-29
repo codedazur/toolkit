@@ -19,12 +19,12 @@ interface UseFormOptions<T extends FieldTypes> {
   onSubmit: (values: FieldValues<T>) => void | Promise<void>;
 }
 
-interface FieldOptions<V extends FieldType> {
+interface FieldOptions<V extends FieldType = FieldType> {
   validation?: Validator<V> | Validator<V>[];
   initialValue?: V;
 }
 
-export type Validator<V extends FieldType> = (
+export type Validator<V extends FieldType = FieldType> = (
   value: V | undefined,
 ) => string | null;
 
@@ -36,7 +36,7 @@ interface UseFormResult<T extends FieldTypes> {
 }
 
 export interface FieldProps<
-  V extends FieldType,
+  V extends FieldType = FieldType,
   E extends HTMLElement = HTMLInputElement | HTMLSelectElement,
 > {
   name: string;
@@ -49,8 +49,8 @@ export interface FieldProps<
 }
 
 type FieldValues<T extends FieldTypes> = { [K in keyof T]: T[K] | undefined };
-type FieldTouched<T extends FieldTypes> = { [K in keyof T]: boolean };
-type FieldErrors<T extends FieldTypes> = { [K in keyof T]: string | null };
+type FieldTouched<T extends FieldTypes> = Record<keyof T, boolean>;
+type FieldErrors<T extends FieldTypes> = Record<keyof T, string | null>;
 
 export function useForm<T extends FieldTypes>({
   fields,
@@ -63,7 +63,7 @@ export function useForm<T extends FieldTypes>({
   const [values, setValues] = useState<FieldValues<T>>(
     revalueObject(
       fields,
-      ([key, options]) => options.initialValue,
+      ([, options]) => options.initialValue,
     ) as FieldValues<T>,
   );
 

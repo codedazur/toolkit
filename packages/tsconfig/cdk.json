@@ -2,7 +2,6 @@
   "$schema": "https://json.schemastore.org/tsconfig",
   "display": "CDK",
   "extends": "./base.json",
-  "exclude": ["cdk.out"],
   "compilerOptions": {
     "target": "es2018",
     "module": "commonjs",
@@ -10,5 +9,6 @@
     "inlineSources": true,
     "inlineSourceMap": true,
     "experimentalDecorators": true
-  }
+  },
+  "exclude": ["cdk.out"]
 }

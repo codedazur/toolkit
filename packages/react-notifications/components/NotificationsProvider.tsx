@@ -1,5 +1,4 @@
 import { revalueObject, Timer } from "@codedazur/essentials";
-import { useTimerProgress } from "@codedazur/react-essentials";
 import {
   FunctionComponent,
   ReactNode,

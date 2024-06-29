@@ -3,8 +3,9 @@
   "display": "NPM Package",
   "extends": "./base.json",
   "compilerOptions": {
-    "lib": ["es2015", "dom"],
+    "lib": ["ESNext", "DOM"],
     "module": "ESNext",
     "target": "es6"
-  }
+  },
+  "exclude": ["dist"]
 }

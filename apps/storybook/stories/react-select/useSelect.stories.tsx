@@ -50,7 +50,7 @@ export default {
 } as Meta;
 
 interface Identifiable {
-  [key: string]: any;
+  [key: string]: unknown;
   id: string;
 }
 

@@ -1,4 +1,4 @@
-import { App, Background, Padding } from "@codedazur/react-components";
+import { App } from "@codedazur/react-components";
 import { Decorator } from "@storybook/react";
 import { storyTheme } from "../themes/storyTheme";
 

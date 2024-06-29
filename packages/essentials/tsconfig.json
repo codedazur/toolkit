@@ -1,5 +1,3 @@
 {
-  "extends": "@codedazur/tsconfig/npm-package.json",
-  "include": ["."],
-  "exclude": ["dist", "build", "node_modules"]
+  "extends": "@codedazur/tsconfig/npm-package.json"
 }

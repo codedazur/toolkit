@@ -5,9 +5,10 @@ import { mapObject } from "./mapObject";
  * key-value pair using a callback function and constructing a new object from
  * the resulting array of entries.
  */
-export function mutateObject<T extends Record<keyof any, any>, U>(
-  object: T,
-  callback: (entry: [keyof T, T[keyof T]]) => [keyof any, U],
-): { [K in keyof any]: U } {
-  return Object.fromEntries(mapObject(object, callback));
+export function mutateObject<
+  T extends object,
+  K extends string | number | symbol,
+  U,
+>(object: T, callback: (entry: [keyof T, T[keyof T]]) => [K, U]): Record<K, U> {
+  return Object.fromEntries(mapObject(object, callback)) as Record<K, U>;
 }

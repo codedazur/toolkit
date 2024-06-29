@@ -1,4 +1,4 @@
-import { format } from "date-fns";
+import { format, Locale } from "date-fns";
 
 export function getFormattingFn(
   outputFormat: string,

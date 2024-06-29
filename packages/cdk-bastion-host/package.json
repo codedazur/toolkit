@@ -27,12 +27,9 @@
     "constructs": ">=10"
   },
   "devDependencies": {
-    "@codedazur/eslint-config": "*",
-    "@codedazur/tsconfig": "*",
-    "@types/node": "^20.14.2",
-    "aws-cdk-lib": "^2.145.0",
+    "@types/node": "^20.14.9",
+    "aws-cdk-lib": "^2.147.2",
     "constructs": "^10.3.0",
-    "eslint": "^8.46.0",
-    "typescript": "^5.4.5"
+    "esbuild": "^0.21.5"
   }
 }

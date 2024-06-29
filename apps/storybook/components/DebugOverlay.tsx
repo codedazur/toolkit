@@ -49,12 +49,13 @@ const DebugBox = styled(Positioned).attrs<PositionedProps>({
 `;
 
 const functionTag: ScalarTag = {
+  // eslint-disable-next-line @typescript-eslint/ban-types
   identify: (value: unknown): value is Function => value instanceof Function,
   tag: "!fn",
   resolve: (string) => {
     return new Function(string);
   },
-  stringify: (item, context) => {
+  stringify: () => {
     return "Function";
   },
 };

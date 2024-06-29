@@ -1,7 +1,8 @@
 import {
+  Day,
+  Locale,
   addDays,
   addMonths,
-  Day,
   eachDayOfInterval,
   endOfMonth,
   getDay,

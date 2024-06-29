@@ -131,6 +131,12 @@ export function MediaProvider({
     [elementRef],
   );
 
+  useEffect(() => {
+    if (initialVolume) {
+      setVolume(initialVolume);
+    }
+  }, [initialVolume, setVolume]);
+
   const addTrack = useCallback(
     (track: MediaTrack) => {
       setTracks((tracks) => [...tracks, track]);
@@ -243,7 +249,7 @@ export function MediaProvider({
       element.src = typeof track === "string" ? track : track.source;
 
       if (isPlayingRef.current) {
-        void element.play();
+        element.play();
       }
     } else {
       element.pause();
@@ -258,7 +264,11 @@ export function MediaProvider({
     const element = resolveMaybeRef(elementRef);
     if (!element) return;
 
-    isPlaying ? setTimeout(() => void element.play(), 1) : element.pause();
+    if (isPlaying) {
+      setTimeout(element.play, 1);
+    } else {
+      element.pause();
+    }
   }, [elementRef, isPlaying]);
 
   const setTime = useCallback(

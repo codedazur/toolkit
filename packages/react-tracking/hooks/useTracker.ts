@@ -2,8 +2,10 @@
 
 import { useContext } from "react";
 import { TrackingContext, trackingContext } from "../contexts/trackingContext";
+import { omit } from "@codedazur/essentials";
 
 export const useTracker = (): Omit<TrackingContext, "tracker"> => {
-  const { tracker, ...rest } = useContext(trackingContext);
-  return rest;
+  const context = useContext(trackingContext);
+
+  return omit(context, ["tracker"]);
 };

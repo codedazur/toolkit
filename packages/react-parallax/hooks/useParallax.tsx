@@ -1,4 +1,4 @@
-import { Vector2 } from "@codedazur/essentials";
+import { Direction, Vector2 } from "@codedazur/essentials";
 import {
   MaybeRef,
   ScrollState,
@@ -249,13 +249,3 @@ function useWindowSize({
     };
   }, [handleResize]);
 }
-
-/**
- * @todo Release this as part of the @codedazur/essentials package.
- */
-const Direction = {
-  up: new Vector2(0, -1),
-  down: new Vector2(0, 1),
-  left: new Vector2(-1, 0),
-  right: new Vector2(1, 0),
-};
