@@ -1,5 +1,11 @@
 # @codedazur/cdk-site-distribution
 
+## 0.1.2
+
+### Patch Changes
+
+- [`d9e51b0`](https://github.com/codedazur/toolkit/commit/d9e51b0e2fb36d64c641ae341124b0fb2bd298df) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The Certificate construct is now used instead of the deprecated DnsValidatedCertificate.
+
 ## 0.1.1
 
 ### Patch Changes

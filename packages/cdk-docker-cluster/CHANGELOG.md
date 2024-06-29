@@ -1,5 +1,14 @@
 # @codedazur/cdk-docker-cluster
 
+## 0.5.1
+
+### Patch Changes
+
+- [`d9e51b0`](https://github.com/codedazur/toolkit/commit/d9e51b0e2fb36d64c641ae341124b0fb2bd298df) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - An unused certificate resource was removed.
+
+- Updated dependencies [[`d9e51b0`](https://github.com/codedazur/toolkit/commit/d9e51b0e2fb36d64c641ae341124b0fb2bd298df)]:
+  - @codedazur/cdk-site-distribution@0.1.2
+
 ## 0.5.0
 
 ### Minor Changes
