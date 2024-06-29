@@ -1,6 +1,6 @@
 {
   "name": "@codedazur/react-media",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": ".dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -27,8 +27,8 @@
     "react-dom": ">=16.8.0"
   },
   "dependencies": {
-    "@codedazur/essentials": "^1.9.0",
-    "@codedazur/react-essentials": "^1.4.1"
+    "@codedazur/essentials": "^1.9.1",
+    "@codedazur/react-essentials": "^1.4.2"
   },
   "devDependencies": {
     "@testing-library/dom": "10.2.0",
