@@ -1,5 +1,11 @@
 # @codedazur/cdk-site-distribution
 
+## 0.1.1
+
+### Patch Changes
+
+- [`640554d`](https://github.com/codedazur/toolkit/commit/640554d76addc0da87c05d416d6e2af7448d816b) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The password secret is only referenced when authentication is enabled.
+
 ## 0.1.0
 
 ### Minor Changes
