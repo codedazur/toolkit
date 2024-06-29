@@ -7,7 +7,7 @@ export class Website extends Stack {
     super(scope, id, props);
 
     new ToolkitSite(this, "Website", {
-      path: "../website/out",
+      directory: "../website/out",
       subdomain: env("WEBSITE_SUBDOMAIN"),
     });
   }

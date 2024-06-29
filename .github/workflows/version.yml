@@ -1,16 +1,12 @@
-name: Check
+name: Release
 
 on:
   workflow_call:
 
 jobs:
-  check:
-    name: Check Quality
+  version:
+    name: Version Packages
     runs-on: ubuntu-latest
-
-    concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}
-      cancel-in-progress: true
 
     steps:
       - name: Checkout Repository
@@ -20,12 +16,16 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: npm
 
       - name: Install Dependencies
         run: |
           npm config set //registry.npmjs.org/:_authToken ${{ secrets.NPM_TOKEN }}
           npm ci
 
-      - name: Check
-        run: npm run check
+      - name: Version Packages
+        uses: changesets/action@v1
+        with:
+          commit: version packages
+          publish: echo "This step is not configured for publishing."
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

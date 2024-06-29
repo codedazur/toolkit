@@ -1,0 +1,10 @@
+name: Feature
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  check:
+    uses: ./.github/workflows/check.yml
+    secrets: inherit

@@ -7,7 +7,7 @@ export class Storybook extends Stack {
     super(scope, id, props);
 
     new ToolkitSite(this, "Storybook", {
-      path: "../storybook/.storybook",
+      directory: "../storybook/.storybook",
       subdomain: env("STORYBOOK_SUBDOMAIN", "storybook"),
     });
   }

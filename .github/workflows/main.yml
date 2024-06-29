@@ -1,0 +1,25 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  check:
+    uses: ./.github/workflows/check.yml
+    secrets: inherit
+
+  version:
+    needs: check
+    uses: ./.github/workflows/version.yml
+    secrets: inherit
+
+  publish:
+    uses: ./.github/workflows/publish.yml
+    secrets: inherit
+
+  deploy:
+    needs: check
+    uses: ./.github/workflows/deploy.yml
+    secrets: inherit
