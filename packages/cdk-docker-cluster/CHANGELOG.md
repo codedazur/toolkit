@@ -1,5 +1,11 @@
 # @codedazur/cdk-docker-cluster
 
+## 0.5.2
+
+### Patch Changes
+
+- [`49582be`](https://github.com/codedazur/toolkit/commit/49582be94f1f39d57a359fb2ae69c303f0503871) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Updated dependencies.
+
 ## 0.5.1
 
 ### Patch Changes
