@@ -32,7 +32,9 @@ For a non-monorepo build, simply provide the path to the directory that contains
 
 ```ts
 new NextApp(this, "NextApp", {
-  path: "../next",
+  source: {
+    path: "../next",
+  },
 });
 ```
 
@@ -42,8 +44,10 @@ For monorepo builds, set the build context to the root of your monorepo, and pro
 
 ```ts
 new NextApp(this, "NextApp", {
-  path: "../../",
-  file: "apps/next/Dockerfile",
+  source: {
+    path: "../../",
+    file: "apps/next/Dockerfile",
+  },
 });
 ```
 
@@ -57,12 +61,14 @@ These arguments and secrets need to be handled appropriately by your Dockerfile 
 import { DockerBuildSecret } from "aws-cdk-lib";
 
 new NextApp(this, "NextApp", {
-  // ...
-  arguments: {
-    MY_BUILD_ARGUMENT: process.env.MY_BUILD_ARGUMENT,
-  },
-  secrets: {
-    myBuildSecret: new DockerBuildSecret.fromEnvironment("MY_BUILD_SECRET"),
+  source: {
+    // ...
+    arguments: {
+      MY_BUILD_ARGUMENT: process.env.MY_BUILD_ARGUMENT,
+    },
+    secrets: {
+      myBuildSecret: new DockerBuildSecret.fromEnvironment("MY_BUILD_SECRET"),
+    },
   },
 });
 ```

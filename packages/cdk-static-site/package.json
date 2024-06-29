@@ -23,7 +23,7 @@
     "test": "vitest run --passWithNoTests"
   },
   "dependencies": {
-    "@codedazur/cdk-cache-invalidator": "*"
+    "@codedazur/cdk-site-distribution": "^0.0.0"
   },
   "peerDependencies": {
     "aws-cdk-lib": ">=2",

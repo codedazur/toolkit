@@ -1,5 +1,9 @@
-import { CacheInvalidator } from "@codedazur/cdk-cache-invalidator";
-import { Distribution, OriginProtocolPolicy } from "aws-cdk-lib/aws-cloudfront";
+import {
+  SiteDistribution,
+  SiteDistributionProps,
+} from "@codedazur/cdk-site-distribution";
+import { Certificate } from "aws-cdk-lib/aws-certificatemanager";
+import { OriginProtocolPolicy } from "aws-cdk-lib/aws-cloudfront";
 import { LoadBalancerV2Origin } from "aws-cdk-lib/aws-cloudfront-origins";
 import { DockerImageAsset, Platform } from "aws-cdk-lib/aws-ecr-assets";
 import { Cluster, ContainerImage } from "aws-cdk-lib/aws-ecs";
@@ -10,10 +14,7 @@ import {
 import { Construct } from "constructs";
 
 export interface DockerClusterProps {
-  path: string;
-  file?: string;
-  arguments?: Record<string, string>;
-  secrets?: Record<string, string>;
+  source: ContainerImage | DockerBuildProps;
   port?: number;
   tasks?:
     | number
@@ -23,6 +24,14 @@ export interface DockerClusterProps {
       };
   cpu?: ApplicationLoadBalancedFargateServiceProps["cpu"];
   memory?: ApplicationLoadBalancedFargateServiceProps["memoryLimitMiB"];
+  distribution?: Omit<SiteDistributionProps, "origin">;
+}
+
+interface DockerBuildProps {
+  path: string;
+  file?: string;
+  arguments?: Record<string, string>;
+  secrets?: Record<string, string>;
 }
 
 /**
@@ -30,10 +39,31 @@ export interface DockerClusterProps {
  * built from a Dockerfile in a directory and pushed to ECR.
  */
 export class DockerCluster extends Construct {
-  constructor(scope: Construct, id: string, props: DockerClusterProps) {
+  public readonly domain?: string;
+  public readonly image: ContainerImage;
+  public readonly service: ApplicationLoadBalancedFargateService;
+  public readonly distribution: SiteDistribution;
+
+  constructor(
+    scope: Construct,
+    id: string,
+    protected readonly props: DockerClusterProps,
+  ) {
     super(scope, id);
 
-    const image = new DockerImageAsset(this, "Image", {
+    this.image =
+      this.props.source instanceof ContainerImage
+        ? this.props.source
+        : this.createImage();
+
+    this.service = this.createService();
+    this.distribution = this.createDistribution();
+  }
+
+  protected createImage() {
+    const props = this.props.source as DockerBuildProps;
+
+    const asset = new DockerImageAsset(this, "Image", {
       directory: props.path,
       file: props.file,
       exclude: ["**/cdk.out"],
@@ -42,44 +72,51 @@ export class DockerCluster extends Construct {
       platform: Platform.LINUX_AMD64,
     });
 
-    const desiredTasks =
-      typeof props.tasks === "number" ? props.tasks : props.tasks?.minimum;
+    return ContainerImage.fromDockerImageAsset(asset);
+  }
 
-    const fargate = new ApplicationLoadBalancedFargateService(this, "Service", {
+  protected createService() {
+    const desiredTasks =
+      typeof this.props.tasks === "number"
+        ? this.props.tasks
+        : this.props.tasks?.minimum;
+
+    const service = new ApplicationLoadBalancedFargateService(this, "Service", {
       cluster: new Cluster(this, "Cluster"),
-      cpu: props.cpu,
-      memoryLimitMiB: props.memory,
+      cpu: this.props.cpu,
+      memoryLimitMiB: this.props.memory,
       desiredCount: desiredTasks,
       taskImageOptions: {
         // image: ContainerImage.fromEcrRepository(image.repository, image.imageTag),
-        image: ContainerImage.fromDockerImageAsset(image),
-        containerPort: props.port,
+        image: this.image,
+        containerPort: this.props.port,
       },
       circuitBreaker: {
         enable: true,
         rollback: true,
       },
-      // @todo certificate: ...
-      // @todo publicLoadBalancer: false,
+      publicLoadBalancer: false,
+      certificate: new Certificate(this, "Certificate", {
+        domainName: "example.com",
+      }),
     });
 
-    if (typeof props.tasks === "object") {
-      fargate.service.autoScaleTaskCount({
-        minCapacity: props.tasks.minimum,
-        maxCapacity: props.tasks.maximum,
+    if (typeof this.props.tasks === "object") {
+      this.service.service.autoScaleTaskCount({
+        minCapacity: this.props.tasks.minimum,
+        maxCapacity: this.props.tasks.maximum,
       });
     }
 
-    const distribution = new Distribution(this, "Distribution", {
-      defaultBehavior: {
-        origin: new LoadBalancerV2Origin(fargate.loadBalancer, {
-          protocolPolicy: OriginProtocolPolicy.HTTP_ONLY, // @todo OriginProtocolPolicy.HTTPS_ONLY
-        }),
-      },
-    });
+    return service;
+  }
 
-    new CacheInvalidator(this, "CacheInvalidator", {
-      distribution,
+  protected createDistribution() {
+    return new SiteDistribution(this, "Distribution", {
+      ...this.props.distribution,
+      origin: new LoadBalancerV2Origin(this.service.loadBalancer, {
+        protocolPolicy: OriginProtocolPolicy.HTTP_ONLY,
+      }),
     });
   }
 }
