@@ -188,11 +188,11 @@ export class SiteDistribution extends Construct {
   }
 
   protected getAuthenticateCode() {
-    const token = this.getAuthenticationToken();
-
-    if (!token) {
+    if (!this.props.authentication) {
       return;
     }
+
+    const token = this.getAuthenticationToken();
 
     return FunctionCode.fromInline(/* js */ `
 			function authenticate(event, next) {
@@ -219,16 +219,18 @@ export class SiteDistribution extends Construct {
   protected getAuthenticationToken() {
     const password = this.getPassword();
 
-    return this.props.authentication
-      ? Buffer.from(
-          [this.props.authentication?.username, password].join(":"),
-        ).toString("base64")
-      : undefined;
+    if (!password) {
+      return undefined;
+    }
+
+    return Buffer.from(
+      [this.props.authentication?.username, password].join(":"),
+    ).toString("base64");
   }
 
   protected getPassword() {
     if (!this.props.authentication?.password) {
-      return this.passwordSecret!.secretValue.toString();
+      return this.passwordSecret?.secretValue.toString();
     }
 
     if (this.props.authentication.password instanceof Secret) {

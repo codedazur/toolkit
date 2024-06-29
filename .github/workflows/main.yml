@@ -8,6 +8,7 @@ on:
 jobs:
   check:
     uses: ./.github/workflows/check.yml
+    if: github.event.head_commit.message != 'version packages'
     secrets: inherit
 
   version:
@@ -15,11 +16,12 @@ jobs:
     uses: ./.github/workflows/version.yml
     secrets: inherit
 
-  publish:
-    uses: ./.github/workflows/publish.yml
-    secrets: inherit
-
   deploy:
     needs: check
     uses: ./.github/workflows/deploy.yml
+    secrets: inherit
+
+  publish:
+    uses: ./.github/workflows/publish.yml
+    if: github.event.head_commit.message == 'version packages'
     secrets: inherit
