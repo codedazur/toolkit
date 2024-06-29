@@ -27,7 +27,7 @@
     "constructs": ">=10"
   },
   "dependencies": {
-    "@codedazur/cdk-site-distribution": "^0.1.1"
+    "@codedazur/cdk-site-distribution": "^0.1.2"
   },
   "devDependencies": {
     "@types/node": "^20.14.9",
