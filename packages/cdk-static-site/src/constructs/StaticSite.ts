@@ -12,10 +12,12 @@ import { Secret } from "aws-cdk-lib/aws-secretsmanager";
 import { Construct } from "constructs";
 
 export interface StaticSiteProps {
-  source: {
-    directory: string;
-    exclude?: string[];
-  };
+  source:
+    | string
+    | {
+        directory: string;
+        exclude?: string[];
+      };
   bucket?: {
     accelerate?: boolean;
   };
@@ -114,9 +116,11 @@ export class StaticSite extends Construct {
   protected createDeployment() {
     return new BucketDeployment(this, "BucketDeployment", {
       sources: [
-        Source.asset(this.props.source.directory, {
-          exclude: this.props.source.exclude,
-        }),
+        typeof this.props.source === "string"
+          ? Source.asset(this.props.source)
+          : Source.asset(this.props.source.directory, {
+              exclude: this.props.source.exclude,
+            }),
       ],
       destinationBucket: this.bucket,
       destinationKeyPrefix: this.props.deployment?.prefix,

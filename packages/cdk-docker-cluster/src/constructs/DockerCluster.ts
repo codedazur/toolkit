@@ -2,11 +2,12 @@ import {
   SiteDistribution,
   SiteDistributionProps,
 } from "@codedazur/cdk-site-distribution";
+import { App, Stack } from "aws-cdk-lib";
 import { Certificate } from "aws-cdk-lib/aws-certificatemanager";
 import { OriginProtocolPolicy } from "aws-cdk-lib/aws-cloudfront";
 import { LoadBalancerV2Origin } from "aws-cdk-lib/aws-cloudfront-origins";
 import { DockerImageAsset, Platform } from "aws-cdk-lib/aws-ecr-assets";
-import { Cluster, ContainerImage } from "aws-cdk-lib/aws-ecs";
+import { AssetImageProps, Cluster, ContainerImage } from "aws-cdk-lib/aws-ecs";
 import {
   ApplicationLoadBalancedFargateService,
   ApplicationLoadBalancedFargateServiceProps,
@@ -14,7 +15,7 @@ import {
 import { Construct } from "constructs";
 
 export interface DockerClusterProps {
-  source: ContainerImage | DockerBuildProps;
+  source: string | SourceProps | ContainerImage;
   port?: number;
   tasks?:
     | number
@@ -27,8 +28,9 @@ export interface DockerClusterProps {
   distribution?: Omit<SiteDistributionProps, "origin">;
 }
 
-interface DockerBuildProps {
-  path: string;
+interface SourceProps {
+  directory: string;
+  exclude?: string[];
   file?: string;
   arguments?: Record<string, string>;
   secrets?: Record<string, string>;
@@ -54,25 +56,28 @@ export class DockerCluster extends Construct {
     this.image =
       this.props.source instanceof ContainerImage
         ? this.props.source
-        : this.createImage();
+        : this.createImage(this.props.source);
 
     this.service = this.createService();
     this.distribution = this.createDistribution();
   }
 
-  protected createImage() {
-    const props = this.props.source as DockerBuildProps;
-
-    const asset = new DockerImageAsset(this, "Image", {
-      directory: props.path,
-      file: props.file,
-      exclude: ["**/cdk.out"],
-      buildArgs: props.arguments,
-      buildSecrets: props.secrets,
+  protected createImage(source: string | SourceProps) {
+    const props: Partial<AssetImageProps> = {
+      exclude: [`**/${this.getOutputDirectory()}`],
       platform: Platform.LINUX_AMD64,
-    });
+    };
 
-    return ContainerImage.fromDockerImageAsset(asset);
+    if (typeof source === "string") {
+      return ContainerImage.fromAsset(source, props);
+    }
+
+    return ContainerImage.fromAsset(source.directory, {
+      ...props,
+      file: source.file,
+      buildArgs: source.arguments,
+      buildSecrets: source.secrets,
+    });
   }
 
   protected createService() {
@@ -87,7 +92,6 @@ export class DockerCluster extends Construct {
       memoryLimitMiB: this.props.memory,
       desiredCount: desiredTasks,
       taskImageOptions: {
-        // image: ContainerImage.fromEcrRepository(image.repository, image.imageTag),
         image: this.image,
         containerPort: this.props.port,
       },
@@ -118,5 +122,9 @@ export class DockerCluster extends Construct {
         protocolPolicy: OriginProtocolPolicy.HTTP_ONLY,
       }),
     });
+  }
+
+  protected getOutputDirectory() {
+    return App.of(this)?.outdir ?? "cdk.out";
   }
 }

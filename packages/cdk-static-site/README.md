@@ -6,8 +6,19 @@ The minimum needed to get a `StaticSite` up and running is to provide the path t
 
 ```ts
 new StaticSite({
+  source: "./path/to/build/output",
+});
+```
+
+### With Excludes
+
+If your output directory contains files you don't want to include in the deployment, you can exclude those with glob patterns.
+
+```ts
+new StaticSite({
   source: {
     directory: "./path/to/build/output",
+    excludes: ["foo/*"],
   },
 });
 ```

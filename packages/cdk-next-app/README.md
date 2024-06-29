@@ -22,7 +22,7 @@ const nextConfig = {
 
 ### Docker
 
-In order to use this construct, your Next.js application needs to be configure for Docker deployments. See the [official documentation](https://nextjs.org/docs/pages/building-your-application/deploying#docker-image) for more information.
+In order to use this construct, your Next.js application needs to be configured for Docker deployments. See the [official documentation](https://nextjs.org/docs/pages/building-your-application/deploying#docker-image) for more information.
 
 ## Example
 
@@ -32,9 +32,7 @@ For a non-monorepo build, simply provide the path to the directory that contains
 
 ```ts
 new NextApp(this, "NextApp", {
-  source: {
-    path: "../next",
-  },
+  source: "../next",
 });
 ```
 
@@ -45,7 +43,7 @@ For monorepo builds, set the build context to the root of your monorepo, and pro
 ```ts
 new NextApp(this, "NextApp", {
   source: {
-    path: "../../",
+    directory: "../../",
     file: "apps/next/Dockerfile",
   },
 });
@@ -89,8 +87,6 @@ new NextApp(this, "NextApp", {
 ```ts
 new NextApp(this, "NextApp", {
   // ...
-  cpu: 1024,
-  memory: 4096,
   tasks: {
     minimum: 1,
     maximum: 5,
