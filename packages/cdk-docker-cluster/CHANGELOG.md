@@ -1,5 +1,11 @@
 # @codedazur/cdk-docker-cluster
 
+## 0.6.0
+
+### Minor Changes
+
+- [`4bbe16d`](https://github.com/codedazur/toolkit/commit/4bbe16ddf6880fa33649d70f45144e8c7d7c82de) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Container environment and secrets are now supported.
+
 ## 0.5.2
 
 ### Patch Changes
