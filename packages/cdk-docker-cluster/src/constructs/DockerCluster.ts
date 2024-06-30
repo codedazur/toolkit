@@ -6,7 +6,12 @@ import { App } from "aws-cdk-lib";
 import { OriginProtocolPolicy } from "aws-cdk-lib/aws-cloudfront";
 import { LoadBalancerV2Origin } from "aws-cdk-lib/aws-cloudfront-origins";
 import { Platform } from "aws-cdk-lib/aws-ecr-assets";
-import { AssetImageProps, Cluster, ContainerImage } from "aws-cdk-lib/aws-ecs";
+import {
+  AssetImageProps,
+  Cluster,
+  ContainerImage,
+  Secret,
+} from "aws-cdk-lib/aws-ecs";
 import {
   ApplicationLoadBalancedFargateService,
   ApplicationLoadBalancedFargateServiceProps,
@@ -15,15 +20,19 @@ import { Construct } from "constructs";
 
 export interface DockerClusterProps {
   source: string | SourceProps | ContainerImage;
-  port?: number;
-  tasks?:
-    | number
-    | {
-        minimum: number;
-        maximum: number;
-      };
-  cpu?: ApplicationLoadBalancedFargateServiceProps["cpu"];
-  memory?: ApplicationLoadBalancedFargateServiceProps["memoryLimitMiB"];
+  service?: {
+    port?: number;
+    tasks?:
+      | number
+      | {
+          minimum: number;
+          maximum: number;
+        };
+    cpu?: ApplicationLoadBalancedFargateServiceProps["cpu"];
+    memory?: ApplicationLoadBalancedFargateServiceProps["memoryLimitMiB"];
+    environment?: Record<string, string>;
+    secrets?: Record<string, Secret>;
+  };
   distribution?: Omit<SiteDistributionProps, "origin">;
 }
 
@@ -81,18 +90,20 @@ export class DockerCluster extends Construct {
 
   protected createService() {
     const desiredTasks =
-      typeof this.props.tasks === "number"
-        ? this.props.tasks
-        : this.props.tasks?.minimum;
+      typeof this.props.service?.tasks === "number"
+        ? this.props.service?.tasks
+        : this.props.service?.tasks?.minimum;
 
     const service = new ApplicationLoadBalancedFargateService(this, "Service", {
       cluster: new Cluster(this, "Cluster"),
-      cpu: this.props.cpu,
-      memoryLimitMiB: this.props.memory,
+      cpu: this.props.service?.cpu,
+      memoryLimitMiB: this.props.service?.memory,
       desiredCount: desiredTasks,
       taskImageOptions: {
         image: this.image,
-        containerPort: this.props.port,
+        containerPort: this.props.service?.port,
+        environment: this.props.service?.environment,
+        secrets: this.props.service?.secrets,
       },
       circuitBreaker: {
         enable: true,
@@ -101,10 +112,10 @@ export class DockerCluster extends Construct {
       publicLoadBalancer: false,
     });
 
-    if (typeof this.props.tasks === "object") {
+    if (typeof this.props.service?.tasks === "object") {
       this.service.service.autoScaleTaskCount({
-        minCapacity: this.props.tasks.minimum,
-        maxCapacity: this.props.tasks.maximum,
+        minCapacity: this.props.service?.tasks.minimum,
+        maxCapacity: this.props.service?.tasks.maximum,
       });
     }
 

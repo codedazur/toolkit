@@ -9,7 +9,9 @@ The minimum needed to get a DockerCluster up and running is a path to the source
 ```ts
 new DockerCluster(this, "DockerCluster", {
   source: "../path/to/source",
-  port: 3000,
+  service: {
+    port: 3000,
+  },
 });
 ```
 
@@ -94,9 +96,12 @@ The `DockerCluster` construct supports both vertical and horizontal scaling.
 ```ts
 new DockerCluster(this, "DockerCluster", {
   // ...
-  cpu: 1024, // 1vCPU
-  memory: 4096, // 4GB
-  tasks: 3,
+  service: {
+    // ...
+    cpu: 1024, // 1vCPU
+    memory: 4096, // 4GB
+    tasks: 3,
+  },
 });
 ```
 
@@ -105,9 +110,12 @@ Horizontal auto-scaling is also supported.
 ```ts
 new DockerCluster(this, "DockerCluster", {
   // ...
-  tasks: {
-    minimum: 1,
-    maximum: 5,
+  service: {
+    // ...
+    tasks: {
+      minimum: 1,
+      maximum: 5,
+    },
   },
 });
 ```

@@ -78,18 +78,23 @@ The NextApp is based on the [DockerCluster](https://github.com/codedazur/toolkit
 ```ts
 new NextApp(this, "NextApp", {
   // ...
-  cpu: 1024,
-  memory: 4096,
-  tasks: 3,
+  service: {
+    cpu: 1024,
+    memory: 4096,
+    tasks: 3,
+  },
 });
 ```
 
 ```ts
 new NextApp(this, "NextApp", {
   // ...
-  tasks: {
-    minimum: 1,
-    maximum: 5,
+  service: {
+    // ...
+    tasks: {
+      minimum: 1,
+      maximum: 5,
+    },
   },
 });
 ```

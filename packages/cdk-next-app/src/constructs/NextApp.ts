@@ -19,11 +19,18 @@ export class NextApp extends DockerCluster {
   constructor(
     scope: Construct,
     id: string,
-    { port = 3000, source, ...props }: NextAppProps,
+    {
+      source,
+      service: { port = 3000, ...service } = {},
+      ...props
+    }: NextAppProps,
   ) {
     super(scope, id, {
-      port,
       source: NextApp.withNpmSecret(source),
+      service: {
+        port,
+        ...service,
+      },
       ...props,
     });
   }
