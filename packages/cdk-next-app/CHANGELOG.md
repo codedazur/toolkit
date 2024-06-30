@@ -1,5 +1,14 @@
 # @codedazur/cdk-next-app
 
+## 0.2.5
+
+### Patch Changes
+
+- [`4bbe16d`](https://github.com/codedazur/toolkit/commit/4bbe16ddf6880fa33649d70f45144e8c7d7c82de) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Props were updated to match DockerCluster.
+
+- Updated dependencies [[`4bbe16d`](https://github.com/codedazur/toolkit/commit/4bbe16ddf6880fa33649d70f45144e8c7d7c82de)]:
+  - @codedazur/cdk-docker-cluster@0.6.0
+
 ## 0.2.4
 
 ### Patch Changes
