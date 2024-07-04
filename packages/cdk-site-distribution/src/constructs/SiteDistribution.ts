@@ -79,7 +79,7 @@ export class SiteDistribution extends Construct {
     this.distribution = this.createDistribution();
     this.alias = this.createAlias();
 
-    if (!(props.invalidateCache ?? true)) {
+    if (props.invalidateCache ?? true) {
       this.cacheInvalidator = this.createCacheInvalidator();
     }
   }
