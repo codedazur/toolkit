@@ -109,7 +109,6 @@ export class DockerCluster extends Construct {
         enable: true,
         rollback: true,
       },
-      publicLoadBalancer: false,
     });
 
     if (typeof this.props.service?.tasks === "object") {
