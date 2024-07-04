@@ -10,7 +10,6 @@ import {
   Distribution,
   FunctionCode,
   FunctionEventType,
-  FunctionRuntime,
   IOrigin,
   PriceClass,
   ViewerProtocolPolicy,
@@ -152,7 +151,6 @@ export class SiteDistribution extends Construct {
 
     return new CloudFrontFunction(this, "ViewerRequestFunction", {
       code: this.getHandlerChainCode(handlers, "request"),
-      runtime: FunctionRuntime.JS_2_0,
     });
   }
 
@@ -168,7 +166,6 @@ export class SiteDistribution extends Construct {
 
     return new CloudFrontFunction(this, "ViewerResponseFunction", {
       code: this.getHandlerChainCode(handlers, "response"),
-      runtime: FunctionRuntime.JS_2_0,
     });
   }
 
