@@ -1,5 +1,12 @@
 # @codedazur/cdk-static-site
 
+## 2.0.3
+
+### Patch Changes
+
+- Updated dependencies [[`58b894d`](https://github.com/codedazur/toolkit/commit/58b894d62bfd01f852233a95b75ffa538a5bc7f1)]:
+  - @codedazur/cdk-site-distribution@0.1.4
+
 ## 2.0.2
 
 ### Patch Changes
