@@ -1,5 +1,11 @@
 # @codedazur/cdk-site-distribution
 
+## 0.1.3
+
+### Patch Changes
+
+- [`0034613`](https://github.com/codedazur/toolkit/commit/0034613fbf086d5e634a9a09d4273025b9a647aa) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The CloudFront function runtime was downgraded to avoid rate limiting during deployment.
+
 ## 0.1.2
 
 ### Patch Changes
