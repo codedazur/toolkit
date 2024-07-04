@@ -1,5 +1,14 @@
 # @codedazur/cdk-docker-cluster
 
+## 0.6.2
+
+### Patch Changes
+
+- [`0f0bad2`](https://github.com/codedazur/toolkit/commit/0f0bad20fec5c212979b24f1c67d7cbf5427c016) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The load blancer is now internet-facing.
+
+- Updated dependencies [[`58b894d`](https://github.com/codedazur/toolkit/commit/58b894d62bfd01f852233a95b75ffa538a5bc7f1)]:
+  - @codedazur/cdk-site-distribution@0.1.4
+
 ## 0.6.1
 
 ### Patch Changes

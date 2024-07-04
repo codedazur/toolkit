@@ -1,5 +1,11 @@
 # @codedazur/cdk-site-distribution
 
+## 0.1.4
+
+### Patch Changes
+
+- [`58b894d`](https://github.com/codedazur/toolkit/commit/58b894d62bfd01f852233a95b75ffa538a5bc7f1) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Cache invalidation is now triggered correctly.
+
 ## 0.1.3
 
 ### Patch Changes
