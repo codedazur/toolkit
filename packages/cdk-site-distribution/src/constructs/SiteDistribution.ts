@@ -132,9 +132,21 @@ export class SiteDistribution extends Construct {
   }
 
   protected createFunctions() {
+    const viewerRequest = this.createViewerRequestFunction();
+    const viewerResponse = this.createViewerResponseFunction();
+
+    /**
+     * Although the response function doesn't actually depend on the request
+     * function, we define a dependency to avoid a service rate limit that may
+     * occur when both are created simultaneously.
+     */
+    if (viewerRequest && viewerResponse) {
+      viewerResponse.node.addDependency(viewerRequest);
+    }
+
     return {
-      viewerRequest: this.createViewerRequestFunction(),
-      viewerResponse: this.createViewerResponseFunction(),
+      viewerRequest,
+      viewerResponse,
     };
   }
 

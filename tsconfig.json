@@ -1,0 +1,3 @@
+{
+  "extends": "@codedazur/tsconfig/base.json"
+}
