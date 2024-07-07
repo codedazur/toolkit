@@ -1,5 +1,11 @@
 # @codedazur/cdk-site-distribution
 
+## 0.1.6
+
+### Patch Changes
+
+- [`fdbd655`](https://github.com/codedazur/toolkit/commit/fdbd65536edc88074817e9256f99f30a5e1c3680) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The appendSlash function was moved from the SiteDistribution to the StaticSite construct.
+
 ## 0.1.5
 
 ### Patch Changes
