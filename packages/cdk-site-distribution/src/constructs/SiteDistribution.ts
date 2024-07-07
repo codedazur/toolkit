@@ -153,7 +153,6 @@ export class SiteDistribution extends Construct {
   protected createViewerRequestFunction() {
     const handlers = [
       this.getAuthenticateCode(),
-      this.getAppendSlashCode(),
       ...(this.props.functions?.viewerRequest ?? []),
     ].filter((handler): handler is FunctionCode => !!handler);
 
@@ -254,21 +253,6 @@ export class SiteDistribution extends Construct {
     }
 
     return this.props.authentication.password;
-  }
-
-  protected getAppendSlashCode() {
-    return FunctionCode.fromInline(/* js */ `
-			function appendSlash(event, next) {
-				if (
-					!event.request.uri.endsWith("/") &&
-					!event.request.uri.includes(".")
-				) {
-					event.request.uri += "/";
-				}
-
-				return next(event);
-			}
-		`);
   }
 
   /**

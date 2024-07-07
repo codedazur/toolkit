@@ -3,7 +3,7 @@ import {
   SiteDistributionProps,
 } from "@codedazur/cdk-site-distribution";
 import { CfnOutput, RemovalPolicy } from "aws-cdk-lib";
-import { OriginProtocolPolicy } from "aws-cdk-lib/aws-cloudfront";
+import { FunctionCode, OriginProtocolPolicy } from "aws-cdk-lib/aws-cloudfront";
 import { HttpOrigin } from "aws-cdk-lib/aws-cloudfront-origins";
 import { AnyPrincipal, Effect, PolicyStatement } from "aws-cdk-lib/aws-iam";
 import { BlockPublicAccess, Bucket } from "aws-cdk-lib/aws-s3";
@@ -110,7 +110,29 @@ export class StaticSite extends Construct {
           Referer: this.refererSecret.secretValue.toString(),
         },
       }),
+      functions: {
+        viewerRequest: [
+          this.getAppendSlashCode(),
+          ...(this.props.distribution?.functions?.viewerRequest ?? []),
+        ],
+        ...this.props.distribution?.functions,
+      },
     });
+  }
+
+  protected getAppendSlashCode() {
+    return FunctionCode.fromInline(/* js */ `
+			function appendSlash(event, next) {
+				if (
+					!event.request.uri.endsWith("/") &&
+					!event.request.uri.includes(".")
+				) {
+					event.request.uri += "/";
+				}
+
+				return next(event);
+			}
+		`);
   }
 
   protected createDeployment() {
