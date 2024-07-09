@@ -1,5 +1,13 @@
 # @codedazur/react-notifications
 
+## 0.1.5
+
+### Patch Changes
+
+- [`f87c1c0`](https://github.com/codedazur/toolkit/commit/f87c1c01961d7ad95c7d3811cb59878a7ec27bf5) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The NotificationsProviderProps are now exported.
+
+- [`539c487`](https://github.com/codedazur/toolkit/commit/539c487160c2b2a95699a250822d846f3b8c9ca3) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The provider is now marked as a client component.
+
 ## 0.1.4
 
 ### Patch Changes
