@@ -1,5 +1,11 @@
 # @codedazur/react-audio
 
+## 1.0.2
+
+### Patch Changes
+
+- [`539c487`](https://github.com/codedazur/toolkit/commit/539c487160c2b2a95699a250822d846f3b8c9ca3) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The provider is now marked as a client component.
+
 ## 1.0.1
 
 ### Patch Changes
