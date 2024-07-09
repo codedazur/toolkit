@@ -1,3 +1,5 @@
+"use client";
+
 import { modulo, shuffle as shuffleArray } from "@codedazur/essentials";
 import {
   MaybeRef,

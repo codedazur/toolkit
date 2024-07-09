@@ -1,3 +1,5 @@
+"use client";
+
 import { revalueObject, Timer } from "@codedazur/essentials";
 import {
   FunctionComponent,
