@@ -34,7 +34,7 @@ interface ClearAction {
 
 type Actions = AddAction | RemoveAction | ClearAction;
 
-interface NotificationsProviderProps {
+export interface NotificationsProviderProps {
   autoDismiss?: MaybeGrouped<AutoDismiss>;
   limit?: MaybeGrouped<Limit>;
   children?: ReactNode;
