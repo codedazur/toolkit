@@ -1,5 +1,16 @@
 # @codedazur/cdk-docker-cluster
 
+## 0.7.0
+
+### Minor Changes
+
+- [`4f8716c`](https://github.com/codedazur/toolkit/commit/4f8716c534265493e708ede8239bd47d38ff83a4) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The cache policy now defaults to the recommended policy for an Application Load Balancer origin.
+
+### Patch Changes
+
+- Updated dependencies [[`4f8716c`](https://github.com/codedazur/toolkit/commit/4f8716c534265493e708ede8239bd47d38ff83a4), [`4f8716c`](https://github.com/codedazur/toolkit/commit/4f8716c534265493e708ede8239bd47d38ff83a4)]:
+  - @codedazur/cdk-site-distribution@0.2.0
+
 ## 0.6.4
 
 ### Patch Changes

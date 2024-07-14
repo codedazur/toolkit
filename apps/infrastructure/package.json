@@ -15,7 +15,7 @@
   "dependencies": {
     "@apps/storybook": "*",
     "@apps/website": "*",
-    "@codedazur/cdk-static-site": "^2.0.5",
+    "@codedazur/cdk-static-site": "^2.0.6",
     "@codedazur/essentials": "^1.9.1",
     "aws-cdk-lib": "^2.147.2",
     "constructs": "^10.3.0"

@@ -1,5 +1,15 @@
 # @codedazur/cdk-site-distribution
 
+## 0.2.0
+
+### Minor Changes
+
+- [`4f8716c`](https://github.com/codedazur/toolkit/commit/4f8716c534265493e708ede8239bd47d38ff83a4) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Custom cache policies are now supported.
+
+### Patch Changes
+
+- [`4f8716c`](https://github.com/codedazur/toolkit/commit/4f8716c534265493e708ede8239bd47d38ff83a4) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Cross origin embedding is now allwed by default.
+
 ## 0.1.6
 
 ### Patch Changes
