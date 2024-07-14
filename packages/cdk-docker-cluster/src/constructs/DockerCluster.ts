@@ -3,7 +3,7 @@ import {
   SiteDistributionProps,
 } from "@codedazur/cdk-site-distribution";
 import { App } from "aws-cdk-lib";
-import { OriginProtocolPolicy } from "aws-cdk-lib/aws-cloudfront";
+import { CachePolicy, OriginProtocolPolicy } from "aws-cdk-lib/aws-cloudfront";
 import { LoadBalancerV2Origin } from "aws-cdk-lib/aws-cloudfront-origins";
 import { Platform } from "aws-cdk-lib/aws-ecr-assets";
 import {
@@ -122,11 +122,24 @@ export class DockerCluster extends Construct {
   }
 
   protected createDistribution() {
+    /**
+     * This retrieves the managed "UseOriginCacheControlHeaders-QueryStrings"
+     * cache policy, which is designed for use with an origin that sends
+     * Cache-Control headers with the object and includes query strings in the
+     * cache key.
+     */
+    const cachePolicy = CachePolicy.fromCachePolicyId(
+      this,
+      "CachePolicy",
+      "4cc15a8a-d715-48a4-82b8-cc0b614638fe",
+    );
+
     return new SiteDistribution(this, "Distribution", {
       ...this.props.distribution,
       origin: new LoadBalancerV2Origin(this.service.loadBalancer, {
         protocolPolicy: OriginProtocolPolicy.HTTP_ONLY,
       }),
+      cachePolicy,
     });
   }
 

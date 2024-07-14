@@ -10,6 +10,7 @@ import {
   Distribution,
   FunctionCode,
   FunctionEventType,
+  ICachePolicy,
   IOrigin,
   PriceClass,
   ViewerProtocolPolicy,
@@ -40,6 +41,7 @@ export interface SiteDistributionProps {
     subdomain?: string;
     zone?: IHostedZone;
   };
+  cachePolicy?: ICachePolicy;
   invalidateCache?: boolean | string[];
 }
 
@@ -258,6 +260,7 @@ export class SiteDistribution extends Construct {
   /**
    * @todo Make these headers configurable.
    * @todo Research CSP and define a good default.
+   * @todo Enable customizable X-Frame-Options.
    */
   protected getSecurityHeadersCode() {
     return FunctionCode.fromInline(/* js */ `
@@ -275,9 +278,9 @@ export class SiteDistribution extends Construct {
           value: "nosniff",
         };
 
-        event.response.headers["x-frame-options"] = {
-          value: "SAMEORIGIN",
-        };
+        // event.response.headers["x-frame-options"] = {
+        //   value: "SAMEORIGIN",
+        // };
 
         return next(event);
 			}
@@ -310,6 +313,7 @@ export class SiteDistribution extends Construct {
               ]
             : []),
         ],
+        cachePolicy: this.props.cachePolicy,
       },
     });
 
