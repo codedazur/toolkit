@@ -1,0 +1,38 @@
+{
+  "name": "@codedazur/cdk-sanity-site",
+  "version": "0.0.0",
+  "main": ".dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT",
+  "scripts": {
+    "develop": "tsup src/index.ts --format esm,cjs --dts --watch",
+    "build": "tsup src/index.ts --format esm,cjs --dts",
+    "audit": "npm audit --omit dev",
+    "lint": "TIMING=1 eslint \"**/*.ts*\"",
+    "types": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests"
+  },
+  "peerDependencies": {
+    "aws-cdk-lib": ">=2",
+    "constructs": ">=10"
+  },
+  "dependencies": {
+    "@codedazur/cdk-static-site": "^2.0.5"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.9",
+    "aws-cdk-lib": "^2.147.2",
+    "constructs": "^10.3.0",
+    "esbuild": "^0.21.5"
+  }
+}
