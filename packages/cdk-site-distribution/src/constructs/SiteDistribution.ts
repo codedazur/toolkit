@@ -6,6 +6,7 @@ import {
   ICertificate,
 } from "aws-cdk-lib/aws-certificatemanager";
 import {
+  AllowedMethods,
   Function as CloudFrontFunction,
   Distribution,
   FunctionCode,
@@ -42,6 +43,7 @@ export interface SiteDistributionProps {
     subdomain?: string;
     zone?: IHostedZone;
   };
+  allowedMethods?: AllowedMethods;
   cachePolicy?: ICachePolicy;
   originRequestPolicy?: IOriginRequestPolicy;
   invalidateCache?: boolean | string[];
@@ -296,6 +298,7 @@ export class SiteDistribution extends Construct {
       domainNames: this.domain ? [this.domain] : undefined,
       defaultBehavior: {
         origin: this.props.origin,
+        allowedMethods: this.props.allowedMethods,
         originRequestPolicy: this.props.originRequestPolicy,
         viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
         functionAssociations: [
