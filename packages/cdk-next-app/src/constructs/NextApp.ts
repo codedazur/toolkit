@@ -14,6 +14,9 @@ export interface NextAppProps extends DockerClusterProps {}
 /**
  * A docker cluster preconfigured for running a Next.js application with support
  * for private NPM packages using a build-time secret.
+ *
+ * @todo Add specific distribution behaviors for the various Next.js features.
+ * @see https://bitbucket.org/codedazur/cdk-constructs/src/v5.14.0/src/NextSite/NextSite.ts
  */
 export class NextApp extends DockerCluster {
   constructor(

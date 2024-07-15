@@ -4,6 +4,7 @@ import {
 } from "@codedazur/cdk-site-distribution";
 import { App } from "aws-cdk-lib";
 import {
+  AllowedMethods,
   CachePolicy,
   OriginProtocolPolicy,
   OriginRequestPolicy,
@@ -156,6 +157,7 @@ export class DockerCluster extends Construct {
       origin: new LoadBalancerV2Origin(this.service.loadBalancer, {
         protocolPolicy: OriginProtocolPolicy.HTTP_ONLY,
       }),
+      allowedMethods: AllowedMethods.ALLOW_ALL,
       cachePolicy,
       originRequestPolicy,
     });
