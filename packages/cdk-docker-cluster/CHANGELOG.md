@@ -1,5 +1,16 @@
 # @codedazur/cdk-docker-cluster
 
+## 0.9.0
+
+### Minor Changes
+
+- [`c8d5f0b`](https://github.com/codedazur/toolkit/commit/c8d5f0b86cb3eb1677d51a4531e8bcc948f8ea4b) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - All HTTP methods are now allowed by default.
+
+### Patch Changes
+
+- Updated dependencies [[`7d709c8`](https://github.com/codedazur/toolkit/commit/7d709c8be6ea8b0573443e9cc138d7b909412a30)]:
+  - @codedazur/cdk-site-distribution@0.4.0
+
 ## 0.8.0
 
 ### Minor Changes
