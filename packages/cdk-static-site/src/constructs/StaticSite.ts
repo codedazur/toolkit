@@ -3,7 +3,11 @@ import {
   SiteDistributionProps,
 } from "@codedazur/cdk-site-distribution";
 import { CfnOutput, RemovalPolicy } from "aws-cdk-lib";
-import { FunctionCode, OriginProtocolPolicy } from "aws-cdk-lib/aws-cloudfront";
+import {
+  FunctionCode,
+  OriginProtocolPolicy,
+  OriginRequestPolicy,
+} from "aws-cdk-lib/aws-cloudfront";
 import { HttpOrigin } from "aws-cdk-lib/aws-cloudfront-origins";
 import { AnyPrincipal, Effect, PolicyStatement } from "aws-cdk-lib/aws-iam";
 import { BlockPublicAccess, Bucket } from "aws-cdk-lib/aws-s3";
@@ -110,6 +114,7 @@ export class StaticSite extends Construct {
           Referer: this.refererSecret.secretValue.toString(),
         },
       }),
+      originRequestPolicy: OriginRequestPolicy.CORS_S3_ORIGIN,
       functions: {
         viewerRequest: [
           this.getAppendSlashCode(),

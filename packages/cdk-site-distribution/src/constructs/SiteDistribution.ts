@@ -12,6 +12,7 @@ import {
   FunctionEventType,
   ICachePolicy,
   IOrigin,
+  IOriginRequestPolicy,
   PriceClass,
   ViewerProtocolPolicy,
 } from "aws-cdk-lib/aws-cloudfront";
@@ -42,6 +43,7 @@ export interface SiteDistributionProps {
     zone?: IHostedZone;
   };
   cachePolicy?: ICachePolicy;
+  originRequestPolicy?: IOriginRequestPolicy;
   invalidateCache?: boolean | string[];
 }
 
@@ -294,6 +296,7 @@ export class SiteDistribution extends Construct {
       domainNames: this.domain ? [this.domain] : undefined,
       defaultBehavior: {
         origin: this.props.origin,
+        originRequestPolicy: this.props.originRequestPolicy,
         viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
         functionAssociations: [
           ...(this.functions.viewerRequest
