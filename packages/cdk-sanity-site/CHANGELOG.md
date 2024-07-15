@@ -1,5 +1,11 @@
 # @codedazur/cdk-sanity-site
 
+## 0.1.2
+
+### Patch Changes
+
+- [`581ed2f`](https://github.com/codedazur/toolkit/commit/581ed2fdd4dee53c4c6984ce87b862302366d04f) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The rewrite function's static pattern has been corrected.
+
 ## 0.1.1
 
 ### Patch Changes
