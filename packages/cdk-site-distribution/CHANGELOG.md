@@ -1,5 +1,11 @@
 # @codedazur/cdk-site-distribution
 
+## 0.3.0
+
+### Minor Changes
+
+- [`d557d82`](https://github.com/codedazur/toolkit/commit/d557d822ffe8e42b0907f1d4e1a2b243f3430674) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - It is now supported to provide a custom origin request policy.
+
 ## 0.2.0
 
 ### Minor Changes
