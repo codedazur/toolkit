@@ -1,3 +1,5 @@
+/* eslint-disable no-useless-escape */
+
 import { StaticSite, StaticSiteProps } from "@codedazur/cdk-static-site";
 import { FunctionCode } from "aws-cdk-lib/aws-cloudfront";
 import { Construct } from "constructs";
@@ -16,7 +18,9 @@ export class SanitySite extends StaticSite {
             ...(props.distribution?.functions?.viewerRequest ?? []),
             FunctionCode.fromInline(/* js */ `
               function rewriteToIndex(event, next) {
-                if (!event.request.uri.match(/.*.[^?]*$/)) {
+                const isStatic = /^\/static\//.test(event.request.uri);
+                
+                if (!isStatic) {
                   event.request.uri = "/index.html";
                 }
 
