@@ -1,5 +1,16 @@
 # @codedazur/cdk-docker-cluster
 
+## 0.8.0
+
+### Minor Changes
+
+- [`d557d82`](https://github.com/codedazur/toolkit/commit/d557d822ffe8e42b0907f1d4e1a2b243f3430674) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The AllViewer origin request policy is now used by default.
+
+### Patch Changes
+
+- Updated dependencies [[`d557d82`](https://github.com/codedazur/toolkit/commit/d557d822ffe8e42b0907f1d4e1a2b243f3430674)]:
+  - @codedazur/cdk-site-distribution@0.3.0
+
 ## 0.7.0
 
 ### Minor Changes
