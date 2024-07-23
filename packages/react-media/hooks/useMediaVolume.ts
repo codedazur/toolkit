@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useMedia } from "./useMedia";
 
 export const useMediaVolume = () => {
-  const { element, setVolume, isMuted, setIsMuted, mute, unmute } = useMedia();
+  const { element, setVolume, isMuted, mute, unmute } = useMedia();
 
   const [volume, _setVolume] = useState<number>(element ? element.volume : 1);
 
@@ -22,7 +22,6 @@ export const useMediaVolume = () => {
     volume,
     setVolume,
     isMuted,
-    setIsMuted,
     mute,
     unmute,
   };

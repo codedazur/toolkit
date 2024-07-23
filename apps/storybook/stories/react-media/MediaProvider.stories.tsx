@@ -104,6 +104,16 @@ const StopButton = () => {
   );
 };
 
+export const WithAutoPlay: StoryObj = {
+  render: () => (
+    <MediaProvider tracks={[meteorites]} autoPlay>
+      <StateControls />
+      <TrackAttributionOverlay />
+      <MediaDebugOverlay isPlaying />
+    </MediaProvider>
+  ),
+};
+
 export const WithVolumeControls = () => (
   <MediaProvider tracks={[meteorites]}>
     <Row gap="1rem">
@@ -478,9 +488,39 @@ export const WithVideo = () => {
 
   return (
     <MediaProvider tracks={[bigBuckBunny]} element={videoRef}>
-      <video ref={videoRef} controls />
+      <Column gap="5rem" align="center">
+        <video ref={videoRef} width="540" />
+        <Column gap="1rem" align="center">
+          <Row gap="1rem">
+            <StateControls />
+            <VolumeControls />
+          </Row>
+          <SeekControls />
+        </Column>
+      </Column>
       <TrackAttributionOverlay />
-      <MediaDebugOverlay tracks cursor isPlaying isMuted volume time duration />
+      <MediaDebugOverlay isPlaying isMuted volume time duration />
+    </MediaProvider>
+  );
+};
+
+export const WithAutoPlayingVideo = () => {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  return (
+    <MediaProvider tracks={[bigBuckBunny]} element={videoRef} autoPlay>
+      <Column gap="5rem" align="center">
+        <video ref={videoRef} width="540" muted />
+        <Column gap="1rem" align="center">
+          <Row gap="1rem">
+            <StateControls />
+            <VolumeControls />
+          </Row>
+          <SeekControls />
+        </Column>
+      </Column>
+      <TrackAttributionOverlay />
+      <MediaDebugOverlay isPlaying isMuted volume time duration />
     </MediaProvider>
   );
 };

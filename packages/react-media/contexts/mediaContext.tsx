@@ -24,8 +24,6 @@ export interface MediaContext<T extends MediaTrack = MediaTrack> {
   previous: () => void;
   canPlayNext: boolean;
   next: () => void;
-  autoPlay: boolean;
-  setAutoPlay: (autoPlay: boolean) => void;
   shuffle: boolean;
   setShuffle: (shuffle: boolean) => void;
   toggleShuffle: () => void;
@@ -64,8 +62,6 @@ export const mediaContext = createContext<MediaContext>({
   previous: error,
   canPlayNext: false,
   next: error,
-  autoPlay: false,
-  setAutoPlay: error,
   shuffle: false,
   setShuffle: error,
   toggleShuffle: error,

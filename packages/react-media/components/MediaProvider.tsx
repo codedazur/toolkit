@@ -25,6 +25,7 @@ interface MediaProviderProps {
   cursor?: number;
   volume?: number;
   autoPlay?: boolean;
+  autoAdvance?: boolean;
   repeat?: boolean;
   shuffle?: boolean;
   children?: ReactNode;
@@ -35,7 +36,8 @@ export function MediaProvider({
   tracks: initialTracks = [],
   cursor: initialCursor = 0,
   volume: initialVolume,
-  autoPlay: initialAutoPlay = true,
+  autoPlay = false,
+  autoAdvance = true,
   repeat: initialRepeat = false,
   shuffle: initialShuffle = false,
   children,
@@ -62,70 +64,77 @@ export function MediaProvider({
 
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const isPlayingRef = useSynchronizedRef(isPlaying);
-  const [autoPlay, setAutoPlay] = useState<boolean>(initialAutoPlay);
   const [shuffle, setShuffle] = useState<boolean>(initialShuffle);
   const [repeat, setRepeat] = useState<boolean>(initialRepeat);
   const repeatRef = useSynchronizedRef(repeat);
-  const [duration, _setDuration] = useState(0);
-  const [isMuted, _setIsMuted] = useState(false);
+  const [duration, setDuration] = useState(0);
+  const [isMuted, setIsMuted] = useState(false);
 
-  const play = useCallback(() => {
-    setIsPlaying(true);
-  }, [setIsPlaying]);
-
-  const pause = useCallback(() => {
-    setIsPlaying(false);
-  }, [setIsPlaying]);
-
-  const stop = useCallback(() => {
-    pause();
-
-    const element = resolveMaybeRef(elementRef);
-
-    if (element) {
-      element.currentTime = 0;
-    }
-  }, [pause, elementRef]);
-
-  const setIsMuted = useCallback(
-    (muted: boolean) => {
+  const setTime = useCallback(
+    (time: number) => {
       const element = resolveMaybeRef(elementRef);
-
       if (!element) return;
 
-      element.muted = muted;
+      element.currentTime = time;
     },
     [elementRef],
   );
 
+  const setProgress = useCallback(
+    (progress: number) => {
+      setTime(progress * duration);
+    },
+    [duration, setTime],
+  );
+
+  const play = useCallback(() => {
+    const element = resolveMaybeRef(elementRef);
+    if (!element) return;
+
+    /**
+     * Delay the play request by exactly two ticks to prevent the browser from
+     * interrupting it due to a new load request ocurring on the same tick.
+     */
+    setTimeout(() => setTimeout(() => element.play(), 0), 0);
+  }, [elementRef]);
+
+  const pause = useCallback(() => {
+    const element = resolveMaybeRef(elementRef);
+    if (!element) return;
+
+    element.pause();
+  }, [elementRef]);
+
+  const stop = useCallback(() => {
+    const element = resolveMaybeRef(elementRef);
+
+    if (!element) {
+      return;
+    }
+
+    pause();
+    setTime(0);
+  }, [pause, elementRef, setTime]);
+
   const mute = useCallback(() => {
-    setIsMuted(true);
-  }, [setIsMuted]);
-
-  const unmute = useCallback(() => {
-    setIsMuted(false);
-  }, [setIsMuted]);
-
-  useEffect(() => {
     const element = resolveMaybeRef(elementRef);
 
     if (!element) return;
 
-    const handleColumeChange = () => {
-      _setIsMuted(element.muted);
-    };
+    element.muted = true;
+  }, [elementRef]);
 
-    element.addEventListener("volumechange", handleColumeChange);
+  const unmute = useCallback(() => {
+    const element = resolveMaybeRef(elementRef);
 
-    return () => {
-      element.removeEventListener("volumechange", handleColumeChange);
-    };
-  }, [elementRef, isMuted]);
+    if (!element) return;
+
+    element.muted = false;
+  }, [elementRef]);
 
   const setVolume = useCallback(
     (volume: number) => {
       const element = resolveMaybeRef(elementRef);
-
       if (!element) return;
 
       element.volume = volume;
@@ -210,10 +219,9 @@ export function MediaProvider({
    */
   useEffect(
     () => () => {
-      const element = resolveMaybeRef(elementRef);
-      element && element.pause();
+      pause();
     },
-    [elementRef],
+    [pause],
   );
 
   /**
@@ -225,18 +233,42 @@ export function MediaProvider({
 
     const handlePlay = () => setIsPlaying(true);
     const handlePause = () => setIsPlaying(false);
-    const handleDurationChange = () => _setDuration(element.duration);
+    const handleDurationChange = () => setDuration(element.duration);
+    const handleVolumeChange = () => setIsMuted(element.muted);
+
+    const handleEnded = () => {
+      if (autoAdvance && canPlayNext) {
+        next();
+      } else {
+        stop();
+      }
+    };
+
+    handleVolumeChange();
 
     element.addEventListener("play", handlePlay);
     element.addEventListener("pause", handlePause);
+    element.addEventListener("ended", handleEnded);
+    element.addEventListener("volumechange", handleVolumeChange);
     element.addEventListener("durationchange", handleDurationChange);
 
     return () => {
       element.removeEventListener("play", handlePlay);
       element.removeEventListener("pause", handlePause);
+      element.removeEventListener("ended", handleEnded);
+      element.removeEventListener("volumechange", handleVolumeChange);
       element.removeEventListener("durationchange", handleDurationChange);
     };
-  }, [elementRef]);
+  }, [
+    elementRef,
+    setIsPlaying,
+    setDuration,
+    setIsMuted,
+    autoAdvance,
+    canPlayNext,
+    next,
+    stop,
+  ]);
 
   /**
    * Change the media element source when the track changes, continuing playback
@@ -251,44 +283,13 @@ export function MediaProvider({
       element.src = typeof track === "string" ? track : track.source;
 
       if (isPlayingRef.current) {
-        element.play();
+        play();
       }
     } else {
-      element.pause();
-      element.currentTime = 0;
+      pause();
+      setTime(0);
     }
-  }, [track, elementRef, isPlayingRef]);
-
-  /**
-   * Tell the media element to pause and play.
-   */
-  useEffect(() => {
-    const element = resolveMaybeRef(elementRef);
-    if (!element) return;
-
-    if (isPlaying) {
-      setTimeout(element.play, 1);
-    } else {
-      element.pause();
-    }
-  }, [elementRef, isPlaying]);
-
-  const setTime = useCallback(
-    (time: number) => {
-      const element = resolveMaybeRef(elementRef);
-      if (!element) return;
-
-      element.currentTime = time;
-    },
-    [elementRef],
-  );
-
-  const setProgress = useCallback(
-    (progress: number) => {
-      setTime(progress * duration);
-    },
-    [duration, setTime],
-  );
+  }, [track, elementRef, isPlayingRef, play, pause, setTime]);
 
   /**
    * Clamp the cursor when the tracks change.
@@ -298,34 +299,14 @@ export function MediaProvider({
   }, [tracks, setCursor]);
 
   /**
-   * If `autoPlay` is enabled, automatically play the current track when it
-   * changes, even when the media element wasn't already playing.
-   */
-  const readyRef = useRef(false);
-  useEffect(() => {
-    if (autoPlay && readyRef.current === true) {
-      play();
-    }
-    readyRef.current = true;
-  }, [track, autoPlay, play]);
-
-  /**
-   * Tell the media element what to do when the track ends. If `autoPlay` is
-   * enabled, it should continue to the next track if there is one, otherwise
-   * it should stop.
+   * Configure the initial element attributes.
    */
   useEffect(() => {
     const element = resolveMaybeRef(elementRef);
     if (!element) return;
 
-    const handleEnded = autoPlay && canPlayNext ? next : stop;
-
-    element.addEventListener("ended", handleEnded);
-
-    return () => {
-      element.removeEventListener("ended", handleEnded);
-    };
-  }, [elementRef, autoPlay, next, stop, canPlayNext]);
+    element.autoplay = autoPlay;
+  }, [autoPlay, elementRef]);
 
   /**
    * Shuffle the tracks, shifting the cursor to retain the active track.
@@ -366,8 +347,6 @@ export function MediaProvider({
     previous,
     canPlayNext,
     next,
-    autoPlay,
-    setAutoPlay,
     shuffle,
     setShuffle,
     toggleShuffle,
