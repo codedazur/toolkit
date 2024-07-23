@@ -1,5 +1,15 @@
 # @codedazur/react-audio
 
+## 2.0.0
+
+### Major Changes
+
+- [`1ad5249`](https://github.com/codedazur/toolkit/commit/1ad5249f195ec49831477f061231d83c731ab524) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The autoPlay and setAutoPlay properties were removed from the context, because they only affect initial state.
+
+### Patch Changes
+
+- [`1ad5249`](https://github.com/codedazur/toolkit/commit/1ad5249f195ec49831477f061231d83c731ab524) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The media play event is now triggered from the correct scope, so that browsers no longer block the request.
+
 ## 1.0.2
 
 ### Patch Changes
