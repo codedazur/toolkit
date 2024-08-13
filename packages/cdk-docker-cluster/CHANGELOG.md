@@ -1,5 +1,11 @@
 # @codedazur/cdk-docker-cluster
 
+## 0.9.1
+
+### Patch Changes
+
+- [`afec6fd`](https://github.com/codedazur/toolkit/commit/afec6fdb40cfbbb4dc118c2fa6caacf1345f7875) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The distribution props are no longer overridden.
+
 ## 0.9.0
 
 ### Minor Changes
