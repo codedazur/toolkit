@@ -47,7 +47,7 @@ export class NextApp extends DockerCluster {
       return {
         directory: source,
         secrets: {
-          npmrc: DockerBuildSecret.fromSrc(path.join(os.homedir(), "/.npmrc")),
+          npmrc: NextApp.npmSecret(),
         },
       };
     }
@@ -55,9 +55,13 @@ export class NextApp extends DockerCluster {
     return {
       ...source,
       secrets: {
-        npmrc: DockerBuildSecret.fromSrc(path.join(os.homedir(), "/.npmrc")),
+        npmrc: NextApp.npmSecret(),
         ...source.secrets,
       },
     };
+  }
+
+  protected static npmSecret() {
+    return DockerBuildSecret.fromSrc(path.join(os.homedir(), ".npmrc"));
   }
 }
