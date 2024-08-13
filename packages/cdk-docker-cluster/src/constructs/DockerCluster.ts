@@ -153,13 +153,13 @@ export class DockerCluster extends Construct {
     );
 
     return new SiteDistribution(this, "Distribution", {
+      allowedMethods: AllowedMethods.ALLOW_ALL,
+      cachePolicy,
+      originRequestPolicy,
       ...this.props.distribution,
       origin: new LoadBalancerV2Origin(this.service.loadBalancer, {
         protocolPolicy: OriginProtocolPolicy.HTTP_ONLY,
       }),
-      allowedMethods: AllowedMethods.ALLOW_ALL,
-      cachePolicy,
-      originRequestPolicy,
     });
   }
 
