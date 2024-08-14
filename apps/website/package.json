@@ -12,7 +12,7 @@
     "test": "vitest run --passWithNoTests"
   },
   "dependencies": {
-    "@codedazur/essentials": "^1.9.1",
+    "@codedazur/essentials": "^1.10.0",
     "@codedazur/react-components": "^25.2.1",
     "@codedazur/react-date-picker": "^0.0.2",
     "@codedazur/react-essentials": "^1.4.2",

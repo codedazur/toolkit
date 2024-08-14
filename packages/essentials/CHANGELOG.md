@@ -1,5 +1,11 @@
 # @codedazur/essentials
 
+## 1.10.0
+
+### Minor Changes
+
+- [`002ee9e`](https://github.com/codedazur/toolkit/commit/002ee9e152a67c21c93ea986b9e527e6f6536307) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The filterObject and whereDefined object utilities were added.
+
 ## 1.9.1
 
 ### Patch Changes
