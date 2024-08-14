@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 export interface UseLoadMoreProps<T> {
   items: T[];
@@ -6,7 +6,6 @@ export interface UseLoadMoreProps<T> {
 }
 
 /**
- * @todo Review this code before releasing it.
  * @todo Support asynchoronously fetching more items _instead_ of providing all
  * items at once and using `itemsPerPage` to limit the results. These are two
  * very different use cases, so evaluate if this hook should support both, or if
@@ -19,13 +18,10 @@ export interface UseLoadMoreProps<T> {
 export function useLoadMore<T>({ items, itemsPerPage }: UseLoadMoreProps<T>) {
   const [page, setPage] = useState(1);
 
-  const [visibleItems, setVisibleItems] = useState<T[]>(
-    items.slice(0, itemsPerPage * page),
+  const visibleItems = useMemo<T[]>(
+    () => items.slice(0, itemsPerPage * page),
+    [page, items, itemsPerPage],
   );
-
-  useEffect(() => {
-    setVisibleItems(items.slice(0, itemsPerPage * page));
-  }, [page, items, itemsPerPage]);
 
   const isOverflowing = useMemo(
     () => items.length > page * itemsPerPage,
