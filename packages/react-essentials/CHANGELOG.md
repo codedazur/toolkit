@@ -1,5 +1,11 @@
 # @codedazur/react-essentials
 
+## 1.5.0
+
+### Minor Changes
+
+- [`2a73c10`](https://github.com/codedazur/toolkit/commit/2a73c1005fa3214ee05734d7e60cd94c7670b285) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The useDelayedValue hook was added.
+
 ## 1.4.2
 
 ### Patch Changes
