@@ -1,5 +1,14 @@
 # @codedazur/react-pagination
 
+## 1.1.1
+
+### Patch Changes
+
+- [`fbc2c40`](https://github.com/codedazur/toolkit/commit/fbc2c40386a7cb41d36052fee6351a1dddbf1e1c) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Missing index exports were added.
+
+- Updated dependencies [[`fbc2c40`](https://github.com/codedazur/toolkit/commit/fbc2c40386a7cb41d36052fee6351a1dddbf1e1c)]:
+  - @codedazur/essentials@1.10.1
+
 ## 1.1.0
 
 ### Minor Changes
