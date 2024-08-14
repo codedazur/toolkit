@@ -1,5 +1,11 @@
 # @codedazur/react-pagination
 
+## 1.1.0
+
+### Minor Changes
+
+- [`2a73c10`](https://github.com/codedazur/toolkit/commit/2a73c1005fa3214ee05734d7e60cd94c7670b285) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The useLoadMore hook was added.
+
 ## 1.0.2
 
 ### Patch Changes
