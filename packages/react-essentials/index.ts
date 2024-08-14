@@ -1,5 +1,6 @@
 export * from "./hooks/useClickOutside";
 export * from "./hooks/useCursor";
+export * from "./hooks/useDelayedValue";
 export * from "./hooks/useDelta";
 export * from "./hooks/useIntersection";
 export * from "./hooks/useIsIntersecting";
