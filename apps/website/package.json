@@ -12,13 +12,13 @@
     "test": "vitest run --passWithNoTests"
   },
   "dependencies": {
-    "@codedazur/essentials": "^1.10.0",
+    "@codedazur/essentials": "^1.10.1",
     "@codedazur/react-components": "^25.2.1",
     "@codedazur/react-date-picker": "^0.0.2",
-    "@codedazur/react-essentials": "^1.5.0",
+    "@codedazur/react-essentials": "^1.5.1",
     "@codedazur/react-media": "^2.0.0",
     "@codedazur/react-notifications": "^0.1.5",
-    "@codedazur/react-pagination": "^1.1.0",
+    "@codedazur/react-pagination": "^1.1.1",
     "@codedazur/react-parallax": "^0.1.1",
     "next": "^14.2.5",
     "react": "^18.3.1",
