@@ -44,11 +44,6 @@ type ParallaxFactor = PrimitiveParallaxFactor | ParallaxFactorFunction;
  * });
  *
  * return <div ref={ref} />
- *
- * @todo A bug currently causes the element to jump on the first scroll event
- * when `cover` is set to true, because the initial position is not calculated.
- * This can be fixed by calling the `onScroll` callback of the `useScroll` hook
- * on the initial render to set the initial position.
  */
 export function useParallax<T extends HTMLElement>({
   scrollRef,
@@ -58,58 +53,39 @@ export function useParallax<T extends HTMLElement>({
   const ref = useRef<T>(null);
 
   const position = useRef<Vector2>(Vector2.zero);
-  const offset = useRef<Vector2>(Vector2.zero);
   const windowSize = useRef<Vector2>(Vector2.zero);
   const elementSize = useRef<Vector2>(Vector2.zero);
 
   const translation = useRef<Vector2>(Vector2.zero);
   const scale = useRef<number>(1);
 
-  const applyTransform = useCallback(() => {
-    const target = resolveMaybeRef(ref);
-
-    if (!target) {
+  const setOffset = useCallback(() => {
+    if (!ref.current) {
       return;
     }
 
-    window.requestAnimationFrame(() => {
-      target.style.transform = `translate3d(${translation.current.x}px, ${translation.current.y}px, 0) scale(${scale.current})`;
-    });
-  }, []);
+    const scrollOffset = getOffset(ref.current);
 
-  const handleScroll = useCallback(
-    (state: ScrollState) => {
-      position.current = state.position;
+    const offset = scrollOffset
+      .subtract(windowSize.current.divide(2))
+      .add(elementSize.current.divide(2))
+      .multiply(Vector2.one.subtract(factor as PrimitiveParallaxFactor))
+      /**
+       * @todo Make this configurable in case the scroll direction is
+       * different, or determine it based on the state.overflow.
+       */
+      .multiply(Direction.up);
 
-      if (cover === true && ref.current) {
-        const scrollOffset = getOffset(ref.current).subtract(
-          translation.current,
-        );
+    translation.current = translation.current.add(offset);
+  }, [factor]);
 
-        offset.current = scrollOffset
-          .subtract(windowSize.current.divide(2))
-          .add(elementSize.current.divide(2))
-          .multiply(Vector2.one.subtract(factor as PrimitiveParallaxFactor))
-          /**
-           * @todo Make this configurable in case the scroll direction is
-           * different, or determine it based on the state.overflow.
-           */
-          .multiply(Direction.up);
-      }
+  const setTranslation = useCallback(() => {
+    translation.current = translate(position.current, factor);
 
-      translation.current = translate(position.current, factor).add(
-        offset.current,
-      );
-
-      applyTransform();
-    },
-    [applyTransform, cover, factor],
-  );
-
-  useScroll({
-    ref: scrollRef,
-    onScroll: handleScroll,
-  });
+    if (cover) {
+      setOffset();
+    }
+  }, [cover, factor, setOffset]);
 
   const setScale = useCallback(() => {
     if (!cover) {
@@ -120,23 +96,70 @@ export function useParallax<T extends HTMLElement>({
       windowSize.current.x / elementSize.current.x,
       windowSize.current.y / elementSize.current.y,
     );
+  }, [cover]);
+
+  const applyTransform = useCallback(() => {
+    const target = resolveMaybeRef(ref);
+
+    if (!target) {
+      return;
+    }
+
+    window.requestAnimationFrame(() => {
+      target.style.transform = [
+        `translate3d(${[
+          `${translation.current.x}px`,
+          `${translation.current.y}px`,
+          0,
+        ].join(", ")})`,
+        `scale(${scale.current})`,
+      ].join(" ");
+    });
+  }, []);
+
+  const updateTransform = useCallback(() => {
+    setTranslation();
+    setScale();
 
     applyTransform();
-  }, [applyTransform, cover]);
+  }, [applyTransform, setScale, setTranslation]);
+
+  const handleScroll = useCallback(
+    (state: ScrollState) => {
+      position.current = state.position;
+      updateTransform();
+    },
+    [updateTransform],
+  );
+
+  const handleElementResize = useCallback(
+    (size: Vector2) => {
+      elementSize.current = size;
+      updateTransform();
+    },
+    [updateTransform],
+  );
+
+  const handleWindowResize = useCallback(
+    (size: Vector2) => {
+      windowSize.current = size;
+      updateTransform();
+    },
+    [updateTransform],
+  );
+
+  useScroll({
+    ref: scrollRef,
+    onScroll: handleScroll,
+  });
 
   useSize({
     ref,
-    onResize: (size) => {
-      elementSize.current = size;
-      setScale();
-    },
+    onResize: handleElementResize,
   });
 
   useWindowSize({
-    onResize: (size) => {
-      windowSize.current = size;
-      setScale();
-    },
+    onResize: handleWindowResize,
   });
 
   return ref;
@@ -144,10 +167,11 @@ export function useParallax<T extends HTMLElement>({
 
 /**
  * This function returns the offset of an element relative to the document.
- * @todo Check if there is a simpler way to do this.
+ * @todo This causes a repaint and is used on scroll. Check if there is a more
+ * efficient way to do this.
  */
 function getOffset(element: HTMLElement) {
-  const rectangle = element.getBoundingClientRect();
+  const rectangle = element.parentElement!.getBoundingClientRect();
 
   const scrollX = document.documentElement.scrollLeft;
   const scrollY = document.documentElement.scrollTop;
@@ -169,7 +193,7 @@ function translate(position: Vector2, factor: ParallaxFactor): Vector2 {
 
 /**
  * A hook that uses a resize observer to call a callback whenever the element
- * resizes. if no particular ref is provided, it will use the window.
+ * resizes. If no particular ref is provided, it will use the window.
  * @todo Release this as part of the @codedazur/react-essentials package.
  */
 function useSize<T extends HTMLElement>({
