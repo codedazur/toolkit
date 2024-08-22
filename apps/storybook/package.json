@@ -20,7 +20,7 @@
     "@codedazur/react-media": "^2.0.0",
     "@codedazur/react-notifications": "^0.1.5",
     "@codedazur/react-pagination": "^1.1.1",
-    "@codedazur/react-parallax": "^0.1.1",
+    "@codedazur/react-parallax": "^0.1.2",
     "@codedazur/react-preferences": "^1.0.1",
     "@codedazur/react-select": "^0.0.4",
     "@faker-js/faker": "^8.4.1",
