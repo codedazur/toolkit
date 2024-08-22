@@ -1,5 +1,11 @@
 # @codedazur/react-parallax
 
+## 0.1.2
+
+### Patch Changes
+
+- [`13175fd`](https://github.com/codedazur/toolkit/commit/13175fd40bddbce619374f753995fc3ffb47a790) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The offset is now applied correctly on the initial render when cover is enabled.
+
 ## 0.1.1
 
 ### Patch Changes
