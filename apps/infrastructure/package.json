@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "audit": "npm audit --omit dev",
+    "audit": "npm audit --omit dev --audit-level high",
     "lint": "TIMING=1 eslint \"**/*.ts*\"",
     "types": "tsc --noEmit",
     "test": "jest --passWithNoTests",
