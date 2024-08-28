@@ -8,6 +8,7 @@ export * from "./utilities/geometry/Rectangle";
 export * from "./utilities/geometry/Vector2";
 export * from "./utilities/math/clamp";
 export * from "./utilities/math/deg2rad";
+export * from "./utilities/math/lerp";
 export * from "./utilities/math/modulo";
 export * from "./utilities/math/rad2deg";
 export * from "./utilities/math/sequence";
