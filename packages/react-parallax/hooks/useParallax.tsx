@@ -1,4 +1,4 @@
-import { Direction, Vector2 } from "@codedazur/essentials";
+import { Direction, Vector2, lerp } from "@codedazur/essentials";
 import {
   MaybeRef,
   ScrollState,
@@ -44,6 +44,14 @@ type ParallaxFactor = PrimitiveParallaxFactor | ParallaxFactorFunction;
  * });
  *
  * return <div ref={ref} />
+ *
+ * @todo If you use this hook with `cover: true`, it causes a repaint on every
+ * scroll event. We should check if there is a more efficient way to calculate
+ * the offset. I suspect it should be possible to use the transform origin in
+ * such a way that that it doesn't need to change on scroll at all. I believe
+ * it might be something close to this, though I think the `factor` should be a
+ * factor as well somehow:
+ *   - `50% ${elementHeight * (elementHeight / windowHeight) * index}px`
  */
 export function useParallax<T extends HTMLElement>({
   scrollRef,
@@ -56,6 +64,7 @@ export function useParallax<T extends HTMLElement>({
   const windowSize = useRef<Vector2>(Vector2.zero);
   const elementSize = useRef<Vector2>(Vector2.zero);
 
+  // const origin = useRef<Vector2>(Origin.center);
   const translation = useRef<Vector2>(Vector2.zero);
   const scale = useRef<number>(1);
 
@@ -79,6 +88,21 @@ export function useParallax<T extends HTMLElement>({
     translation.current = translation.current.add(offset);
   }, [factor]);
 
+  // const setOrigin = useCallback(() => {
+  //   if (!ref.current || !cover) {
+  //     return;
+  //   }
+
+  //   console.log(ref.current.parentElement);
+
+  //   const offset = getOffset(ref.current.parentElement!);
+
+  //   origin.current = new Vector2(
+  //     windowSize.current.x / 2 - offset.x,
+  //     windowSize.current.y / 2 - offset.y,
+  //   );
+  // }, [ref, translation, windowSize, elementSize, factor, cover]);
+
   const setTranslation = useCallback(() => {
     translation.current = translate(position.current, factor);
 
@@ -92,11 +116,15 @@ export function useParallax<T extends HTMLElement>({
       return;
     }
 
-    scale.current = Math.max(
-      windowSize.current.x / elementSize.current.x,
-      windowSize.current.y / elementSize.current.y,
+    scale.current = lerp(
+      Math.max(
+        windowSize.current.x / elementSize.current.x,
+        windowSize.current.y / elementSize.current.y,
+      ),
+      1,
+      typeof factor === "number" ? factor : (factor as Vector2).magnitude,
     );
-  }, [cover]);
+  }, [cover, factor]);
 
   const applyTransform = useCallback(() => {
     const target = resolveMaybeRef(ref);
@@ -106,6 +134,11 @@ export function useParallax<T extends HTMLElement>({
     }
 
     window.requestAnimationFrame(() => {
+      // target.style.transformOrigin = [
+      //   `${origin.current.x * 100}%`,
+      //   `${origin.current.y * 100}%`,
+      // ].join(" ");
+
       target.style.transform = [
         `translate3d(${[
           `${translation.current.x}px`,
@@ -118,6 +151,7 @@ export function useParallax<T extends HTMLElement>({
   }, []);
 
   const updateTransform = useCallback(() => {
+    // setOrigin();
     setTranslation();
     setScale();
 
