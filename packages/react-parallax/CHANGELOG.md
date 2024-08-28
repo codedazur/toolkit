@@ -1,5 +1,14 @@
 # @codedazur/react-parallax
 
+## 0.1.3
+
+### Patch Changes
+
+- [`8b5f35a`](https://github.com/codedazur/toolkit/commit/8b5f35a2f91e9094a65004da03a9583e89b0649e) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The cover scale now takes the factor into account.
+
+- Updated dependencies [[`c751fca`](https://github.com/codedazur/toolkit/commit/c751fcac664b515ad04204485ef19e3efab0c1cf)]:
+  - @codedazur/essentials@1.11.0
+
 ## 0.1.2
 
 ### Patch Changes
