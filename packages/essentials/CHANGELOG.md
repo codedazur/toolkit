@@ -1,5 +1,11 @@
 # @codedazur/essentials
 
+## 1.11.0
+
+### Minor Changes
+
+- [`c751fca`](https://github.com/codedazur/toolkit/commit/c751fcac664b515ad04204485ef19e3efab0c1cf) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The lerp function was added.
+
 ## 1.10.1
 
 ### Patch Changes
