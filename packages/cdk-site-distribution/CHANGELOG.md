@@ -1,5 +1,11 @@
 # @codedazur/cdk-site-distribution
 
+## 0.5.0
+
+### Minor Changes
+
+- [`ddef1e0`](https://github.com/codedazur/toolkit/commit/ddef1e023538d35ecf637a30e654f10ebb06d8d2) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Additional behaviors are now supported.
+
 ## 0.4.0
 
 ### Minor Changes
