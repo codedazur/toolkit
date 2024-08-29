@@ -34,6 +34,16 @@ export class NextApp extends DockerCluster {
         port,
         ...service,
       },
+      distribution: {
+        ...props.distribution,
+        behaviors: {
+          ...props.distribution?.behaviors,
+          "/api/*": {
+            authentication: false,
+            ...props.distribution?.behaviors?.["/api/*"],
+          },
+        },
+      },
       ...props,
     });
   }

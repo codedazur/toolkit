@@ -52,6 +52,8 @@ interface SourceProps {
 /**
  * An Docker cluster on a load balanced Fargate service on EC2, using an image
  * built from a Dockerfile in a directory and pushed to ECR.
+ * @todo Make the distribution and laod balancer optional, to reduce cost and
+ * increase deployment speed for development environments.
  */
 export class DockerCluster extends Construct {
   public readonly domain?: string;

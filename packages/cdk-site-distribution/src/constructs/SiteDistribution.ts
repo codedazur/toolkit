@@ -1,4 +1,5 @@
 import { CacheInvalidator } from "@codedazur/cdk-cache-invalidator";
+import { revalueObject } from "@codedazur/essentials";
 import { CfnOutput } from "aws-cdk-lib";
 import {
   Certificate,
@@ -7,6 +8,7 @@ import {
 } from "aws-cdk-lib/aws-certificatemanager";
 import {
   AllowedMethods,
+  BehaviorOptions,
   Function as CloudFrontFunction,
   Distribution,
   FunctionCode,
@@ -27,26 +29,32 @@ import { CloudFrontTarget } from "aws-cdk-lib/aws-route53-targets";
 import { Secret } from "aws-cdk-lib/aws-secretsmanager";
 import { Construct } from "constructs";
 
-export interface SiteDistributionProps {
-  origin: IOrigin;
+export interface SiteDistributionProps extends BehaviorProps {
   priceClass?: PriceClass;
-  functions?: {
-    viewerRequest?: FunctionCode[];
-    viewerResponse?: FunctionCode[];
-  };
-  authentication?: {
-    username: string;
-    password?: string | Secret;
-  };
   domain?: {
     name: string;
     subdomain?: string;
     zone?: IHostedZone;
   };
+  behaviors?: Record<string, Partial<BehaviorProps>>;
+  invalidateCache?: boolean | string[];
+}
+
+export interface BehaviorProps {
+  origin: IOrigin;
+  authentication?:
+    | {
+        username: string;
+        password: string;
+      }
+    | false;
+  functions?: {
+    viewerRequest?: FunctionCode[];
+    viewerResponse?: FunctionCode[];
+  };
   allowedMethods?: AllowedMethods;
   cachePolicy?: ICachePolicy;
   originRequestPolicy?: IOriginRequestPolicy;
-  invalidateCache?: boolean | string[];
 }
 
 /**
@@ -57,11 +65,6 @@ export class SiteDistribution extends Construct {
   public readonly domain?: string;
   public readonly zone?: IHostedZone;
   public readonly certificate?: ICertificate;
-  public readonly passwordSecret?: Secret;
-  public readonly functions: {
-    viewerRequest?: CloudFrontFunction;
-    viewerResponse?: CloudFrontFunction;
-  };
   public readonly distribution: Distribution;
   public readonly alias?: ARecord;
   public readonly cacheInvalidator?: CacheInvalidator;
@@ -76,12 +79,6 @@ export class SiteDistribution extends Construct {
     this.domain = this.determineDomain();
     this.zone = this.findHostedZone();
     this.certificate = this.createCertificate();
-
-    if (this.props.authentication && !this.props.authentication.password) {
-      this.passwordSecret = this.createPasswordSecret();
-    }
-
-    this.functions = this.createFunctions();
     this.distribution = this.createDistribution();
     this.alias = this.createAlias();
 
@@ -137,9 +134,85 @@ export class SiteDistribution extends Construct {
     });
   }
 
-  protected createFunctions() {
-    const viewerRequest = this.createViewerRequestFunction();
-    const viewerResponse = this.createViewerResponseFunction();
+  protected createDistribution() {
+    const distribution = new Distribution(this, "Distribution", {
+      priceClass: this.props.priceClass,
+      certificate: this.certificate,
+      domainNames: this.domain ? [this.domain] : undefined,
+      defaultBehavior: this.behavior(),
+      additionalBehaviors: this.props.behaviors
+        ? revalueObject(this.props.behaviors, ([, props]) =>
+            this.behavior(props),
+          )
+        : undefined,
+    });
+
+    new CfnOutput(this, "DistributionId", {
+      value: distribution.distributionId,
+    });
+
+    new CfnOutput(this, "DistributionDomainName", {
+      value: distribution.distributionDomainName,
+    });
+
+    return distribution;
+  }
+
+  protected behavior({
+    pattern = "/*",
+    authentication,
+    functions: functionsCode,
+    ...props
+  }: Partial<BehaviorProps> & {
+    pattern?: string;
+  } = {}): BehaviorOptions {
+    const functions = this.createFunctions({
+      pattern,
+      authentication: authentication ?? this.props.authentication,
+      functions: functionsCode ?? this.props.functions,
+    });
+
+    return {
+      origin: props.origin ?? this.props.origin,
+      allowedMethods: props.allowedMethods ?? this.props.allowedMethods,
+      originRequestPolicy:
+        props.originRequestPolicy ?? this.props.originRequestPolicy,
+      viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+      cachePolicy: props.cachePolicy ?? this.props.cachePolicy,
+      functionAssociations: [
+        functions.viewerRequest
+          ? {
+              function: functions.viewerRequest,
+              eventType: FunctionEventType.VIEWER_REQUEST,
+            }
+          : null,
+        functions.viewerResponse
+          ? {
+              function: functions.viewerResponse,
+              eventType: FunctionEventType.VIEWER_RESPONSE,
+            }
+          : null,
+      ].filter((association) => !!association),
+    };
+  }
+
+  protected createFunctions({
+    pattern,
+    authentication,
+    functions,
+  }: {
+    pattern: string;
+  } & Partial<Pick<BehaviorProps, "authentication" | "functions">>) {
+    const viewerRequest = this.createViewerRequestFunction({
+      id: `ViewerRequestFunction-${pattern}`,
+      authentication,
+      code: functions?.viewerRequest,
+    });
+
+    const viewerResponse = this.createViewerResponseFunction({
+      id: `ViewerResponseFunction-${pattern}`,
+      code: functions?.viewerResponse,
+    });
 
     /**
      * Although the response function doesn't actually depend on the request
@@ -156,32 +229,44 @@ export class SiteDistribution extends Construct {
     };
   }
 
-  protected createViewerRequestFunction() {
-    const handlers = [
-      this.getAuthenticateCode(),
-      ...(this.props.functions?.viewerRequest ?? []),
-    ].filter((handler): handler is FunctionCode => !!handler);
+  protected createViewerRequestFunction({
+    id,
+    authentication,
+    code = [],
+  }: {
+    id: string;
+    authentication?: BehaviorProps["authentication"];
+    code?: FunctionCode[];
+  }) {
+    const handlers = [this.getAuthenticateCode(authentication), ...code].filter(
+      (handler) => !!handler,
+    );
 
     if (handlers.length === 0) {
       return undefined;
     }
 
-    return new CloudFrontFunction(this, "ViewerRequestFunction", {
+    return new CloudFrontFunction(this, id, {
       code: this.getHandlerChainCode(handlers, "request"),
     });
   }
 
-  protected createViewerResponseFunction() {
-    const handlers = [
-      this.getSecurityHeadersCode(),
-      ...(this.props.functions?.viewerResponse ?? []),
-    ].filter((handler): handler is FunctionCode => !!handler);
+  protected createViewerResponseFunction({
+    id,
+    code = [],
+  }: {
+    id: string;
+    code?: FunctionCode[];
+  }) {
+    const handlers = [this.getSecurityHeadersCode(), ...code].filter(
+      (handler) => !!handler,
+    );
 
     if (handlers.length === 0) {
       return undefined;
     }
 
-    return new CloudFrontFunction(this, "ViewerResponseFunction", {
+    return new CloudFrontFunction(this, id, {
       code: this.getHandlerChainCode(handlers, "response"),
     });
   }
@@ -208,12 +293,14 @@ export class SiteDistribution extends Construct {
 		`);
   }
 
-  protected getAuthenticateCode() {
-    if (!this.props.authentication) {
+  protected getAuthenticateCode(props: BehaviorProps["authentication"]) {
+    if (!props) {
       return;
     }
 
-    const token = this.getAuthenticationToken();
+    const { username, password } = props;
+
+    const token = Buffer.from(`${username}:${password}`).toString("base64");
 
     return FunctionCode.fromInline(/* js */ `
 			function authenticate(event, next) {
@@ -235,30 +322,6 @@ export class SiteDistribution extends Construct {
 				return next(event);
 			}
 		`);
-  }
-
-  protected getAuthenticationToken() {
-    const password = this.getPassword();
-
-    if (!password) {
-      return undefined;
-    }
-
-    return Buffer.from(
-      [this.props.authentication?.username, password].join(":"),
-    ).toString("base64");
-  }
-
-  protected getPassword() {
-    if (!this.props.authentication?.password) {
-      return this.passwordSecret?.secretValue.toString();
-    }
-
-    if (this.props.authentication.password instanceof Secret) {
-      return this.props.authentication.password.secretValue.toString();
-    }
-
-    return this.props.authentication.password;
   }
 
   /**
@@ -289,49 +352,6 @@ export class SiteDistribution extends Construct {
         return next(event);
 			}
 		`);
-  }
-
-  protected createDistribution() {
-    const distribution = new Distribution(this, "Distribution", {
-      priceClass: this.props.priceClass,
-      certificate: this.certificate,
-      domainNames: this.domain ? [this.domain] : undefined,
-      defaultBehavior: {
-        origin: this.props.origin,
-        allowedMethods: this.props.allowedMethods,
-        originRequestPolicy: this.props.originRequestPolicy,
-        viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
-        functionAssociations: [
-          ...(this.functions.viewerRequest
-            ? [
-                {
-                  function: this.functions.viewerRequest,
-                  eventType: FunctionEventType.VIEWER_REQUEST,
-                },
-              ]
-            : []),
-          ...(this.functions.viewerResponse
-            ? [
-                {
-                  function: this.functions.viewerResponse,
-                  eventType: FunctionEventType.VIEWER_RESPONSE,
-                },
-              ]
-            : []),
-        ],
-        cachePolicy: this.props.cachePolicy,
-      },
-    });
-
-    new CfnOutput(this, "DistributionId", {
-      value: distribution.distributionId,
-    });
-
-    new CfnOutput(this, "DistributionDomainName", {
-      value: distribution.distributionDomainName,
-    });
-
-    return distribution;
   }
 
   protected createAlias() {
