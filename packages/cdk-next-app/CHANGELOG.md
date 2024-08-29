@@ -1,5 +1,16 @@
 # @codedazur/cdk-next-app
 
+## 0.3.0
+
+### Minor Changes
+
+- [`ddef1e0`](https://github.com/codedazur/toolkit/commit/ddef1e023538d35ecf637a30e654f10ebb06d8d2) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Authentication is now disabled by default for the API route, even if authentication is prvided for the default behavior.
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @codedazur/cdk-docker-cluster@0.9.2
+
 ## 0.2.12
 
 ### Patch Changes
