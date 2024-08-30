@@ -141,8 +141,8 @@ export class SiteDistribution extends Construct {
       domainNames: this.domain ? [this.domain] : undefined,
       defaultBehavior: this.behavior(),
       additionalBehaviors: this.props.behaviors
-        ? revalueObject(this.props.behaviors, ([, props]) =>
-            this.behavior(props),
+        ? revalueObject(this.props.behaviors, ([pattern, props]) =>
+            this.behavior({ pattern, ...props }),
           )
         : undefined,
     });
@@ -167,7 +167,7 @@ export class SiteDistribution extends Construct {
     pattern?: string;
   } = {}): BehaviorOptions {
     const functions = this.createFunctions({
-      pattern,
+      idSuffix: pattern,
       authentication: authentication ?? this.props.authentication,
       functions: functionsCode ?? this.props.functions,
     });
@@ -197,20 +197,20 @@ export class SiteDistribution extends Construct {
   }
 
   protected createFunctions({
-    pattern,
+    idSuffix,
     authentication,
     functions,
   }: {
-    pattern: string;
+    idSuffix: string;
   } & Partial<Pick<BehaviorProps, "authentication" | "functions">>) {
     const viewerRequest = this.createViewerRequestFunction({
-      id: `ViewerRequestFunction-${pattern}`,
+      id: `ViewerRequestFunction-${idSuffix}`,
       authentication,
       code: functions?.viewerRequest,
     });
 
     const viewerResponse = this.createViewerResponseFunction({
-      id: `ViewerResponseFunction-${pattern}`,
+      id: `ViewerResponseFunction-${idSuffix}`,
       code: functions?.viewerResponse,
     });
 
