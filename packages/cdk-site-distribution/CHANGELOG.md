@@ -1,5 +1,11 @@
 # @codedazur/cdk-site-distribution
 
+## 0.5.1
+
+### Patch Changes
+
+- [`fd47292`](https://github.com/codedazur/toolkit/commit/fd4729230f53aefd5ff29617b99420f9a1df2398) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The functions' behavior suffix is now configured correctly.
+
 ## 0.5.0
 
 ### Minor Changes
