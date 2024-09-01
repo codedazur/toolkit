@@ -69,6 +69,8 @@ export class SiteDistribution extends Construct {
   public readonly alias?: ARecord;
   public readonly cacheInvalidator?: CacheInvalidator;
 
+  private readonly functions: CloudFrontFunction[] = [];
+
   constructor(
     scope: Construct,
     id: string,
@@ -147,6 +149,8 @@ export class SiteDistribution extends Construct {
         : undefined,
     });
 
+    this.avoidFunctionRateLimit();
+
     new CfnOutput(this, "DistributionId", {
       value: distribution.distributionId,
     });
@@ -156,6 +160,20 @@ export class SiteDistribution extends Construct {
     });
 
     return distribution;
+  }
+
+  /**
+   * Ddefines dependencies on functions to avoid a service rate limit that may
+   * occur when several are created simultaneously.
+   */
+  private avoidFunctionRateLimit() {
+    if (this.functions.length > 1) {
+      for (let i = 1; i < this.functions.length; i++) {
+        const a = this.functions[i - 1];
+        const b = this.functions[i];
+        a.node.addDependency(b);
+      }
+    }
   }
 
   protected behavior({
@@ -214,15 +232,6 @@ export class SiteDistribution extends Construct {
       code: functions?.viewerResponse,
     });
 
-    /**
-     * Although the response function doesn't actually depend on the request
-     * function, we define a dependency to avoid a service rate limit that may
-     * occur when both are created simultaneously.
-     */
-    if (viewerRequest && viewerResponse) {
-      viewerResponse.node.addDependency(viewerRequest);
-    }
-
     return {
       viewerRequest,
       viewerResponse,
@@ -246,9 +255,13 @@ export class SiteDistribution extends Construct {
       return undefined;
     }
 
-    return new CloudFrontFunction(this, id, {
+    const func = new CloudFrontFunction(this, id, {
       code: this.getHandlerChainCode(handlers, "request"),
     });
+
+    this.functions.push(func);
+
+    return func;
   }
 
   protected createViewerResponseFunction({
@@ -266,9 +279,13 @@ export class SiteDistribution extends Construct {
       return undefined;
     }
 
-    return new CloudFrontFunction(this, id, {
+    const func = new CloudFrontFunction(this, id, {
       code: this.getHandlerChainCode(handlers, "response"),
     });
+
+    this.functions.push(func);
+
+    return func;
   }
 
   protected getHandlerChainCode(
