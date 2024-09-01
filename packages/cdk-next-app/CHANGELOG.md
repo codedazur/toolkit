@@ -1,5 +1,14 @@
 # @codedazur/cdk-next-app
 
+## 0.3.2
+
+### Patch Changes
+
+- [`55ddf9b`](https://github.com/codedazur/toolkit/commit/55ddf9b6d47be519a7ad7a932d20ec1526b5d1e2) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The default api behavior is no longer overridden.
+
+- Updated dependencies [[`55ddf9b`](https://github.com/codedazur/toolkit/commit/55ddf9b6d47be519a7ad7a932d20ec1526b5d1e2)]:
+  - @codedazur/cdk-docker-cluster@0.9.4
+
 ## 0.3.1
 
 ### Patch Changes
