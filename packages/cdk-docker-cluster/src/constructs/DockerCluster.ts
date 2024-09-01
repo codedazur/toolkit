@@ -5,9 +5,7 @@ import {
 import { App } from "aws-cdk-lib";
 import {
   AllowedMethods,
-  CachePolicy,
   OriginProtocolPolicy,
-  OriginRequestPolicy,
 } from "aws-cdk-lib/aws-cloudfront";
 import { LoadBalancerV2Origin } from "aws-cdk-lib/aws-cloudfront-origins";
 import { Platform } from "aws-cdk-lib/aws-ecr-assets";
@@ -129,35 +127,29 @@ export class DockerCluster extends Construct {
   }
 
   protected createDistribution() {
-    /**
-     * This retrieves the managed "UseOriginCacheControlHeaders-QueryStrings"
-     * cache policy, which is designed for use with an origin that sends
-     * Cache-Control headers with the object, which is recommended for use with
-     * an Application Load Balancer, and includes query strings in the cache
-     * key.
-     */
-    const cachePolicy = CachePolicy.fromCachePolicyId(
-      this,
-      "CachePolicy",
-      "4cc15a8a-d715-48a4-82b8-cc0b614638fe",
-    );
-
-    /**
-     * This retrieves the managed "AllViewer" origin request policy, which
-     * includes all values (query strings, headers, and cookies) in the viewer
-     * request, which is recommended for use with an Application Load Balancer
-     * endpoint.
-     */
-    const originRequestPolicy = OriginRequestPolicy.fromOriginRequestPolicyId(
-      this,
-      "OriginRequestPolicy",
-      "216adef6-5c7f-47e4-b989-5492eafa07d3",
-    );
-
     return new SiteDistribution(this, "Distribution", {
       allowedMethods: AllowedMethods.ALLOW_ALL,
-      cachePolicy,
-      originRequestPolicy,
+      cachePolicy: {
+        /**
+         * The managed "UseOriginCacheControlHeaders-QueryStrings" cache policy,
+         * which is designed for use with an origin that sends Cache-Control
+         * headers with the object, which is recommended for use with an
+         * Application Load Balancer, and includes query strings in the cache
+         * key.
+         * @see https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-managed-cache-policies.html#managed-cache-policy-origin-cache-headers-query-strings
+         */
+        cachePolicyId: "4cc15a8a-d715-48a4-82b8-cc0b614638fe",
+      },
+      originRequestPolicy: {
+        /**
+         * The managed "AllViewer" origin request policy, which includes all
+         * values (query strings, headers, and cookies) in the viewer request,
+         * which is recommended for use with an Application Load Balancer
+         * endpoint.
+         * @see https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-managed-origin-request-policies.html#managed-origin-request-policy-all-viewer
+         */
+        originRequestPolicyId: "216adef6-5c7f-47e4-b989-5492eafa07d3",
+      },
       ...this.props.distribution,
       origin: new LoadBalancerV2Origin(this.service.loadBalancer, {
         protocolPolicy: OriginProtocolPolicy.HTTP_ONLY,

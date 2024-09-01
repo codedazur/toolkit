@@ -25,26 +25,27 @@ export class NextApp extends DockerCluster {
     {
       source,
       service: { port = 3000, ...service } = {},
+      distribution,
       ...props
     }: NextAppProps,
   ) {
     super(scope, id, {
       source: NextApp.withNpmSecret(source),
+      ...props,
       service: {
         port,
         ...service,
       },
       distribution: {
-        ...props.distribution,
+        ...distribution,
         behaviors: {
-          ...props.distribution?.behaviors,
+          ...distribution?.behaviors,
           "/api/*": {
             authentication: false,
-            ...props.distribution?.behaviors?.["/api/*"],
+            ...distribution?.behaviors?.["/api/*"],
           },
         },
       },
-      ...props,
     });
   }
 
