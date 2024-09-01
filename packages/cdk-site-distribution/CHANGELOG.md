@@ -1,5 +1,11 @@
 # @codedazur/cdk-site-distribution
 
+## 0.5.2
+
+### Patch Changes
+
+- [`951ff0b`](https://github.com/codedazur/toolkit/commit/951ff0b7d2d6add7796989801052717b7f486ff8) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The CloudFront functions are now created in sequence in order to stay under the rate limit.
+
 ## 0.5.1
 
 ### Patch Changes
