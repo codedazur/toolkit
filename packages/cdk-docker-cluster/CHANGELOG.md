@@ -1,5 +1,12 @@
 # @codedazur/cdk-docker-cluster
 
+## 0.9.5
+
+### Patch Changes
+
+- Updated dependencies [[`ddef1e0`](https://github.com/codedazur/toolkit/commit/361f03c2aafe7a2bc04789b433c99ca79350da2a)]:
+  - @codedazur/cdk-site-distribution@0.5.2
+
 ## 0.9.4
 
 ### Patch Changes
