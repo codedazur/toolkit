@@ -1,5 +1,11 @@
 # @codedazur/cdk-docker-cluster
 
+## 0.9.4
+
+### Patch Changes
+
+- [`55ddf9b`](https://github.com/codedazur/toolkit/commit/55ddf9b6d47be519a7ad7a932d20ec1526b5d1e2) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - THe default cache and origin request policies were simplified.
+
 ## 0.9.3
 
 ### Patch Changes
