@@ -57,7 +57,7 @@ export class DockerCluster extends Construct {
   public readonly domain?: string;
   public readonly image: ContainerImage;
   public readonly service: ApplicationLoadBalancedFargateService;
-  public readonly distribution: SiteDistribution;
+  public readonly siteDistribution: SiteDistribution;
 
   constructor(
     scope: Construct,
@@ -72,13 +72,15 @@ export class DockerCluster extends Construct {
         : this.createImage(this.props.source);
 
     this.service = this.createService();
-    this.distribution = this.createDistribution();
+    this.siteDistribution = this.createSiteDistribution();
   }
 
   protected createImage(source: string | SourceProps) {
     const props: Partial<AssetImageProps> = {
       exclude: [`**/${this.getOutputDirectory()}`],
       platform: Platform.LINUX_AMD64,
+      // networkMode: NetworkMode.HOST, // @todo Use the host network mode.
+      // cacheFrom: [], // @todo Use the previously built image as a cache.
     };
 
     if (typeof source === "string") {
@@ -126,7 +128,7 @@ export class DockerCluster extends Construct {
     return service;
   }
 
-  protected createDistribution() {
+  protected createSiteDistribution() {
     return new SiteDistribution(this, "Distribution", {
       allowedMethods: AllowedMethods.ALLOW_ALL,
       cachePolicy: {

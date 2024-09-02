@@ -66,10 +66,9 @@ export class SiteDistribution extends Construct {
   public readonly zone?: IHostedZone;
   public readonly certificate?: ICertificate;
   public readonly distribution: Distribution;
+  public readonly functions: CloudFrontFunction[] = [];
   public readonly alias?: ARecord;
   public readonly cacheInvalidator?: CacheInvalidator;
-
-  private readonly functions: CloudFrontFunction[] = [];
 
   constructor(
     scope: Construct,
