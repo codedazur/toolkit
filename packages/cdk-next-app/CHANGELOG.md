@@ -1,10 +1,17 @@
 # @codedazur/cdk-next-app
 
+## 0.3.4
+
+### Patch Changes
+
+- Updated dependencies [[`315085a`](https://github.com/codedazur/toolkit/commit/315085a029c6f0f2f71b1a48ea223b0b78d316aa)]:
+  - @codedazur/cdk-docker-cluster@0.9.6
+
 ## 0.3.3
 
 ### Patch Changes
 
-- Updated dependencies [[`ddef1e0`](https://github.com/codedazur/toolkit/commit/361f03c2aafe7a2bc04789b433c99ca79350da2a)]:
+- Updated dependencies [[`361f03c`](https://github.com/codedazur/toolkit/commit/361f03c2aafe7a2bc04789b433c99ca79350da2a)]:
   - @codedazur/cdk-docker-cluster@0.9.5
 
 ## 0.3.2
