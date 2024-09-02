@@ -1,5 +1,14 @@
 # @codedazur/cdk-docker-cluster
 
+## 0.9.6
+
+### Patch Changes
+
+- [`315085a`](https://github.com/codedazur/toolkit/commit/315085a029c6f0f2f71b1a48ea223b0b78d316aa) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The DockerCluster's site distribution attribute was renamed.
+
+- Updated dependencies [[`315085a`](https://github.com/codedazur/toolkit/commit/315085a029c6f0f2f71b1a48ea223b0b78d316aa)]:
+  - @codedazur/cdk-site-distribution@0.5.3
+
 ## 0.9.5
 
 ### Patch Changes
