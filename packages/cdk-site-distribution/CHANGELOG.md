@@ -1,5 +1,11 @@
 # @codedazur/cdk-site-distribution
 
+## 0.5.3
+
+### Patch Changes
+
+- [`315085a`](https://github.com/codedazur/toolkit/commit/315085a029c6f0f2f71b1a48ea223b0b78d316aa) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The SiteDistribution's functions attribute was made public.
+
 ## 0.5.2
 
 ### Patch Changes
