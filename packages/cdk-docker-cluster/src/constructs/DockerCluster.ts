@@ -50,7 +50,7 @@ interface SourceProps {
 /**
  * An Docker cluster on a load balanced Fargate service on EC2, using an image
  * built from a Dockerfile in a directory and pushed to ECR.
- * @todo Make the distribution and laod balancer optional, to reduce cost and
+ * @todo Make the distribution and load balancer optional, to reduce cost and
  * increase deployment speed for development environments.
  */
 export class DockerCluster extends Construct {
@@ -119,7 +119,7 @@ export class DockerCluster extends Construct {
     });
 
     if (typeof this.props.service?.tasks === "object") {
-      this.service.service.autoScaleTaskCount({
+      service.service.autoScaleTaskCount({
         minCapacity: this.props.service?.tasks.minimum,
         maxCapacity: this.props.service?.tasks.maximum,
       });
