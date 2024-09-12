@@ -204,9 +204,7 @@ export class SiteDistribution extends Construct {
       [subdomain, name].filter(Boolean).join("."),
     );
 
-    for (const domain in domains) {
-      new CfnOutput(this, "URL", { value: "https://" + domain });
-    }
+    new CfnOutput(this, "URL", { value: "https://" + domains[0] });
 
     return domains;
   }
@@ -524,7 +522,7 @@ export class SiteDistribution extends Construct {
 
     return domains.map(
       (domain) =>
-        new ARecord(this, "DomainAlias", {
+        new ARecord(this, `DomainAlias-${domain}`, {
           recordName: domain,
           target: RecordTarget.fromAlias(
             new CloudFrontTarget(this.distribution),
