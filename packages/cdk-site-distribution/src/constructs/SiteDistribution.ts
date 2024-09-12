@@ -11,6 +11,7 @@ import {
   BehaviorOptions,
   Function as CloudFrontFunction,
   Distribution,
+  ErrorResponse,
   FunctionCode,
   FunctionEventType,
   ICachePolicy,
@@ -30,44 +31,146 @@ import { Secret } from "aws-cdk-lib/aws-secretsmanager";
 import { Construct } from "constructs";
 
 export interface SiteDistributionProps extends BehaviorProps {
+  /**
+   * The price class for the distribution. This will affect the number of edge
+   * locations used by the distribution.
+   *
+   * @default PriceClass.PRICE_CLASS_ALL
+   */
   priceClass?: PriceClass;
-  domain?: {
-    name: string;
-    subdomain?: string;
-    zone?: IHostedZone;
-  };
+
+  /**
+   * The domain of the distribution. You can provide a single domain or an array
+   * of domains. If you provide your own certificate, all domains need to be
+   * covered by the certificate.
+   */
+  domain?: Domain | Domain[];
+
+  /**
+   * The hosted zone of the domain. If not provided, the hosted zone will be
+   * looked up using the provided domain. If multiple domains are provided, the
+   * first one will be used.
+   */
+  hostedZone?: IHostedZone;
+
+  /**
+   * The certificate to use for the distribution. If not provided, a certificate
+   * will be created for the domain. If multiple domains are provided, the first
+   * will be used as the primary domain and the others as subject alternative
+   * names.
+   */
+  certificate?: ICertificate;
+
+  /**
+   * Any additional behaviors to add to the distribution, keyed by the path
+   * pattern. These additional behaviors will inherit the properties of the
+   * distribution.
+   *
+   * @default {}
+   */
   behaviors?: Record<string, Partial<BehaviorProps>>;
+
+  /**
+   * Custom error responses to add to the distribution.
+   *
+   * @default []
+   */
+  errorResponses?: ErrorResponse[];
+
+  /**
+   * Whether to invalidate the cache after deployment. If set to `true`, the
+   * entire cache will be invalidated. If set to an array of strings, only the
+   * specified paths will be invalidated.
+   *
+   * @default true
+   */
   invalidateCache?: boolean | string[];
 }
 
 export interface BehaviorProps {
+  /**
+   * The origin that the behavior will route traffic to.
+   */
   origin: IOrigin;
+
+  /**
+   * The Baasic authentication credentials to use for the behavior. If set to
+   * `false`, no authentication will be used.
+   */
   authentication?:
     | {
         username: string;
         password: string;
       }
     | false;
+
+  /**
+   * Custom functions to run on the viewer request and response. The functions
+   * will be chained together using a middleware pattern and will run in the
+   * order they are provided.
+   */
   functions?: {
     viewerRequest?: FunctionCode[];
     viewerResponse?: FunctionCode[];
   };
+
+  /**
+   * The allowed HTTP methods for the behavior.
+   */
   allowedMethods?: AllowedMethods;
+
+  /**
+   * The cache policy to use for the behavior.
+   */
   cachePolicy?: ICachePolicy;
+
+  /**
+   * The origin request policy to use for the behavior.
+   */
   originRequestPolicy?: IOriginRequestPolicy;
 }
 
+export interface Domain {
+  name: string;
+  subdomain?: string;
+}
+
 /**
+ * A construct that creates a general-purpose CloudFront distribution.
+ *
+ * One or more domains can be provided if needed, in which case a hosted zone
+ * will be looked up and a certificate will be created and validated. You can
+ * also provide your own hosted zone and certificate if needed, but make sure
+ * the certificate covers all the domains.
+ *
+ * You can enable Basic authentication for the distribution and you can provide
+ * custom functions to run on the viewer request and response. The functions
+ * will be chained together using a middleware pattern and will run in the order
+ * they are provided.
+ *
+ * The @see SiteDistributionProps extends @see BehaviorProps for the
+ * configuration of the default behavior. Additional behaviors can be provided
+ * as well, keyed by their path pattern and following the same props. These
+ * additional behaviors will inherit the properties of the default behavior.
+ *
+ * You can provide custom error responses to add to the distribution, in case
+ * you want to override CloudFront's default plaintext error responses.
+ *
+ * After successful deployment, the distribution's cache will be invalidated by
+ * default. You can disable this behavior or provide an array of paths to
+ * invalidate. The invalidation will not be awaited, so it will not block the
+ * deployment.
+ *
  * @todo Make use of KeyValueStores for CloudFront functions to store the Basic
  * authentication password.
  */
 export class SiteDistribution extends Construct {
-  public readonly domain?: string;
+  public readonly domains?: string[];
   public readonly zone?: IHostedZone;
   public readonly certificate?: ICertificate;
   public readonly distribution: Distribution;
   public readonly functions: CloudFrontFunction[] = [];
-  public readonly alias?: ARecord;
+  public readonly aliases?: ARecord[];
   public readonly cacheInvalidator?: CacheInvalidator;
 
   constructor(
@@ -77,45 +180,84 @@ export class SiteDistribution extends Construct {
   ) {
     super(scope, id);
 
-    this.domain = this.determineDomain();
+    this.domains = this.determineDomains();
     this.zone = this.findHostedZone();
     this.certificate = this.createCertificate();
     this.distribution = this.createDistribution();
-    this.alias = this.createAlias();
+    this.aliases = this.createAliases();
 
     if (props.invalidateCache ?? true) {
       this.cacheInvalidator = this.createCacheInvalidator();
     }
   }
 
-  protected determineDomain() {
-    const domain = this.props.domain
-      ? [this.props.domain.subdomain, this.props.domain.name]
-          .filter(Boolean)
-          .join(".")
-      : undefined;
+  protected determineDomains() {
+    if (!this.props.domain) {
+      return [];
+    }
 
-    if (domain) {
+    const domainsProps = Array.isArray(this.props.domain)
+      ? this.props.domain
+      : [this.props.domain];
+
+    const domains = domainsProps.map(({ name, subdomain }) =>
+      [subdomain, name].filter(Boolean).join("."),
+    );
+
+    for (const domain in domains) {
       new CfnOutput(this, "URL", { value: "https://" + domain });
     }
 
-    return domain;
+    return domains;
+  }
+
+  protected getPrimaryDomain(): Domain | undefined {
+    if (Array.isArray(this.props.domain)) {
+      return this.props.domain[0];
+    } else {
+      return this.props.domain;
+    }
+  }
+
+  protected getAlternateDomains(): Domain[] {
+    if (Array.isArray(this.props.domain)) {
+      return this.props.domain.slice(1);
+    } else {
+      return [];
+    }
   }
 
   protected findHostedZone() {
-    return this.props.domain
-      ? this.props.domain?.zone ??
-          HostedZone.fromLookup(this, "HostedZone", {
-            domainName: this.props.domain.name,
-          })
+    if (this.props.hostedZone) {
+      return this.props.hostedZone;
+    }
+
+    const primaryDomain = this.getPrimaryDomain();
+
+    return primaryDomain
+      ? HostedZone.fromLookup(this, "HostedZone", {
+          domainName: primaryDomain.name,
+        })
       : undefined;
   }
 
+  protected fqdn(domain: Domain) {
+    return [domain.subdomain, domain.name].filter(Boolean).join(".");
+  }
+
   protected createCertificate() {
+    if (this.props.certificate) {
+      return this.props.certificate;
+    }
+
+    const primaryDomain = this.getPrimaryDomain();
+    const alternateDomains = this.getAlternateDomains();
+
     const certificate =
-      this.domain && this.zone
+      primaryDomain && this.zone
         ? new Certificate(this, "Certificate", {
-            domainName: this.domain,
+            domainName: this.fqdn(primaryDomain),
+            subjectAlternativeNames: alternateDomains.map(this.fqdn),
             validation: CertificateValidation.fromDns(this.zone),
           })
         : undefined;
@@ -139,8 +281,10 @@ export class SiteDistribution extends Construct {
     const distribution = new Distribution(this, "Distribution", {
       priceClass: this.props.priceClass,
       certificate: this.certificate,
-      domainNames: this.domain ? [this.domain] : undefined,
+      domainNames:
+        this.domains && this.domains.length > 0 ? this.domains : undefined,
       defaultBehavior: this.behavior(),
+      errorResponses: this.props.errorResponses,
       additionalBehaviors: this.props.behaviors
         ? revalueObject(this.props.behaviors, ([pattern, props]) =>
             this.behavior({ pattern, ...props }),
@@ -370,16 +514,24 @@ export class SiteDistribution extends Construct {
 		`);
   }
 
-  protected createAlias() {
-    return this.domain && this.zone
-      ? new ARecord(this, "DomainAlias", {
-          recordName: this.domain,
+  protected createAliases() {
+    const domains = this.domains;
+    const zone = this.zone;
+
+    if (!domains || !zone) {
+      return undefined;
+    }
+
+    return domains.map(
+      (domain) =>
+        new ARecord(this, "DomainAlias", {
+          recordName: domain,
           target: RecordTarget.fromAlias(
             new CloudFrontTarget(this.distribution),
           ),
-          zone: this.zone,
-        })
-      : undefined;
+          zone,
+        }),
+    );
   }
 
   protected createCacheInvalidator() {

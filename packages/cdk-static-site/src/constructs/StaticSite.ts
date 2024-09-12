@@ -44,6 +44,9 @@ export interface StaticSiteProps {
  * public, while still allowing access by the CloudFront distribution, which is
  * configured to include that secret header.
  * @see https://repost.aws/knowledge-center/cloudfront-serve-static-website
+ *
+ * @todo Make the distribution optional, to reduce cost and increase deployment
+ * speed for development environments.
  */
 export class StaticSite extends Construct {
   public readonly refererSecret: Secret;
