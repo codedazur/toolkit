@@ -1,5 +1,11 @@
 # @codedazur/cdk-site-distribution
 
+## 0.6.0
+
+### Minor Changes
+
+- [`a1e21fa`](https://github.com/codedazur/toolkit/commit/a1e21faf3bb700e9ba6b92cbac345f696e19dd03) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Multiple domains are now supported, as well as providing your own hosted zone certificate and customizing the error responses.
+
 ## 0.5.3
 
 ### Patch Changes
