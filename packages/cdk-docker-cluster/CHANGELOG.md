@@ -1,5 +1,11 @@
 # @codedazur/cdk-docker-cluster
 
+## 0.9.7
+
+### Patch Changes
+
+- [#296](https://github.com/codedazur/toolkit/pull/296) [`ed9f7e6`](https://github.com/codedazur/toolkit/commit/ed9f7e62e0f1a53d34356963ac9bcfab77219b45) Thanks [@rickootes](https://github.com/rickootes)! - Correct typo in autoscaling configuration.
+
 ## 0.9.6
 
 ### Patch Changes
