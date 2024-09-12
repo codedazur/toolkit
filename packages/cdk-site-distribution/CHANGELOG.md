@@ -1,5 +1,11 @@
 # @codedazur/cdk-site-distribution
 
+## 0.6.1
+
+### Patch Changes
+
+- [`d9802e4`](https://github.com/codedazur/toolkit/commit/d9802e4a5e31e09a1ea99dcd89e5512bc9db4fe4) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Alias records now have unique resource IDs.
+
 ## 0.6.0
 
 ### Minor Changes
