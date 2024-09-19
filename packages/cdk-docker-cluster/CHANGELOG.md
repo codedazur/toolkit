@@ -1,5 +1,15 @@
 # @codedazur/cdk-docker-cluster
 
+## 1.1.0
+
+### Minor Changes
+
+- [`5a3a979`](https://github.com/codedazur/toolkit/commit/5a3a979ed8de855f6ef4d410eed95db2230e0b2e) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Autoscaling thresholds and cooldowns can now be configured.
+
+### Patch Changes
+
+- [`78a1ab2`](https://github.com/codedazur/toolkit/commit/78a1ab2f853f66480ff7b240d083aa22883471ab) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - If a minimum and maximum task count is provided, the cluster will now autoscale at 75% cpu or memory utilization by default.
+
 ## 1.0.0
 
 ### Major Changes
