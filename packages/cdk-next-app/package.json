@@ -1,6 +1,6 @@
 {
   "name": "@codedazur/cdk-next-app",
-  "version": "0.3.7",
+  "version": "1.0.0",
   "main": ".dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -27,7 +27,7 @@
     "constructs": ">=10"
   },
   "dependencies": {
-    "@codedazur/cdk-docker-cluster": "^0.9.9"
+    "@codedazur/cdk-docker-cluster": "^1.0.0"
   },
   "devDependencies": {
     "@types/node": "^20.14.10",

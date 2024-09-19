@@ -1,5 +1,11 @@
 # @codedazur/cdk-site-distribution
 
+## 1.0.0
+
+### Major Changes
+
+- [`fa32d93`](https://github.com/codedazur/toolkit/commit/fa32d934b57d6d3aab563881bfaf25b701d35437) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The `ARecord` resources now automatically delete existing records with the same name to prevent clashes with the least amount of downtime and manual work. Any existing domains will need to be removed and re-deployed once to make this work.
+
 ## 0.6.1
 
 ### Patch Changes

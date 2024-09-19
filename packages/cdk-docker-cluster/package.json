@@ -1,6 +1,6 @@
 {
   "name": "@codedazur/cdk-docker-cluster",
-  "version": "0.9.9",
+  "version": "1.0.0",
   "main": ".dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -27,7 +27,7 @@
     "constructs": ">=10"
   },
   "dependencies": {
-    "@codedazur/cdk-site-distribution": "^0.6.1"
+    "@codedazur/cdk-site-distribution": "^1.0.0"
   },
   "devDependencies": {
     "@types/node": "^20.14.10",
