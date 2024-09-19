@@ -2,7 +2,7 @@ import {
   SiteDistribution,
   SiteDistributionProps,
 } from "@codedazur/cdk-site-distribution";
-import { App } from "aws-cdk-lib";
+import { App, Duration } from "aws-cdk-lib";
 import {
   AllowedMethods,
   OriginProtocolPolicy,
@@ -25,18 +25,48 @@ export interface DockerClusterProps {
   source: string | SourceProps | ContainerImage;
   service?: {
     port?: number;
-    tasks?:
-      | number
-      | {
-          minimum: number;
-          maximum: number;
-        };
+    tasks?: number | AutoScalingConfig;
     cpu?: ApplicationLoadBalancedFargateServiceProps["cpu"];
     memory?: ApplicationLoadBalancedFargateServiceProps["memoryLimitMiB"];
     environment?: Record<string, string>;
     secrets?: Record<string, Secret>;
   };
   distribution?: Omit<SiteDistributionProps, "origin">;
+}
+
+interface AutoScalingConfig {
+  /**
+   * The minimum number of tasks to scale out to.
+   */
+  minimum: number;
+  /**
+   * The maximum number of tasks to scale out to.
+   */
+  maximum: number;
+  threshold?: {
+    /**
+     * The memory utilization percentage above which the service will scale out.
+     * @default 75
+     */
+    memory?: number;
+    /**
+     * The CPU utilization percentage above which the service will scale out.
+     * @default 75
+     */
+    cpu?: number;
+  };
+  cooldown?: {
+    /**
+     * The cooldown period for scaling in.
+     * @default Duration.seconds(300)
+     */
+    in?: Duration;
+    /**
+     * The cooldown period for scaling out.
+     * @default Duration.seconds(300)
+     */
+    out?: Duration;
+  };
 }
 
 interface SourceProps {
@@ -119,9 +149,23 @@ export class DockerCluster extends Construct {
     });
 
     if (typeof this.props.service?.tasks === "object") {
-      service.service.autoScaleTaskCount({
+      const autoScaling = service.service.autoScaleTaskCount({
         minCapacity: this.props.service?.tasks.minimum,
         maxCapacity: this.props.service?.tasks.maximum,
+      });
+
+      autoScaling.scaleOnMemoryUtilization("MemoryScaling", {
+        targetUtilizationPercent:
+          this.props.service?.tasks.threshold?.memory ?? 75,
+        scaleInCooldown: this.props.service?.tasks.cooldown?.in,
+        scaleOutCooldown: this.props.service?.tasks.cooldown?.out,
+      });
+
+      autoScaling.scaleOnCpuUtilization("CpuScaling", {
+        targetUtilizationPercent:
+          this.props.service?.tasks.threshold?.cpu ?? 75,
+        scaleInCooldown: this.props.service?.tasks.cooldown?.in,
+        scaleOutCooldown: this.props.service?.tasks.cooldown?.out,
       });
     }
 
