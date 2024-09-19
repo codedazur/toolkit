@@ -13,6 +13,7 @@ import {
   AssetImageProps,
   Cluster,
   ContainerImage,
+  ScalableTaskCount,
   Secret,
 } from "aws-cdk-lib/aws-ecs";
 import {
@@ -87,6 +88,7 @@ export class DockerCluster extends Construct {
   public readonly domain?: string;
   public readonly image: ContainerImage;
   public readonly service: ApplicationLoadBalancedFargateService;
+  public readonly autoScaling?: ScalableTaskCount;
   public readonly siteDistribution: SiteDistribution;
 
   constructor(
@@ -102,6 +104,7 @@ export class DockerCluster extends Construct {
         : this.createImage(this.props.source);
 
     this.service = this.createService();
+    this.autoScaling = this.createAutoScaling(this.service);
     this.siteDistribution = this.createSiteDistribution();
   }
 
@@ -148,28 +151,33 @@ export class DockerCluster extends Construct {
       },
     });
 
-    if (typeof this.props.service?.tasks === "object") {
-      const autoScaling = service.service.autoScaleTaskCount({
-        minCapacity: this.props.service?.tasks.minimum,
-        maxCapacity: this.props.service?.tasks.maximum,
-      });
+    return service;
+  }
 
-      autoScaling.scaleOnMemoryUtilization("MemoryScaling", {
-        targetUtilizationPercent:
-          this.props.service?.tasks.threshold?.memory ?? 75,
-        scaleInCooldown: this.props.service?.tasks.cooldown?.in,
-        scaleOutCooldown: this.props.service?.tasks.cooldown?.out,
-      });
-
-      autoScaling.scaleOnCpuUtilization("CpuScaling", {
-        targetUtilizationPercent:
-          this.props.service?.tasks.threshold?.cpu ?? 75,
-        scaleInCooldown: this.props.service?.tasks.cooldown?.in,
-        scaleOutCooldown: this.props.service?.tasks.cooldown?.out,
-      });
+  protected createAutoScaling(service: ApplicationLoadBalancedFargateService) {
+    if (typeof this.props.service?.tasks !== "object") {
+      return;
     }
 
-    return service;
+    const autoScaling = service.service.autoScaleTaskCount({
+      minCapacity: this.props.service?.tasks.minimum,
+      maxCapacity: this.props.service?.tasks.maximum,
+    });
+
+    autoScaling.scaleOnMemoryUtilization("MemoryScaling", {
+      targetUtilizationPercent:
+        this.props.service?.tasks.threshold?.memory ?? 75,
+      scaleInCooldown: this.props.service?.tasks.cooldown?.in,
+      scaleOutCooldown: this.props.service?.tasks.cooldown?.out,
+    });
+
+    autoScaling.scaleOnCpuUtilization("CpuScaling", {
+      targetUtilizationPercent: this.props.service?.tasks.threshold?.cpu ?? 75,
+      scaleInCooldown: this.props.service?.tasks.cooldown?.in,
+      scaleOutCooldown: this.props.service?.tasks.cooldown?.out,
+    });
+
+    return autoScaling;
   }
 
   protected createSiteDistribution() {
