@@ -528,6 +528,7 @@ export class SiteDistribution extends Construct {
             new CloudFrontTarget(this.distribution),
           ),
           zone,
+          deleteExisting: true,
         }),
     );
   }
