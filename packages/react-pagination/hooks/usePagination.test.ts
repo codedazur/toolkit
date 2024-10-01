@@ -60,6 +60,27 @@ describe("usePagination ", () => {
 
       expect(result.current.page).toBe(1);
     });
+
+    it("should handle mobile view: only show 1 boundaries", () => {
+      const { result } = renderHook(() =>
+        usePagination({
+          pages: 20,
+          initialPage: 1,
+          siblings: 1,
+          boundaries: 2,
+          isMobile: true,
+        }),
+      );
+
+      expect(result.current.range).toEqual([[1, 2, 3], [20]]);
+
+      act(() => {
+        result.current.setPage(2);
+      });
+
+      // // The layout of the segments should still be the same.
+      expect(result.current.range).toEqual([[1, 2, 3], [20]]);
+    });
   });
 
   describe("Array-based pagination", () => {

@@ -20,6 +20,7 @@ interface UsePaginationBaseProps {
   boundaries: number;
 
   gapSize?: number;
+  isMobile?: boolean;
 }
 
 export interface UsePaginationWithPagesProps extends UsePaginationBaseProps {
@@ -101,25 +102,38 @@ export function usePagination<T>(
     [clampIndex],
   );
 
-  const { boundaries = 1, siblings = 1, gapSize = 1 } = props;
+  const { boundaries = 1, siblings = 1, gapSize = 1, isMobile = false } = props;
+
+  const responsiveSiblings = isMobile ? 0 : siblings;
+  const responsiveBoundaries = isMobile ? 1 : boundaries;
 
   const range = useMemo(() => {
     const segments: [number[], number[], number[]] = [
       boundaries ? clampedSequence(1, boundaries) : [],
-      clampedSequence(page - siblings, page + siblings),
-      boundaries
-        ? clampedSequence(computedPages + 1 - boundaries, computedPages)
+      clampedSequence(page - responsiveSiblings, page + responsiveSiblings),
+      responsiveBoundaries
+        ? clampedSequence(
+            computedPages + 1 - responsiveBoundaries,
+            computedPages,
+          )
         : [],
     ];
 
     return formatSegments(
       segments,
       computedPages,
-      siblings,
-      boundaries,
+      responsiveSiblings,
+      responsiveBoundaries,
       gapSize,
     );
-  }, [page, boundaries, siblings, clampedSequence, computedPages, gapSize]);
+  }, [
+    page,
+    responsiveBoundaries,
+    responsiveSiblings,
+    clampedSequence,
+    computedPages,
+    gapSize,
+  ]);
 
   const currentItems = useMemo(
     () =>
