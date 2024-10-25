@@ -1,5 +1,11 @@
 # @codedazur/react-notifications
 
+## 0.5.4
+
+### Patch Changes
+
+- [`14227c8`](https://github.com/codedazur/toolkit/commit/14227c8f021a77a2a826279dbdf73f94e32a4647) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The window.dataLayer is now null-checked in case of adblockers.
+
 ## 0.5.3
 
 ### Patch Changes
