@@ -1,5 +1,11 @@
 # @codedazur/react-notifications
 
+## 0.5.5
+
+### Patch Changes
+
+- [`ec06ed9`](https://github.com/codedazur/toolkit/commit/ec06ed9557dcb56ab534dcac3f44dfb6f4e85fad) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The dataLayer is now prepared in case the script is not yet loaded.
+
 ## 0.5.4
 
 ### Patch Changes
