@@ -10,7 +10,9 @@ export function createGtmTracker({
   prefix,
 }: { prefix?: string } = {}): Tracker {
   return function gtmTracker({ type, ...event }) {
-    window.dataLayer?.push({
+    window.dataLayer = window.dataLayer || [];
+
+    window.dataLayer.push({
       event: [prefix, type].filter(Boolean).join("."),
       ...event,
     });
