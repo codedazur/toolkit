@@ -1,7 +1,7 @@
 "use client";
 
 import { MouseEvent, SyntheticEvent, createContext } from "react";
-import { Tracker } from "../components/TrackingProvider";
+import { Tracker, TrackingMetadata } from "../components/TrackingProvider";
 
 export interface TrackingContext {
   path: string[];
@@ -14,6 +14,7 @@ export interface TrackingContext {
   trackEnter: (element: Element) => Promise<void>;
   trackExit: (element: Element) => Promise<void>;
   trackLoad: (event: SyntheticEvent<Element>) => Promise<void>;
+  metadata?: TrackingMetadata;
 }
 
 export enum TrackingEventType {
@@ -29,7 +30,7 @@ export interface EventMetadata {
   path: string;
 }
 
-export type TrackingEvent = BaseEvent | PageEvent | ElementEvent;
+export type TrackingEvent = BaseEvent | PageEvent | ElementEvent ;
 
 export interface BaseEvent {
   type: string;
@@ -40,6 +41,7 @@ export interface PageEvent extends BaseEvent {
   type: string;
   data: {
     page: PageData;
+    metadata?: TrackingMetadata;
   };
 }
 
@@ -48,6 +50,7 @@ export interface ElementEvent extends BaseEvent {
   data: {
     page: PageData;
     element: ElementData;
+    metadata?: TrackingMetadata;
   };
 }
 
@@ -111,4 +114,5 @@ export const trackingContext = createContext<TrackingContext>({
   trackEnter: async () => undefined,
   trackExit: async () => undefined,
   trackLoad: async () => undefined,
+  metadata: undefined,
 });
