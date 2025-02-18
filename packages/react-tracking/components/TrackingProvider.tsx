@@ -28,7 +28,7 @@ export interface TrackingProviderProps {
   slug?: string;
   tracker?: Tracker | Promise<Tracker> | false;
   children?: ReactNode;
-  metadata?: TrackingMetadata;
+  metadata: TrackingMetadata | null;
 }
 
 export type TrackingMetadata = Record<string, string>;
@@ -41,7 +41,7 @@ export function TrackingProvider({
   slug,
   tracker,
   children,
-  metadata, 
+  metadata = null, 
 }: TrackingProviderProps) {
   const parent = usePrivateTracker();
 
