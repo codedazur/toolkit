@@ -28,7 +28,7 @@ export interface TrackingProviderProps {
   slug?: string;
   tracker?: Tracker | Promise<Tracker> | false;
   children?: ReactNode;
-  metadata: TrackingMetadata | null;
+  metadata?: TrackingMetadata;
 }
 
 export type TrackingMetadata = Record<string, string>;
@@ -41,13 +41,21 @@ export function TrackingProvider({
   slug,
   tracker,
   children,
-  metadata = null, 
+  metadata, 
 }: TrackingProviderProps) {
   const parent = usePrivateTracker();
 
   const inheritedTracker = useMemo(
     () => tracker ?? parent.tracker,
     [parent.tracker, tracker],
+  );
+
+  const inheritedMetadata = useMemo(
+    () => ({
+      ...parent.metadata,
+      ...metadata,
+    }),
+    [parent.metadata, metadata]
   );
 
   const path = useMemo(
@@ -61,22 +69,24 @@ export function TrackingProvider({
         inheritedTracker instanceof Promise
           ? await inheritedTracker
           : inheritedTracker;
-
-      if (resolvedTracker instanceof Function) {
-        const eventData = {
-          timestamp: new Date().getTime(),
-          path: path.join("."),
-          type: event.type,
-          data: {
-            ...event.data,
-            ...(metadata && Object.keys(metadata).length > 0 && { metadata }),
-          },
-        };
-
-        return resolvedTracker(eventData);
-      }
+    
+          if (resolvedTracker instanceof Function) {
+            const baseEvent = {
+              timestamp: new Date().getTime(),
+              path: path.join("."),
+              type: event.type,
+              data: {
+                ...event.data,
+                ...(inheritedMetadata && Object.keys(inheritedMetadata).length > 0
+                  ? { metadata: inheritedMetadata }
+                  : {})
+              }
+            };
+      
+            return resolvedTracker(baseEvent);
+          }        
     },
-    [inheritedTracker, metadata, path], 
+    [inheritedTracker, inheritedMetadata, path],
   );
 
   const trackElement = useCallback(
@@ -86,11 +96,10 @@ export function TrackingProvider({
         data: {
           page: getDataForPage(),
           element: getDataForElement(element),
-          ...(metadata && { metadata }),
         },
       });
     },
-    [metadata, track],
+    [ track],
   );
 
   const trackEvent = useCallback(
@@ -106,11 +115,10 @@ export function TrackingProvider({
         type: TrackingEventType.navigate,
         data: {
           page: { ...getDataForPage(), ...data },
-          ...(metadata && { metadata }),
         },
       });
     },
-    [metadata, track],
+    [ track],
   );
 
   const trackClick = useCallback(
@@ -154,7 +162,7 @@ export function TrackingProvider({
         trackEnter,
         trackExit,
         trackLoad,
-        metadata,
+        metadata: inheritedMetadata,
       }}
     >
       {children}
