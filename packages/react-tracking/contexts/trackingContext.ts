@@ -14,7 +14,7 @@ export interface TrackingContext {
   trackEnter: (element: Element) => Promise<void>;
   trackExit: (element: Element) => Promise<void>;
   trackLoad: (event: SyntheticEvent<Element>) => Promise<void>;
-  metadata: TrackingMetadata | null;
+  metadata: TrackingMetadata | undefined;
 }
 
 export enum TrackingEventType {
@@ -35,6 +35,7 @@ export type TrackingEvent = BaseEvent | PageEvent | ElementEvent ;
 export interface BaseEvent {
   type: string;
   data: object;
+  metadata?: TrackingMetadata;
 }
 
 export interface PageEvent extends BaseEvent {
@@ -114,5 +115,5 @@ export const trackingContext = createContext<TrackingContext>({
   trackEnter: async () => undefined,
   trackExit: async () => undefined,
   trackLoad: async () => undefined,
-  metadata: null,
+  metadata: undefined,
 });
