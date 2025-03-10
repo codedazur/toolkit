@@ -20,6 +20,7 @@ import {
   MediaElementData,
   PageData,
   PageEvent,
+  TrackingContext,
   TrackingEventType,
   trackingContext,
 } from "../contexts/trackingContext";
@@ -70,21 +71,19 @@ export function TrackingProvider({
           ? await inheritedTracker
           : inheritedTracker;
     
-          if (resolvedTracker instanceof Function) {
-            const baseEvent = {
-              timestamp: new Date().getTime(),
-              path: path.join("."),
-              type: event.type,
-              data: {
-                ...event.data,
-                ...(inheritedMetadata && Object.keys(inheritedMetadata).length > 0
+      if (resolvedTracker instanceof Function) {
+        return resolvedTracker( {
+          ...event,
+          timestamp: new Date().getTime(),
+          path: path.join("."),
+          data: {
+            ...event.data,
+            ...(inheritedMetadata && Object.keys(inheritedMetadata).length > 0
                   ? { metadata: inheritedMetadata }
-                  : {})
-              }
-            };
-      
-            return resolvedTracker(baseEvent);
-          }        
+                  : {}),
+          }
+        });
+      }      
     },
     [inheritedTracker, inheritedMetadata, path],
   );
@@ -149,21 +148,26 @@ export function TrackingProvider({
     [trackEvent],
   );
 
+  const value: TrackingContext = {
+    tracker: inheritedTracker,
+    path,
+    track,
+    trackElement,
+    trackEvent,
+    trackNavigate,
+    trackClick,
+    trackEnter,
+    trackExit,
+    trackLoad,
+  };
+
+  if (inheritedMetadata) {
+    value.metadata = inheritedMetadata;
+  }
+
   return (
     <trackingContext.Provider
-      value={{
-        tracker: inheritedTracker,
-        path,
-        track,
-        trackElement,
-        trackEvent,
-        trackNavigate,
-        trackClick,
-        trackEnter,
-        trackExit,
-        trackLoad,
-        metadata: inheritedMetadata,
-      }}
+      value={value}
     >
       {children}
     </trackingContext.Provider>
