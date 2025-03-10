@@ -14,7 +14,7 @@ export interface TrackingContext {
   trackEnter: (element: Element) => Promise<void>;
   trackExit: (element: Element) => Promise<void>;
   trackLoad: (event: SyntheticEvent<Element>) => Promise<void>;
-  metadata: TrackingMetadata | undefined;
+  metadata?: TrackingMetadata;
 }
 
 export enum TrackingEventType {
