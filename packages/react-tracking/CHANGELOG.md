@@ -1,5 +1,11 @@
 # @codedazur/react-notifications
 
+## 0.6.0
+
+### Minor Changes
+
+- [#306](https://github.com/codedazur/toolkit/pull/306) [`d4eee52`](https://github.com/codedazur/toolkit/commit/d4eee52ac0ba3e454e6e36e159ff20bac2e44ad6) Thanks [@krystonen](https://github.com/krystonen)! - Added metadata support and inheritance in TrackingProvider component
+
 ## 0.5.5
 
 ### Patch Changes
