@@ -15,7 +15,7 @@
     "@codedazur/react-components": "^25.2.1",
     "@codedazur/react-date-picker": "^0.0.2",
     "@codedazur/react-dictionary": "^0.2.2",
-    "@codedazur/react-essentials": "^1.5.1",
+    "@codedazur/react-essentials": "^1.5.2",
     "@codedazur/react-forms": "^0.1.1",
     "@codedazur/react-media": "^2.0.0",
     "@codedazur/react-notifications": "^0.1.5",

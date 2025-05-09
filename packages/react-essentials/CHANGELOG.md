@@ -1,5 +1,11 @@
 # @codedazur/react-essentials
 
+## 1.5.2
+
+### Patch Changes
+
+- [`110901a`](https://github.com/codedazur/toolkit/commit/110901a1e3090343b5699ef943ecb40ae9c6da8f) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The MaybeRef type now correctly handles the null case.
+
 ## 1.5.1
 
 ### Patch Changes
