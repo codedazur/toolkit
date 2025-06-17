@@ -3,13 +3,14 @@
   "display": "Storybook",
   "extends": "./base.json",
   "compilerOptions": {
-    "target": "es5",
-    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
-    "noEmit": true,
     "incremental": true,
-    "module": "esnext",
+    "jsx": "preserve",
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "noEmit": true,
     "resolveJsonModule": true,
-    "jsx": "preserve"
+    "target": "ESNext"
   }
 }
