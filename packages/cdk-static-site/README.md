@@ -10,6 +10,79 @@ new StaticSite({
 });
 ```
 
+## Rewrite Modes
+
+The `StaticSite` construct provides a few different rewrite modes to handle different use cases.
+
+### Index Pages (Default)
+
+This is the default rewrite mode. It assumes that ambiguous requests are directory paths and rewrite them to that directory's `index.html` file.
+
+```ts
+new StaticSite({
+  source: "./path/to/build/output",
+  rewriteMode: RewriteMode.IndexPages,
+});
+```
+
+Use this when your application's document structure looks like this:
+
+```
+/
+├── index.html
+├── about/
+│   └── index.html
+└── products/
+    ├── index.html
+    ├── product-1/
+    │   └── index.html
+    └── product-2/
+        └── index.html
+```
+
+### Named Pages
+
+This rewrite mode assumes that ambiguous requests are file paths and rewrite them to that file.
+
+```ts
+new StaticSite({
+  source: "./path/to/build/output",
+  rewriteMode: RewriteMode.NamedPages,
+});
+```
+
+Use this when your application's document structure looks like this:
+
+```
+/
+├── index.html
+├── about.html
+├── products.html
+└── products/
+    ├── product-1.html
+    └── product-2.html
+```
+
+### Single Page
+
+This rewrite mode will rewrite all page requests (requests that do not end with a file extension) to the root index.
+
+```ts
+new StaticSite({
+  source: "./path/to/build/output",
+  rewriteMode: RewriteMode.SinglePage,
+});
+```
+
+Use this when your application's document structure looks like this:
+
+```
+/
+└── index.html
+```
+
+In this scenario, any routing logic is expected to be handled by the application itself on the client side.
+
 ### With Excludes
 
 If your output directory contains files you don't want to include in the deployment, you can exclude those with glob patterns.

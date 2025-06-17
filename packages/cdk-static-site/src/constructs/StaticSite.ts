@@ -15,18 +15,90 @@ import { BucketDeployment, Source } from "aws-cdk-lib/aws-s3-deployment";
 import { Secret } from "aws-cdk-lib/aws-secretsmanager";
 import { Construct } from "constructs";
 
+export enum RewriteMode {
+  /**
+   * Interpret ambiguous requests, as well as directory paths, as requests to
+   * the root index.
+   *
+   * @example
+   * - `/foo` -> `/index.html`
+   * - `/foo/` -> `/index.html`
+   * - `/foo.png` -> `/foo.png`
+   */
+  SinglePage = "SinglePage",
+
+  /**
+   * Interpret ambiguous requests as file paths and rewrite them to that file.
+   *
+   * @example
+   * - `/foo` -> `/foo.html`
+   * - `/foo/` -> `/foo/index.html`
+   * - `/foo.png` -> `/foo.png`
+   */
+  NamedPages = "NamedPages",
+
+  /**
+   * Interpret ambiguous requests as directory paths and rewrite them to that
+   * directory's `index.html` file.
+   *
+   * @example
+   * - `/foo` -> `/foo/index.html`
+   * - `/foo/` -> `/foo/index.html`
+   * - `/foo.png` -> `/foo.png`
+   */
+  IndexPages = "IndexPages",
+}
+
 export interface StaticSiteProps {
+  /**
+   * The source directory to deploy to the bucket. You can either pass a string
+   * path to a directory, or an object with a `directory` property and an
+   * optional `exclude` property.
+   */
   source:
     | string
     | {
         directory: string;
         exclude?: string[];
       };
+
+  /**
+   * The bucket to deploy the source to.
+   */
   bucket?: {
     accelerate?: boolean;
   };
+
+  /**
+   * The StaticSite rewrites request URIs to direct traffic to the correct
+   * document locations. Different strategies are available for different use
+   * cases.
+   *
+   * @see RewriteMode
+   * @default @see RewriteMode.IndexPages
+   */
+  rewriteMode?: RewriteMode;
+
+  /**
+   * The path to the error document that CloudFront will return when a request
+   * is not found, or fails for other reasons.
+   *
+   * @default "error.html"
+   */
   errorDocument?: string;
+
+  /**
+   * The CloudFront distribution to use for the site.
+   *
+   * @see SiteDistributionProps
+   */
   distribution?: Omit<SiteDistributionProps, "origin">;
+
+  /**
+   * The deployment configuration includes the memory limit for the function
+   * that is used to deploy the content to the bucket, and an optional prefix
+   * that allows you to deploy the content to a subdirectory of the bucket.
+   */
   deployment?: {
     memoryLimit?: number;
     prefix?: string;
@@ -67,13 +139,13 @@ export class StaticSite extends Construct {
     this.deployment = this.createDeployment();
   }
 
-  protected createRefererSecret() {
+  protected createRefererSecret(): Secret {
     return new Secret(this, "RefererSecret", {
       generateSecretString: { excludePunctuation: true },
     });
   }
 
-  protected createBucket() {
+  protected createBucket(): Bucket {
     const bucket = new Bucket(this, "Bucket", {
       publicReadAccess: true,
       blockPublicAccess: new BlockPublicAccess({
@@ -83,7 +155,7 @@ export class StaticSite extends Construct {
         restrictPublicBuckets: false,
       }),
       websiteIndexDocument: "index.html",
-      websiteErrorDocument: this.props.errorDocument ?? "404.html",
+      websiteErrorDocument: this.props.errorDocument ?? "error.html",
       transferAcceleration: this.props.bucket?.accelerate,
       removalPolicy: RemovalPolicy.DESTROY,
       autoDeleteObjects: true,
@@ -108,7 +180,7 @@ export class StaticSite extends Construct {
     return bucket;
   }
 
-  protected createSiteDistribution() {
+  protected createSiteDistribution(): SiteDistribution {
     return new SiteDistribution(this, "SiteDistribution", {
       ...this.props.distribution,
       origin: new HttpOrigin(this.bucket.bucketWebsiteDomainName, {
@@ -120,7 +192,7 @@ export class StaticSite extends Construct {
       originRequestPolicy: OriginRequestPolicy.CORS_S3_ORIGIN,
       functions: {
         viewerRequest: [
-          this.getAppendSlashCode(),
+          this.getRewriteCode(),
           ...(this.props.distribution?.functions?.viewerRequest ?? []),
         ],
         ...this.props.distribution?.functions,
@@ -128,14 +200,33 @@ export class StaticSite extends Construct {
     });
   }
 
-  protected getAppendSlashCode() {
+  protected getRewriteCode(): FunctionCode {
+    switch (this.props.rewriteMode) {
+      case RewriteMode.SinglePage:
+        return this.getSinglePageRewriteCode();
+      case RewriteMode.NamedPages:
+        return this.getNamedPagesRewriteCode();
+      case RewriteMode.IndexPages:
+      default:
+        return this.getIndexPagesRewriteCode();
+    }
+  }
+
+  protected getIndexPagesRewriteCode(): FunctionCode {
+    return this.getAppendSlashCode();
+  }
+
+  /**
+   * @deprecated Use `getIndexPagesRewriteCode` instead.
+   */
+  protected getAppendSlashCode(): FunctionCode {
     return FunctionCode.fromInline(/* js */ `
-			function appendSlash(event, next) {
+			function rewriteToIndexPage(event, next) {
 				if (
 					!event.request.uri.endsWith("/") &&
 					!event.request.uri.includes(".")
 				) {
-					event.request.uri += "/";
+					event.request.uri += "/index.html";
 				}
 
 				return next(event);
@@ -143,7 +234,34 @@ export class StaticSite extends Construct {
 		`);
   }
 
-  protected createDeployment() {
+  protected getNamedPagesRewriteCode(): FunctionCode {
+    return FunctionCode.fromInline(/* js */ `
+      function rewriteToNamedPage(event, next) {
+        if (
+          !event.request.uri.endsWith("/") &&
+          !event.request.uri.includes(".")
+        ) {
+          event.request.uri += ".html";
+        }
+
+        return next(event);
+      }
+    `);
+  }
+
+  protected getSinglePageRewriteCode(): FunctionCode {
+    return FunctionCode.fromInline(/* js */ `
+      function rewriteToRootIndex(event, next) {
+        if (!event.request.uri.includes(".")) {
+          event.request.uri = "/index.html";
+        }
+
+        return next(event);
+      }
+    `);
+  }
+
+  protected createDeployment(): BucketDeployment {
     return new BucketDeployment(this, "BucketDeployment", {
       sources: [
         typeof this.props.source === "string"
