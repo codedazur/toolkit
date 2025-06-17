@@ -3,9 +3,10 @@
   "display": "CDK",
   "extends": "./base.json",
   "compilerOptions": {
-    "target": "es2018",
-    "module": "commonjs",
-    "lib": ["es2018", "dom"],
+    "target": "ES2020",
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "lib": ["ES2020", "DOM"],
     "inlineSources": true,
     "inlineSourceMap": true,
     "experimentalDecorators": true

@@ -1,5 +1,5 @@
 import { Image } from "@codedazur/react-components";
-import React, { FunctionComponent } from "react";
+import { FunctionComponent } from "react";
 import logo from "./logo.svg";
 
 export const Logo: FunctionComponent = () => (

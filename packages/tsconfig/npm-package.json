@@ -4,8 +4,9 @@
   "extends": "./base.json",
   "compilerOptions": {
     "lib": ["ESNext", "DOM"],
-    "module": "ESNext",
-    "target": "es6"
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "target": "ES2020"
   },
   "exclude": ["dist"]
 }

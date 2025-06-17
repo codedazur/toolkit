@@ -41,7 +41,7 @@ export const useSingleDatePicker = ({
     minDuration: 1,
     maxDuration: 1,
     isDateDisabled: isDateDisabled
-      ? (date, cursor, dates) => isDateDisabled(date, dates[0])
+      ? (date, _, dates) => isDateDisabled(date, dates[0])
       : undefined,
     ...props,
   });
