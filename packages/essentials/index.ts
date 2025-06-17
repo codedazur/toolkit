@@ -1,4 +1,5 @@
 export * from "./types/optional";
+export * from "./utilities/array/chunk";
 export * from "./utilities/array/shuffle";
 export * from "./utilities/assert";
 export * from "./utilities/geometry/Angle";
@@ -13,6 +14,7 @@ export * from "./utilities/math/modulo";
 export * from "./utilities/math/rad2deg";
 export * from "./utilities/math/sequence";
 export * from "./utilities/object/filterObject";
+export * from "./utilities/object/flattenObject";
 export * from "./utilities/object/mapObject";
 export * from "./utilities/object/mutateObject";
 export * from "./utilities/object/omit";
