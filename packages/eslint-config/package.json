@@ -12,6 +12,6 @@
     "eslint": "^8.46.0",
     "eslint-config-next": "^14.2.5",
     "eslint-config-prettier": "^9.1.0",
-    "eslint-config-turbo": "^2.0.6"
+    "eslint-config-turbo": "^2.5.4"
   }
 }

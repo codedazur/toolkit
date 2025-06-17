@@ -27,14 +27,14 @@
     "react-dom": ">=16.8.0"
   },
   "dependencies": {
-    "@codedazur/essentials": "^1.9.1"
+    "@codedazur/essentials": "^1.11.0"
   },
   "devDependencies": {
-    "@testing-library/dom": "10.3.1",
+    "@testing-library/dom": "10.4.0",
     "@testing-library/react": "alpha",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
-    "@vitejs/plugin-react": "^4.3.1",
+    "@vitejs/plugin-react": "^4.5.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   }
