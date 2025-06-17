@@ -1,6 +1,6 @@
 {
   "name": "@codedazur/cdk-static-site",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "main": ".dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -28,7 +28,7 @@
     "constructs": ">=10"
   },
   "dependencies": {
-    "@codedazur/cdk-site-distribution": "^1.0.0"
+    "@codedazur/cdk-site-distribution": "^1.0.1"
   },
   "devDependencies": {
     "@types/node": "^24.0.3",

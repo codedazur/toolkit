@@ -1,5 +1,15 @@
 # @codedazur/react-notifications
 
+## 0.1.6
+
+### Patch Changes
+
+- [`b24894a`](https://github.com/codedazur/toolkit/commit/b24894a2de01e596669c2b5aca51bc0b28533106) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Mark the package as side-effect-free for tree shaking.
+
+- Updated dependencies [[`b24894a`](https://github.com/codedazur/toolkit/commit/b24894a2de01e596669c2b5aca51bc0b28533106)]:
+  - @codedazur/react-essentials@1.5.3
+  - @codedazur/essentials@1.12.1
+
 ## 0.1.5
 
 ### Patch Changes
