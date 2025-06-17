@@ -1,5 +1,11 @@
 # @codedazur/cdk-static-site
 
+## 3.1.0
+
+### Minor Changes
+
+- [`fc9ea9d`](https://github.com/codedazur/toolkit/commit/fc9ea9d94f25ea967518dc20020ecaaf00dbc4e3) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Three different request rewrite modes are now supported.
+
 ## 3.0.0
 
 ### Major Changes

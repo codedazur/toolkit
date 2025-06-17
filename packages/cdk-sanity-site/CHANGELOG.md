@@ -1,5 +1,14 @@
 # @codedazur/cdk-sanity-site
 
+## 1.0.1
+
+### Patch Changes
+
+- [`51531ab`](https://github.com/codedazur/toolkit/commit/51531abe89589bc2daf07780a138e39eb0476821) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The SanitySite has been marked as deprecated in favor of the StaticSite with the SinglePage rewrite mode.
+
+- Updated dependencies [[`fc9ea9d`](https://github.com/codedazur/toolkit/commit/fc9ea9d94f25ea967518dc20020ecaaf00dbc4e3)]:
+  - @codedazur/cdk-static-site@3.1.0
+
 ## 1.0.0
 
 ### Major Changes
