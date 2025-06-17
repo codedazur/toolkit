@@ -1,5 +1,11 @@
 # @codedazur/essentials
 
+## 1.12.0
+
+### Minor Changes
+
+- [`8d5b8f4`](https://github.com/codedazur/toolkit/commit/8d5b8f404660cfc6e76262716748447c370b9ff8) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The flattenObject utility was added.
+
 ## 1.11.0
 
 ### Minor Changes

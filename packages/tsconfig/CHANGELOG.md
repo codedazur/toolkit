@@ -1,5 +1,15 @@
 # tsconfig
 
+## 1.0.0
+
+### Major Changes
+
+- [`a03ddde`](https://github.com/codedazur/toolkit/commit/a03ddde93d7a33056ff54842b7246dad53ab5675) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Stable release.
+
+### Patch Changes
+
+- [`f9a331e`](https://github.com/codedazur/toolkit/commit/f9a331e22f5e47cc5107d11abae634c518580862) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Set storybook JSX configuration to React.
+
 ## 0.1.0
 
 ### Minor Changes
