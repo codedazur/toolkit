@@ -22,7 +22,6 @@ import { Monospace } from "../../components/Monospace";
 import { Days } from "./components/Days";
 import { Navigation } from "./components/Navigation";
 import { Weekdays } from "./components/Weekdays";
-import docs from "./useSingleDatePicker.docs.mdx";
 
 const localeMap: Record<string, Locale> = {
   "en-US": enUS,
@@ -41,6 +40,7 @@ const weekStartsOnMap: Record<string, Day> = {
   Friday: 5,
   Saturday: 6,
 };
+
 const defaultArgTypes = {
   weekStartsOn: {
     control: { type: "select" },
@@ -62,11 +62,6 @@ const defaultArgTypes = {
 
 const meta: Meta = {
   title: "React/DatePicker/useSingleDatePicker",
-  parameters: {
-    docs: {
-      page: docs,
-    },
-  },
   args: {
     showExternalDays: true,
     autoProgressMonth: false,

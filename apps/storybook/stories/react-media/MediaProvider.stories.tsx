@@ -42,7 +42,6 @@ import { Meta, StoryObj } from "@storybook/react";
 import { FunctionComponent, useMemo, useRef } from "react";
 import { DebugOverlay } from "../../components/DebugOverlay";
 import { Monospace } from "../../components/Monospace";
-import docs from "./MediaProvider.docs.mdx";
 import distantWorldsIi from "./artworks/distant-worlds-ii.jpg";
 import distantWorlds from "./artworks/distant-worlds.jpg";
 import seaOfStars from "./artworks/sea-of-stars.jpg";
@@ -54,11 +53,6 @@ import bigBuckBunny from "./videos/big-buck-bunny.mp4";
 const meta: Meta = {
   title: "React/Media/MediaProvider",
   decorators: [WithCenter],
-  parameters: {
-    docs: {
-      page: docs,
-    },
-  },
 };
 
 export default meta;

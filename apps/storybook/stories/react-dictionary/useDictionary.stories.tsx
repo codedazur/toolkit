@@ -1,15 +1,9 @@
 import { Button, Row } from "@codedazur/react-components";
 import { DictionaryProvider, useDictionary } from "@codedazur/react-dictionary";
 import { Meta, StoryObj } from "@storybook/react";
-import docs from "./useDictionary.docs.mdx";
 
 const meta: Meta = {
   title: "React/Dictionary/useDictionary",
-  parameters: {
-    docs: {
-      page: docs,
-    },
-  },
   args: {
     locale: "de",
   },

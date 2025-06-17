@@ -14,15 +14,9 @@ import {
 import { action } from "@storybook/addon-actions";
 import { Meta, StoryObj } from "@storybook/react";
 import { DebugOverlay } from "../../components/DebugOverlay";
-import docs from "./useForm.docs.mdx";
 
 const meta: Meta = {
   title: "React/Forms/useForm",
-  parameters: {
-    docs: {
-      page: docs,
-    },
-  },
 };
 
 export default meta;

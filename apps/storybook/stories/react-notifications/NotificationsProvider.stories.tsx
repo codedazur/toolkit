@@ -21,15 +21,9 @@ import { expect } from "@storybook/jest";
 import { Meta, StoryObj } from "@storybook/react";
 import { userEvent, within } from "@storybook/testing-library";
 import { FunctionComponent, ReactNode } from "react";
-import docs from "./NotificationsProvider.docs.mdx";
 
 const meta: Meta = {
   title: "React/Notifications/NotificationsProvider",
-  parameters: {
-    docs: {
-      page: docs,
-    },
-  },
 };
 
 export default meta;

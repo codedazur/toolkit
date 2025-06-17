@@ -1,3 +1,4 @@
+import { SymbolButton } from "@apps/storybook/components/SymbolButton";
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
@@ -9,23 +10,16 @@ import {
 } from "@codedazur/react-components";
 import {
   UsePaginationProps,
-  UsePaginationWithPagesProps,
   UsePaginationWithItemsProps,
+  UsePaginationWithPagesProps,
   usePagination,
 } from "@codedazur/react-pagination";
 import { faker } from "@faker-js/faker";
 import { Meta, StoryObj } from "@storybook/react";
-import { SymbolButton } from "@apps/storybook/components/SymbolButton";
-import docs from "./usePagination.docs.mdx";
 import { DebugOverlay } from "../../components/DebugOverlay";
 
 const meta: Meta<UsePaginationProps<string>> = {
   title: "React/Pagination/usePagination",
-  parameters: {
-    docs: {
-      page: docs,
-    },
-  },
   argTypes: {
     initialPage: { control: { type: "number" } },
     siblings: { control: { type: "number" } },

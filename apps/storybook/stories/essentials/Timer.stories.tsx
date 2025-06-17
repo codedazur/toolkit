@@ -2,15 +2,9 @@ import { Timer, TimerEvent } from "@codedazur/essentials";
 import { Button, Center, Column, Row } from "@codedazur/react-components";
 import { action } from "@storybook/addon-actions";
 import type { Meta, StoryObj } from "@storybook/react";
-import docs from "./Timer.docs.mdx";
 
 const meta: Meta<Timer> = {
   title: "Essentials/Timer",
-  parameters: {
-    docs: {
-      page: docs,
-    },
-  },
 };
 
 export default meta;

@@ -1,11 +1,30 @@
-module.exports = {
+import { StorybookConfig } from "@storybook/react-vite";
+import { dirname, join } from "path";
+
+const config: StorybookConfig = {
   stories: ["./stories/**/*.stories.@(js|jsx|ts|tsx)"],
-  addons: ["@storybook/addon-essentials", "@storybook/addon-interactions"],
+  addons: [
+    getAbsolutePath("@storybook/addon-essentials"),
+    getAbsolutePath("@storybook/addon-interactions"),
+    getAbsolutePath("@storybook/addon-a11y"),
+    getAbsolutePath("@storybook/addon-links"),
+  ],
   docs: {
-    autodocs: true,
+    autodocs: false,
   },
   framework: {
-    name: "@storybook/react-webpack5",
+    name: "@storybook/react-vite",
     options: {},
   },
 };
+
+export default config;
+
+/**
+ * The return value is typed as `T` despite technically being `string`, so that
+ * the Storybook configuration still considers the input string as a literal,
+ * allowing it to determine the add-on options type using unions.
+ */
+function getAbsolutePath<T extends string>(value: T): T {
+  return dirname(require.resolve(join(value, "package.json"))) as T;
+}

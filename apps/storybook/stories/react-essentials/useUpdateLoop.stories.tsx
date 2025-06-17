@@ -14,7 +14,6 @@ import { Meta, StoryObj } from "@storybook/react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import styled from "styled-components";
 import { DebugOverlay } from "../../components/DebugOverlay";
-import docs from "./useUpdateLoop.docs.mdx";
 
 interface UseUpdateLoopArgs {
   timeScale?: number;
@@ -23,11 +22,6 @@ interface UseUpdateLoopArgs {
 
 const meta: Meta<UseUpdateLoopArgs> = {
   title: "React/Essentials/useUpdateLoop",
-  parameters: {
-    docs: {
-      page: docs,
-    },
-  },
   argTypes: {
     timeScale: { control: { type: "range", min: 0, max: 2, step: 0.1 } },
     targetFps: { control: { type: "number", min: 0.1, max: 240 } },

@@ -22,15 +22,11 @@ import layerOne from "./diorama/layer-one.png";
 import layerSix from "./diorama/layer-six.png";
 import layerThree from "./diorama/layer-three.png";
 import layerTwo from "./diorama/layer-two.png";
-import docs from "./useParallax.docs.mdx";
 
 const meta: Meta = {
   title: "React/Parallax/useParallax",
   parameters: {
     layout: "fullscreen",
-    docs: {
-      page: docs,
-    },
   },
 };
 

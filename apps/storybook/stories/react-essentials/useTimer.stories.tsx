@@ -20,15 +20,9 @@ import { action } from "@storybook/addon-actions";
 import { Meta } from "@storybook/react";
 import styled from "styled-components";
 import { DebugOverlay } from "../../components/DebugOverlay";
-import docs from "./useTimer.docs.mdx";
 
 const meta: Meta = {
   title: "React/Essentials/useTimer",
-  parameters: {
-    docs: {
-      page: docs,
-    },
-  },
 };
 
 export default meta;

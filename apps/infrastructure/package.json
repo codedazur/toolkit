@@ -15,13 +15,13 @@
   "dependencies": {
     "@apps/storybook": "*",
     "@apps/website": "*",
-    "@codedazur/cdk-static-site": "^3.0.0",
-    "@codedazur/essentials": "^1.11.0",
+    "@codedazur/cdk-static-site": "*",
+    "@codedazur/essentials": "*",
     "aws-cdk-lib": "^2.201.0",
     "constructs": "^10.4.2"
   },
   "devDependencies": {
-    "@codedazur/tsconfig": "^0.1.0",
+    "@codedazur/tsconfig": "*",
     "aws-cdk": "^2.1018.1",
     "dotenv": "^16.5.0",
     "ts-jest": "^29.4.0",

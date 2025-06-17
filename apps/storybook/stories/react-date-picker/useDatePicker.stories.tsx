@@ -14,21 +14,19 @@ import {
   Separate,
   SizedBox,
 } from "@codedazur/react-components";
+import {
+  UseDatePickerProps,
+  useDatePicker,
+} from "@codedazur/react-date-picker";
 import { Meta, StoryObj } from "@storybook/react";
 import { Day } from "date-fns";
 import { enGB, enUS, es, nl, ru } from "date-fns/locale";
 import { FunctionComponent, useMemo, useRef, useState } from "react";
 import { DebugOverlay } from "../../components/DebugOverlay";
-import { Weekdays } from "./components/Weekdays";
-import docs from "./useDatePicker.docs.mdx";
-
-import {
-  UseDatePickerProps,
-  useDatePicker,
-} from "@codedazur/react-date-picker";
 import { Monospace } from "../../components/Monospace";
 import { Days } from "./components/Days";
 import { Navigation } from "./components/Navigation";
+import { Weekdays } from "./components/Weekdays";
 
 const DatePicker: FunctionComponent<UseDatePickerProps> = (props) => {
   const { cursor, dates, month, toNextMonth, toPreviousMonth } =
@@ -72,11 +70,7 @@ const weekStartsOnMap: Record<string, Day> = {
 
 const meta: Meta<UseDatePickerProps> = {
   title: "React/DatePicker/useDatePicker",
-  parameters: {
-    docs: {
-      page: docs,
-    },
-  },
+  component: DatePicker,
   argTypes: {
     subsequentDates: {
       control: { type: "select" },
