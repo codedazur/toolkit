@@ -14,6 +14,7 @@
     "access": "public"
   },
   "license": "MIT",
+  "sideEffects": false,
   "scripts": {
     "develop": "tsup index.ts --format esm,cjs --dts --watch",
     "build": "tsup index.ts --format esm,cjs --dts",
