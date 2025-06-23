@@ -1,5 +1,22 @@
 # @codedazur/react-dictionary
 
+## 1.0.0
+
+### Major Changes
+
+- [`07ce0f2`](https://github.com/codedazur/toolkit/commit/07ce0f2865e68ffacec952b157e1887e4eaaf766) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Stable release.
+
+### Minor Changes
+
+- [`07ce0f2`](https://github.com/codedazur/toolkit/commit/07ce0f2865e68ffacec952b157e1887e4eaaf766) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The useTranslate hook was added.
+
+### Patch Changes
+
+- [`b24894a`](https://github.com/codedazur/toolkit/commit/b24894a2de01e596669c2b5aca51bc0b28533106) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Mark the package as side-effect-free for tree shaking.
+
+- Updated dependencies [[`b24894a`](https://github.com/codedazur/toolkit/commit/b24894a2de01e596669c2b5aca51bc0b28533106)]:
+  - @codedazur/essentials@1.12.1
+
 ## 0.2.2
 
 ### Patch Changes
