@@ -101,47 +101,9 @@ export default function App({ children }) {
 }
 ```
 
-### Remote Dictionaries (Client Component)
-
-In many applications, your translation files will be fetched from an API endpoint. You can handle this by creating a wrapper component that fetches the data, stores it in state and passes it to the `DictionaryProvider` once the data is available.
-
-```tsx
-// RemoteDictionaryProvider.tsx
-import { useState, useEffect, ReactNode } from "react";
-import {
-  Dictionaries,
-  DictionaryProvider,
-  Locale,
-} from "@codedazur/react-dictionary";
-
-interface RemoteDictionaryProviderProps {
-  children: ReactNode;
-}
-
-export function RemoteDictionaryProvider({
-  children,
-}: RemoteDictionaryProviderProps) {
-  const [dictionaries, setDictionaries] = useState<Dictionaries | null>(null);
-
-  useEffect(() => {
-    const fetchDictionaries = async () => {
-      const response = await fetch("https://...");
-      setDictionaries(response.json() as Dictionaries);
-    };
-    fetchDictionaries();
-  }, []);
-
-  return (
-    <DictionaryProvider dictionaries={dictionaries} locale="en">
-      {children}
-    </DictionaryProvider>
-  );
-}
-```
-
 ### Remote Dictionaries (Server Component)
 
-When using a framework that supports React Server Components (like Next.js), you can fetch your dictionaries on the server to improve performance and avoid a client-side loading state. This moves the data-fetching from the browser to the server, which is often much faster.
+In many applications, your translation files will be fetched from an API endpoint. When using a framework that supports React Server Components (like Next.js), you can fetch your dictionaries on the server to improve performance and avoid a client-side loading state. This moves the data-fetching from the browser to the server, which is often much faster.
 
 The pattern is to have a **Server Component** fetch the data and pass it as a prop to a **Client Component** that contains the `DictionaryProvider`.
 
@@ -165,7 +127,7 @@ export default async function RootLayout({ children }) {
   return (
     <html>
       <body>
-        <DictionaryProvider dictionaries={dictionaries}>
+        <DictionaryProvider dictionaries={dictionaries} locale="en">
           {children}
         </DictionaryProvider>
       </body>
@@ -176,33 +138,54 @@ export default async function RootLayout({ children }) {
 
 #### 2. Create a Client Component for the Provider
 
-Because `DictionaryProvider` uses Context, it must be in a Client Component. Create a new file and add the `"use client"` directive at the top.
+Because `DictionaryProvider` uses Context, it must be in a Client Component. Create a new file to re-export it and add the `"use client"` directive at the top.
 
 ```tsx
 // components/DictionaryProvider.tsx
 "use client";
-
-import { ReactNode } from "react";
-import {
-  DictionaryProvider as BaseDictionaryProvider,
-  DictionaryProviderProps,
-  Dictionaries,
-  Locale,
-} from "@codedazur/react-dictionary";
-
-export function DictionaryProvider({
-  dictionaries,
-  children,
-}: DictionaryProviderProps) {
-  return (
-    <BaseDictionaryProvider dictionaries={dictionaries} locale="en">
-      {children}
-    </BaseDictionaryProvider>
-  );
-}
+export { DictionaryProvider } from "@codedazur/react-dictionary";
 ```
 
 With this setup, the translations are fetched on the server and are immediately available on the client, eliminating the need for a loading state and reducing the time to a meaningful paint.
+
+### Remote Dictionaries (Client Component)
+ 
+If you cannot or do not want to use React Server Components, you can still still work with remote dictionaries by creating a wrapper component that fetches the data, stores it in state and passes it to the `DictionaryProvider` once the data is available.
+
+```tsx
+// RemoteDictionaryProvider.tsx
+import { useState, useEffect, ReactNode } from "react";
+import {
+  Dictionaries,
+  DictionaryProvider,
+  Locale,
+} from "@codedazur/react-dictionary";
+
+interface RemoteDictionaryProviderProps {
+  children: ReactNode;
+}
+
+async function getDictionaries(): Dictionaries {
+  const response = await fetch("https://...");
+  return response.json() as Dictionaries;
+}
+
+export function RemoteDictionaryProvider({
+  children,
+}: RemoteDictionaryProviderProps) {
+  const [dictionaries, setDictionaries] = useState<Dictionaries | null>(null);
+
+  useEffect(() => {
+    fetchDictionaries.then(setDictionaries);
+  }, []);
+
+  return (
+    <DictionaryProvider dictionaries={dictionaries} locale="en">
+      {children}
+    </DictionaryProvider>
+  );
+}
+```
 
 ## Managing Locales
 
@@ -216,19 +199,14 @@ Because the `DictionaryProvider` uses context, it must be used within a Client C
 
 ```tsx
 // app/[locale]/layout.tsx (Server Component)
-import { DictionaryProvider } from "../components/DictionaryProvider";
-import { Dictionaries } from "@codedazur/react-dictionary";
-
-async function getDictionaries(): Promise<Dictionaries> {
-  // ... fetch dictionaries from your API or CMS
-}
+// ...
 
 export default async function RootLayout({ children, params }) {
   const dictionaries = await getDictionaries();
   const { locale } = params;
 
   return (
-    <html>
+    <html lang={locale}>
       <body>
         <DictionaryProvider dictionaries={dictionaries} locale={locale}>
           {children}
@@ -237,14 +215,6 @@ export default async function RootLayout({ children, params }) {
     </html>
   );
 }
-```
-
-```tsx
-// components/DictionaryProvider.tsx (Client Component)
-"use client";
-
-// This simple component acts as the boundary between Server and Client Components.
-export { DictionaryProvider } from "@codedazur/react-dictionary";
 ```
 
 With this setup, changing the language is a matter of navigating to a different URL, and the entire application will react accordingly.
@@ -291,8 +261,11 @@ export function LocaleProvider({
   dictionaries,
   defaultLocale,
 }: LocaleProviderProps) {
+  /**
+   * On the server, initialize to the default locale. In the browser, initialize
+   * to the value from localStorage or fall back to the default.
+   */
   const [locale, setLocale] = useState<Locale>(() => {
-    // On the server, return the default. In the browser, get from localStorage or return default.
     if (typeof window === "undefined") {
       return defaultLocale;
     }
