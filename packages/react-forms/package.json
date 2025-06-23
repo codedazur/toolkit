@@ -1,6 +1,6 @@
 {
   "name": "@codedazur/react-forms",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "main": ".dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -28,8 +28,8 @@
     "react-dom": ">=16.8.0"
   },
   "dependencies": {
-    "@codedazur/essentials": "^1.11.0",
-    "@codedazur/react-essentials": "^1.5.2"
+    "@codedazur/essentials": "^1.12.1",
+    "@codedazur/react-essentials": "^1.5.3"
   },
   "devDependencies": {
     "@testing-library/dom": "10.4.0",

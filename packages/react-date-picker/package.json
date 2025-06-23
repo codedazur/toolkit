@@ -1,6 +1,6 @@
 {
   "name": "@codedazur/react-date-picker",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "main": ".dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -28,7 +28,7 @@
     "react-dom": ">=16.8.0"
   },
   "dependencies": {
-    "@codedazur/essentials": "^1.11.0",
+    "@codedazur/essentials": "^1.12.1",
     "date-fns": "^2.30.0"
   },
   "devDependencies": {

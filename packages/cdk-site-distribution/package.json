@@ -1,6 +1,6 @@
 {
   "name": "@codedazur/cdk-site-distribution",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": ".dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -28,8 +28,8 @@
     "constructs": ">=10"
   },
   "dependencies": {
-    "@codedazur/cdk-cache-invalidator": "^1.2.1",
-    "@codedazur/essentials": "^1.11.0"
+    "@codedazur/cdk-cache-invalidator": "^1.2.2",
+    "@codedazur/essentials": "^1.12.1"
   },
   "devDependencies": {
     "@types/node": "^24.0.3",
