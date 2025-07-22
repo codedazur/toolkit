@@ -1,4 +1,5 @@
-export * from "./types/optional";
+export * from "./types/DeepPartial";
+export * from "./types/Optional";
 export * from "./utilities/array/chunk";
 export * from "./utilities/array/shuffle";
 export * from "./utilities/assert";

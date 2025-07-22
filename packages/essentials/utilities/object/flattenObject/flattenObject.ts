@@ -77,7 +77,7 @@ type Flatten<T, D extends number = typeof defaultMaxDepth> =
  * @returns A new object with flattened keys and their corresponding values.
  */
 export function flattenObject<
-  T extends Record<string | number, unknown>,
+  const T extends Record<string | number, unknown>,
   D extends number,
 >(object: T, options: { maxDepth: D }): Flatten<T, D>;
 
@@ -89,7 +89,7 @@ export function flattenObject<
  * @param options An object containing configuration options.
  * @returns A new object with flattened keys and their corresponding values.
  */
-export function flattenObject<T extends Record<string | number, unknown>>(
+export function flattenObject<const T extends Record<string | number, unknown>>(
   object: T,
   options?: { maxDepth?: never },
 ): Flatten<T, typeof defaultMaxDepth>;
@@ -102,7 +102,7 @@ export function flattenObject<T extends Record<string | number, unknown>>(
  * @param options An object containing configuration options.
  * @returns A new object with flattened keys and their corresponding values.
  */
-export function flattenObject<T extends Record<string | number, unknown>>(
+export function flattenObject<const T extends Record<string | number, unknown>>(
   object: T,
   options?: { maxDepth?: number },
 ): Record<string, unknown> {

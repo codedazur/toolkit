@@ -7,6 +7,7 @@
     "build": "storybook build -c . -o .storybook",
     "audit": "npm audit --omit dev --audit-level high",
     "lint": "TIMING=1 eslint \"**/*.ts*\"",
+    "types": "tsc --noEmit",
     "test": "vitest run --passWithNoTests"
   },
   "dependencies": {
