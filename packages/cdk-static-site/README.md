@@ -1,6 +1,4 @@
-# StaticSite
-
-## Examples
+# CDK Static Site
 
 The minimum needed to get a `StaticSite` up and running is to provide the path to the directory that you want to deploy as your website.
 
@@ -16,7 +14,7 @@ The `StaticSite` construct provides a few different rewrite modes to handle diff
 
 ### Index Pages (Default)
 
-This is the default rewrite mode. It assumes that ambiguous requests are directory paths and rewrite them to that directory's `index.html` file.
+This is the default rewrite mode. It assumes that ambiguous requests are directory paths and rewrites them to that directory's `index.html` file.
 
 ```ts
 new StaticSite({
@@ -25,7 +23,7 @@ new StaticSite({
 });
 ```
 
-Use this when your application's document structure looks like this:
+Use this mode when your site's document structure looks like this:
 
 ```
 /
@@ -42,7 +40,7 @@ Use this when your application's document structure looks like this:
 
 ### Named Pages
 
-This rewrite mode assumes that ambiguous requests are file paths and rewrite them to that file.
+This rewrite mode assumes that ambiguous requests are file paths and rewrites them to that file.
 
 ```ts
 new StaticSite({
@@ -51,7 +49,7 @@ new StaticSite({
 });
 ```
 
-Use this when your application's document structure looks like this:
+Use this mode when your site's document structure looks like this:
 
 ```
 /
@@ -74,7 +72,7 @@ new StaticSite({
 });
 ```
 
-Use this when your application's document structure looks like this:
+Use this mode when your site's document structure looks like this:
 
 ```
 /
@@ -83,7 +81,7 @@ Use this when your application's document structure looks like this:
 
 In this scenario, any routing logic is expected to be handled by the application itself on the client side.
 
-### With Excludes
+## With Excludes
 
 If your output directory contains files you don't want to include in the deployment, you can exclude those with glob patterns.
 
@@ -96,7 +94,7 @@ new StaticSite({
 });
 ```
 
-### With Custom Domain Name
+## With Custom Domain Name
 
 If you provide a domain name and an optional subdomain, Route53 and Certificate Manager will be used to create the necessary resources.
 
@@ -130,7 +128,7 @@ new StaticSite(this, "StaticSite", {
 });
 ```
 
-### With Basic Authentication
+## With Basic Authentication
 
 If you do not provide a password, a Secrets Manager secret will be created and its secret value used to verify the Authorization header using a CloudFront function. Keep in mind that editing the secret's value will not update the CloudFront function.
 
@@ -163,7 +161,9 @@ new StaticSite(this, "StaticSite", {
 
 Or, you could provide the password as a plain string, typically read from an environment variable.
 
-> WARNING: This method does NOT meet production security standards, even if the password is not hardcoded into the codebase, because it will result in the password string being readable in the CloudFormation template, which is uploaded to AWS. Use this approach with caution and only in cases where a leak is not considered problematic.
+> [!WARNING]
+>
+> This method does NOT meet production security standards, even if the password is not hardcoded into the codebase, because it will result in the password string being readable in the CloudFormation template, which is uploaded to AWS. Use this approach with caution and only in cases where a leak is not considered problematic.
 
 ```ts
 new StaticSite(this, "StaticSite", {
@@ -177,7 +177,7 @@ new StaticSite(this, "StaticSite", {
 });
 ```
 
-### With Explicit Cache Invalidation
+## With Explicit Cache Invalidation
 
 By default, all routes will be flushed from the cache upon deployment. This is performed asynchronously using a step function, so that the deployment procedure does not hold until the invalidation is completed.
 
@@ -199,7 +199,7 @@ new StaticSite(this, "StaticSite", {
 });
 ```
 
-### With Custom Error Document
+## With Custom Error Document
 
 By default, the `StaticSite` will load a `404.html` document when the requested path does not exist. If your application uses a different document, you can override it.
 

@@ -6,6 +6,7 @@ import {
   DockerClusterProps,
 } from "@codedazur/cdk-docker-cluster";
 import { DockerBuildSecret } from "aws-cdk-lib";
+import { AllowedMethods, CachePolicy } from "aws-cdk-lib/aws-cloudfront";
 import { ContainerImage } from "aws-cdk-lib/aws-ecs";
 import { Construct } from "constructs";
 
@@ -15,8 +16,9 @@ export interface NextAppProps extends DockerClusterProps {}
  * A docker cluster preconfigured for running a Next.js application with support
  * for private NPM packages using a build-time secret.
  *
- * @todo Add specific distribution behaviors for the various Next.js features.
- * @see https://bitbucket.org/codedazur/cdk-constructs/src/v5.14.0/src/NextSite/NextSite.ts
+ * @todo Document and standardize a shared cache pool for Next.js applications
+ * that run on multiple containers.
+ * @see https://nextjs.org/docs/app/guides/self-hosting#configuring-caching
  */
 export class NextApp extends DockerCluster {
   constructor(
@@ -40,9 +42,51 @@ export class NextApp extends DockerCluster {
         ...distribution,
         behaviors: {
           ...distribution?.behaviors,
+
+          /**
+           * API routes should not be cached by the CDN.
+           * @see https://nextjs.org/docs/app/guides/self-hosting#usage-with-cdns
+           */
           "/api/*": {
             authentication: false,
+            allowedMethods: AllowedMethods.ALLOW_ALL,
+            cachePolicy: CachePolicy.CACHING_DISABLED,
             ...distribution?.behaviors?.["/api/*"],
+          },
+
+          /**
+           * Statically generated assets with hashes in the filename. These can
+           * be cached forever.
+           * @see https://nextjs.org/docs/app/guides/self-hosting#automatic-caching
+           */
+          "/_next/static/*": {
+            allowedMethods: AllowedMethods.ALLOW_GET_HEAD_OPTIONS,
+            cachePolicy: CachePolicy.CACHING_OPTIMIZED,
+            ...distribution?.behaviors?.["/_next/static/*"],
+          },
+
+          /**
+           * Assets for Next.js Image Optimization. Caching is based on query
+           * strings. This behavior inherits the default cache policy from the
+           * DockerCluster, which should be configured to include query
+           * strings in the cache key.
+           * @see https://nextjs.org/docs/app/guides/self-hosting#image-optimization
+           */
+          "/_next/image*": {
+            allowedMethods: AllowedMethods.ALLOW_GET_HEAD_OPTIONS,
+            ...distribution?.behaviors?.["/_next/image*"],
+          },
+
+          /**
+           * Page data for client-side navigation. Caching should be aligned
+           * with the corresponding page. This behavior inherits the default
+           * cache policy, which should respect the origin's Cache-Control
+           * headers.
+           * @see https://nextjs.org/docs/app/guides/self-hosting#caching-and-isr
+           */
+          "/_next/data/*": {
+            allowedMethods: AllowedMethods.ALLOW_GET_HEAD_OPTIONS,
+            ...distribution?.behaviors?.["/_next/data/*"],
           },
         },
       },

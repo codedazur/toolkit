@@ -7,6 +7,18 @@ interface Size {
   height: number | undefined;
 }
 
+/**
+ * @todo Make the Size type's width and height properties non-optional, and
+ * instead, make the entire return type of this hook optional. This better
+ * reflects the fact that the width and height are always present together if
+ * they are present at all, and it also simplifies null-checks (albeit at the
+ * cost of complicating destructuring).
+ * @todo Either include the scroll size in this hook, or create a separate hook
+ * for it.
+ * @todo Compare this implementation with the private hook of the same name
+ * defined in `@codedazur/react-parallax/hooks/useParallax.ts` and pick the one
+ * that's best.
+ */
 export const useSize = <T extends Element>({
   ref,
   options,
