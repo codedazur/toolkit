@@ -34,6 +34,7 @@ export type Locale = string;
 export interface DictionaryContext {
   locale: Locale | null;
   entries: Dictionaries;
+  fallback?: (key: string) => string;
 }
 
 export const dictionaryContext = createContext<DictionaryContext>({

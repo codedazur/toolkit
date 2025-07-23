@@ -12,12 +12,14 @@ export interface DictionaryProviderProps {
   locale?: Locale;
   dictionaries: Record<Locale, Record<DictionaryKey, string>>;
   children: ReactNode;
+  fallback?: (key: string) => string;
 }
 
 export const DictionaryProvider: FunctionComponent<DictionaryProviderProps> = ({
   locale = null,
   dictionaries,
   children,
+  fallback,
 }) => {
   const map = useMemo(
     () =>
@@ -40,6 +42,7 @@ export const DictionaryProvider: FunctionComponent<DictionaryProviderProps> = ({
       value={{
         locale,
         entries: map,
+        fallback,
       }}
     >
       {children}
