@@ -1,6 +1,6 @@
 import { Button, Row } from "@codedazur/react-components";
 import { useDelta } from "@codedazur/react-essentials";
-import { Meta, StoryObj } from "@storybook/react";
+import { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { DebugOverlay } from "../../components/DebugOverlay";
 import docs from "./useDelta.docs.mdx";

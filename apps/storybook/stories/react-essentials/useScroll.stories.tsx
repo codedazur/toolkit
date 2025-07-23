@@ -14,7 +14,7 @@ import {
   deepPurple,
 } from "@codedazur/react-components";
 import { useScroll } from "@codedazur/react-essentials";
-import { Meta, StoryObj } from "@storybook/react";
+import { Meta, StoryObj } from "@storybook/react-vite";
 import { motion, transform } from "framer-motion";
 import { useMemo, useRef } from "react";
 import styled from "styled-components";

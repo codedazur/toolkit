@@ -1,6 +1,6 @@
 import { Button, Column, Row } from "@codedazur/react-components";
 import { usePrevious } from "@codedazur/react-essentials";
-import { Meta, StoryObj } from "@storybook/react";
+import { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { DebugOverlay } from "../../components/DebugOverlay";
 import { Monospace } from "../../components/Monospace";

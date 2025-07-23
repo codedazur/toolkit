@@ -86,49 +86,49 @@ export const useUpdateLoop = ({
   /**
    * The ID of the requested animation frame.
    */
-  const requestedFrameId = useRef<number>();
+  const requestedFrameId = useRef<number>(undefined);
 
   /**
    * The index of the current frame.
    */
-  const frame = useRef<number>();
+  const frame = useRef<number>(undefined);
 
   /**
    * The timestamp of the current frame.
    */
-  const time = useRef<number>();
+  const time = useRef<number>(undefined);
 
   /**
    * The timestamp of the previous frame.
    */
-  const previousTime = useRef<number>();
+  const previousTime = useRef<number>(undefined);
 
   /**
    * Time difference between the current frame and the previous frame
    */
-  const deltaTime = useRef<number>();
+  const deltaTime = useRef<number>(undefined);
 
   /**
    * The total elapsed time since the start of the loop.
    */
-  const elapsedTime = useRef<number>();
+  const elapsedTime = useRef<number>(undefined);
 
   /**
    * The deltaTime scaled to the timeScale.
    */
-  const scaledDeltaTime = useRef<number>();
+  const scaledDeltaTime = useRef<number>(undefined);
 
   /**
    * The total elapsed time scaled to the timeScale.
    */
-  const scaledElapsedTime = useRef<number>();
+  const scaledElapsedTime = useRef<number>(undefined);
 
   /**
    * The time since the last call to the `onUpdate` callback. This is used to
    * check whether enough time has passed to call `onUpdate` again given the
    * `targetFps`.
    */
-  const checkTime = useRef<number>();
+  const checkTime = useRef<number>(undefined);
 
   /**
    * Reference to the `timeScale` value.
@@ -138,7 +138,7 @@ export const useUpdateLoop = ({
   /**
    * The target duration for a single frame given the `targetFps`.
    */
-  const targetIntervalRef = useRef<number>();
+  const targetIntervalRef = useRef<number>(undefined);
 
   /**
    * Update the `targetIntervalRef` when the `targetFps` changes.

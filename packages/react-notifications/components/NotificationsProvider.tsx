@@ -4,7 +4,6 @@ import { revalueObject, Timer } from "@codedazur/essentials";
 import {
   FunctionComponent,
   ReactNode,
-  Reducer,
   useCallback,
   useEffect,
   useReducer,
@@ -73,8 +72,8 @@ type Limit = number | false;
 export const NotificationsProvider: FunctionComponent<
   NotificationsProviderProps
 > = ({ autoDismiss, limit, children }) => {
-  const [groups, dispatch] = useReducer<Reducer<Notifications, Actions>>(
-    (state, action) => {
+  const [groups, dispatch] = useReducer(
+    (state: Notifications, action: Actions): Notifications => {
       switch (action.operation) {
         case "add":
           return {
@@ -111,7 +110,7 @@ export const NotificationsProvider: FunctionComponent<
       group: string,
       option: MaybeGrouped<Option> | undefined,
     ): Option | undefined => {
-      return isGrouped(option) ? option?.[group] ?? option?.default : option;
+      return isGrouped(option) ? (option?.[group] ?? option?.default) : option;
     },
     [],
   );
@@ -148,7 +147,7 @@ export const NotificationsProvider: FunctionComponent<
         return groupLimit !== false ? all.slice(groupLimit) : [];
       }),
     );
-  }, [getGroupLimit, groups, limit]);
+  }, [getGroupLimit, groups]);
 
   const remove = useCallback((group: string, id: number) => {
     dispatch({

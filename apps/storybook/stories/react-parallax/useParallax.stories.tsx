@@ -14,7 +14,7 @@ import {
 } from "@codedazur/react-components";
 import { useParallax } from "@codedazur/react-parallax";
 import { faker } from "@faker-js/faker";
-import { Meta, StoryObj } from "@storybook/react";
+import { Meta, StoryObj } from "@storybook/react-vite";
 import styled from "styled-components";
 import layerFive from "./diorama/layer-five.png";
 import layerFour from "./diorama/layer-four.png";

@@ -10,7 +10,7 @@ import {
   size,
 } from "@codedazur/react-components";
 import { Frame, useUpdateLoop } from "@codedazur/react-essentials";
-import { Meta, StoryObj } from "@storybook/react";
+import { Meta, StoryObj } from "@storybook/react-vite";
 import { useEffect, useMemo, useRef, useState } from "react";
 import styled from "styled-components";
 import { DebugOverlay } from "../../components/DebugOverlay";

@@ -3,7 +3,7 @@ import { Text, Center } from "@codedazur/react-components";
 import { useMotionPreferences } from "@codedazur/react-preferences";
 
 import docs from "./useMotionPreferences.docs.mdx";
-import { Meta, StoryObj } from "@storybook/react";
+import { Meta, StoryObj } from "@storybook/react-vite";
 
 const meta: Meta = {
   title: "React/Preferences/useMotionPreferences",

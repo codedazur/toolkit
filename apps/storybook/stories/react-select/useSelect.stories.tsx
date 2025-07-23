@@ -27,7 +27,7 @@ import {
 } from "@codedazur/react-components";
 import { useSelect, UseSelectProps } from "@codedazur/react-select";
 import { faker } from "@faker-js/faker";
-import { Meta, StoryObj } from "@storybook/react";
+import { Meta, StoryObj } from "@storybook/react-vite";
 import { MutableRefObject, ReactNode, useMemo, useRef, useState } from "react";
 import { styled } from "styled-components";
 import { DebugOverlay } from "../../components/DebugOverlay";

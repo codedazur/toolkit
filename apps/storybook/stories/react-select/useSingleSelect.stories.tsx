@@ -25,7 +25,7 @@ import {
   useSuggestions,
 } from "@codedazur/react-components";
 import { faker } from "@faker-js/faker";
-import { Meta, StoryObj } from "@storybook/react";
+import { Meta, StoryObj } from "@storybook/react-vite";
 import { MutableRefObject, useEffect, useMemo, useRef, useState } from "react";
 import styled from "styled-components";
 import { DebugOverlay } from "../../components/DebugOverlay";

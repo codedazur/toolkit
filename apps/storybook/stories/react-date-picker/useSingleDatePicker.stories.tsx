@@ -14,7 +14,7 @@ import {
   UseSingleDatePickerProps,
   useSingleDatePicker,
 } from "@codedazur/react-date-picker";
-import { Meta } from "@storybook/react";
+import { Meta } from "@storybook/react-vite";
 import { Day, addDays } from "date-fns";
 import { enGB, enUS, es, nl, ru } from "date-fns/locale";
 import { FunctionComponent, useMemo, useRef, useState } from "react";

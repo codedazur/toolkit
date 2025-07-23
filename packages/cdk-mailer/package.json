@@ -28,15 +28,15 @@
     "constructs": ">=10"
   },
   "dependencies": {
-    "@aws-sdk/client-lambda": "^3.830.0",
-    "@aws-sdk/client-ses": "^3.830.0",
-    "@aws-sdk/client-sqs": "^3.830.0",
+    "@aws-sdk/client-lambda": "^3.851.0",
+    "@aws-sdk/client-ses": "^3.848.0",
+    "@aws-sdk/client-sqs": "^3.848.0",
     "@codedazur/essentials": "^1.12.1"
   },
   "devDependencies": {
-    "@types/node": "^24.0.3",
-    "aws-cdk-lib": "^2.201.0",
+    "@types/node": "^24.1.0",
+    "aws-cdk-lib": "^2.206.0",
     "constructs": "^10.4.2",
-    "esbuild": "^0.25.5"
+    "esbuild": "^0.25.8"
   }
 }

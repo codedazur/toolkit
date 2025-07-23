@@ -85,7 +85,7 @@ export function getDaysData({
     isSameMonth(day, date) || showExternalDays
       ? {
           date: day,
-          day: getDay(day),
+          day: getDay(day) as Day,
           label: dayLabelFormat(day),
           isDisabled: isDateDisabled(day),
           isInActiveMonth: isSameMonth(day, date),

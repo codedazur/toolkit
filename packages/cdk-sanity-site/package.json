@@ -31,9 +31,9 @@
     "@codedazur/cdk-static-site": "^3.1.1"
   },
   "devDependencies": {
-    "@types/node": "^24.0.3",
-    "aws-cdk-lib": "^2.201.0",
+    "@types/node": "^24.1.0",
+    "aws-cdk-lib": "^2.206.0",
     "constructs": "^10.4.2",
-    "esbuild": "^0.25.5"
+    "esbuild": "^0.25.8"
   }
 }

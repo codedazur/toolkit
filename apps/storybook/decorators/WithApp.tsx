@@ -1,5 +1,5 @@
 import { App } from "@codedazur/react-components";
-import { Decorator } from "@storybook/react";
+import { Decorator } from "@storybook/react-vite";
 import { storyTheme } from "../themes/storyTheme";
 
 export const WithApp: Decorator = (Story) => (

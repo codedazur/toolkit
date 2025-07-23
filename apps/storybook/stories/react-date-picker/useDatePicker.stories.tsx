@@ -18,7 +18,7 @@ import {
   UseDatePickerProps,
   useDatePicker,
 } from "@codedazur/react-date-picker";
-import { Meta, StoryObj } from "@storybook/react";
+import { Meta, StoryObj } from "@storybook/react-vite";
 import { Day } from "date-fns";
 import { enGB, enUS, es, nl, ru } from "date-fns/locale";
 import { FunctionComponent, useMemo, useRef, useState } from "react";

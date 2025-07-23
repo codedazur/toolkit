@@ -5,7 +5,7 @@ import {
   resolveMaybeRef,
   useScroll,
 } from "@codedazur/react-essentials";
-import { RefObject, useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 
 interface BaseUseParallaxProps {
   scrollRef?: MaybeRef<HTMLElement>;
@@ -57,7 +57,7 @@ export function useParallax<T extends HTMLElement>({
   scrollRef,
   factor,
   cover = false,
-}: UseParallaxProps): RefObject<T> {
+}: UseParallaxProps) {
   const ref = useRef<T>(null);
 
   const position = useRef<Vector2>(Vector2.zero);

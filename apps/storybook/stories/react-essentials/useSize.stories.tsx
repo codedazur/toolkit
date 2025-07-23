@@ -6,7 +6,7 @@ import {
   Row,
 } from "@codedazur/react-components";
 import { useSize } from "@codedazur/react-essentials";
-import { Meta, StoryObj } from "@storybook/react";
+import { Meta, StoryObj } from "@storybook/react-vite";
 import { useRef, useState } from "react";
 import { DebugOverlay } from "../../components/DebugOverlay";
 

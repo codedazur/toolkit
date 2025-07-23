@@ -1,4 +1,4 @@
-import { Preview } from "@storybook/react";
+import { Preview } from "@storybook/react-vite";
 import { WithApp } from "./decorators/WithApp";
 
 const preview: Preview = {

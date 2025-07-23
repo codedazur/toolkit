@@ -11,8 +11,8 @@ import {
   isNotEmpty,
   useForm,
 } from "@codedazur/react-forms";
-import { action } from "@storybook/addon-actions";
-import { Meta, StoryObj } from "@storybook/react";
+import { action } from "storybook/actions";
+import { Meta, StoryObj } from "@storybook/react-vite";
 import { DebugOverlay } from "../../components/DebugOverlay";
 
 const meta: Meta = {

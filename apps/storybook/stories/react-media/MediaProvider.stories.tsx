@@ -38,7 +38,7 @@ import {
   useMediaProgress,
   useMediaVolume,
 } from "@codedazur/react-media";
-import { Meta, StoryObj } from "@storybook/react";
+import { Meta, StoryObj } from "@storybook/react-vite";
 import { FunctionComponent, useMemo, useRef } from "react";
 import { DebugOverlay } from "../../components/DebugOverlay";
 import { Monospace } from "../../components/Monospace";

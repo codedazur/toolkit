@@ -18,7 +18,7 @@ import {
 } from "@codedazur/react-notifications";
 import { faker } from "@faker-js/faker";
 import { expect } from "@storybook/jest";
-import { Meta, StoryObj } from "@storybook/react";
+import { Meta, StoryObj } from "@storybook/react-vite";
 import { userEvent, within } from "@storybook/testing-library";
 import { FunctionComponent, ReactNode } from "react";
 

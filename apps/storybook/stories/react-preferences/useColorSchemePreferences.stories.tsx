@@ -3,7 +3,7 @@ import { Text, Center } from "@codedazur/react-components";
 import { useColorSchemePreferences } from "@codedazur/react-preferences";
 
 import docs from "./useColorSchemePreferences.docs.mdx";
-import { Meta, StoryObj } from "@storybook/react";
+import { Meta, StoryObj } from "@storybook/react-vite";
 
 const meta: Meta = {
   title: "React/Preferences/useColorSchemePreferences",
