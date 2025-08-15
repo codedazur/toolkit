@@ -1,24 +1,16 @@
 import { Bar } from "@apps/storybook/components/Bar";
+import { Icon } from "@apps/storybook/components/Icon";
 import {
-  AddIcon,
-  background,
+  Button,
   Column,
   IconButton,
   LinearProgress,
-  LinearProgressBar,
-  PauseIcon,
-  PlayArrowIcon,
-  RemoveIcon,
   Row,
-  shape,
-  SkipNextIcon,
-  StopIcon,
   Text,
-} from "@codedazur/react-components";
+} from "@codedazur/fusion-ui";
 import { TimerStatus, useTimer } from "@codedazur/react-essentials";
-import { action } from "storybook/actions";
 import { Meta } from "@storybook/react-vite";
-import styled from "styled-components";
+import { action } from "storybook/actions";
 import { DebugOverlay } from "../../components/DebugOverlay";
 
 const meta: Meta = {
@@ -31,9 +23,9 @@ export const Default = () => {
   const timer = useTimer(action("callback"), 3000);
 
   return (
-    <Column gap="1rem" align="center">
+    <Column gap={400} align="center">
       <TimerProgress {...timer} />
-      <Row gap="1rem">
+      <Row gap={400}>
         <TimerControls {...timer} />
         <TimerExtension {...timer} />
       </Row>
@@ -50,11 +42,7 @@ const TimerProgress = (timer: TimerProgressProps) => {
     <>
       <Bar>
         <Text>{elapsed.toString().padStart(4, "0")}</Text>
-        <PrimaryLinearProgress
-          width="20rem"
-          height="0.5rem"
-          progress={progress}
-        />
+        <LinearProgress size={{ width: 800 }} progress={progress} />
         <Text>{timer.duration}</Text>
       </Bar>
       <DebugOverlay
@@ -69,23 +57,12 @@ const TimerProgress = (timer: TimerProgressProps) => {
   );
 };
 
-const PrimaryLinearProgress = styled(LinearProgress)`
-  ${LinearProgressBar} {
-    ${background({ color: "primary" })};
-    ${shape("stadium")}
-  }
-`;
-
 interface TimerExtensionProps extends ReturnType<typeof useTimer> {}
 
 const TimerExtension = ({ extend }: TimerExtensionProps) => (
   <Bar>
-    <IconButton onClick={() => extend(-1000)}>
-      <RemoveIcon />
-    </IconButton>
-    <IconButton onClick={() => extend(1000)}>
-      <AddIcon />
-    </IconButton>
+    <IconButton icon={Icon.Remove} onClick={() => extend(-1000)} />
+    <IconButton icon={Icon.Add} onClick={() => extend(1000)} />
   </Bar>
 );
 
@@ -105,23 +82,15 @@ const TimerControls = ({
   return (
     <Bar>
       {isRunning ? (
-        <IconButton onClick={pause}>
-          <PauseIcon />
-        </IconButton>
+        <IconButton icon={Icon.Pause} onClick={pause} />
       ) : (
-        <IconButton onClick={resume}>
-          <PlayArrowIcon />
-        </IconButton>
+        <IconButton icon={Icon.Play} onClick={resume} />
       )}
-      <IconButton onClick={start}>start</IconButton>
-      <IconButton onClick={resume}>resume</IconButton>
-      <IconButton onClick={stop}>stop</IconButton>
-      <IconButton onClick={stop} disabled={isStopped}>
-        <StopIcon />
-      </IconButton>
-      <IconButton onClick={end}>
-        <SkipNextIcon />
-      </IconButton>
+      <Button onClick={start}>start</Button>
+      <Button onClick={resume}>resume</Button>
+      <Button onClick={stop}>stop</Button>
+      <IconButton icon={Icon.Stop} onClick={stop} disabled={isStopped} />
+      <IconButton icon={Icon.SkipNext} onClick={end} />
     </Bar>
   );
 };

@@ -1,13 +1,7 @@
-import {
-  Padding,
-  Portal,
-  Positioned,
-  PositionedProps,
-} from "@codedazur/react-components";
+import { Origin } from "@codedazur/essentials";
+import { ExpansionPanel, Popover, Text } from "@codedazur/fusion-ui";
 import { FunctionComponent, useEffect, useState } from "react";
-import styled from "styled-components";
 import YAML, { ScalarTag } from "yaml";
-import { Monospace } from "./Monospace";
 
 interface DebugOverlayProps {
   value: unknown;
@@ -28,25 +22,35 @@ export const DebugOverlay: FunctionComponent<DebugOverlayProps> = ({
     );
   }, [value]);
 
+  const [expanded, setExpanded] = useState(true);
+
   return (
-    <Portal>
-      <DebugBox left={0} top={0}>
-        <Padding all="1rem">
-          <Monospace>{yaml}</Monospace>
-        </Padding>
-      </DebugBox>
-    </Portal>
+    <Popover
+      open={true}
+      anchor={{
+        strategy: "fixed",
+        parent: Origin.topLeft,
+        child: Origin.topLeft,
+        offset: { x: "1rem", y: "1rem" },
+      }}
+    >
+      <ExpansionPanel
+        title="Debug Panel"
+        expanded={expanded}
+        header={{ onClick: () => setExpanded(!expanded) }}
+        opacity={500}
+      >
+        <Text
+          as="pre"
+          font={5}
+          style={{ fontSize: "12px", lineHeight: "1.5em" }}
+        >
+          {yaml}
+        </Text>
+      </ExpansionPanel>
+    </Popover>
   );
 };
-
-const DebugBox = styled(Positioned).attrs<PositionedProps>({
-  mode: "fixed",
-})<PositionedProps>`
-  pointer-events: none;
-  font-size: smaller;
-  line-height: 1.5em;
-  opacity: 0.75;
-`;
 
 const functionTag: ScalarTag = {
   // eslint-disable-next-line @typescript-eslint/ban-types

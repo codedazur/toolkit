@@ -1,29 +1,17 @@
 import {
-  Button,
-  CheckIcon,
+  Box,
   Column,
-  Divider,
   FormField,
-  highlight,
-  Identifiable,
-  Origin,
-  Placeholder,
-  Popover,
-  PopoverProps,
+  Input,
+  PopoverMenu,
   Row,
-  ScrollView,
-  Separate,
-  SizedBox,
-  TextInput,
-  useSuggestions,
-  UseSuggestionsProps,
-} from "@codedazur/react-components";
+  Text,
+} from "@codedazur/fusion-ui";
+import { useSuggestions, UseSuggestionsProps } from "@codedazur/react-select";
 import { faker } from "@faker-js/faker";
 import { Meta, StoryObj } from "@storybook/react-vite";
-import { MutableRefObject, useCallback, useRef, useState } from "react";
-import styled from "styled-components";
+import { useCallback, useState } from "react";
 import { DebugOverlay } from "../../components/DebugOverlay";
-import { Monospace } from "../../components/Monospace";
 
 const defaultOptions = Array.from(
   new Set(Array.from({ length: 10 }).map(() => faker.commerce.product())),
@@ -46,12 +34,20 @@ export const Default: Story = {
 
     return (
       <>
-        <SizedBox width="20rem">
-          <TextInput
+        <Column gap={400} align="center">
+          <Row gap={400}>
+            {suggestions.map((suggestion) => (
+              <Text key={suggestion} variant="label">
+                {suggestion}
+              </Text>
+            ))}
+          </Row>
+          <Input
+            size={{ width: 800 }}
             value={query}
             onChange={(event) => setQuery(event.target.value)}
           />
-        </SizedBox>
+        </Column>
         <DebugOverlay value={{ query, suggestions }} />
       </>
     );
@@ -69,30 +65,33 @@ export const WithCustomFiltering: Story = {
 export const WithPopover: Story = {
   render: function WithPopover(args) {
     const [open, setOpen] = useState(false);
-    const ref = useRef<HTMLDivElement | null>(null);
 
     const { suggestions, query, setQuery } = useSuggestions(args);
 
     return (
       <>
-        <SizedBox width="20rem">
-          <TextInput
-            boxRef={ref}
+        <Box position="relative">
+          <Input
+            size={{ width: 800 }}
             value={query}
             onFocus={() => setOpen(true)}
             onChange={(event) => setQuery(event.target.value)}
           />
-        </SizedBox>
-        <Suggestions
-          anchor={ref}
-          open={open}
-          onClose={() => setOpen(false)}
-          suggestions={suggestions}
-          onSelect={(value) => {
-            setQuery(value);
-            setOpen(false);
-          }}
-        />
+          <PopoverMenu
+            fit="parent"
+            open={open}
+            onClose={() => setOpen(false)}
+            menu={{
+              items: suggestions.map((suggestion) => ({
+                label: suggestion,
+                onClick: () => {
+                  setQuery(suggestion);
+                  setOpen(false);
+                },
+              })),
+            }}
+          />
+        </Box>
         <DebugOverlay value={{ query, suggestions }} />
       </>
     );
@@ -106,7 +105,6 @@ interface GeocodingResult {
 export const WithAsyncFilter: Story = {
   render: function WithAsyncFilter() {
     const [open, setOpen] = useState(false);
-    const ref = useRef<HTMLDivElement | null>(null);
 
     const filter = useCallback(async (query: string) => {
       const uri = `https://nominatim.openstreetmap.org/search?countrycodes=nl&format=json&q=${encodeURI(
@@ -128,104 +126,32 @@ export const WithAsyncFilter: Story = {
 
     return (
       <>
-        <SizedBox width="20rem">
-          <FormField title="Address">
-            <TextInput
-              boxRef={ref}
+        <Box position="relative">
+          <FormField label="Address">
+            <Input
+              size={{ width: 800 }}
               value={query}
               onFocus={() => setOpen(true)}
               onChange={(event) => setQuery(event.target.value)}
             />
           </FormField>
-        </SizedBox>
-        <Suggestions
-          anchor={ref}
-          open={open}
-          onClose={() => setOpen(false)}
-          suggestions={suggestions}
-          onSelect={(value) => {
-            setQuery(value);
-            setOpen(false);
-          }}
-        />
+          <PopoverMenu
+            fit="parent"
+            open={open}
+            onClose={() => setOpen(false)}
+            menu={{
+              items: suggestions.map((suggestion) => ({
+                label: suggestion,
+                onClick: () => {
+                  setQuery(suggestion);
+                  setOpen(false);
+                },
+              })),
+            }}
+          />
+        </Box>
         <DebugOverlay value={{ query, suggestions }} />
       </>
     );
   },
 };
-
-interface SuggestionsProps<T extends string | Identifiable> {
-  anchor: MutableRefObject<HTMLDivElement | null>;
-  width?: PopoverProps["width"];
-  open: boolean;
-  onClose: () => void;
-  suggestions: T[];
-  onSelect: (option: T) => void;
-  isSelected?: (option: T) => boolean;
-}
-
-function Suggestions<T extends string | Identifiable>({
-  anchor,
-  onClose,
-  open,
-  suggestions,
-  onSelect,
-  isSelected = () => false,
-}: SuggestionsProps<T>) {
-  return (
-    <Popover
-      anchor={anchor}
-      open={open}
-      onClose={onClose}
-      width="20rem"
-      anchorOrigin={Origin.bottomLeft}
-      transformOrigin={Origin.topLeft}
-      scrollLock={false}
-      autoFocus={false}
-    >
-      <Placeholder>
-        <ScrollView width="100%" maxHeight="10rem">
-          <Column>
-            <Separate separator={<Divider />}>
-              {suggestions.map((suggestion) => {
-                const label = getLabel(suggestion);
-
-                return (
-                  <ListButton key={label} onClick={() => onSelect(suggestion)}>
-                    <Row
-                      width="100%"
-                      gap="0.5rem"
-                      justify="space-between"
-                      align="center"
-                    >
-                      <Monospace noWrap>{label}</Monospace>
-                      {isSelected(suggestion) ? <CheckIcon /> : undefined}
-                    </Row>
-                  </ListButton>
-                );
-              })}
-            </Separate>
-          </Column>
-        </ScrollView>
-      </Placeholder>
-    </Popover>
-  );
-}
-
-const ListButton = styled(Button)`
-  background-color: transparent;
-  color: ${({ theme }) => theme.colors.foreground.toString()};
-  border: none;
-  justify-content: flex-start;
-
-  &:hover,
-  &:active,
-  &:focus {
-    background-color: ${({ theme }) =>
-      highlight(theme.colors.background).toString()};
-  }
-`;
-
-function getLabel(option: string | Identifiable): string {
-  return typeof option !== "string" ? option.id : option;
-}

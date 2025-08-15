@@ -10,5 +10,5 @@
   "access": "restricted",
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
-  "ignore": ["@apps/infrastructure", "@apps/storybook", "@apps/website"]
+  "ignore": ["@apps/cdk", "@apps/next", "@apps/storybook"]
 }

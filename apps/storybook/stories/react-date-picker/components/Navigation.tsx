@@ -1,12 +1,5 @@
-import {
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  IconButton,
-  Padding,
-  Row,
-} from "@codedazur/react-components";
+import { Icon, IconButton, Row, Text } from "@codedazur/fusion-ui";
 import { FunctionComponent, MouseEventHandler } from "react";
-import { Monospace } from "../../../components/Monospace";
 
 interface NavigationProps {
   label?: string;
@@ -19,15 +12,9 @@ export const Navigation: FunctionComponent<NavigationProps> = ({
   onNextClick,
   onPreviousClick,
 }) => (
-  <Padding all="0.5rem">
-    <Row justify="space-between" align="center">
-      <IconButton onClick={onPreviousClick}>
-        <ChevronLeftIcon />
-      </IconButton>
-      <Monospace>{label}</Monospace>
-      <IconButton onClick={onNextClick}>
-        <ChevronRightIcon />
-      </IconButton>
-    </Row>
-  </Padding>
+  <Row justify="between" align="center" padding={200}>
+    <IconButton icon={Icon.ChevronLeft} onClick={onPreviousClick} />
+    <Text variant="label">{label}</Text>
+    <IconButton icon={Icon.ChevronRight} onClick={onNextClick} />
+  </Row>
 );

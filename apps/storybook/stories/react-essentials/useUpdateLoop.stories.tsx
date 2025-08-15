@@ -1,18 +1,8 @@
-import {
-  Column,
-  IconButton,
-  PauseIcon,
-  PlayArrowIcon,
-  Row,
-  StopIcon,
-  background,
-  shape,
-  size,
-} from "@codedazur/react-components";
+import { Icon } from "@apps/storybook/components/Icon";
+import { Column, IconButton, Row, Surface } from "@codedazur/fusion-ui";
 import { Frame, useUpdateLoop } from "@codedazur/react-essentials";
 import { Meta, StoryObj } from "@storybook/react-vite";
 import { useEffect, useMemo, useRef, useState } from "react";
-import styled from "styled-components";
 import { DebugOverlay } from "../../components/DebugOverlay";
 
 interface UseUpdateLoopArgs {
@@ -51,13 +41,12 @@ export const Default: StoryObj<UseUpdateLoopArgs> = {
 
     const controls = useMemo(
       () => (
-        <Row gap="1rem">
-          <IconButton onClick={isUpdating ? pause : start}>
-            {isUpdating ? <PauseIcon /> : <PlayArrowIcon />}
-          </IconButton>
-          <IconButton onClick={stop}>
-            <StopIcon />
-          </IconButton>
+        <Row gap={400}>
+          <IconButton
+            icon={isUpdating ? Icon.Pause : Icon.Play}
+            onClick={isUpdating ? pause : start}
+          />
+          <IconButton icon={Icon.Stop} onClick={stop} />
         </Row>
       ),
       [start, pause, stop, isUpdating],
@@ -92,29 +81,22 @@ export const WithAnimation: StoryObj<UseUpdateLoopArgs> = {
 
     const controls = useMemo(
       () => (
-        <Row gap="1rem">
-          <IconButton onClick={isUpdating ? pause : start}>
-            {isUpdating ? <PauseIcon /> : <PlayArrowIcon />}
-          </IconButton>
-          <IconButton onClick={stop}>
-            <StopIcon />
-          </IconButton>
+        <Row gap={400}>
+          <IconButton
+            icon={isUpdating ? Icon.Pause : Icon.Play}
+            onClick={isUpdating ? pause : start}
+          />
+          <IconButton icon={Icon.Stop} onClick={stop} />
         </Row>
       ),
       [start, pause, stop, isUpdating],
     );
 
     return (
-      <Column align="center" gap="3rem">
-        <Shape ref={ref} />
+      <Column align="center" gap={900}>
+        <Surface ref={ref} size={600} background={{ color: "primary.base" }} />
         {controls}
       </Column>
     );
   },
 };
-
-const Shape = styled.div(
-  size("10rem"),
-  shape("rounded"),
-  background({ color: "primary" }),
-);

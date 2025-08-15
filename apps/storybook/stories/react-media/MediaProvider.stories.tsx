@@ -1,37 +1,21 @@
 import { Bar } from "@apps/storybook/components/Bar";
+import { Icon } from "@apps/storybook/components/Icon";
 import { List } from "@apps/storybook/components/List";
 import { WithCenter } from "@apps/storybook/decorators/WithCenter";
+import { Origin, pick, timecode } from "@codedazur/essentials";
 import {
-  AbsorbPointer,
-  Avatar,
-  Background,
   Center,
   Column,
-  EdgeInset,
   Flex,
   IconButton,
   Image,
-  Opacity,
-  Padding,
-  PauseIcon,
-  PlayArrowIcon,
-  Positioned,
-  RadioCheckedIcon,
-  RadioUncheckedIcon,
-  RepeatIcon,
+  Popover,
   Row,
-  ShuffleIcon,
-  SkipNextIcon,
-  SkipPreviousIcon,
   Slider,
   Stack,
-  StopIcon,
+  Surface,
   Text,
-  VolumeOffIcon,
-  VolumeUpIcon,
-  pick,
-  timecode,
-} from "@codedazur/react-components";
+} from "@codedazur/fusion-ui";
 import {
   MediaProvider,
   useMedia,
@@ -41,7 +25,6 @@ import {
 import { Meta, StoryObj } from "@storybook/react-vite";
 import { FunctionComponent, useMemo, useRef } from "react";
 import { DebugOverlay } from "../../components/DebugOverlay";
-import { Monospace } from "../../components/Monospace";
 import distantWorldsIi from "./artworks/distant-worlds-ii.jpg";
 import distantWorlds from "./artworks/distant-worlds.jpg";
 import seaOfStars from "./artworks/sea-of-stars.jpg";
@@ -78,13 +61,20 @@ const PlayButton = () => {
   const { track, isPlaying, pause, play } = useMedia();
 
   return isPlaying ? (
-    <IconButton onClick={pause}>
-      <PauseIcon />
-    </IconButton>
+    <IconButton
+      variant="tertiary"
+      size="small"
+      icon={Icon.Pause}
+      onClick={pause}
+    />
   ) : (
-    <IconButton onClick={play} disabled={!track}>
-      <PlayArrowIcon />
-    </IconButton>
+    <IconButton
+      variant="tertiary"
+      size="small"
+      icon={Icon.Play}
+      onClick={play}
+      disabled={!track}
+    />
   );
 };
 
@@ -92,9 +82,13 @@ const StopButton = () => {
   const { isPlaying, stop } = useMedia();
 
   return (
-    <IconButton onClick={stop} disabled={!isPlaying}>
-      <StopIcon />
-    </IconButton>
+    <IconButton
+      variant="tertiary"
+      size="small"
+      icon={Icon.Stop}
+      onClick={stop}
+      disabled={!isPlaying}
+    />
   );
 };
 
@@ -110,7 +104,7 @@ export const WithAutoPlay: StoryObj = {
 
 export const WithVolumeControls = () => (
   <MediaProvider tracks={[meteorites]}>
-    <Row gap="1rem">
+    <Row gap={400}>
       <StateControls />
       <VolumeControls />
     </Row>
@@ -130,30 +124,32 @@ const MuteButton = () => {
   const { isMuted, mute, unmute } = useMedia();
 
   return isMuted ? (
-    <IconButton onClick={unmute}>
-      <VolumeOffIcon />
-    </IconButton>
+    <IconButton
+      variant="tertiary"
+      size="small"
+      icon={Icon.VolumeOff}
+      onClick={unmute}
+    />
   ) : (
-    <IconButton onClick={mute}>
-      <VolumeUpIcon />
-    </IconButton>
+    <IconButton
+      variant="tertiary"
+      size="small"
+      icon={Icon.VolumeUp}
+      onClick={mute}
+    />
   );
 };
 
 const VolumeSlider = () => {
   const { volume, setVolume } = useMediaVolume();
 
-  return (
-    <Padding right="0.5rem">
-      <Slider width="4rem" value={volume} onChange={setVolume} />
-    </Padding>
-  );
+  return <Slider size={{ width: 400 }} value={volume} onChange={setVolume} />;
 };
 
 export const WithSeekControls = () => (
   <MediaProvider tracks={[meteorites]}>
-    <Column gap="1rem" align="center">
-      <Row gap="1rem">
+    <Column gap={400} align="center">
+      <Row gap={400}>
         <StateControls />
         <VolumeControls />
       </Row>
@@ -175,7 +171,11 @@ const SeekControls = () => (
 const Time = () => {
   const { time } = useMediaProgress({ targetFps: 1 });
 
-  return <Text>{timecode.minutes(Math.round(time))}</Text>;
+  return (
+    <Text noWrap variant="label" size="small" font={5}>
+      {timecode.minutes(Math.round(time))}
+    </Text>
+  );
 };
 
 const ProgressSlider = () => {
@@ -183,7 +183,7 @@ const ProgressSlider = () => {
 
   return (
     <Slider
-      width="10rem"
+      size={{ width: 600 }}
       value={progress}
       onDragEnd={(progress) => setProgress(progress)}
     />
@@ -193,15 +193,19 @@ const ProgressSlider = () => {
 const Duration = () => {
   const { duration } = useMedia();
 
-  return <Text>{timecode.minutes(duration)}</Text>;
+  return (
+    <Text noWrap variant="label" size="small" font={5}>
+      {timecode.minutes(duration)}
+    </Text>
+  );
 };
 
 export const WithDynamicTrack = () => (
   <MediaProvider>
-    <Column gap="5rem" align="center">
+    <Column gap={1100} align="center">
       <SelectTrack tracks={[meteorites, alienated, tabulaRasa]} />
-      <Column gap="1rem" align="center">
-        <Row gap="1rem">
+      <Column gap={400} align="center">
+        <Row gap={400}>
           <StateControls />
           <VolumeControls />
         </Row>
@@ -214,11 +218,13 @@ export const WithDynamicTrack = () => (
 );
 
 const SelectTrack = ({ tracks }: { tracks: string[] }) => (
-  <Column gap="1rem">
+  <Column gap={400}>
     {tracks.map((track) => (
-      <Row key={track} gap="0.5rem" align="center">
+      <Row key={track} gap={200} align="center">
         <TrackRadioButton track={track} />
-        <Text>{track.split("/").at(-1)}</Text>
+        <Text noWrap font={5}>
+          {track.split("/").at(-1)}
+        </Text>
       </Row>
     ))}
   </Column>
@@ -228,22 +234,22 @@ const TrackRadioButton = ({ track }: { track: string }) => {
   const { track: currentTrack, setTrack } = useMedia();
 
   return track === currentTrack ? (
-    <IconButton disabled>
-      <RadioCheckedIcon />
-    </IconButton>
+    <IconButton variant="tertiary" icon={Icon.RadioButtonChecked} disabled />
   ) : (
-    <IconButton onClick={() => setTrack(track)}>
-      <RadioUncheckedIcon />
-    </IconButton>
+    <IconButton
+      variant="tertiary"
+      icon={Icon.RadioButtonUnchecked}
+      onClick={() => setTrack(track)}
+    />
   );
 };
 
 export const WithPlaylist = () => (
   <MediaProvider tracks={[meteorites, alienated, tabulaRasa]}>
-    <Column gap="5rem" align="center">
+    <Column gap={1100} align="center">
       <TrackList />
-      <Column gap="1rem" align="center">
-        <Row gap="1rem">
+      <Column gap={400} align="center">
+        <Row gap={400}>
           <PlaylistControls />
           <StateControls />
           <VolumeControls />
@@ -263,25 +269,28 @@ const TrackList = () => {
   return (
     <List>
       {tracks.map((track, index) => (
-        <EdgeInset key={index} all="0.5rem">
-          <Row gap="0.5rem">
-            {cursor === index && isPlaying ? (
-              <IconButton onClick={pause}>
-                <PauseIcon />
-              </IconButton>
-            ) : (
-              <IconButton
-                onClick={() => {
-                  setCursor(index);
-                  play();
-                }}
-              >
-                <PlayArrowIcon />
-              </IconButton>
-            )}
-            <Text noWrap>{track.split("/").at(-1)}</Text>
-          </Row>
-        </EdgeInset>
+        <Row
+          key={index}
+          gap={200}
+          padding={{ all: 200, right: 600 }}
+          align="center"
+        >
+          {cursor === index && isPlaying ? (
+            <IconButton variant="tertiary" icon={Icon.Pause} onClick={pause} />
+          ) : (
+            <IconButton
+              variant="tertiary"
+              icon={Icon.Play}
+              onClick={() => {
+                setCursor(index);
+                play();
+              }}
+            />
+          )}
+          <Text noWrap font={5}>
+            {track.split("/").at(-1)}
+          </Text>
+        </Row>
       ))}
     </List>
   );
@@ -300,11 +309,13 @@ const RepeatButton = () => {
   const { repeat, toggleRepeat } = useMedia();
 
   return (
-    <IconButton onClick={toggleRepeat}>
-      <Opacity opacity={repeat ? 1 : 0.5}>
-        <RepeatIcon />
-      </Opacity>
-    </IconButton>
+    <IconButton
+      variant="tertiary"
+      size="small"
+      icon={Icon.Repeat}
+      onClick={toggleRepeat}
+      opacity={repeat ? undefined : 500}
+    />
   );
 };
 
@@ -312,11 +323,13 @@ const ShuffleButton = () => {
   const { shuffle, toggleShuffle } = useMedia();
 
   return (
-    <IconButton onClick={toggleShuffle}>
-      <Opacity opacity={shuffle ? 1 : 0.5}>
-        <ShuffleIcon />
-      </Opacity>
-    </IconButton>
+    <IconButton
+      variant="tertiary"
+      size="small"
+      icon={Icon.Shuffle}
+      onClick={toggleShuffle}
+      opacity={shuffle ? undefined : 500}
+    />
   );
 };
 
@@ -324,9 +337,13 @@ const PreviousButton = () => {
   const { previous, canPlayPrevious } = useMedia();
 
   return (
-    <IconButton onClick={previous} disabled={!canPlayPrevious}>
-      <SkipPreviousIcon />
-    </IconButton>
+    <IconButton
+      variant="tertiary"
+      size="small"
+      icon={Icon.SkipPrevious}
+      onClick={previous}
+      disabled={!canPlayPrevious}
+    />
   );
 };
 
@@ -334,9 +351,13 @@ const NextButton = () => {
   const { next, canPlayNext } = useMedia();
 
   return (
-    <IconButton onClick={next} disabled={!canPlayNext}>
-      <SkipNextIcon />
-    </IconButton>
+    <IconButton
+      variant="tertiary"
+      size="small"
+      icon={Icon.SkipNext}
+      onClick={next}
+      disabled={!canPlayNext}
+    />
   );
 };
 
@@ -354,36 +375,36 @@ const myTracks: MyTrack[] = [
     name: "Meteorites",
     artist: "Purrple Cat",
     album: "Sea of Stars",
-    artwork: seaOfStars,
+    artwork: seaOfStars.src,
   },
   {
     source: alienated,
     name: "Alienated",
     artist: "Purrple Cat",
     album: "Distant Worlds II",
-    artwork: distantWorldsIi,
+    artwork: distantWorldsIi.src,
   },
   {
     source: tabulaRasa,
     name: "Tabula Rasa",
     artist: "Purrple Cat",
     album: "Distant Worlds",
-    artwork: distantWorlds,
+    artwork: distantWorlds.src,
   },
 ];
 
 export const WithMetadata = () => (
   <MediaProvider tracks={myTracks}>
     <FullscreenArtwork />
-    <Column gap="5rem" align="center">
+    <Column gap={1100} align="center">
       <FancyTrackList />
-      <Column gap="1rem" align="center">
-        <Row gap="1rem">
+      <Column gap={400} align="center">
+        <Row gap={400}>
           <PlaylistControls />
           <StateControls />
           <VolumeControls />
         </Row>
-        <Row gap="1rem">
+        <Row gap={400}>
           <TrackData />
           <SeekControls />
         </Row>
@@ -400,13 +421,13 @@ const FullscreenArtwork = () => {
   if (!track) return null;
 
   return (
-    <Background
-      width="100%"
-      height="100%"
-      image={`url(${track.artwork})`}
-      size="cover"
-      position="center"
+    <div
       style={{
+        width: "100%",
+        height: "100%",
+        backgroundImage: `url(${track.artwork})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
         position: "absolute",
         zIndex: -1,
         opacity: 0.25,
@@ -424,41 +445,43 @@ const FancyTrackList = () => {
   return (
     <List>
       {tracks.map((track, index) => (
-        <EdgeInset key={index} all="0.75rem" right="1rem">
-          <Row gap="1rem">
-            <Avatar shape="rounded" width="3rem" height="3rem">
-              <Stack>
+        <Row key={index} gap={400} padding={{ all: 300, right: 400 }}>
+          <Surface size={300}>
+            <Stack>
+              <Surface overflow="hidden">
                 <Image src={track.artwork} alt={track.album} />
-                <Center>
-                  {cursor === index && isPlaying ? (
-                    <IconButton onClick={pause}>
-                      <PauseIcon />
-                    </IconButton>
-                  ) : (
-                    <IconButton
-                      onClick={() => {
-                        setCursor(index);
-                        play();
-                      }}
-                    >
-                      <PlayArrowIcon />
-                    </IconButton>
-                  )}
-                </Center>
-              </Stack>
-            </Avatar>
-            <Flex grow={1}>
-              <Column maxWidth="25rem" justify="center">
-                <Text noWrap>{track.name}</Text>
-                <Opacity opacity={0.5}>
-                  <Text noWrap>
-                    {track.artist} • {track.album}
-                  </Text>
-                </Opacity>
-              </Column>
-            </Flex>
-          </Row>
-        </EdgeInset>
+              </Surface>
+              <Center>
+                {cursor === index && isPlaying ? (
+                  <IconButton
+                    variant="tertiary"
+                    icon={Icon.Pause}
+                    onClick={pause}
+                  />
+                ) : (
+                  <IconButton
+                    variant="tertiary"
+                    icon={Icon.Play}
+                    onClick={() => {
+                      setCursor(index);
+                      play();
+                    }}
+                  />
+                )}
+              </Center>
+            </Stack>
+          </Surface>
+          <Flex grow={1}>
+            <Column constraints={{ maxWidth: 850 }} justify="center">
+              <Text noWrap font={5}>
+                {track.name}
+              </Text>
+              <Text noWrap font={5} opacity={500}>
+                {track.artist} • {track.album}
+              </Text>
+            </Column>
+          </Flex>
+        </Row>
       ))}
     </List>
   );
@@ -469,10 +492,12 @@ const TrackData = () => {
 
   return (
     <Bar>
-      <Avatar shape="rounded" width="1.5rem" height="1.5rem">
+      <Surface size={150} overflow="hidden">
         {track ? <Image src={track.artwork} alt={track.album} /> : null}
-      </Avatar>
-      <Text noWrap>{track?.name ?? <Opacity opacity={0.5}>...</Opacity>}</Text>
+      </Surface>
+      <Text noWrap variant="label" size="small" font={5}>
+        {track?.name ?? <Text opacity={500}>...</Text>}
+      </Text>
     </Bar>
   );
 };
@@ -482,10 +507,12 @@ export const WithVideo = () => {
 
   return (
     <MediaProvider tracks={[bigBuckBunny]} element={videoRef}>
-      <Column gap="5rem" align="center">
-        <video ref={videoRef} width="540" />
-        <Column gap="1rem" align="center">
-          <Row gap="1rem">
+      <Column gap={1100} align="center">
+        <Surface overflow="hidden">
+          <video ref={videoRef} width="540" style={{ display: "block" }} />
+        </Surface>
+        <Column gap={400} align="center">
+          <Row gap={400}>
             <StateControls />
             <VolumeControls />
           </Row>
@@ -503,10 +530,17 @@ export const WithAutoPlayingVideo = () => {
 
   return (
     <MediaProvider tracks={[bigBuckBunny]} element={videoRef} autoPlay>
-      <Column gap="5rem" align="center">
-        <video ref={videoRef} width="540" muted />
-        <Column gap="1rem" align="center">
-          <Row gap="1rem">
+      <Column gap={1100} align="center">
+        <Surface overflow="hidden">
+          <video
+            ref={videoRef}
+            width="540"
+            muted
+            style={{ display: "block" }}
+          />
+        </Surface>
+        <Column gap={400} align="center">
+          <Row gap={400}>
             <StateControls />
             <VolumeControls />
           </Row>
@@ -552,17 +586,29 @@ const TrackAttributionOverlay = () => {
   const source = typeof track === "string" ? track : track.source;
 
   return (
-    <Positioned bottom="1rem" left="1rem">
-      <AbsorbPointer>
-        <Opacity opacity={0.5}>
-          <Column style={{ fontSize: "smaller", lineHeight: "1.5em" }}>
-            {attributions[source]?.map((line) => (
-              <Monospace key={line}>{line}</Monospace>
-            ))}
-          </Column>
-        </Opacity>
-      </AbsorbPointer>
-    </Positioned>
+    <Popover
+      open={true}
+      anchor={{
+        strategy: "fixed",
+        parent: Origin.bottomLeft,
+        child: Origin.bottomLeft,
+        offset: { x: "1rem", y: "-1rem" },
+      }}
+      pointerEvents="none"
+    >
+      <Surface
+        padding={400}
+        text={{ font: 5, size: 100 }}
+        flex={{ direction: "column" }}
+        opacity={500}
+      >
+        {attributions[source]?.map((line) => (
+          <Text key={line} font={5} size="small">
+            {line}
+          </Text>
+        ))}
+      </Surface>
+    </Popover>
   );
 };
 

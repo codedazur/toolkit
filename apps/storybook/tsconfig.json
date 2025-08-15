@@ -1,5 +1,3 @@
 {
-  "extends": "@codedazur/tsconfig/storybook.json",
-  "include": ["**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules"]
+  "extends": "@codedazur/tsconfig/storybook.json"
 }

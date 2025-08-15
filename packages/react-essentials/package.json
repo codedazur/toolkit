@@ -25,7 +25,8 @@
   },
   "peerDependencies": {
     "react": ">=16.8.0",
-    "react-dom": ">=16.8.0"
+    "react-dom": ">=16.8.0",
+    "framer-motion": ">=10.0.0"
   },
   "dependencies": {
     "@codedazur/essentials": "^1.12.1",
@@ -37,6 +38,7 @@
     "@types/react-dom": "^19.1.6",
     "@types/react": "^19.1.8",
     "@vitejs/plugin-react": "^4.7.0",
+    "framer-motion": "^11.14.0",
     "react-dom": "^19.1.0",
     "react": "^19.1.0"
   }

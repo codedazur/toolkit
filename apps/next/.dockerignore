@@ -1,0 +1,23 @@
+# OS Artifacts
+.DS_Store
+
+# IDE Artifacts
+.idea
+.vscode
+
+# NPM Artifacts
+node_modules
+
+# TypeScript Artifacts
+*.tsbuildinfo
+
+# TurboRepo Artifacts
+.turbo
+
+# Next.js Artifacts
+.next
+next-env.d.ts
+out
+
+# DotEnv
+.env*.local

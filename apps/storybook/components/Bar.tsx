@@ -1,12 +1,12 @@
-import { Padding, Placeholder, Row } from "@codedazur/react-components";
+import { Surface } from "@codedazur/fusion-ui";
 import { ReactNode } from "react";
 
 export const Bar = ({ children }: { children?: ReactNode }) => (
-  <Placeholder width="auto" height="auto" shape="stadium">
-    <Padding horizontal="1rem" vertical="0.5rem">
-      <Row align="center" gap="1rem">
-        {children}
-      </Row>
-    </Padding>
-  </Placeholder>
+  <Surface
+    shape="stadium"
+    padding={{ horizontal: 400, vertical: 200 }}
+    flex={{ align: "center", gap: 400 }}
+  >
+    {children}
+  </Surface>
 );

@@ -1,9 +1,8 @@
-import { Button, Column, Row } from "@codedazur/react-components";
+import { Row, SymbolButton, Text } from "@codedazur/fusion-ui";
 import { usePrevious } from "@codedazur/react-essentials";
 import { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { DebugOverlay } from "../../components/DebugOverlay";
-import { Monospace } from "../../components/Monospace";
 import docs from "./usePrevious.docs.mdx";
 
 const meta: Meta = {
@@ -24,13 +23,21 @@ export const Default: StoryObj = {
 
     return (
       <>
-        <Column gap="1rem">
-          <Monospace>{count}</Monospace>
-          <Row gap="1rem">
-            <Button onClick={() => setCount((count) => count - 1)}>-</Button>
-            <Button onClick={() => setCount((count) => count + 1)}>+</Button>
-          </Row>
-        </Column>
+        <Row gap={400} align="center">
+          <SymbolButton
+            variant="tertiary"
+            onClick={() => setCount((count) => count - 1)}
+          >
+            <Text font={5}>-</Text>
+          </SymbolButton>
+          <Text font={5}>{count}</Text>
+          <SymbolButton
+            variant="tertiary"
+            onClick={() => setCount((count) => count + 1)}
+          >
+            <Text font={5}>+</Text>
+          </SymbolButton>
+        </Row>
         <DebugOverlay value={{ usePrevious: previousCount }} />
       </>
     );

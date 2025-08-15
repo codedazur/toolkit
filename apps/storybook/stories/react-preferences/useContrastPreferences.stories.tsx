@@ -1,4 +1,4 @@
-import { Text, Center } from "@codedazur/react-components";
+import { Text, Center } from "@codedazur/fusion-ui";
 
 import { useContrastPreferences } from "@codedazur/react-preferences";
 
@@ -22,7 +22,9 @@ export const Default: StoryObj = {
 
     return (
       <Center>
-        <Text>User prefers {preferedContrast || "default"} contrast.</Text>
+        <Text variant="body">
+          User prefers {preferedContrast || "default"} contrast.
+        </Text>
       </Center>
     );
   },

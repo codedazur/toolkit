@@ -1,18 +1,12 @@
-import {
-  Button,
-  Column,
-  FormField,
-  Input,
-  Select,
-} from "@codedazur/react-components";
+import { Button, Column, FormField } from "@codedazur/fusion-ui";
 import {
   FieldProps,
   isEmail,
   isNotEmpty,
   useForm,
 } from "@codedazur/react-forms";
-import { action } from "storybook/actions";
 import { Meta, StoryObj } from "@storybook/react-vite";
+import { action } from "storybook/actions";
 import { DebugOverlay } from "../../components/DebugOverlay";
 
 const meta: Meta = {
@@ -34,7 +28,7 @@ export const LoginForm: StoryObj = {
     return (
       <>
         <form onSubmit={form.onSubmit}>
-          <Column gap="1rem" width="20rem">
+          <Column gap={400} size={{ width: 800 }}>
             <InputFormField {...form.fields.email} title="Email" type="email" />
             <InputFormField
               {...form.fields.password}
@@ -77,7 +71,7 @@ export const TicketsForm: StoryObj = {
     return (
       <>
         <form onSubmit={form.onSubmit}>
-          <Column gap="1rem" width="20rem">
+          <Column gap={400} size={{ width: 800 }}>
             <InputFormField {...form.fields.date} title="Date" type="date" />
             <SelectFormField
               {...form.fields.type}
@@ -110,12 +104,12 @@ const InputFormField = ({
   string | number,
   HTMLInputElement
 >) => (
-  <FormField title={title} error={isTouched && error}>
-    <Input {...props} type={type} error={isTouched && !!error} />
+  <FormField label={title} error={isTouched && error}>
+    <input {...props} type={type} />
   </FormField>
 );
 
-const SelectFormField = ({
+function SelectFormField({
   title,
   isTouched,
   error,
@@ -123,12 +117,16 @@ const SelectFormField = ({
 }: { title?: string; options: string[] } & FieldProps<
   string | number,
   HTMLSelectElement
->) => (
-  <FormField title={title} error={isTouched && error}>
-    <Select
-      {...props}
-      options={props.options.map((value) => ({ value, label: value }))}
-      error={isTouched && !!error}
-    />
-  </FormField>
-);
+>) {
+  return (
+    <FormField label={title} error={isTouched && error}>
+      <select {...props}>
+        {props.options.map((value) => (
+          <option key={value} value={value}>
+            {value}
+          </option>
+        ))}
+      </select>
+    </FormField>
+  );
+}

@@ -16,8 +16,6 @@
   "scripts": {
     "develop": "turbo run develop --parallel --concurrency=20",
     "packages": "turbo run develop --filter @codedazur/* --parallel --concurrency=20",
-    "storybook": "turbo run develop --filter @apps/storybook",
-    "website": "turbo run develop --filter @apps/website",
     "audit": "turbo run audit",
     "update": "npx npm-check-updates@latest --format group --deep -u -i",
     "lint": "turbo run lint",

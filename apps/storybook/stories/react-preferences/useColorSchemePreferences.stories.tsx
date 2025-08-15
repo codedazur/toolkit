@@ -1,4 +1,4 @@
-import { Text, Center } from "@codedazur/react-components";
+import { Text, Center } from "@codedazur/fusion-ui";
 
 import { useColorSchemePreferences } from "@codedazur/react-preferences";
 
@@ -22,7 +22,9 @@ export const Default: StoryObj = {
 
     return (
       <Center>
-        <Text>User prefers a {preferedColorScheme} color scheme.</Text>
+        <Text variant="body">
+          User prefers a {preferedColorScheme} color scheme.
+        </Text>
       </Center>
     );
   },

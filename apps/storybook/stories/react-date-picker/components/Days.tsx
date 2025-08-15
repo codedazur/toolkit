@@ -1,4 +1,4 @@
-import { Grid, GridItem } from "@codedazur/react-components";
+import { Grid } from "@codedazur/fusion-ui";
 import { UseDatePickerResult } from "@codedazur/react-date-picker";
 import { FunctionComponent } from "react";
 import { Day } from "./Day";
@@ -9,12 +9,11 @@ interface MonthProps {
 }
 
 export const Days: FunctionComponent<MonthProps> = ({ days, onDayClick }) => (
-  <Grid columns={7}>
+  <Grid style={{ gridTemplateColumns: "repeat(7, 1fr)", gap: 0 }}>
     {days.map((day, index) => (
-      <GridItem key={index}>
+      <Grid.Item key={index}>
         {day !== null && (
           <Day
-            type="button"
             isInFocusedRange={day.isInFocusedRange}
             isInSelectedRange={day.isInSelectedRange}
             isSelected={day.isSelected}
@@ -29,7 +28,7 @@ export const Days: FunctionComponent<MonthProps> = ({ days, onDayClick }) => (
             {day.label}
           </Day>
         )}
-      </GridItem>
+      </Grid.Item>
     ))}
   </Grid>
 );

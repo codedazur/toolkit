@@ -1,14 +1,9 @@
-import {
-  Button,
-  Center,
-  Column,
-  Placeholder,
-  Row,
-} from "@codedazur/react-components";
+import { Button, Center, Column, Row } from "@codedazur/fusion-ui";
 import { useSize } from "@codedazur/react-essentials";
 import { Meta, StoryObj } from "@storybook/react-vite";
 import { useRef, useState } from "react";
 import { DebugOverlay } from "../../components/DebugOverlay";
+import { Placeholder } from "../../components/Placeholder";
 
 export default {
   title: "React/Essentials/useSize",
@@ -28,7 +23,7 @@ export const WithReference: StoryObj = {
     return (
       <>
         <Center>
-          <Placeholder ref={ref} bordered crossed width="50vw" height="50vh" />
+          <Placeholder ref={ref} style={{ width: "50vw", height: "50vh" }} />
         </Center>
         <DebugOverlay value={{ useSize: size }} />
       </>
@@ -42,23 +37,21 @@ export const WithDynamicReference: StoryObj = {
     const refA = useRef<HTMLDivElement>(null);
     const refB = useRef<HTMLDivElement>(null);
 
-    const [ref, setRef] = useState<React.RefObject<HTMLDivElement> | undefined>(
-      undefined,
-    );
+    const [ref, setRef] =
+      useState<React.RefObject<HTMLDivElement | null> | null>(null);
 
     const size = useSize({ ref });
 
     return (
       <>
         <Center>
-          <Column gap="1rem">
-            <Row gap="1rem">
+          <Column gap={400}>
+            <Row gap={400}>
               <Placeholder
                 ref={refA}
                 bordered
                 crossed
-                width="30vw"
-                height="50vh"
+                style={{ width: "30vw", height: "50vh" }}
               >
                 A
               </Placeholder>
@@ -66,17 +59,13 @@ export const WithDynamicReference: StoryObj = {
                 ref={refB}
                 bordered
                 crossed
-                width="20vw"
-                height="50vh"
+                style={{ width: "20vw", height: "50vh" }}
               >
                 B
               </Placeholder>
             </Row>
-            <Row gap="1rem">
-              <Button
-                onClick={() => setRef(undefined)}
-                disabled={ref === undefined}
-              >
+            <Row gap={400}>
+              <Button onClick={() => setRef(null)} disabled={ref === null}>
                 Track Window
               </Button>
               <Button onClick={() => setRef(refA)} disabled={ref === refA}>

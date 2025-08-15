@@ -1,24 +1,11 @@
 import { Vector2 } from "@codedazur/essentials";
-import {
-  Button,
-  Column,
-  LinearProgress,
-  LinearProgressBar,
-  Placeholder,
-  Positioned,
-  Row,
-  ScrollView,
-  SizedBox,
-  amber,
-  background,
-  deepPurple,
-} from "@codedazur/react-components";
+import { Box, Button, Column, LinearProgress, Row } from "@codedazur/fusion-ui";
 import { useScroll } from "@codedazur/react-essentials";
 import { Meta, StoryObj } from "@storybook/react-vite";
 import { motion, transform } from "framer-motion";
 import { useMemo, useRef } from "react";
-import styled from "styled-components";
 import { DebugOverlay } from "../../components/DebugOverlay";
+import { Placeholder } from "../../components/Placeholder/Placeholder";
 
 export default {
   title: "React/Essentials/useScroll",
@@ -32,22 +19,26 @@ export const Default = () => {
 
   return (
     <>
-      <Placeholder width="150vw" height="150vh" crossed />
+      <Placeholder style={{ width: "150vw", height: "150vh" }} />
       <ScrollDebugOverlay scroll={scroll} />
     </>
   );
 };
 
-export const WithScrollView: StoryObj = {
+export const WithReference: StoryObj = {
   render: function WithScrollView() {
     const ref = useRef<HTMLDivElement>(null);
     const scroll = useScroll({ ref });
 
     return (
       <>
-        <ScrollView ref={ref} width="75vw" height="75vh">
-          <Placeholder width="100vw" height="100vh" crossed />
-        </ScrollView>
+        <Box
+          ref={ref}
+          style={{ width: "75vw", height: "75vh" }}
+          overflow="auto"
+        >
+          <Placeholder style={{ width: "100vw", height: "100vh" }} />
+        </Box>
         <ScrollDebugOverlay scroll={scroll} />
       </>
     );
@@ -72,15 +63,14 @@ export const WithControls: StoryObj = {
 
     const contents = useMemo(
       () => (
-        <Row gap="1rem">
+        <Row gap={400}>
           {Array(10)
             .fill(null)
             .map((_, index) => (
               <Placeholder
                 key={index}
-                width="30rem"
-                height="20rem"
-                style={{ flexShrink: 0 }}
+                size={{ width: 800, height: 700 }}
+                flex={{ shrink: 0 }}
               />
             ))}
         </Row>
@@ -90,9 +80,9 @@ export const WithControls: StoryObj = {
 
     return (
       <>
-        <SizedBox width="80vw">
-          <Column gap="1rem">
-            <Row gap="1rem" justify="center">
+        <div style={{ width: "80vw" }}>
+          <Column gap={400}>
+            <Row gap={400} justify="center">
               <Button
                 disabled={position.x === 1600}
                 onClick={() => setPosition(new Vector2(1600, 0))}
@@ -106,8 +96,8 @@ export const WithControls: StoryObj = {
                 50%
               </Button>
             </Row>
-            <Row gap="1rem" align="center">
-              <Column gap="1rem">
+            <Row gap={400} align="center">
+              <Column gap={400}>
                 <Button
                   disabled={progress.x === 0}
                   onClick={() => addPosition(new Vector2(-1, 0).multiply(300))}
@@ -121,8 +111,10 @@ export const WithControls: StoryObj = {
                   -10%
                 </Button>
               </Column>
-              <ScrollView ref={ref}>{contents}</ScrollView>
-              <Column gap="1rem">
+              <Box ref={ref} overflow="auto">
+                {contents}
+              </Box>
+              <Column gap={400}>
                 <Button
                   disabled={progress.x === 1}
                   onClick={() => addPosition(new Vector2(1, 0).multiply(300))}
@@ -138,7 +130,7 @@ export const WithControls: StoryObj = {
               </Column>
             </Row>
           </Column>
-        </SizedBox>
+        </div>
         <ScrollDebugOverlay scroll={scroll} />
       </>
     );
@@ -154,40 +146,29 @@ export const WithLinearProgress = () => {
 
   return (
     <>
-      <Positioned mode="fixed" left={0} top={0} right={0}>
-        <ScrollProgress
-          shape="square"
-          height="0.5rem"
-          progress={progress.y}
-          transition={{ ease: "easeOut", duration: 0.1 }}
-        />
-      </Positioned>
-      <Placeholder height="150vh" crossed />
+      <LinearProgress
+        progress={progress.y}
+        transition={{ ease: "easeOut", duration: 0.1 }}
+        // @ts-expect-error Wrongly omitted position prop.
+        position="fixed"
+      />
+      <Placeholder style={{ height: "150vh" }} />
       <ScrollDebugOverlay scroll={scroll} />
     </>
   );
 };
 
-const ScrollProgress = styled(LinearProgress)`
-  ${LinearProgressBar} {
-    ${background({ color: "primary" })};
-  }
-`;
-
 export const WithAnimatedBackground = () => {
   const scroll = useScroll();
   const { progress } = scroll.useProgress();
 
-  const background = transform(
-    progress.y,
-    [0, 1],
-    [amber[700].toString(), deepPurple[700].toString()],
-  );
+  const background = transform(progress.y, [0, 1], ["#993333", "#333399"]);
+  console.log(background);
 
   return (
     <>
       <motion.div style={{ background }}>
-        <SizedBox height="200vh" />
+        <Box style={{ height: "200vh" }} />
       </motion.div>
       <ScrollDebugOverlay scroll={scroll} />
     </>

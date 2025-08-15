@@ -1,15 +1,14 @@
-import { Button } from "@apps/storybook/components/Button";
+import { Origin } from "@codedazur/essentials";
 import {
-  AbsorbPointer,
+  Button,
   Center,
   Column,
-  EdgeInset,
-  LinearProgress,
-  Placeholder,
-  Portal,
-  Positioned,
+  Icon,
+  IconButton,
+  Popover,
+  ProgressIconButton,
   Row,
-} from "@codedazur/react-components";
+} from "@codedazur/fusion-ui";
 import { useTimerProgress } from "@codedazur/react-essentials";
 import {
   NotificationProps,
@@ -20,7 +19,9 @@ import { faker } from "@faker-js/faker";
 import { expect } from "@storybook/jest";
 import { Meta, StoryObj } from "@storybook/react-vite";
 import { userEvent, within } from "@storybook/testing-library";
-import { FunctionComponent, ReactNode } from "react";
+import { useTransform } from "framer-motion";
+import { ReactNode } from "react";
+import { Placeholder } from "../../components/Placeholder";
 
 const meta: Meta = {
   title: "React/Notifications/NotificationsProvider",
@@ -90,7 +91,7 @@ export const MixedDurations: StoryObj = {
   render: () => (
     <NotificationsProvider>
       <Center>
-        <Row gap="1rem">
+        <Row gap={400}>
           <AddNotificationButton autoDismiss={2500}>
             Short
           </AddNotificationButton>
@@ -138,57 +139,71 @@ const Notifications = () => {
   const { entries, queue } = useNotifications();
 
   return (
-    <Portal>
-      <AbsorbPointer>
-        <Positioned bottom="1rem" right="1rem">
-          <Column gap="1rem" align="flex-end">
-            {entries.map(({ id, notification }) => (
-              <AbsorbPointer key={id} absorbing={false}>
-                <Notification {...notification} />
-              </AbsorbPointer>
-            ))}
-            {queue.length > 0 && (
-              <Placeholder width="2.5rem" height="2.5rem">
-                +{queue.length}
-              </Placeholder>
-            )}
-          </Column>
-        </Positioned>
-      </AbsorbPointer>
-    </Portal>
+    <Popover
+      open={true}
+      anchor={{
+        strategy: "fixed",
+        parent: Origin.bottomRight,
+        child: Origin.bottomRight,
+        offset: { x: "-1rem", y: "-1rem" },
+      }}
+      pointerEvents="none"
+    >
+      <Column gap={400} align="end">
+        {entries.map(({ id, notification }) => (
+          <Notification key={id} {...notification} />
+        ))}
+        {queue.length > 0 && (
+          <Placeholder size={250}>+{queue.length}</Placeholder>
+        )}
+      </Column>
+    </Popover>
   );
 };
 
-const Notification: FunctionComponent<NotificationProps> = ({
-  children,
-  timer,
-  onDismiss,
-}) => (
-  <Placeholder
-    width="auto"
-    onMouseEnter={timer?.pause}
-    onMouseLeave={timer?.resume}
-    data-testid="notification"
-  >
-    <Column width="100%">
-      <EdgeInset all="0.5rem" left="1rem">
-        <Row justify="space-between" align="center" gap="1rem">
-          {children}
-          {onDismiss && <Button onClick={onDismiss}>Dismiss</Button>}
-        </Row>
-      </EdgeInset>
-      {timer && <NotificationProgress timer={timer} />}
-    </Column>
-  </Placeholder>
-);
-
-const NotificationProgress = ({
-  timer,
-}: Pick<Required<NotificationProps>, "timer">) => {
+/**
+ * @todo The timer progress should return a motion value directly, and could
+ * support an optional timer, which would cause it to return a motion value
+ * of 0.
+ */
+function Notification({ children, timer, onDismiss }: NotificationProps) {
   const { progress } = useTimerProgress(timer);
 
-  return <LinearProgress progress={1 - progress} height="1px" shape="square" />;
-};
+  const remaining = useTransform(progress, (progress) => 1 - progress);
+
+  return (
+    <Placeholder
+      data-testid="notification"
+      onMouseEnter={timer?.pause}
+      onMouseLeave={timer?.resume}
+      pointerEvents="auto"
+    >
+      <Row
+        justify="between"
+        align="center"
+        gap={400}
+        padding={{ all: 200, left: 400 }}
+      >
+        {children}
+        {onDismiss &&
+          (timer ? (
+            <ProgressIconButton
+              progress={remaining}
+              icon={Icon.Close}
+              variant="tertiary"
+              onClick={onDismiss}
+            />
+          ) : (
+            <IconButton
+              icon={Icon.Close}
+              variant="tertiary"
+              onClick={onDismiss}
+            />
+          ))}
+      </Row>
+    </Placeholder>
+  );
+}
 
 export const Groups: StoryObj = {
   render: () => (
@@ -196,15 +211,15 @@ export const Groups: StoryObj = {
       autoDismiss={{ banners: false }}
       limit={{ banners: 1, snackbars: 3 }}
     >
-      <Column gap="1rem" height="100%">
+      <Column gap={400} size={{ height: "stretch" }}>
         <Banners />
         <Center>
-          <Column gap="3rem" align="center">
-            <Row gap="1rem">
+          <Column gap={900} align="center">
+            <Row gap={400}>
               <AddBannerButton />
               <ClearBannersButton />
             </Row>
-            <Row gap="1rem">
+            <Row gap={400}>
               <AddSnackbarButton />
               <ClearSnackbarsButton />
             </Row>
@@ -280,49 +295,27 @@ const Snackbars = () => {
   const { snackbars, queue } = useSnackbars();
 
   return (
-    <Portal>
-      <AbsorbPointer>
-        <Positioned bottom="1rem" right="1rem">
-          <Column gap="1rem" align="flex-end">
-            {snackbars.map(({ id, notification }) => (
-              <AbsorbPointer key={id} absorbing={false}>
-                <Snackbar {...notification} />
-              </AbsorbPointer>
-            ))}
-            {queue.length > 0 && (
-              <Placeholder width="2.5rem" height="2.5rem">
-                +{queue.length}
-              </Placeholder>
-            )}
-          </Column>
-        </Positioned>
-      </AbsorbPointer>
-    </Portal>
+    <Popover
+      open={true}
+      anchor={{
+        strategy: "fixed",
+        parent: Origin.bottomRight,
+        child: Origin.bottomRight,
+        offset: { x: "-1rem", y: "-1rem" },
+      }}
+      pointerEvents="none"
+    >
+      <Column gap={400} align="end">
+        {snackbars.map(({ id, notification }) => (
+          <Notification key={id} {...notification} />
+        ))}
+        {queue.length > 0 && (
+          <Placeholder size={250}>+{queue.length}</Placeholder>
+        )}
+      </Column>
+    </Popover>
   );
 };
-
-const Snackbar: FunctionComponent<NotificationProps> = ({
-  children,
-  timer,
-  onDismiss,
-}) => (
-  <Placeholder
-    width="auto"
-    onMouseEnter={timer?.pause}
-    onMouseLeave={timer?.resume}
-    data-testid="snackbar"
-  >
-    <Column width="100%">
-      <EdgeInset all="0.5rem" left="1rem">
-        <Row justify="space-between" align="center" gap="1rem">
-          {children}
-          <Button onClick={onDismiss}>Dismiss</Button>
-        </Row>
-      </EdgeInset>
-      {timer && <NotificationProgress timer={timer} />}
-    </Column>
-  </Placeholder>
-);
 
 const Banners = () => {
   const { banners, queue } = useBanners();
@@ -332,39 +325,24 @@ const Banners = () => {
   }
 
   return (
-    <Portal>
-      <AbsorbPointer>
-        <Positioned top="1rem" left="1rem" right="1rem">
-          <Column reverse gap="0.5rem">
-            {banners.map(({ id, notification }) => (
-              <AbsorbPointer key={id} absorbing={false}>
-                <Banner {...notification} />
-              </AbsorbPointer>
-            ))}
-            {queue.length > 0 && (
-              <Placeholder width="2.5rem" height="2.5rem">
-                +{queue.length}
-              </Placeholder>
-            )}
-          </Column>
-        </Positioned>
-      </AbsorbPointer>
-    </Portal>
+    <Popover
+      open={true}
+      anchor={{
+        strategy: "fixed",
+        parent: Origin.top,
+        child: Origin.top,
+        offset: { y: "1rem" },
+      }}
+      pointerEvents="none"
+    >
+      <Column gap={200}>
+        {queue.length > 0 && (
+          <Placeholder size={250}>+{queue.length}</Placeholder>
+        )}
+        {banners.toReversed().map(({ id, notification }) => (
+          <Notification key={id} {...notification} />
+        ))}
+      </Column>
+    </Popover>
   );
 };
-
-const Banner: FunctionComponent<NotificationProps> = ({
-  children,
-  onDismiss,
-}) => (
-  <Placeholder width="auto" data-testid="banner">
-    <Column width="100%">
-      <EdgeInset all="0.5rem" left="1rem">
-        <Row justify="space-between" align="center" gap="1rem">
-          {children}
-          <Button onClick={onDismiss}>Dismiss</Button>
-        </Row>
-      </EdgeInset>
-    </Column>
-  </Placeholder>
-);

@@ -1,4 +1,4 @@
-import { Button, Row } from "@codedazur/react-components";
+import { Row, SymbolButton, Text } from "@codedazur/fusion-ui";
 import { useDelta } from "@codedazur/react-essentials";
 import { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
@@ -23,15 +23,16 @@ export const Default: StoryObj = {
 
     return (
       <>
-        <Row gap="1rem">
+        <Row gap={400}>
           {[1, 2, 3, 4, 5].map((target) => (
-            <Button
+            <SymbolButton
+              variant="tertiary"
               key={target}
               onClick={() => setValue(target)}
               disabled={value === target}
             >
-              {target}
-            </Button>
+              <Text font={5}>{target}</Text>
+            </SymbolButton>
           ))}
         </Row>
         <DebugOverlay value={{ useDelta: delta }} />

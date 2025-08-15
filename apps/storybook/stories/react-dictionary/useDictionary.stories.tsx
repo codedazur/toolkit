@@ -1,4 +1,4 @@
-import { Button, Row } from "@codedazur/react-components";
+import { Button, Row } from "@codedazur/fusion-ui";
 import { DictionaryProvider, useDictionary } from "@codedazur/react-dictionary";
 import { Meta, StoryObj } from "@storybook/react-vite";
 

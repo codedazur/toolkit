@@ -1,27 +1,24 @@
 import { Vector2 } from "@codedazur/essentials";
 import {
-  AspectRatio,
-  Background,
   Box,
   Center,
+  Column,
   Image,
-  Placeholder,
   Row,
-  SizedBox,
   Stack,
+  Surface,
   Text,
-  black,
-} from "@codedazur/react-components";
+} from "@codedazur/fusion-ui";
 import { useParallax } from "@codedazur/react-parallax";
 import { faker } from "@faker-js/faker";
 import { Meta, StoryObj } from "@storybook/react-vite";
-import styled from "styled-components";
 import layerFive from "./diorama/layer-five.png";
 import layerFour from "./diorama/layer-four.png";
 import layerOne from "./diorama/layer-one.png";
 import layerSix from "./diorama/layer-six.png";
 import layerThree from "./diorama/layer-three.png";
 import layerTwo from "./diorama/layer-two.png";
+import { Placeholder } from "../../components/Placeholder";
 
 const meta: Meta = {
   title: "React/Parallax/useParallax",
@@ -35,34 +32,33 @@ export default meta;
 export const Default: StoryObj = {
   render: () => (
     <>
-      <Placeholder height="100vh">
-        <Row gap="1rem">
+      <Center style={{ height: "100vh" }}>
+        <Row gap={400}>
           {[-0.5, 0, 0.5, 1, 1.5].map((factor, index) => (
             <Placeholder
               key={index}
               ref={useParallax<HTMLDivElement>({ factor })}
-              width="10rem"
-              height="10rem"
+              size={600}
             >
               <Text>{factor}</Text>
             </Placeholder>
           ))}
         </Row>
-      </Placeholder>
-      <SizedBox width="200vw" height="200vh" />
+      </Center>
+      <Box style={{ width: "200vw", height: "200vh" }} />
     </>
   ),
 };
 
 export const Heroes: StoryObj = {
   render: () => (
-    <Box padding="10vw" flex={{ direction: "column", gap: "10vw" }}>
+    <Column padding={1200} gap={1200}>
       <Hero />
       <Hero />
       <Hero />
       <Hero />
       <Hero />
-    </Box>
+    </Column>
   ),
 };
 
@@ -73,44 +69,59 @@ const Hero = () => {
   });
 
   return (
-    <Box shape="rounded">
+    <Surface overflow="hidden">
       <Stack>
-        <AspectRatio ratio={16 / 9}>
-          <Image
-            ref={ref}
-            src={faker.image.urlPicsumPhotos({ width: 1920, height: 1080 })}
-            alt=""
-          />
-        </AspectRatio>
-        <Background $color={black.alpha(0.5)} style={{ zIndex: 1 }}>
-          <Center>
-            <Title>{faker.commerce.productName()}</Title>
+        <Image
+          ref={ref}
+          src={faker.image.urlPicsumPhotos({ width: 1920, height: 1080 })}
+          aspectRatio="16:9"
+          alt=""
+        />
+        <Box background={{ color: "gray.0" }} opacity={500}>
+          <Center size="stretch">
+            <Text variant="title">{faker.commerce.productName()}</Text>
           </Center>
-        </Background>
+        </Box>
       </Stack>
-    </Box>
+    </Surface>
   );
 };
-
-const Title = styled(Text)`
-  font-size: 2.5vw;
-`;
 
 export const Diorama: StoryObj = {
   render: function Diorama() {
     return (
       <>
-        <Center>
-          <Stack>
-            <Image src={layerOne} ref={useParallax({ factor: 0.6 })} alt="" />
-            <Image src={layerTwo} ref={useParallax({ factor: 0.7 })} alt="" />
-            <Image src={layerThree} ref={useParallax({ factor: 0.8 })} alt="" />
-            <Image src={layerFour} ref={useParallax({ factor: 0.9 })} alt="" />
-            <Image src={layerFive} ref={useParallax({ factor: 1 })} alt="" />
-            <Image src={layerSix} ref={useParallax({ factor: 1 })} alt="" />
+        <Center style={{ height: "100vh" }}>
+          <Stack overflow="hidden">
+            <Image
+              src={layerOne.src}
+              ref={useParallax({ factor: 0.6 })}
+              alt=""
+            />
+            <Image
+              src={layerTwo.src}
+              ref={useParallax({ factor: 0.7 })}
+              alt=""
+            />
+            <Image
+              src={layerThree.src}
+              ref={useParallax({ factor: 0.8 })}
+              alt=""
+            />
+            <Image
+              src={layerFour.src}
+              ref={useParallax({ factor: 0.9 })}
+              alt=""
+            />
+            <Image
+              src={layerFive.src}
+              ref={useParallax({ factor: 1 })}
+              alt=""
+            />
+            <Image src={layerSix.src} ref={useParallax({ factor: 1 })} alt="" />
           </Stack>
         </Center>
-        <SizedBox height="200vh" />
+        <Box style={{ height: "200vh" }} />
       </>
     );
   },
@@ -125,13 +136,13 @@ export const NonLinear: StoryObj = {
 
     return (
       <>
-        <Placeholder height="100vh">
-          <Placeholder ref={ref} width="10rem" height="10rem">
+        <Placeholder variant="lowest" style={{ height: "100vh" }}>
+          <Placeholder ref={ref} size={600}>
             <Text style={{ fontFamily: "system-ui" }}>5⋅√x</Text>
             <Text style={{ fontFamily: "system-ui" }}>0.005⋅y²</Text>
           </Placeholder>
         </Placeholder>
-        <SizedBox width="200vw" height="100vh" />
+        <Box style={{ width: "200vw", height: "100vh" }} />
       </>
     );
   },
@@ -145,10 +156,10 @@ export const Dynamic: StoryObj = {
 
     return (
       <>
-        <Placeholder height="100vh">
-          <Placeholder ref={ref} width="10rem" height="10rem" />
+        <Placeholder variant="lowest" style={{ height: "100vh" }}>
+          <Placeholder ref={ref} size={600} />
         </Placeholder>
-        <SizedBox width="200vw" height="100vh" />
+        <Box style={{ width: "200vw", height: "100vh" }} />
       </>
     );
   },

@@ -1,4 +1,4 @@
-import { Text, Center } from "@codedazur/react-components";
+import { Text, Center } from "@codedazur/fusion-ui";
 
 import { useMotionPreferences } from "@codedazur/react-preferences";
 
@@ -22,7 +22,9 @@ export const Default: StoryObj = {
 
     return (
       <Center>
-        <Text>User prefers {preferedMotion || "default"} motion.</Text>
+        <Text variant="body">
+          User prefers {preferedMotion || "default"} motion.
+        </Text>
       </Center>
     );
   },
