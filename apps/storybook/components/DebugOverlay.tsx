@@ -1,5 +1,5 @@
 import { Origin } from "@codedazur/essentials";
-import { ExpansionPanel, Popover, Text } from "@codedazur/fusion-ui";
+import { Box, ExpansionPanel, Popover, Text } from "@codedazur/fusion-ui";
 import { FunctionComponent, useEffect, useState } from "react";
 import YAML, { ScalarTag } from "yaml";
 
@@ -43,6 +43,8 @@ export const DebugOverlay: FunctionComponent<DebugOverlayProps> = ({
         <Text
           as="pre"
           font={5}
+          overflow="auto"
+          constraints={{ maxHeight: 1000 }}
           style={{ fontSize: "12px", lineHeight: "1.5em" }}
         >
           {yaml}

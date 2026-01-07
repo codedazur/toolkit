@@ -19,88 +19,38 @@ export const day = recipe({
       },
     },
     isInFocusedRange: {
-      true: {},
+      true: {
+        borderRadius: 0,
+        backgroundColor: semanticTokens.colors.surface.container.low,
+        color: semanticTokens.colors.surface.onBase,
+      },
     },
     isInSelectedRange: {
-      true: {},
+      true: {
+        borderRadius: 0,
+        selectors: {
+          "&:not(:hover)": {
+            backgroundColor: semanticTokens.colors.primary.container,
+            color: semanticTokens.colors.primary.onContainer,
+          },
+          "&:hover": {
+            backgroundColor: semanticTokens.colors.primary.base,
+            color: semanticTokens.colors.primary.onBase,
+          },
+        },
+      },
     },
     isFirstDate: {
-      true: {},
+      true: {
+        borderTopLeftRadius: "50%",
+        borderBottomLeftRadius: "50%",
+      },
     },
     isLastDate: {
-      true: {},
+      true: {
+        borderTopRightRadius: "50%",
+        borderBottomRightRadius: "50%",
+      },
     },
   },
-
-  compoundVariants: [
-    {
-      variants: {
-        isInFocusedRange: true,
-      },
-      style: {
-        ":before": {
-          content: '""',
-          position: "absolute",
-          left: 0,
-          top: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: semanticTokens.colors.primary.container,
-        },
-      },
-    },
-    {
-      variants: {
-        isInSelectedRange: true,
-      },
-      style: {
-        selectors: {
-          "&:not(:hover):before": {
-            content: '""',
-            position: "absolute",
-            left: 0,
-            top: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: semanticTokens.colors.primary.container,
-          },
-        },
-      },
-    },
-    {
-      variants: {
-        isFirstDate: true,
-      },
-      style: {
-        ":before": {
-          borderTopLeftRadius: "50%",
-          borderBottomLeftRadius: "50%",
-        },
-      },
-    },
-    {
-      variants: {
-        isLastDate: true,
-      },
-      style: {
-        ":before": {
-          borderTopRightRadius: "50%",
-          borderBottomRightRadius: "50%",
-        },
-      },
-    },
-    {
-      variants: {
-        isInSelectedRange: false,
-      },
-      style: {
-        selectors: {
-          "&:hover:before": {
-            borderTopRightRadius: "50%",
-            borderBottomRightRadius: "50%",
-          },
-        },
-      },
-    },
-  ],
 });

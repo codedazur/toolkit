@@ -13,6 +13,7 @@ import {
 } from "@codedazur/fusion-ui";
 import {
   UseDatePickerProps,
+  UseDatePickerResult,
   useDatePicker,
 } from "@codedazur/react-date-picker";
 import { Meta, StoryObj } from "@storybook/react-vite";
@@ -25,25 +26,21 @@ import { Navigation } from "./components/Navigation";
 import { Weekdays } from "./components/Weekdays";
 import { Icon } from "../../components/Icon";
 
-const DatePicker: FunctionComponent<UseDatePickerProps> = (props) => {
-  const { cursor, dates, month, toNextMonth, toPreviousMonth } =
-    useDatePicker(props);
-
+const DatePicker: FunctionComponent<UseDatePickerResult> = ({
+  month,
+  toNextMonth,
+  toPreviousMonth,
+}) => {
   return (
-    <>
-      <Box size={{ width: 800 }}>
-        <Column gap={200}>
-          <Navigation
-            label={month.label}
-            onNextClick={toNextMonth}
-            onPreviousClick={toPreviousMonth}
-          />
-          <Weekdays weekdays={month.weekdays} />
-          <Days days={month.days} />
-        </Column>
-      </Box>
-      <DebugOverlay value={{ cursor, dates }} />
-    </>
+    <Column gap={400}>
+      <Navigation
+        label={month.label}
+        onNextClick={toNextMonth}
+        onPreviousClick={toPreviousMonth}
+      />
+      <Weekdays weekdays={month.weekdays} />
+      <Days days={month.days} />
+    </Column>
   );
 };
 
@@ -67,7 +64,7 @@ const weekStartsOnMap: Record<string, Day> = {
 
 const meta: Meta<UseDatePickerProps> = {
   title: "React/DatePicker/useDatePicker",
-  component: DatePicker,
+  // component: DatePicker,
   argTypes: {
     subsequentDates: {
       control: { type: "select" },
@@ -113,7 +110,18 @@ export default meta;
 
 type Story = StoryObj<UseDatePickerProps>;
 
-export const Default: Story = {};
+export const Default: Story = {
+  render: function Default(args) {
+    const props = useDatePicker(args);
+
+    return (
+      <>
+        <DatePicker {...props} />
+        <DebugOverlay value={props} />
+      </>
+    );
+  },
+};
 
 export const WithDurationLimits: Story = {
   args: {
@@ -132,22 +140,30 @@ export const InPopover: Story = {
   render: function InPopover(args) {
     const [open, setOpen] = useState(false);
     const anchor = useRef<HTMLButtonElement | null>(null);
+    const props = useDatePicker(args);
 
     return (
-      <Box position="relative">
-        <Button ref={anchor} onClick={() => setOpen(true)}>
-          Open DatePicker
-        </Button>
-        <Popover
-          anchor={{ parent: Origin.top, child: Origin.bottom }}
-          open={open}
-          onClose={() => setOpen(false)}
-        >
-          <Surface>
-            <DatePicker {...args} />
-          </Surface>
-        </Popover>
-      </Box>
+      <>
+        <Box position="relative">
+          <Button ref={anchor} onClick={() => setOpen(true)}>
+            Open DatePicker
+          </Button>
+          <Popover
+            anchor={{
+              parent: Origin.top,
+              child: Origin.bottom,
+              offset: { y: "-1rem" },
+            }}
+            open={open}
+            onClose={() => setOpen(false)}
+          >
+            <Surface padding={200}>
+              <DatePicker {...props} />
+            </Surface>
+          </Popover>
+        </Box>
+        <DebugOverlay value={props} />
+      </>
     );
   },
 };
@@ -203,7 +219,7 @@ export const ControlledProgression: Story = {
     return (
       <>
         <Box size={{ width: 800 }}>
-          <Column gap={200}>
+          <Column gap={400}>
             <Separate separator={<Divider />}>
               <Row justify="between">
                 <Row gap={100}>
@@ -231,7 +247,7 @@ export const ControlledProgression: Story = {
                   onClick={() => setCursor(0)}
                 />
               </Row>
-              <Column gap={200}>
+              <Column gap={400}>
                 <Navigation
                   label={month.label}
                   onNextClick={toNextMonth}

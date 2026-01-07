@@ -23,11 +23,7 @@ interface MailerProps {
 export class Mailer extends Construct {
   public readonly queue: Queue;
 
-  constructor(
-    scope: Construct,
-    id: string,
-    protected props: MailerProps,
-  ) {
+  constructor(scope: Construct, id: string, protected props: MailerProps) {
     super(scope, id);
 
     this.queue = this.createQueue();

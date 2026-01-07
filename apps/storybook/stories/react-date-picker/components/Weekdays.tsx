@@ -7,12 +7,10 @@ interface WeekdaysProps {
 }
 
 export const Weekdays: FunctionComponent<WeekdaysProps> = ({ weekdays }) => (
-  <Grid style={{ gridTemplateColumns: "repeat(7, 1fr)" }}>
+  <Grid style={{ gridTemplateColumns: "repeat(7, 1fr)", gap: 0 }}>
     {weekdays.map(({ label }, index) => (
-      <Grid.Item key={index} padding={{ vertical: 200 }}>
-        <Text variant="label" align="center">
-          {label}
-        </Text>
+      <Grid.Item key={index} flex={{ justify: "center" }}>
+        <Text variant="label">{label}</Text>
       </Grid.Item>
     ))}
   </Grid>

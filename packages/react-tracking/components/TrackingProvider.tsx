@@ -42,7 +42,7 @@ export function TrackingProvider({
   slug,
   tracker,
   children,
-  metadata, 
+  metadata,
 }: TrackingProviderProps) {
   const parent = usePrivateTracker();
 
@@ -56,7 +56,7 @@ export function TrackingProvider({
       ...parent.metadata,
       ...metadata,
     }),
-    [parent.metadata, metadata]
+    [parent.metadata, metadata],
   );
 
   const path = useMemo(
@@ -70,20 +70,20 @@ export function TrackingProvider({
         inheritedTracker instanceof Promise
           ? await inheritedTracker
           : inheritedTracker;
-    
+
       if (resolvedTracker instanceof Function) {
-        return resolvedTracker( {
+        return resolvedTracker({
           ...event,
           timestamp: new Date().getTime(),
           path: path.join("."),
           data: {
             ...event.data,
             ...(inheritedMetadata && Object.keys(inheritedMetadata).length > 0
-                  ? { metadata: inheritedMetadata }
-                  : {}),
-          }
+              ? { metadata: inheritedMetadata }
+              : {}),
+          },
         });
-      }      
+      }
     },
     [inheritedTracker, inheritedMetadata, path],
   );
@@ -98,7 +98,7 @@ export function TrackingProvider({
         },
       });
     },
-    [ track],
+    [track],
   );
 
   const trackEvent = useCallback(
@@ -117,7 +117,7 @@ export function TrackingProvider({
         },
       });
     },
-    [ track],
+    [track],
   );
 
   const trackClick = useCallback(
@@ -166,9 +166,7 @@ export function TrackingProvider({
   }
 
   return (
-    <trackingContext.Provider
-      value={value}
-    >
+    <trackingContext.Provider value={value}>
       {children}
     </trackingContext.Provider>
   );

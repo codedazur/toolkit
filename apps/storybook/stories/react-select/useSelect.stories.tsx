@@ -194,7 +194,7 @@ export const WithOptionGroups: StoryObj<
                         trailing: isSelected(option) ? (
                           <Icon.Check />
                         ) : undefined,
-                      }) as const,
+                      } as const),
                   ),
                 ],
               ),

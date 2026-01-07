@@ -110,7 +110,7 @@ export const NotificationsProvider: FunctionComponent<
       group: string,
       option: MaybeGrouped<Option> | undefined,
     ): Option | undefined => {
-      return isGrouped(option) ? (option?.[group] ?? option?.default) : option;
+      return isGrouped(option) ? option?.[group] ?? option?.default : option;
     },
     [],
   );

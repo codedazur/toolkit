@@ -12,9 +12,17 @@ export const Navigation: FunctionComponent<NavigationProps> = ({
   onNextClick,
   onPreviousClick,
 }) => (
-  <Row justify="between" align="center" padding={200}>
-    <IconButton icon={Icon.ChevronLeft} onClick={onPreviousClick} />
+  <Row justify="between" align="center">
+    <IconButton
+      variant="tertiary"
+      icon={Icon.ChevronLeft}
+      onClick={onPreviousClick}
+    />
     <Text variant="label">{label}</Text>
-    <IconButton icon={Icon.ChevronRight} onClick={onNextClick} />
+    <IconButton
+      variant="tertiary"
+      icon={Icon.ChevronRight}
+      onClick={onNextClick}
+    />
   </Row>
 );

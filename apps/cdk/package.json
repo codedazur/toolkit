@@ -16,15 +16,15 @@
     "@apps/storybook": "*",
     "@codedazur/cdk-static-site": "*",
     "@codedazur/essentials": "*",
-    "aws-cdk-lib": "^2.206.0",
-    "constructs": "^10.4.2"
+    "aws-cdk-lib": "^2.233.0",
+    "constructs": "^10.4.4"
   },
   "devDependencies": {
     "@codedazur/tsconfig": "*",
-    "aws-cdk": "^2.1021.0",
-    "dotenv": "^17.2.0",
-    "ts-jest": "^29.4.0",
+    "aws-cdk": "^2.1100.3",
+    "dotenv": "^17.2.3",
+    "ts-jest": "^29.4.6",
     "ts-node": "^10.9.2",
-    "typescript": "^5.8.3"
+    "typescript": "^5.9.3"
   }
 }

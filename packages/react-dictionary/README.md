@@ -149,7 +149,7 @@ export { DictionaryProvider } from "@codedazur/react-dictionary";
 With this setup, the translations are fetched on the server and are immediately available on the client, eliminating the need for a loading state and reducing the time to a meaningful paint.
 
 ### Remote Dictionaries (Client Component)
- 
+
 If you cannot or do not want to use React Server Components, you can still still work with remote dictionaries by creating a wrapper component that fetches the data, stores it in state and passes it to the `DictionaryProvider` once the data is available.
 
 ```tsx

@@ -30,7 +30,7 @@ export interface EventMetadata {
   path: string;
 }
 
-export type TrackingEvent = BaseEvent | PageEvent | ElementEvent ;
+export type TrackingEvent = BaseEvent | PageEvent | ElementEvent;
 
 export interface BaseEvent {
   type: string;
