@@ -7,7 +7,9 @@
       "persistent": true
     },
     "audit": {},
-    "lint": {},
+    "lint": {
+      "dependsOn": ["@codedazur/eslint-config#build"]
+    },
     "types": {
       "dependsOn": ["^build"]
     },
@@ -17,6 +19,10 @@
     "build": {
       "dependsOn": ["^build", "audit", "lint", "test"],
       "outputs": ["dist/**", ".next/**", ".storybook/**"]
+    },
+    "@codedazur/eslint-config#build": {
+      "dependsOn": ["^build", "audit", "test"],
+      "outputs": ["dist/**"]
     },
     "deploy": {
       "env": ["CDK_DEFAULT_ACCOUNT", "CDK_DEFAULT_REGION", "DOMAIN_NAME"]
