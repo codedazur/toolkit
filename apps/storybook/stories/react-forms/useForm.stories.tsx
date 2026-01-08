@@ -5,7 +5,7 @@ import {
   isNotEmpty,
   useForm,
 } from "@codedazur/react-forms";
-import { Meta, StoryObj } from "@storybook/react-vite";
+import { Meta, StoryObj } from "@storybook/nextjs";
 import { action } from "storybook/actions";
 import { DebugOverlay } from "../../components/DebugOverlay";
 

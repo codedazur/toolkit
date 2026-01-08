@@ -1,5 +1,5 @@
 import { Origin } from "@codedazur/essentials";
-import { Box, ExpansionPanel, Popover, Text } from "@codedazur/fusion-ui";
+import { ExpansionPanel, Popover, Text } from "@codedazur/fusion-ui";
 import { FunctionComponent, useEffect, useState } from "react";
 import YAML, { ScalarTag } from "yaml";
 
@@ -13,6 +13,7 @@ export const DebugOverlay: FunctionComponent<DebugOverlayProps> = ({
   const [yaml, setYaml] = useState<string>("");
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setYaml(
       YAML.stringify(value, {
         aliasDuplicateObjects: false,
@@ -55,7 +56,7 @@ export const DebugOverlay: FunctionComponent<DebugOverlayProps> = ({
 };
 
 const functionTag: ScalarTag = {
-  // eslint-disable-next-line @typescript-eslint/ban-types
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
   identify: (value: unknown): value is Function => value instanceof Function,
   tag: "!fn",
   resolve: (string) => {

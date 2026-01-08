@@ -1,7 +1,6 @@
 import { Bar } from "@apps/storybook/components/Bar";
 import { Icon } from "@apps/storybook/components/Icon";
 import {
-  Button,
   Column,
   IconButton,
   LinearProgress,
@@ -9,7 +8,7 @@ import {
   Text,
 } from "@codedazur/fusion-ui";
 import { TimerStatus, useTimer } from "@codedazur/react-essentials";
-import { Meta } from "@storybook/react-vite";
+import { Meta } from "@storybook/nextjs";
 import { action } from "storybook/actions";
 import { DebugOverlay } from "../../components/DebugOverlay";
 
@@ -20,7 +19,7 @@ const meta: Meta = {
 export default meta;
 
 export const Default = () => {
-  const timer = useTimer(action("callback"), 3000);
+  const timer = useTimer(action("callback"), 4000);
 
   return (
     <Column gap={400} align="center">
@@ -33,7 +32,7 @@ export const Default = () => {
   );
 };
 
-interface TimerProgressProps extends ReturnType<typeof useTimer> {}
+type TimerProgressProps = ReturnType<typeof useTimer>;
 
 const TimerProgress = (timer: TimerProgressProps) => {
   const { progress, elapsed, remaining } = timer.useProgress();
@@ -57,20 +56,29 @@ const TimerProgress = (timer: TimerProgressProps) => {
   );
 };
 
-interface TimerExtensionProps extends ReturnType<typeof useTimer> {}
+type TimerExtensionProps = ReturnType<typeof useTimer>;
 
 const TimerExtension = ({ extend }: TimerExtensionProps) => (
   <Bar>
-    <IconButton icon={Icon.Remove} onClick={() => extend(-1000)} />
-    <IconButton icon={Icon.Add} onClick={() => extend(1000)} />
+    <IconButton
+      size="small"
+      variant="tertiary"
+      icon={Icon.Remove}
+      onClick={() => extend(-1000)}
+    />
+    <IconButton
+      size="small"
+      variant="tertiary"
+      icon={Icon.Add}
+      onClick={() => extend(1000)}
+    />
   </Bar>
 );
 
-interface TimerControlsProps extends ReturnType<typeof useTimer> {}
+type TimerControlsProps = ReturnType<typeof useTimer>;
 
 const TimerControls = ({
   status,
-  start,
   resume,
   pause,
   stop,
@@ -82,15 +90,33 @@ const TimerControls = ({
   return (
     <Bar>
       {isRunning ? (
-        <IconButton icon={Icon.Pause} onClick={pause} />
+        <IconButton
+          size="small"
+          variant="tertiary"
+          icon={Icon.Pause}
+          onClick={pause}
+        />
       ) : (
-        <IconButton icon={Icon.Play} onClick={resume} />
+        <IconButton
+          size="small"
+          variant="tertiary"
+          icon={Icon.Play}
+          onClick={resume}
+        />
       )}
-      <Button onClick={start}>start</Button>
-      <Button onClick={resume}>resume</Button>
-      <Button onClick={stop}>stop</Button>
-      <IconButton icon={Icon.Stop} onClick={stop} disabled={isStopped} />
-      <IconButton icon={Icon.SkipNext} onClick={end} />
+      <IconButton
+        size="small"
+        variant="tertiary"
+        icon={Icon.Stop}
+        onClick={stop}
+        disabled={isStopped}
+      />
+      <IconButton
+        size="small"
+        variant="tertiary"
+        icon={Icon.SkipNext}
+        onClick={end}
+      />
     </Bar>
   );
 };

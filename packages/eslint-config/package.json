@@ -1,17 +1,41 @@
 {
   "name": "@codedazur/eslint-config",
   "version": "0.2.0",
-  "main": "index.js",
   "publishConfig": {
     "access": "public"
   },
   "license": "MIT",
+  "main": ".dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    }
+  },
+  "sideEffects": false,
+  "scripts": {
+    "develop": "tsup src/index.ts --format esm,cjs --dts --watch",
+    "build": "tsup src/index.ts --format esm,cjs --dts",
+    "audit": "npm audit --omit dev --audit-level high",
+    "lint": "eslint .",
+    "types": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests"
+  },
   "dependencies": {
-    "@typescript-eslint/eslint-plugin": "^7.16.0",
-    "@typescript-eslint/parser": "^7.16.0",
-    "eslint": "^8.46.0",
-    "eslint-config-next": "^14.2.5",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-config-turbo": "^2.5.5"
+    "@eslint/js": "^9.39.2",
+    "@sanity/eslint-config-studio": "^6.0.0",
+    "eslint": "^9.39.2",
+    "eslint-config-next": "^16.1.1",
+    "eslint-plugin-mdx": "^3.6.2",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "eslint-plugin-storybook": "^10.1.11",
+    "@typescript-eslint/eslint-plugin": "^8.52.0",
+    "@typescript-eslint/parser": "^8.52.0",
+    "eslint-plugin-awscdk": "^4.0.5",
+    "eslint-plugin-prettier": "^5.5.4",
+    "eslint-plugin-turbo": "^2.7.3"
   }
 }

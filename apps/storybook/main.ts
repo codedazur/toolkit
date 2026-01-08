@@ -1,8 +1,15 @@
+// This file has been automatically migrated to valid ESM format by Storybook.
+import { fileURLToPath } from "node:url";
+import { createRequire } from "node:module";
 import { StorybookConfig } from "@storybook/nextjs";
 import { VanillaExtractPlugin } from "@vanilla-extract/webpack-plugin";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import { dirname, join, resolve } from "path";
 import { Configuration } from "webpack";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const require = createRequire(import.meta.url);
 
 const config: StorybookConfig = {
   staticDirs: ["./public"],

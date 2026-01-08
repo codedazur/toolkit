@@ -22,7 +22,11 @@ export const useMediaProgress = ({
   });
 
   useEffect(() => {
-    isPlaying ? start() : stop();
+    if (isPlaying) {
+      start();
+    } else {
+      stop();
+    }
   }, [isPlaying, start, stop]);
 
   useEffect(() => {

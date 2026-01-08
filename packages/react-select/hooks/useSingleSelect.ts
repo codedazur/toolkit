@@ -2,8 +2,9 @@ import { useCallback } from "react";
 import { useSelect, UseSelectProps, UseSelectResult } from "./useSelect";
 import { Identifiable } from "./useSuggestions";
 
-export interface UseSingleSelectProps<T extends string | Identifiable>
-  extends UseSelectProps<T> {
+export interface UseSingleSelectProps<
+  T extends string | Identifiable,
+> extends UseSelectProps<T> {
   initialSelected?: T;
 }
 

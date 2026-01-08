@@ -97,22 +97,22 @@ export function useRectangle({
 
   // Measure on scroll.
   useEffect(() => {
-    listeningOptions.scroll &&
+    if (listeningOptions.scroll)
       document.addEventListener("scroll", throttledMeasure, true);
 
     return () => {
-      listeningOptions.scroll &&
+      if (listeningOptions.scroll)
         document.removeEventListener("scroll", throttledMeasure, true);
     };
   }, [throttledMeasure, listeningOptions]);
 
   // Measure on window resize.
   useEffect(() => {
-    listeningOptions.windowResize &&
+    if (listeningOptions.windowResize)
       window.addEventListener("resize", throttledMeasure);
 
     return () => {
-      listeningOptions.windowResize &&
+      if (listeningOptions.windowResize)
         window.removeEventListener("resize", throttledMeasure);
     };
   }, [throttledMeasure, listeningOptions]);

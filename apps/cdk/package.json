@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "audit": "npm audit --omit dev --audit-level high",
-    "lint": "TIMING=1 eslint \"**/*.ts*\"",
+    "lint": "eslint .",
     "types": "tsc --noEmit",
     "test": "jest --passWithNoTests",
     "synth": "cdk synth",

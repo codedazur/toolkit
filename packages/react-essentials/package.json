@@ -19,7 +19,7 @@
     "develop": "tsup index.ts --format esm,cjs --dts --watch --external react",
     "build": "tsup index.ts --format esm,cjs --dts",
     "audit": "npm audit --omit dev --audit-level high",
-    "lint": "TIMING=1 eslint \"**/*.ts*\"",
+    "lint": "eslint .",
     "types": "tsc --noEmit",
     "test": "vitest run"
   },
@@ -38,7 +38,7 @@
     "@types/react-dom": "^19.2.3",
     "@types/react": "^19.2.7",
     "@vitejs/plugin-react": "^5.1.2",
-    "framer-motion": "^12.24.9",
+    "framer-motion": "^12.24.10",
     "react-dom": "^19.2.3",
     "react": "^19.2.3"
   }

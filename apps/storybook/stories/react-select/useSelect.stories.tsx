@@ -19,7 +19,7 @@ import {
   useSuggestions,
 } from "@codedazur/react-select";
 import { faker } from "@faker-js/faker";
-import { Meta, StoryObj } from "@storybook/react-vite";
+import { Meta, StoryObj } from "@storybook/nextjs";
 import { useMemo, useState } from "react";
 import { DebugOverlay } from "../../components/DebugOverlay";
 
@@ -194,7 +194,7 @@ export const WithOptionGroups: StoryObj<
                         trailing: isSelected(option) ? (
                           <Icon.Check />
                         ) : undefined,
-                      } as const),
+                      }) as const,
                   ),
                 ],
               ),

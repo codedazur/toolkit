@@ -1,16 +1,20 @@
 import { Vector2 } from "@codedazur/essentials";
 import { Box, Button, Column, LinearProgress, Row } from "@codedazur/fusion-ui";
 import { useScroll } from "@codedazur/react-essentials";
-import { Meta, StoryObj } from "@storybook/react-vite";
+import { Meta, StoryObj } from "@storybook/nextjs";
 import { motion, transform } from "framer-motion";
 import { useMemo, useRef } from "react";
 import { DebugOverlay } from "../../components/DebugOverlay";
 import { Placeholder } from "../../components/Placeholder/Placeholder";
+import docs from "./useScroll.docs.md";
 
 export default {
   title: "React/Essentials/useScroll",
   parameters: {
     layout: "fullscreen",
+    docs: {
+      page: docs,
+    },
   },
 } as Meta;
 

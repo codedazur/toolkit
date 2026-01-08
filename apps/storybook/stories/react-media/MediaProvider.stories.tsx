@@ -22,7 +22,7 @@ import {
   useMediaProgress,
   useMediaVolume,
 } from "@codedazur/react-media";
-import { Meta, StoryObj } from "@storybook/react-vite";
+import { Meta, StoryObj } from "@storybook/nextjs";
 import { FunctionComponent, useMemo, useRef } from "react";
 import { DebugOverlay } from "../../components/DebugOverlay";
 import distantWorldsIi from "./artworks/distant-worlds-ii.jpg";
@@ -612,15 +612,14 @@ const TrackAttributionOverlay = () => {
   );
 };
 
-interface MediaDebugOverlayProps
-  extends Partial<
-    Record<
-      | keyof ReturnType<typeof useMedia>
-      | keyof ReturnType<typeof useMediaVolume>
-      | keyof ReturnType<typeof useMediaProgress>,
-      boolean
-    >
-  > {
+interface MediaDebugOverlayProps extends Partial<
+  Record<
+    | keyof ReturnType<typeof useMedia>
+    | keyof ReturnType<typeof useMediaVolume>
+    | keyof ReturnType<typeof useMediaProgress>,
+    boolean
+  >
+> {
   targetFps?: number;
 }
 

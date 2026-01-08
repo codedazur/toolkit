@@ -16,11 +16,10 @@ import {
   useNotifications,
 } from "@codedazur/react-notifications";
 import { faker } from "@faker-js/faker";
-import { expect } from "@storybook/jest";
-import { Meta, StoryObj } from "@storybook/react-vite";
-import { userEvent, within } from "@storybook/testing-library";
+import { Meta, StoryObj } from "@storybook/nextjs";
 import { useTransform } from "framer-motion";
 import { ReactNode } from "react";
+import { expect, userEvent, within } from "storybook/test";
 import { Placeholder } from "../../components/Placeholder";
 
 const meta: Meta = {

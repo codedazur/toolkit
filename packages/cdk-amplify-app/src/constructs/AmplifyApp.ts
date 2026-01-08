@@ -13,22 +13,22 @@ import { Construct } from "constructs";
 import YAML from "yaml";
 
 export interface AmplifyAppProps {
-  source: GitSource;
-  name?: string;
-  platform?: Platform;
-  framework?: Framework;
-  buildSpec?: BuildSpec;
-  environment?: Environment;
-  rewrites?: Rewrite[];
-  redirects?: Redirect[];
-  basicAuth?: BasicAuth;
-  branches?: {
+  readonly source: GitSource;
+  readonly name?: string;
+  readonly platform?: Platform;
+  readonly framework?: Framework;
+  readonly buildSpec?: BuildSpec;
+  readonly environment?: Environment;
+  readonly rewrites?: Rewrite[];
+  readonly redirects?: Redirect[];
+  readonly basicAuth?: BasicAuth;
+  readonly branches?: {
     [key: string]: Branch;
     production: Branch;
   };
-  branchPreviews?: string[];
-  domains: string[];
-  headers?: Headers;
+  readonly branchPreviews?: string[];
+  readonly domains: string[];
+  readonly headers?: Headers;
 }
 
 export enum Platform {

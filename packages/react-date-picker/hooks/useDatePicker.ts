@@ -287,31 +287,33 @@ export const useDatePicker = ({
 
   const setDate = useCallback(
     (index: number, date: Date | null) => {
+      const newDates = [...dates];
+
       // Flag: ignoreDisabledDates
       if (ignoreDisabledDates && date && isDateDisabled(date)) {
         return;
       }
 
-      const oldDate = dates[index];
-      dates[index] = date;
+      const oldDate = newDates[index];
+      newDates[index] = date;
 
       // Flag: subsequentDates
-      if (index < dates.length - 1) {
+      if (index < newDates.length - 1) {
         switch (subsequentDates) {
           case "shift":
             if (date && oldDate) {
               const difference = differenceInCalendarDays(date, oldDate);
-              for (let i = index + 1; i <= dates.length - 1; i++) {
-                const subsequentDate = dates[i];
+              for (let i = index + 1; i <= newDates.length - 1; i++) {
+                const subsequentDate = newDates[i];
                 if (subsequentDate) {
-                  dates[i] = addDays(subsequentDate, difference);
+                  newDates[i] = addDays(subsequentDate, difference);
                 }
               }
             }
             break;
           case "clear":
-            for (let i = index + 1; i <= dates.length - 1; i++) {
-              dates[i] = null;
+            for (let i = index + 1; i <= newDates.length - 1; i++) {
+              newDates[i] = null;
             }
             break;
         }
@@ -319,10 +321,10 @@ export const useDatePicker = ({
 
       // Flag: enforceChronologicalOrder
       if (enforceChronologicalOrder && date) {
-        for (let i = 0; i <= dates.length - 1; i++) {
-          const otherDate = dates[i];
+        for (let i = 0; i <= newDates.length - 1; i++) {
+          const otherDate = newDates[i];
           if (otherDate) {
-            dates[i] =
+            newDates[i] =
               i < index ? min([otherDate, date]) : max([otherDate, date]);
           }
         }
@@ -340,10 +342,10 @@ export const useDatePicker = ({
 
       // Flag: autoProgressCursor
       if (autoProgressCursor) {
-        setCursor((cursor + 1) % dates.length);
+        setCursor((cursor + 1) % newDates.length);
       }
 
-      setDates([...dates]);
+      setDates([...newDates]);
     },
     [
       dates,

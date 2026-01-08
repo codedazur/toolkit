@@ -1,6 +1,6 @@
 import { Button, Row } from "@codedazur/fusion-ui";
 import { DictionaryProvider, useDictionary } from "@codedazur/react-dictionary";
-import { Meta, StoryObj } from "@storybook/react-vite";
+import { Meta, StoryObj } from "@storybook/nextjs";
 
 const meta: Meta = {
   title: "React/Dictionary/useDictionary",

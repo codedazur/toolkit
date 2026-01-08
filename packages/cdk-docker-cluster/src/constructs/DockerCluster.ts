@@ -25,16 +25,18 @@ import {
 import { Construct } from "constructs";
 
 export interface DockerClusterProps {
-  source: string | SourceProps | ContainerImage;
-  service?: {
-    port?: number;
-    tasks?: number | AutoScalingConfig;
-    cpu?: ApplicationLoadBalancedFargateServiceProps["cpu"];
-    memory?: ApplicationLoadBalancedFargateServiceProps["memoryLimitMiB"];
-    environment?: Record<string, string>;
-    secrets?: Record<string, Secret>;
-  };
-  distribution?: Omit<SiteDistributionProps, "origin">;
+  readonly source: string | SourceProps | ContainerImage;
+  readonly service?: ServiceProps;
+  readonly distribution?: Omit<SiteDistributionProps, "origin">;
+}
+
+export interface ServiceProps {
+  readonly port?: number;
+  readonly tasks?: number | AutoScalingConfig;
+  readonly cpu?: ApplicationLoadBalancedFargateServiceProps["cpu"];
+  readonly memory?: ApplicationLoadBalancedFargateServiceProps["memoryLimitMiB"];
+  readonly environment?: Record<string, string>;
+  readonly secrets?: Record<string, Secret>;
 }
 
 interface AutoScalingConfig {
@@ -73,11 +75,11 @@ interface AutoScalingConfig {
 }
 
 interface SourceProps {
-  directory: string;
-  exclude?: string[];
-  file?: string;
-  arguments?: Record<string, string>;
-  secrets?: Record<string, string>;
+  readonly directory: string;
+  readonly exclude?: string[];
+  readonly file?: string;
+  readonly arguments?: Record<string, string>;
+  readonly secrets?: Record<string, string>;
 }
 
 /**

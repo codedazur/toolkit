@@ -63,12 +63,10 @@ type FlattenWithDepth<
  *  default maximum depth of @see defaultMaxDepth is used to prevent infinite
  *  recursion.
  */
-type Flatten<T, D extends number = typeof defaultMaxDepth> = T extends Record<
-  string | number,
-  unknown
->
-  ? MergeUnion<FlattenWithDepth<T, D>>
-  : T;
+type Flatten<T, D extends number = typeof defaultMaxDepth> =
+  T extends Record<string | number, unknown>
+    ? MergeUnion<FlattenWithDepth<T, D>>
+    : T;
 
 /**
  * Flattens a nested object into a single-level object with dot-concatenated

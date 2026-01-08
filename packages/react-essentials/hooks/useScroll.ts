@@ -24,7 +24,7 @@ export function useScroll<T extends Element>({
 } {
   useEffect(() => {
     const target = ref
-      ? resolveMaybeRef(ref) ?? window.document
+      ? (resolveMaybeRef(ref) ?? window.document)
       : window.document;
 
     const handleScroll = () => {
@@ -46,7 +46,7 @@ export function useScroll<T extends Element>({
   const setPosition = useCallback(
     (position: Vector2) => {
       const element = ref
-        ? resolveMaybeRef(ref) ?? window.document.documentElement
+        ? (resolveMaybeRef(ref) ?? window.document.documentElement)
         : window.document.documentElement;
 
       element.scrollTo({ left: position.x, top: position.y });
@@ -57,7 +57,7 @@ export function useScroll<T extends Element>({
   const setProgress = useCallback(
     (progress: Vector2) => {
       const element = ref
-        ? resolveMaybeRef(ref) ?? window.document.documentElement
+        ? (resolveMaybeRef(ref) ?? window.document.documentElement)
         : window.document.documentElement;
 
       element.scrollTo({
@@ -71,7 +71,7 @@ export function useScroll<T extends Element>({
   const addPosition = useCallback(
     (addition: Vector2) => {
       const element = ref
-        ? resolveMaybeRef(ref) ?? window.document.documentElement
+        ? (resolveMaybeRef(ref) ?? window.document.documentElement)
         : window.document.documentElement;
 
       element.scrollBy({
@@ -85,7 +85,7 @@ export function useScroll<T extends Element>({
   const addProgress = useCallback(
     (addition: Vector2) => {
       const element = ref
-        ? resolveMaybeRef(ref) ?? window.document.documentElement
+        ? (resolveMaybeRef(ref) ?? window.document.documentElement)
         : window.document.documentElement;
 
       element.scrollBy({
@@ -119,7 +119,10 @@ export function useScrollProgress({ ref }: { ref?: MaybeRef<Element> }) {
     progress: Vector2.zero,
   });
 
-  const handleScroll = useCallback(setState, [setState]);
+  const handleScroll = useCallback(
+    (state: ScrollState) => setState(state),
+    [setState],
+  );
 
   useScroll({ ref, onScroll: handleScroll });
 

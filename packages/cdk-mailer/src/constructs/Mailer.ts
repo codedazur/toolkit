@@ -6,12 +6,12 @@ import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
 import { RetentionDays } from "aws-cdk-lib/aws-logs";
 import { Queue } from "aws-cdk-lib/aws-sqs";
 import { Construct } from "constructs";
-import path = require("path");
+import path from "path";
 
 interface MailerProps {
-  fromAddress: string;
-  replyToAddresses?: string[];
-  perSecondRateLimit: number;
+  readonly fromAddress: string;
+  readonly replyToAddresses?: string[];
+  readonly perSecondRateLimit: number;
 }
 
 /**
@@ -23,7 +23,11 @@ interface MailerProps {
 export class Mailer extends Construct {
   public readonly queue: Queue;
 
-  constructor(scope: Construct, id: string, protected props: MailerProps) {
+  constructor(
+    scope: Construct,
+    id: string,
+    protected props: MailerProps,
+  ) {
     super(scope, id);
 
     this.queue = this.createQueue();

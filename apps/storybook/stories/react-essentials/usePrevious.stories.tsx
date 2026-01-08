@@ -1,9 +1,9 @@
 import { Row, SymbolButton, Text } from "@codedazur/fusion-ui";
 import { usePrevious } from "@codedazur/react-essentials";
-import { Meta, StoryObj } from "@storybook/react-vite";
+import { Meta, StoryObj } from "@storybook/nextjs";
 import { useState } from "react";
 import { DebugOverlay } from "../../components/DebugOverlay";
-import docs from "./usePrevious.docs.mdx";
+import docs from "./usePrevious.docs.md";
 
 const meta: Meta = {
   title: "React/Essentials/usePrevious",

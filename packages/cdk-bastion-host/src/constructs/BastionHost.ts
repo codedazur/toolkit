@@ -16,9 +16,9 @@ import {
 import { Construct } from "constructs";
 
 export interface BastionHostProps {
-  vpc: IVpc;
-  ingress: { peer: IPeer; port: Port }[];
-  publicKey: string;
+  readonly vpc: IVpc;
+  readonly ingress: { peer: IPeer; port: Port }[];
+  readonly publicKey: string;
 }
 
 export class BastionHost extends Construct {

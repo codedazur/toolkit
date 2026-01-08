@@ -13,8 +13,8 @@
     "yarn": "Please use NPM!"
   },
   "scripts": {
-    "develop": "next dev",
-    "audit": "npm audit --omit dev --audit-level moderate",
+    "develop": "next dev --webpack",
+    "audit": "npm audit --omit dev --audit-level high",
     "audit:fix": "npm audit fix --omit dev",
     "lint": "eslint .",
     "style": "prettier --check .",
@@ -22,7 +22,7 @@
     "test": "vitest run --passWithNoTests",
     "test:watch": "vitest watch --passWithNoTests",
     "format": "prettier --write .",
-    "build": "next build",
+    "build": "next build --webpack",
     "start": "next start"
   },
   "dependencies": {
@@ -32,7 +32,7 @@
     "@vanilla-extract/css": "^1.18.0",
     "@vanilla-extract/recipes": "^0.5.7",
     "@vanilla-extract/sprinkles": "^1.6.5",
-    "framer-motion": "^12.24.9",
+    "framer-motion": "^12.24.10",
     "next": "^16.1.1",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",

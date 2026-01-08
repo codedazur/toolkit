@@ -18,19 +18,19 @@ import { ApiGateway } from "aws-cdk-lib/aws-route53-targets";
 import { Construct } from "constructs";
 
 export interface RpcApiProps extends RestApiProps {
-  procedures: Record<string, ProcedureProps>;
-  domain?: DomainProps;
+  readonly procedures: Record<string, ProcedureProps>;
+  readonly domain?: DomainProps;
 }
 
 interface DomainProps {
-  name: string;
-  subdomain?: string;
+  readonly name: string;
+  readonly subdomain?: string;
 }
 
 interface ProcedureProps {
-  method?: HttpMethod;
-  handler?: IFunction;
-  procedures?: Record<string, ProcedureProps>;
+  readonly method?: HttpMethod;
+  readonly handler?: IFunction;
+  readonly procedures?: Record<string, ProcedureProps>;
 }
 
 /**

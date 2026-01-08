@@ -9,7 +9,7 @@ import {
 } from "@codedazur/fusion-ui";
 import { useSuggestions, UseSuggestionsProps } from "@codedazur/react-select";
 import { faker } from "@faker-js/faker";
-import { Meta, StoryObj } from "@storybook/react-vite";
+import { Meta, StoryObj } from "@storybook/nextjs";
 import { useCallback, useState } from "react";
 import { DebugOverlay } from "../../components/DebugOverlay";
 

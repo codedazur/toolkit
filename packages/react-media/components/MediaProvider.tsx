@@ -70,6 +70,13 @@ export function MediaProvider({
   const [duration, setDuration] = useState(0);
   const [isMuted, setIsMuted] = useState(false);
 
+  const [element, setElement] = useState<HTMLMediaElement | null>(null);
+
+  useEffect(() => {
+    const element = resolveMaybeRef(elementRef);
+    setElement(element);
+  }, [elementRef]);
+
   const setTime = useCallback(
     (time: number) => {
       const element = resolveMaybeRef(elementRef);
@@ -88,7 +95,6 @@ export function MediaProvider({
   );
 
   const play = useCallback(() => {
-    const element = resolveMaybeRef(elementRef);
     if (!element) return;
 
     /**
@@ -96,50 +102,43 @@ export function MediaProvider({
      * interrupting it due to a new load request ocurring on the same tick.
      */
     setTimeout(() => setTimeout(() => element.play(), 0), 0);
-  }, [elementRef]);
+  }, [element]);
 
   const pause = useCallback(() => {
-    const element = resolveMaybeRef(elementRef);
     if (!element) return;
 
     element.pause();
-  }, [elementRef]);
+  }, [element]);
 
   const stop = useCallback(() => {
-    const element = resolveMaybeRef(elementRef);
-
-    if (!element) {
-      return;
-    }
+    if (!element) return;
 
     pause();
     setTime(0);
-  }, [pause, elementRef, setTime]);
+  }, [pause, element, setTime]);
 
   const mute = useCallback(() => {
-    const element = resolveMaybeRef(elementRef);
-
     if (!element) return;
 
+    // eslint-disable-next-line react-hooks/immutability
     element.muted = true;
-  }, [elementRef]);
+  }, [element]);
 
   const unmute = useCallback(() => {
-    const element = resolveMaybeRef(elementRef);
-
     if (!element) return;
 
+    // eslint-disable-next-line react-hooks/immutability
     element.muted = false;
-  }, [elementRef]);
+  }, [element]);
 
   const setVolume = useCallback(
     (volume: number) => {
-      const element = resolveMaybeRef(elementRef);
       if (!element) return;
 
+      // eslint-disable-next-line react-hooks/immutability
       element.volume = volume;
     },
-    [elementRef],
+    [element],
   );
 
   useEffect(() => {
@@ -228,7 +227,6 @@ export function MediaProvider({
    * Bind event handlers to the media element.
    */
   useEffect(() => {
-    const element = resolveMaybeRef(elementRef);
     if (!element) return;
 
     const handlePlay = () => setIsPlaying(true);
@@ -260,7 +258,7 @@ export function MediaProvider({
       element.removeEventListener("durationchange", handleDurationChange);
     };
   }, [
-    elementRef,
+    element,
     setIsPlaying,
     setDuration,
     setIsMuted,
@@ -276,10 +274,10 @@ export function MediaProvider({
    * selected.
    */
   useEffect(() => {
-    const element = resolveMaybeRef(elementRef);
     if (!element) return;
 
     if (track) {
+      // eslint-disable-next-line react-hooks/immutability
       element.src = typeof track === "string" ? track : track.source;
 
       if (isPlayingRef.current) {
@@ -289,7 +287,7 @@ export function MediaProvider({
       pause();
       setTime(0);
     }
-  }, [track, elementRef, isPlayingRef, play, pause, setTime]);
+  }, [track, element, isPlayingRef, play, pause, setTime]);
 
   /**
    * Clamp the cursor when the tracks change.
@@ -302,11 +300,11 @@ export function MediaProvider({
    * Configure the initial element attributes.
    */
   useEffect(() => {
-    const element = resolveMaybeRef(elementRef);
     if (!element) return;
 
+    // eslint-disable-next-line react-hooks/immutability
     element.autoplay = autoPlay;
-  }, [autoPlay, elementRef]);
+  }, [autoPlay, element]);
 
   /**
    * Shuffle the tracks, shifting the cursor to retain the active track.
@@ -325,7 +323,7 @@ export function MediaProvider({
   }, [shuffle, tracks, trackRef, setCursor]);
 
   const context: MediaContext = {
-    element: resolveMaybeRef(elementRef),
+    element,
     tracks: shuffled,
     setTracks,
     cursor,

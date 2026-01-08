@@ -1,0 +1,28 @@
+# useMotionPreferences
+
+A hook that determines whether the user prefers reduced motion.
+
+This hook returns true if the current device has Reduced Motion setting enabled.
+The return state will respond to changes in your devices settings and re-render your
+component with the latest setting.
+
+In this hook `prefers-reduced-motion` media query is used, see the following link for
+more information and browser compatibility.
+[MDN web docs - prefers-reduced-motion](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion)
+
+```js
+import { useState } from "react";
+import { useMotionPreferences } from "@codedazur/react-preferences";
+
+export function Demo() {
+  const preferedMotion = useMotionPreferences();
+
+  return <p>User prefers {preferedMotion || "default"} motion.</p>;
+}
+```
+
+## Type Declarations
+
+```js
+declare function useMotionPreferences(): boolean;
+```

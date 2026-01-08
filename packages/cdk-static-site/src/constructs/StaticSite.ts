@@ -10,9 +10,9 @@ import {
 } from "aws-cdk-lib/aws-cloudfront";
 import { HttpOrigin } from "aws-cdk-lib/aws-cloudfront-origins";
 import { AnyPrincipal, Effect, PolicyStatement } from "aws-cdk-lib/aws-iam";
-import { BlockPublicAccess, Bucket } from "aws-cdk-lib/aws-s3";
+import { BlockPublicAccess, Bucket, IBucket } from "aws-cdk-lib/aws-s3";
 import { BucketDeployment, Source } from "aws-cdk-lib/aws-s3-deployment";
-import { Secret } from "aws-cdk-lib/aws-secretsmanager";
+import { ISecret, Secret } from "aws-cdk-lib/aws-secretsmanager";
 import { Construct } from "constructs";
 
 export enum RewriteMode {
@@ -55,7 +55,7 @@ export interface StaticSiteProps {
    * path to a directory, or an object with a `directory` property and an
    * optional `exclude` property.
    */
-  source:
+  readonly source:
     | string
     | {
         directory: string;
@@ -65,7 +65,7 @@ export interface StaticSiteProps {
   /**
    * The bucket to deploy the source to.
    */
-  bucket?: {
+  readonly bucket?: {
     accelerate?: boolean;
   };
 
@@ -77,7 +77,7 @@ export interface StaticSiteProps {
    * @see RewriteMode
    * @default @see RewriteMode.IndexPages
    */
-  rewriteMode?: RewriteMode;
+  readonly rewriteMode?: RewriteMode;
 
   /**
    * The path to the error document that CloudFront will return when a request
@@ -85,21 +85,21 @@ export interface StaticSiteProps {
    *
    * @default "error.html"
    */
-  errorDocument?: string;
+  readonly errorDocument?: string;
 
   /**
    * The CloudFront distribution to use for the site.
    *
    * @see SiteDistributionProps
    */
-  distribution?: Omit<SiteDistributionProps, "origin">;
+  readonly distribution?: Omit<SiteDistributionProps, "origin">;
 
   /**
    * The deployment configuration includes the memory limit for the function
    * that is used to deploy the content to the bucket, and an optional prefix
    * that allows you to deploy the content to a subdirectory of the bucket.
    */
-  deployment?: {
+  readonly deployment?: {
     memoryLimit?: number;
     prefix?: string;
   };
@@ -121,8 +121,8 @@ export interface StaticSiteProps {
  * speed for development environments.
  */
 export class StaticSite extends Construct {
-  public readonly refererSecret: Secret;
-  public readonly bucket: Bucket;
+  public readonly refererSecret: ISecret;
+  public readonly bucket: IBucket;
   public readonly deployment: BucketDeployment;
   public readonly siteDistribution: SiteDistribution;
 

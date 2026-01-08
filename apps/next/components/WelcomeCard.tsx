@@ -1,5 +1,5 @@
 import { ButtonGroup, Card, Center, LinkButton } from "@codedazur/fusion-ui";
-import { Logo } from "ui";
+import { Logo } from "./Logo";
 
 interface WelcomeCardProps {
   title: string;

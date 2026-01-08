@@ -24,9 +24,11 @@ export const WithApp: Decorator = (Story, { globals: { theme } }) => {
   }, []);
 
   useEffect(() => {
-    previousTheme
-      ? document.body.classList.replace(previousTheme, themes[theme])
-      : document.body.classList.add(themes[theme]);
+    if (previousTheme) {
+      document.body.classList.replace(previousTheme, themes[theme]);
+    } else {
+      document.body.classList.add(themes[theme]);
+    }
   }, [theme, previousTheme]);
 
   return (

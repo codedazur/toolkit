@@ -15,7 +15,7 @@ import {
   usePagination,
 } from "@codedazur/react-pagination";
 import { faker } from "@faker-js/faker";
-import { Meta, StoryObj } from "@storybook/react-vite";
+import { Meta, StoryObj } from "@storybook/nextjs";
 import { DebugOverlay } from "../../components/DebugOverlay";
 
 const meta: Meta<UsePaginationProps<string>> = {

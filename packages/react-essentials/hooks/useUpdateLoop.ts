@@ -10,7 +10,7 @@ export interface Frame {
    */
   index: number;
   /**
-   * The time at the moment of this frane.
+   * The time at the moment of this frame.
    */
   time: number;
   /**
@@ -221,6 +221,11 @@ export const useUpdateLoop = ({
         callOnUpdate();
       }
 
+      /**
+       * The `react-hooks/immutability` rule warns against calling this function
+       * before it is declared, but I believe this to be a false positive.
+       */
+      // eslint-disable-next-line react-hooks/immutability
       step();
     });
   }, [callOnUpdate, incrementFrame, setMetrics, shouldCallOnUpdate]);

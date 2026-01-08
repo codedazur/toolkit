@@ -1,9 +1,7 @@
-import { Text, Center } from "@codedazur/fusion-ui";
-
+import { Center, Text } from "@codedazur/fusion-ui";
 import { useMotionPreferences } from "@codedazur/react-preferences";
-
-import docs from "./useMotionPreferences.docs.mdx";
-import { Meta, StoryObj } from "@storybook/react-vite";
+import { Meta, StoryObj } from "@storybook/nextjs";
+import docs from "./useMotionPreferences.docs.md";
 
 const meta: Meta = {
   title: "React/Preferences/useMotionPreferences",

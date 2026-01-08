@@ -1,7 +1,7 @@
 import { Icon } from "@apps/storybook/components/Icon";
 import { Column, IconButton, Row, Surface } from "@codedazur/fusion-ui";
 import { Frame, useUpdateLoop } from "@codedazur/react-essentials";
-import { Meta, StoryObj } from "@storybook/react-vite";
+import { Meta, StoryObj } from "@storybook/nextjs";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { DebugOverlay } from "../../components/DebugOverlay";
 

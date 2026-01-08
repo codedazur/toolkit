@@ -14,7 +14,7 @@
   },
   "scripts": {
     "develop": "storybook dev -c . -p 6006 --no-open",
-    "audit": "npm audit --omit dev --audit-level moderate",
+    "audit": "npm audit --omit dev --audit-level high",
     "audit:fix": "npm audit fix --omit dev",
     "lint": "eslint .",
     "style": "prettier --check .",

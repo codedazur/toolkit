@@ -15,6 +15,8 @@ import {
   FunctionCode,
   FunctionEventType,
   ICachePolicy,
+  IDistribution,
+  IFunction,
   IOrigin,
   IOriginRequestPolicy,
   PriceClass,
@@ -24,6 +26,7 @@ import {
   ARecord,
   HostedZone,
   IHostedZone,
+  IRecordSet,
   RecordTarget,
 } from "aws-cdk-lib/aws-route53";
 import { CloudFrontTarget } from "aws-cdk-lib/aws-route53-targets";
@@ -37,21 +40,21 @@ export interface SiteDistributionProps extends BehaviorProps {
    *
    * @default PriceClass.PRICE_CLASS_ALL
    */
-  priceClass?: PriceClass;
+  readonly priceClass?: PriceClass;
 
   /**
    * The domain of the distribution. You can provide a single domain or an array
    * of domains. If you provide your own certificate, all domains need to be
    * covered by the certificate.
    */
-  domain?: Domain | Domain[];
+  readonly domain?: Domain | Domain[];
 
   /**
    * The hosted zone of the domain. If not provided, the hosted zone will be
    * looked up using the provided domain. If multiple domains are provided, the
    * first one will be used.
    */
-  hostedZone?: IHostedZone;
+  readonly hostedZone?: IHostedZone;
 
   /**
    * The certificate to use for the distribution. If not provided, a certificate
@@ -59,7 +62,7 @@ export interface SiteDistributionProps extends BehaviorProps {
    * will be used as the primary domain and the others as subject alternative
    * names.
    */
-  certificate?: ICertificate;
+  readonly certificate?: ICertificate;
 
   /**
    * Any additional behaviors to add to the distribution, keyed by the path
@@ -68,14 +71,14 @@ export interface SiteDistributionProps extends BehaviorProps {
    *
    * @default {}
    */
-  behaviors?: Record<string, Partial<BehaviorProps>>;
+  readonly behaviors?: Record<string, Partial<BehaviorProps>>;
 
   /**
    * Custom error responses to add to the distribution.
    *
    * @default []
    */
-  errorResponses?: ErrorResponse[];
+  readonly errorResponses?: ErrorResponse[];
 
   /**
    * Whether to invalidate the cache after deployment. If set to `true`, the
@@ -84,20 +87,20 @@ export interface SiteDistributionProps extends BehaviorProps {
    *
    * @default true
    */
-  invalidateCache?: boolean | string[];
+  readonly invalidateCache?: boolean | string[];
 }
 
 export interface BehaviorProps {
   /**
    * The origin that the behavior will route traffic to.
    */
-  origin: IOrigin;
+  readonly origin: IOrigin;
 
   /**
    * The Baasic authentication credentials to use for the behavior. If set to
    * `false`, no authentication will be used.
    */
-  authentication?:
+  readonly authentication?:
     | {
         username: string;
         password: string;
@@ -109,7 +112,7 @@ export interface BehaviorProps {
    * will be chained together using a middleware pattern and will run in the
    * order they are provided.
    */
-  functions?: {
+  readonly functions?: {
     viewerRequest?: FunctionCode[];
     viewerResponse?: FunctionCode[];
   };
@@ -117,22 +120,22 @@ export interface BehaviorProps {
   /**
    * The allowed HTTP methods for the behavior.
    */
-  allowedMethods?: AllowedMethods;
+  readonly allowedMethods?: AllowedMethods;
 
   /**
    * The cache policy to use for the behavior.
    */
-  cachePolicy?: ICachePolicy;
+  readonly cachePolicy?: ICachePolicy;
 
   /**
    * The origin request policy to use for the behavior.
    */
-  originRequestPolicy?: IOriginRequestPolicy;
+  readonly originRequestPolicy?: IOriginRequestPolicy;
 }
 
 export interface Domain {
-  name: string;
-  subdomain?: string;
+  readonly name: string;
+  readonly subdomain?: string;
 }
 
 /**
@@ -168,9 +171,9 @@ export class SiteDistribution extends Construct {
   public readonly domains?: string[];
   public readonly zone?: IHostedZone;
   public readonly certificate?: ICertificate;
-  public readonly distribution: Distribution;
-  public readonly functions: CloudFrontFunction[] = [];
-  public readonly aliases?: ARecord[];
+  public readonly distribution: IDistribution;
+  public readonly functions: IFunction[] = [];
+  public readonly aliases?: IRecordSet[];
   public readonly cacheInvalidator?: CacheInvalidator;
 
   constructor(
@@ -396,6 +399,7 @@ export class SiteDistribution extends Construct {
       return undefined;
     }
 
+    // eslint-disable-next-line awscdk/no-variable-construct-id
     const func = new CloudFrontFunction(this, id, {
       code: this.getHandlerChainCode(handlers, "request"),
     });
@@ -420,6 +424,7 @@ export class SiteDistribution extends Construct {
       return undefined;
     }
 
+    // eslint-disable-next-line awscdk/no-variable-construct-id
     const func = new CloudFrontFunction(this, id, {
       code: this.getHandlerChainCode(handlers, "response"),
     });

@@ -1,10 +1,10 @@
+import { size, surface } from "@codedazur/fusion-ui/style";
 import { Metadata } from "next";
 import { ReactNode } from "react";
 import { App } from "../components/App";
 import { GoogleTagManagerScript } from "../components/GoogleTagManagerScript";
 import { RouteChangeTracker } from "../components/RouteChangeTracker";
 import { TrackingProvider } from "../components/TrackingProvider";
-import { size } from "@codedazur/fusion-ui/style";
 
 const containerId = process.env.NEXT_PUBLIC_GTM_CONTAINER_ID;
 
@@ -22,7 +22,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
     <html lang="en" className={size({ height: "stretch" })}>
       <TrackingProvider>
         <RouteChangeTracker />
-        <App as="body" surface>
+        <App as="body" className={surface}>
           {containerId && <GoogleTagManagerScript id={containerId} />}
           {children}
         </App>

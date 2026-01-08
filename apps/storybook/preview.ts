@@ -6,14 +6,14 @@ const preview: Preview = {
   parameters: {
     layout: "centered",
     backgrounds: {
-      disable: true,
       grid: {
         cellSize: 16,
         opacity: 0.1,
       },
+      disabled: true,
     },
     viewport: {
-      viewports: INITIAL_VIEWPORTS,
+      options: INITIAL_VIEWPORTS,
     },
   },
   decorators: [WithApp],

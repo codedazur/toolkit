@@ -1,11 +1,9 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-const { createVanillaExtractPlugin } = require("@vanilla-extract/next-plugin");
-const { withSentryConfig } = require("@sentry/nextjs");
+import { createVanillaExtractPlugin } from "@vanilla-extract/next-plugin";
+import { SentryBuildOptions, withSentryConfig } from "@sentry/nextjs";
+import { NextConfig } from "next";
+import { NextJsWebpackConfig } from "next/dist/server/config-shared";
 
-/**
- * @type {import("next").NextConfig}
- */
-const nextConfig = {
+const nextConfig: NextConfig = {
   reactStrictMode: true,
   output: "standalone",
   transpilePackages: ["ui", "@codedazur/fusion-ui", "@codedazur/fusion-next"],
@@ -20,14 +18,6 @@ const nextConfig = {
    * remove this setting.
    */
   skipTrailingSlashRedirect: true,
-  experimental: {
-    /**
-     * The instrumentation hook is required for Sentry integration. This can be
-     * removed when we upgrade to `next@15`.
-     * @see https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/#create-initialization-config-files
-     */
-    instrumentationHook: true,
-  },
   webpack(config) {
     return withUrlLoader(config, ["woff2"]);
   },
@@ -39,7 +29,6 @@ const withSentry = createSentryPlugin({
   org: process.env.SENTRY_ORG,
   project: process.env.SENTRY_PROJECT,
   authToken: process.env.SENTRY_AUTH_TOKEN,
-  hideSourceMaps: true,
   widenClientFileUpload: true,
   /**
    * Uncomment the following line to enable tunneling for Sentry requests to
@@ -54,14 +43,19 @@ module.exports = withSentry(withVanillaExtract(nextConfig));
 /**
  * @todo move to a shared location such as `@codedazur/webpack-essentials`.
  */
-function withUrlLoader(config, modules) {
+function withUrlLoader(config: NextJsWebpackConfig, modules: string[]) {
   return withLoaders(config, modules, ["url-loader"]);
 }
 
 /**
  * @todo move to a shared location such as `@codedazur/webpack-essentials`.
  */
-function withLoaders(config, modules, loaders) {
+function withLoaders(
+  config: NextJsWebpackConfig,
+  modules: string[],
+  loaders: string[],
+) {
+  /** @ts-expect-error The NextJsWebpackConfig seems to be typed incorrectly? */
   config.module.rules.push({
     test: new RegExp(`\\.(${modules.join("|")})$`),
     issuer: {
@@ -77,8 +71,8 @@ function withLoaders(config, modules, loaders) {
  * @todo Check if this isn't already exorted by Sentry and otherwise move this
  * function to a shared location such as `@codedazur/webpack-essentials`.
  */
-function createSentryPlugin(sentryConfig) {
-  return function (nextConfig) {
+function createSentryPlugin(sentryConfig: SentryBuildOptions) {
+  return function (nextConfig: NextConfig) {
     if (!sentryConfig.org || !sentryConfig.project) {
       return nextConfig;
     }

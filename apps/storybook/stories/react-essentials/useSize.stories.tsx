@@ -1,6 +1,6 @@
 import { Button, Center, Column, Row } from "@codedazur/fusion-ui";
 import { useSize } from "@codedazur/react-essentials";
-import { Meta, StoryObj } from "@storybook/react-vite";
+import { Meta, StoryObj } from "@storybook/nextjs";
 import { useRef, useState } from "react";
 import { DebugOverlay } from "../../components/DebugOverlay";
 import { Placeholder } from "../../components/Placeholder";

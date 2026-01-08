@@ -19,7 +19,7 @@
     "develop": "tsup index.ts --format esm,cjs --dts --watch --external react",
     "build": "tsup index.ts --format esm,cjs --dts",
     "audit": "npm audit --omit dev --audit-level high",
-    "lint": "TIMING=1 eslint \"**/*.ts*\"",
+    "lint": "eslint .",
     "types": "tsc --noEmit",
     "test": "vitest run --passWithNoTests"
   },

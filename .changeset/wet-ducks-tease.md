@@ -2,4 +2,4 @@
 "@codedazur/react-essentials": patch
 ---
 
-specify motion as a peer dependency
+The motion package is now specified as a peer dependency instead of a regular dependency.

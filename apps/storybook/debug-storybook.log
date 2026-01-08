@@ -1,0 +1,31 @@
+[11:48:42.604] [INFO] storybook v10.1.11
+[11:48:42.958] [DEBUG] Getting package.json info for /Users/thijsdaniels/Projects/codedazur/toolkit/package.json...
+[11:48:43.670] [DEBUG] Serving static files from [36mapps/storybook/public[39m at [36m/[39m
+[11:48:43.674] [INFO] Starting...
+[11:48:43.687] [WARN] No story files found for the specified pattern: [34mstories/**/*.mdx[39m
+[11:48:43.853] [DEBUG] Starting preview..
+[11:48:43.869] [INFO] Addon-docs: using MDX3
+[11:48:43.886] [INFO] Using implicit CSS loaders
+[11:48:43.981] [INFO] Using SWC as compiler
+[11:48:43.986] [INFO] => [@storybook/addon-styling-webpack] Applying custom Storybook webpack configuration styling.
+[11:48:43.986] [INFO] => [@storybook/addon-styling-webpack] Adding given plugins to Storybook webpack configuration.
+[11:48:43.986] [INFO] => [@storybook/addon-styling-webpack] Replacing Storybook's webpack rules for styles with given rules.
+[11:48:43.987] [INFO] Using default Webpack5 setup
+[11:48:44.326] [DEBUG] Using tsconfig paths for react-docgen
+[11:48:58.234] [WARN] Module not found: Error: Can't resolve '@emotion/is-prop-valid' in '/Users/thijsdaniels/Projects/codedazur/toolkit/node_modules/framer-motion/dist/es/render/dom/utils'
+[11:48:58.238] [ERROR] Failed to build the preview
+[11:48:58.241] [WARN] Force closed preview build
+[11:48:58.241] [ERROR] [38;2;241;97;97mSB_BUILDER-WEBPACK5_0003 (WebpackCompilationError): There were problems when compiling your code with Webpack.
+Run Storybook with --debug-webpack for more information.[39m
+    at starter (file:///Users/thijsdaniels/Projects/codedazur/toolkit/node_modules/@storybook/builder-webpack5/dist/index.js:799:11)
+    at starter.next (<anonymous>)
+    at Module.start (file:///Users/thijsdaniels/Projects/codedazur/toolkit/node_modules/@storybook/builder-webpack5/dist/index.js:857:34)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async storybookDevServer (file:///Users/thijsdaniels/Projects/codedazur/toolkit/node_modules/storybook/dist/core-server/index.js:6806:82)
+    at async buildOrThrow (file:///Users/thijsdaniels/Projects/codedazur/toolkit/node_modules/storybook/dist/core-server/index.js:5555:12)
+    at async buildDevStandalone (file:///Users/thijsdaniels/Projects/codedazur/toolkit/node_modules/storybook/dist/core-server/index.js:7208:66)
+    at async withTelemetry (file:///Users/thijsdaniels/Projects/codedazur/toolkit/node_modules/storybook/dist/_node-chunks/chunk-2372JZ52.js:209:12)
+    at async dev (file:///Users/thijsdaniels/Projects/codedazur/toolkit/node_modules/storybook/dist/bin/core.js:2734:3)
+    at async _Command.<anonymous> (file:///Users/thijsdaniels/Projects/codedazur/toolkit/node_modules/storybook/dist/bin/core.js:2801:92)
+[11:48:58.243] [WARN] Broken build, fix the error above.
+You may need to refresh the browser.

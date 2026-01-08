@@ -11,7 +11,7 @@ import {
 } from "@codedazur/fusion-ui";
 import { useParallax } from "@codedazur/react-parallax";
 import { faker } from "@faker-js/faker";
-import { Meta, StoryObj } from "@storybook/react-vite";
+import { Meta, StoryObj } from "@storybook/nextjs";
 import layerFive from "./diorama/layer-five.png";
 import layerFour from "./diorama/layer-four.png";
 import layerOne from "./diorama/layer-one.png";

@@ -1,4 +1,7 @@
-import { App as BrandApp, AppProps as BrandAppProps } from "ui";
+import {
+  App as BrandApp,
+  AppProps as BrandAppProps,
+} from "@codedazur/fusion-ui";
 
 export interface AppProps extends BrandAppProps {}
 

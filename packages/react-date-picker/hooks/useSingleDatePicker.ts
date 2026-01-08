@@ -5,27 +5,25 @@ import {
   UseDatePickerResult,
 } from "./useDatePicker";
 
-export interface UseSingleDatePickerProps
-  extends Omit<
-    UseDatePickerProps,
-    | "count"
-    | "initialDates"
-    | "minDuration"
-    | "maxDuration"
-    | "isDateDisabled"
-    | "autoProgressCursor"
-    | "enforceChronologicalOrder"
-    | "subsequentDates"
-  > {
+export interface UseSingleDatePickerProps extends Omit<
+  UseDatePickerProps,
+  | "count"
+  | "initialDates"
+  | "minDuration"
+  | "maxDuration"
+  | "isDateDisabled"
+  | "autoProgressCursor"
+  | "enforceChronologicalOrder"
+  | "subsequentDates"
+> {
   initialDate?: Date;
   isDateDisabled?: (date: Date, selectedDate: Date | null) => boolean;
 }
 
-export interface UseSingleDatePickerResult
-  extends Omit<
-    UseDatePickerResult,
-    "dates" | "setDate" | "cursor" | "setCursor" | "isFirstDate" | "isLastDate"
-  > {
+export interface UseSingleDatePickerResult extends Omit<
+  UseDatePickerResult,
+  "dates" | "setDate" | "cursor" | "setCursor" | "isFirstDate" | "isLastDate"
+> {
   date: Date | null;
   setDate: (date: Date | null) => void;
 }

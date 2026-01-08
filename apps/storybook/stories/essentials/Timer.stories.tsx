@@ -1,6 +1,6 @@
 import { Timer, TimerEvent } from "@codedazur/essentials";
 import { Button, Center, Column, Row } from "@codedazur/fusion-ui";
-import type { Meta, StoryObj } from "@storybook/react-vite";
+import type { Meta, StoryObj } from "@storybook/nextjs";
 import { action } from "storybook/actions";
 
 const meta: Meta<Timer> = {

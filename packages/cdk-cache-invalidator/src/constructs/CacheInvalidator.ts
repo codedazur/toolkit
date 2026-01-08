@@ -7,8 +7,8 @@ import { CallAwsService } from "aws-cdk-lib/aws-stepfunctions-tasks";
 import { Construct } from "constructs";
 
 interface CacheInvalidatorProps {
-  distribution: IDistribution;
-  paths?: string[];
+  readonly distribution: IDistribution;
+  readonly paths?: string[];
 }
 
 /**

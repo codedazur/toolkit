@@ -1,9 +1,7 @@
-import { Text, Center } from "@codedazur/fusion-ui";
-
+import { Center, Text } from "@codedazur/fusion-ui";
 import { useColorSchemePreferences } from "@codedazur/react-preferences";
-
-import docs from "./useColorSchemePreferences.docs.mdx";
-import { Meta, StoryObj } from "@storybook/react-vite";
+import { Meta, StoryObj } from "@storybook/nextjs";
+import docs from "./useColorSchemePreferences.docs.md";
 
 const meta: Meta = {
   title: "React/Preferences/useColorSchemePreferences",

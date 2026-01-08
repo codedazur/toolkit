@@ -22,7 +22,7 @@ export const random = {
   paragraph: (sentences: MaybeRange = { min: 3, max: 5 }) =>
     faker.lorem.paragraph(sentences),
   paragraphs: (count: MaybeRange = 3) => (
-    <Column gap="300">
+    <Column gap={300}>
       {random.array(
         (index) => (
           <Text key={index}>{random.paragraph()}</Text>
@@ -58,7 +58,7 @@ export const random = {
       height: 1440,
       ...options,
     }),
-  avatar: faker.image.avatarLegacy,
+  avatar: faker.image.avatar,
   entry: function randomEntry<T>(array: T[]): T {
     return array[Math.floor(Math.random() * array.length)];
   },

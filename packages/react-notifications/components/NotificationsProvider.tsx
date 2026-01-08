@@ -6,8 +6,8 @@ import {
   ReactNode,
   useCallback,
   useEffect,
+  useMemo,
   useReducer,
-  useState,
 } from "react";
 import {
   AutoDismiss,
@@ -102,15 +102,12 @@ export const NotificationsProvider: FunctionComponent<
     {},
   );
 
-  const [entries, setEntries] = useState<Notifications>({});
-  const [queue, setQueue] = useState<Notifications>({});
-
   const getGroupOption = useCallback(
     (
       group: string,
       option: MaybeGrouped<Option> | undefined,
     ): Option | undefined => {
-      return isGrouped(option) ? option?.[group] ?? option?.default : option;
+      return isGrouped(option) ? (option?.[group] ?? option?.default) : option;
     },
     [],
   );
@@ -129,25 +126,29 @@ export const NotificationsProvider: FunctionComponent<
     [limit, getGroupOption],
   );
 
-  useEffect(() => {
-    setEntries(
+  const entries = useMemo(
+    () =>
       revalueObject(groups, ([group, all]) => {
         const groupLimit = getGroupLimit(group);
-        const entries = groupLimit !== false ? all.slice(0, groupLimit) : all;
-
-        entries.forEach((entry) => entry.notification.timer?.resume());
-
-        return entries;
+        return groupLimit !== false ? all.slice(0, groupLimit) : all;
       }),
-    );
+    [getGroupLimit, groups],
+  );
 
-    setQueue(
+  const queue = useMemo(
+    () =>
       revalueObject(groups, ([group, all]) => {
         const groupLimit = getGroupLimit(group);
         return groupLimit !== false ? all.slice(groupLimit) : [];
       }),
-    );
-  }, [getGroupLimit, groups]);
+    [getGroupLimit, groups],
+  );
+
+  useEffect(() => {
+    Object.values(entries).forEach((groupEntries) => {
+      groupEntries.forEach((entry) => entry.notification.timer?.resume());
+    });
+  }, [entries]);
 
   const remove = useCallback((group: string, id: number) => {
     dispatch({

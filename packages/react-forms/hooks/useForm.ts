@@ -68,26 +68,13 @@ export function useForm<T extends FieldTypes>({
   );
 
   const getErrors = useCallback(
-    (values: FieldValues<T>) =>
-      revalueObject(fieldsRef.current, ([key, { validation }]) => {
-        const validators = Array.isArray(validation)
-          ? validation
-          : [validation];
-
-        for (const validator of validators) {
-          const error = validator?.(values[key]);
-
-          if (error) {
-            return error;
-          }
-        }
-
-        return null;
-      }),
+    (values: FieldValues<T>) => validate(fieldsRef.current, values),
     [fieldsRef],
   );
 
-  const [errors, setErrors] = useState<FieldErrors<T>>(getErrors(values));
+  const [errors, setErrors] = useState<FieldErrors<T>>(() =>
+    validate(fields, values),
+  );
 
   const [isTouched, setIsTouched] = useState<FieldTouched<T>>(
     revalueObject(fields, false),
@@ -151,4 +138,23 @@ export function useForm<T extends FieldTypes>({
       disabled: isSubmitting,
     })) as UseFormResult<T>["fields"],
   };
+}
+
+function validate<T extends FieldTypes>(
+  fields: { [K in keyof T]: FieldOptions<T[K]> },
+  values: FieldValues<T>,
+): FieldErrors<T> {
+  return revalueObject(fields, ([key, { validation }]) => {
+    const validators = Array.isArray(validation) ? validation : [validation];
+
+    for (const validator of validators) {
+      const error = validator?.(values[key]);
+
+      if (error) {
+        return error;
+      }
+    }
+
+    return null;
+  });
 }
