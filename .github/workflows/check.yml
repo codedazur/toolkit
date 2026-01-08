@@ -28,4 +28,4 @@ jobs:
           npm ci
 
       - name: Check
-        run: npm run check
+        run: npm run check:packages
