@@ -1,5 +1,22 @@
 # @codedazur/react-essentials
 
+## 2.0.0
+
+### Major Changes
+
+- [`2734c9d`](https://github.com/codedazur/toolkit/commit/2734c9d2f1a6fbdbae8e7d676b1e06437200df23) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The useTimerProgress hook now returns MotionValues.
+
+### Minor Changes
+
+- [`2734c9d`](https://github.com/codedazur/toolkit/commit/2734c9d2f1a6fbdbae8e7d676b1e06437200df23) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - A useDownload hook was added to programmatically trigger a file download.
+
+### Patch Changes
+
+- [`0afbfa1`](https://github.com/codedazur/toolkit/commit/0afbfa1f1dc2b3999af654a18e9ceabf52c7c4b2) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The motion package is now specified as a peer dependency instead of a regular dependency.
+
+- Updated dependencies [[`7f3aef0`](https://github.com/codedazur/toolkit/commit/7f3aef08cfc630938d5d47ad8cc6d6fa705c3027), [`7f3aef0`](https://github.com/codedazur/toolkit/commit/7f3aef08cfc630938d5d47ad8cc6d6fa705c3027)]:
+  - @codedazur/essentials@1.13.0
+
 ## 1.5.3
 
 ### Patch Changes

@@ -1,5 +1,16 @@
 # @codedazur/react-dictionary
 
+## 1.1.0
+
+### Minor Changes
+
+- [`a4917d2`](https://github.com/codedazur/toolkit/commit/a4917d25d848fb88a3b97ff92b5304dd625d662e) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Add support for a default fallback.
+
+### Patch Changes
+
+- Updated dependencies [[`7f3aef0`](https://github.com/codedazur/toolkit/commit/7f3aef08cfc630938d5d47ad8cc6d6fa705c3027), [`7f3aef0`](https://github.com/codedazur/toolkit/commit/7f3aef08cfc630938d5d47ad8cc6d6fa705c3027)]:
+  - @codedazur/essentials@1.13.0
+
 ## 1.0.0
 
 ### Major Changes

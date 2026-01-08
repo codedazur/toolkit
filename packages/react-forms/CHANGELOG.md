@@ -1,5 +1,13 @@
 # @codedazur/react-forms
 
+## 0.1.3
+
+### Patch Changes
+
+- Updated dependencies [[`2734c9d`](https://github.com/codedazur/toolkit/commit/2734c9d2f1a6fbdbae8e7d676b1e06437200df23), [`2734c9d`](https://github.com/codedazur/toolkit/commit/2734c9d2f1a6fbdbae8e7d676b1e06437200df23), [`7f3aef0`](https://github.com/codedazur/toolkit/commit/7f3aef08cfc630938d5d47ad8cc6d6fa705c3027), [`7f3aef0`](https://github.com/codedazur/toolkit/commit/7f3aef08cfc630938d5d47ad8cc6d6fa705c3027), [`0afbfa1`](https://github.com/codedazur/toolkit/commit/0afbfa1f1dc2b3999af654a18e9ceabf52c7c4b2)]:
+  - @codedazur/react-essentials@2.0.0
+  - @codedazur/essentials@1.13.0
+
 ## 0.1.2
 
 ### Patch Changes

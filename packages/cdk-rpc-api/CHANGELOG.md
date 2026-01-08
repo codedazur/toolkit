@@ -1,5 +1,11 @@
 # @codedazur/cdk-rpc-api
 
+## 1.1.3
+
+### Patch Changes
+
+- [`2734c9d`](https://github.com/codedazur/toolkit/commit/2734c9d2f1a6fbdbae8e7d676b1e06437200df23) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Props are now marked as readonly.
+
 ## 1.1.2
 
 ### Patch Changes

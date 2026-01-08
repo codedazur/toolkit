@@ -1,5 +1,15 @@
 # @codedazur/cdk-site-distribution
 
+## 1.0.2
+
+### Patch Changes
+
+- [`2734c9d`](https://github.com/codedazur/toolkit/commit/2734c9d2f1a6fbdbae8e7d676b1e06437200df23) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Props are now marked as readonly.
+
+- Updated dependencies [[`2734c9d`](https://github.com/codedazur/toolkit/commit/2734c9d2f1a6fbdbae8e7d676b1e06437200df23), [`7f3aef0`](https://github.com/codedazur/toolkit/commit/7f3aef08cfc630938d5d47ad8cc6d6fa705c3027), [`7f3aef0`](https://github.com/codedazur/toolkit/commit/7f3aef08cfc630938d5d47ad8cc6d6fa705c3027)]:
+  - @codedazur/cdk-cache-invalidator@1.2.3
+  - @codedazur/essentials@1.13.0
+
 ## 1.0.1
 
 ### Patch Changes
