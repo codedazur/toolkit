@@ -1,5 +1,20 @@
 import { ReactNode, useContext } from "react";
-import { notificationsContext } from "../contexts/notificationsContext";
+import {
+  NotificationGroup,
+  NotificationProps,
+  notificationsContext,
+} from "../contexts/notificationsContext";
+
+export interface UseNotificationsReturn {
+  entries: NotificationGroup;
+  queue: NotificationGroup;
+  add: (
+    children: ReactNode,
+    options?: { autoDismiss?: number | false },
+  ) => NotificationProps;
+  remove: (id: number) => void;
+  clear: () => void;
+}
 
 /**
  * @param {string} [group="default"] - The notification group to associate with.
@@ -10,7 +25,9 @@ import { notificationsContext } from "../contexts/notificationsContext";
  * @property {Function} remove - Removes a notification with the specified ID from the group.
  * @property {Function} clear - Clears all notifications in the specified group.
  */
-export const useNotifications = (group: string = "default") => {
+export const useNotifications = (
+  group: string = "default",
+): UseNotificationsReturn => {
   const context = useContext(notificationsContext);
 
   return {

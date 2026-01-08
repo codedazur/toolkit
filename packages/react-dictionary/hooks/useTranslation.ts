@@ -6,7 +6,10 @@ import {
 } from "../contexts/dictionaryContext";
 import { useDictionary } from "./useDictionary";
 
-export const useTranslation = (key: DictionaryKey, locale?: Locale) => {
+export const useTranslation = (
+  key: DictionaryKey,
+  locale?: Locale,
+): string | undefined => {
   const dictionary = useDictionary(locale);
   const { fallback } = useContext(dictionaryContext);
 
