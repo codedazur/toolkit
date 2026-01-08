@@ -1,5 +1,11 @@
 # eslint-config-custom
 
+## 1.0.0
+
+### Major Changes
+
+- [`2734c9d`](https://github.com/codedazur/toolkit/commit/2734c9d2f1a6fbdbae8e7d676b1e06437200df23) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Stable release based on the new ESLint flat config.
+
 ## 0.2.0
 
 ### Minor Changes

@@ -1,5 +1,16 @@
 # @codedazur/cdk-docker-cluster
 
+## 1.1.2
+
+### Patch Changes
+
+- [`2734c9d`](https://github.com/codedazur/toolkit/commit/2734c9d2f1a6fbdbae8e7d676b1e06437200df23) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Props are now marked as readonly.
+
+- [`62b823b`](https://github.com/codedazur/toolkit/commit/62b823bfb366f0b7b037b0485aafe7084fe3743f) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Following a CDK update, the cache policy and origin request policy are now created as constructs instead of using a simple object.
+
+- Updated dependencies [[`2734c9d`](https://github.com/codedazur/toolkit/commit/2734c9d2f1a6fbdbae8e7d676b1e06437200df23)]:
+  - @codedazur/cdk-site-distribution@1.0.2
+
 ## 1.1.1
 
 ### Patch Changes

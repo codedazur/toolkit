@@ -1,5 +1,13 @@
 # @codedazur/essentials
 
+## 1.13.0
+
+### Minor Changes
+
+- [`7f3aef0`](https://github.com/codedazur/toolkit/commit/7f3aef08cfc630938d5d47ad8cc6d6fa705c3027) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The flattenObject utility now has constant type arguments.
+
+- [`7f3aef0`](https://github.com/codedazur/toolkit/commit/7f3aef08cfc630938d5d47ad8cc6d6fa705c3027) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The DeepPartial type was added.
+
 ## 1.12.1
 
 ### Patch Changes

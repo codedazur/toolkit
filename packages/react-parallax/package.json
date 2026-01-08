@@ -1,6 +1,6 @@
 {
   "name": "@codedazur/react-parallax",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "main": ".dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -28,8 +28,8 @@
     "react-dom": ">=16.8.0"
   },
   "dependencies": {
-    "@codedazur/essentials": "^1.12.1",
-    "@codedazur/react-essentials": "^1.5.3"
+    "@codedazur/essentials": "^1.13.0",
+    "@codedazur/react-essentials": "^2.0.0"
   },
   "devDependencies": {
     "@testing-library/dom": "10.4.1",
