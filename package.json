@@ -28,8 +28,8 @@
     "build": "turbo run build",
     "build:apps": "turbo run build --filter=@apps/*",
     "build:packages": "turbo run build --filter=@codedazur/*",
-    "deploy": "turbo run deploy --filter=@apps/infrastructure",
-    "destroy": "turbo run destroy --filter=@apps/infrastructure",
+    "deploy": "turbo run deploy --filter=@apps/cdk",
+    "destroy": "turbo run destroy --filter=@apps/cdk",
     "publish": "npm run build:packages && changeset publish"
   },
   "devDependencies": {
