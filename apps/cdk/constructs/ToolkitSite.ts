@@ -3,8 +3,8 @@ import { env } from "@codedazur/essentials";
 import { Construct } from "constructs";
 
 interface ToolkitSiteProps {
-  directory: string;
-  subdomain?: string;
+  readonly directory: string;
+  readonly subdomain?: string;
 }
 
 export class ToolkitSite extends StaticSite {
@@ -20,6 +20,9 @@ export class ToolkitSite extends StaticSite {
           name: env("DOMAIN_NAME", "toolkit.codedazur.cloud"),
           subdomain,
         },
+      },
+      deployment: {
+        memoryLimit: 256,
       },
     });
   }
