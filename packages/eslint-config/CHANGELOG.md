@@ -1,5 +1,11 @@
 # eslint-config-custom
 
+## 1.0.1
+
+### Patch Changes
+
+- [`aa56dc9`](https://github.com/codedazur/toolkit/commit/aa56dc92cbf10ac6c763c089aca7362776bd028a) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Removed postinstall script.
+
 ## 1.0.0
 
 ### Major Changes
