@@ -11,7 +11,7 @@
       "dependsOn": ["@codedazur/eslint-config#build"]
     },
     "types": {
-      "dependsOn": ["^build"]
+      "dependsOn": ["^build", "@codedazur/eslint-config#build"]
     },
     "test": {
       "dependsOn": ["^build"]
