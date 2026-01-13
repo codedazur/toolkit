@@ -16,7 +16,6 @@
   },
   "sideEffects": false,
   "scripts": {
-    "postinstall": "npm run build",
     "develop": "tsup src/index.ts --format esm,cjs --dts --watch",
     "build": "tsup src/index.ts --format esm,cjs --dts",
     "audit": "npm audit --omit dev --audit-level high",
