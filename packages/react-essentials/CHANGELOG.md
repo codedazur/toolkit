@@ -1,5 +1,11 @@
 # @codedazur/react-essentials
 
+## 2.1.0
+
+### Minor Changes
+
+- [#254](https://github.com/codedazur/toolkit/pull/254) [`bb91e40`](https://github.com/codedazur/toolkit/commit/bb91e4025507fcea80fa123e51f64209a37ac739) Thanks [@Goosens](https://github.com/Goosens)! - The useHover hook was added.
+
 ## 2.0.0
 
 ### Major Changes
