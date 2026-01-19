@@ -5,6 +5,8 @@
 In the root of your monorepo, you can use the `base` config:
 
 ```ts
+// eslint.config.ts
+
 import { base } from "@codedazur/eslint-config"
 import { defineConfig } from "eslint/config"
 
@@ -18,6 +20,8 @@ The `base` config includes recommended configs from `eslint`, `ts-eslint`, `pret
 For apps and packages in your monorepo, you can extend your monorepo's root config and include more specifics.
 
 ```ts
+// apps/next/eslint.config.ts
+
 import { next } from "@codedazur/eslint-config"
 import { defineConfig } from "eslint/config"
 import root from "../../eslint-config"
