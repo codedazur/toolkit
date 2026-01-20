@@ -1,5 +1,11 @@
 # eslint-config-custom
 
+## 1.0.2
+
+### Patch Changes
+
+- [`17e201b`](https://github.com/codedazur/toolkit/commit/17e201b5d04b12b4e91362136fb414c0cb7d4183) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The eslint-config-prettier peer dependency is now included.
+
 ## 1.0.1
 
 ### Patch Changes
