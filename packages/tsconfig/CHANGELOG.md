@@ -1,5 +1,11 @@
 # tsconfig
 
+## 1.1.0
+
+### Minor Changes
+
+- [`3a7a8dd`](https://github.com/codedazur/toolkit/commit/3a7a8dd68fafc07176043de413ce1e66b5845e79) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Upgrade the CDK tsconfig to NodeNext.
+
 ## 1.0.0
 
 ### Major Changes
