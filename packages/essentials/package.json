@@ -2,23 +2,17 @@
   "name": "@codedazur/essentials",
   "version": "1.13.0",
   "type": "module",
-  "main": ".dist/index.js",
-  "module": "./dist/index.mjs",
+  "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "exports": {
-    ".": {
-      "require": "./dist/index.js",
-      "import": "./dist/index.mjs"
-    }
-  },
+  "exports": "./dist/index.js",
   "publishConfig": {
     "access": "public"
   },
   "license": "MIT",
   "sideEffects": false,
   "scripts": {
-    "develop": "tsup index.ts --format esm,cjs --dts --watch",
-    "build": "tsup index.ts --format esm,cjs --dts",
+    "develop": "tsup index.ts --clean --format esm --dts --watch",
+    "build": "tsup index.ts --clean --format esm --dts",
     "audit": "npm audit --omit dev --audit-level high",
     "lint": "eslint .",
     "types": "tsc --noEmit",
