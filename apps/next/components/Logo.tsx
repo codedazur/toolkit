@@ -1,6 +1,6 @@
 import { Box, BoxProps } from "@codedazur/fusion-ui";
 
-type LogoProps = BoxProps<SVGSVGElement>;
+interface LogoProps extends BoxProps<SVGSVGElement> {}
 
 export function Logo(props: LogoProps) {
   return (
