@@ -1,34 +1,35 @@
 {
   "name": "@codedazur/eslint-config",
   "version": "1.0.2",
+  "type": "module",
   "publishConfig": {
     "access": "public"
   },
   "license": "MIT",
   "exports": {
     ".": {
-      "types": "./dist/index.d.mts",
-      "default": "./dist/index.mjs"
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
     },
     "./cdk": {
-      "types": "./dist/cdk.d.mts",
-      "default": "./dist/cdk.mjs"
+      "types": "./dist/cdk.d.ts",
+      "default": "./dist/cdk.js"
     },
     "./next": {
-      "types": "./dist/next.d.mts",
-      "default": "./dist/next.mjs"
+      "types": "./dist/next.d.ts",
+      "default": "./dist/next.js"
     },
     "./react": {
-      "types": "./dist/react.d.mts",
-      "default": "./dist/react.mjs"
+      "types": "./dist/react.d.ts",
+      "default": "./dist/react.js"
     },
     "./sanity": {
-      "types": "./dist/sanity.d.mts",
-      "default": "./dist/sanity.mjs"
+      "types": "./dist/sanity.d.ts",
+      "default": "./dist/sanity.js"
     },
     "./storybook": {
-      "types": "./dist/storybook.d.mts",
-      "default": "./dist/storybook.mjs"
+      "types": "./dist/storybook.d.ts",
+      "default": "./dist/storybook.js"
     }
   },
   "sideEffects": false,

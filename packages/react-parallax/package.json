@@ -1,6 +1,7 @@
 {
   "name": "@codedazur/react-parallax",
   "version": "0.1.5",
+  "type": "module",
   "main": ".dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",

@@ -1,6 +1,7 @@
 {
   "name": "@codedazur/cdk-bastion-host",
   "version": "1.0.3",
+  "type": "module",
   "main": ".dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",

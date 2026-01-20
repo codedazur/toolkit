@@ -2,6 +2,7 @@
   "name": "@apps/next",
   "version": "0.0.0",
   "private": true,
+  "type": "module",
   "author": {
     "name": "code d'azur",
     "email": "development@codedazur.com",

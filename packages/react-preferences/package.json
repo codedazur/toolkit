@@ -1,6 +1,7 @@
 {
   "name": "@codedazur/react-preferences",
   "version": "1.0.2",
+  "type": "module",
   "main": ".dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
