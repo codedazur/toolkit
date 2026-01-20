@@ -1,4 +1,5 @@
-import { distribution, react } from "@codedazur/eslint-config";
+import { distribution } from "@codedazur/eslint-config";
+import { react } from "@codedazur/eslint-config/react";
 import { defineConfig } from "eslint/config";
 import root from "../../eslint.config";
 

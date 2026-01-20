@@ -48,7 +48,6 @@
     "storybook": "^10.1.11"
   },
   "devDependencies": {
-    "@codedazur/tsconfig": "^1.0.0",
     "@storybook/addon-styling-webpack": "^3.0.0",
     "@storybook/react-webpack5": "^10.1.11",
     "@storybook/test-runner": "^0.24.2",
@@ -58,10 +57,6 @@
     "@vanilla-extract/webpack-plugin": "^2.3.25",
     "babel-loader": "^10.0.0",
     "css-loader": "^7.1.2",
-    "eslint-plugin-mdx": "^3.6.2",
-    "eslint-plugin-react": "^7.37.5",
-    "eslint-plugin-react-hooks": "^7.0.1",
-    "eslint-plugin-storybook": "^10.1.11",
     "mini-css-extract-plugin": "^2.9.4",
     "style-loader": "^4.0.0"
   }

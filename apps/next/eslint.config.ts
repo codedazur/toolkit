@@ -1,4 +1,4 @@
-import { next } from "@codedazur/eslint-config";
+import { next } from "@codedazur/eslint-config/next";
 import { defineConfig } from "eslint/config";
 import root from "../../eslint.config";
 
