@@ -1,5 +1,11 @@
 # eslint-config-custom
 
+## 2.0.0
+
+### Major Changes
+
+- [`7fac01f`](https://github.com/codedazur/toolkit/commit/7fac01fff438de0ca2f0c0108eb4f3280f763a93) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Platform-specific configurations have been removed from the barrel export to avoid problems with missing peer dependencies when some of them are unused.
+
 ## 1.0.2
 
 ### Patch Changes
