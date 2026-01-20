@@ -1,10 +1,10 @@
-import * as mdx from "eslint-plugin-mdx";
-import storybook from "eslint-plugin-storybook";
+import * as mdxPlugin from "eslint-plugin-mdx";
+import storybookPlugin from "eslint-plugin-storybook";
 import { Config, defineConfig } from "eslint/config";
 
 export default defineConfig(
-  storybook.configs["flat/recommended"] as Config[],
-  mdx.configs.flat,
+  storybookPlugin.configs["flat/recommended"] as Config[],
+  mdxPlugin.configs.flat,
   {
     ignores: [".storybook/**/*"],
   },

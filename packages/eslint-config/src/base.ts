@@ -4,7 +4,7 @@ import turbo from "eslint-plugin-turbo";
 import { defineConfig } from "eslint/config";
 import tseslint from "typescript-eslint";
 
-export default defineConfig(
+export const base = defineConfig(
   eslint.configs.recommended,
   tseslint.configs.recommended,
   prettier,

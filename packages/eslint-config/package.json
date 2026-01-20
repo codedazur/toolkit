@@ -5,19 +5,36 @@
     "access": "public"
   },
   "license": "MIT",
-  "main": ".dist/index.js",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "require": "./dist/index.js",
-      "import": "./dist/index.mjs"
+      "types": "./dist/index.d.mts",
+      "default": "./dist/index.mjs"
+    },
+    "./cdk": {
+      "types": "./dist/cdk.d.mts",
+      "default": "./dist/cdk.mjs"
+    },
+    "./next": {
+      "types": "./dist/next.d.mts",
+      "default": "./dist/next.mjs"
+    },
+    "./react": {
+      "types": "./dist/react.d.mts",
+      "default": "./dist/react.mjs"
+    },
+    "./sanity": {
+      "types": "./dist/sanity.d.mts",
+      "default": "./dist/sanity.mjs"
+    },
+    "./storybook": {
+      "types": "./dist/storybook.d.mts",
+      "default": "./dist/storybook.mjs"
     }
   },
   "sideEffects": false,
   "scripts": {
-    "develop": "tsup src/index.ts --format esm,cjs --dts --watch",
-    "build": "tsup src/index.ts --format esm,cjs --dts",
+    "develop": "tsup --watch",
+    "build": "tsup",
     "audit": "npm audit --omit dev --audit-level high",
     "lint": "eslint .",
     "types": "tsc --noEmit",

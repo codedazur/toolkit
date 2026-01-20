@@ -1,4 +1,4 @@
-import next from "eslint-config-next";
+import nextConfig from "eslint-config-next";
 import { defineConfig } from "eslint/config";
 
-export default defineConfig(next);
+export const next = defineConfig(nextConfig);
