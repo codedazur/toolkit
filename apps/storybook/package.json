@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "@codedazur/essentials": "*",
-    "@codedazur/fusion-ui": "^1.3.1",
+    "@codedazur/fusion-ui": "^1.4.0",
     "@codedazur/react-date-picker": "*",
     "@codedazur/react-dictionary": "*",
     "@codedazur/react-essentials": "*",
@@ -53,12 +53,12 @@
     "@storybook/react-webpack5": "^10.1.11",
     "@storybook/test-runner": "^0.24.2",
     "@types/mini-css-extract-plugin": "^2.5.1",
-    "@types/node": "^25.0.6",
-    "@types/react": "^19.2.8",
+    "@types/node": "^25.0.9",
+    "@types/react": "^19.2.9",
     "@vanilla-extract/webpack-plugin": "^2.3.25",
     "babel-loader": "^10.0.0",
     "css-loader": "^7.1.2",
-    "mini-css-extract-plugin": "^2.9.4",
+    "mini-css-extract-plugin": "^2.10.0",
     "style-loader": "^4.0.0"
   }
 }

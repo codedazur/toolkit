@@ -153,7 +153,6 @@ export const WithLinearProgress = () => {
       <LinearProgress
         progress={progress.y}
         transition={{ ease: "easeOut", duration: 0.1 }}
-        // @ts-expect-error Wrongly omitted position prop.
         position="fixed"
       />
       <Placeholder style={{ height: "150vh" }} />
