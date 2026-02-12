@@ -7,8 +7,8 @@
     "inlineSourceMap": true,
     "inlineSources": true,
     "lib": ["ES2020", "DOM"],
-    "module": "CommonJS",
-    "moduleResolution": "Node",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
     "target": "ES2020"
   },
   "exclude": ["cdk.out"]
