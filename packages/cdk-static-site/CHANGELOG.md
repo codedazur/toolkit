@@ -1,5 +1,16 @@
 # @codedazur/cdk-static-site
 
+## 4.0.0
+
+### Major Changes
+
+- [`4f12708`](https://github.com/codedazur/toolkit/commit/4f12708f7b35ce7e96af62c10a6f637e347c3c69) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Custom domain names with external DNS registry are now supported. A HostedZone will no longer be looked up and must be provided instead if needed.
+
+### Patch Changes
+
+- Updated dependencies [[`4f12708`](https://github.com/codedazur/toolkit/commit/4f12708f7b35ce7e96af62c10a6f637e347c3c69)]:
+  - @codedazur/cdk-site-distribution@2.0.0
+
 ## 3.1.2
 
 ### Patch Changes
