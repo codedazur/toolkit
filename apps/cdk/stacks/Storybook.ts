@@ -1,14 +1,28 @@
+import { StaticSite } from "@codedazur/cdk-static-site";
 import { env } from "@codedazur/essentials";
 import { App, Stack, StackProps } from "aws-cdk-lib";
-import { ToolkitSite } from "../constructs/ToolkitSite";
+import { HostedZone } from "aws-cdk-lib/aws-route53";
+
+const DOMAIN_NAME = env("DOMAIN_NAME", "toolkit.codedazur.cloud");
+const STORYBOOK_SUBDOMAIN = env("STORYBOOK_SUBDOMAIN", "storybook");
 
 export class Storybook extends Stack {
   constructor(scope?: App, id?: string, props?: StackProps) {
     super(scope, id, props);
 
-    new ToolkitSite(this, "Storybook", {
-      directory: "../storybook/.storybook",
-      subdomain: env("STORYBOOK_SUBDOMAIN", "storybook"),
+    const hostedZone = HostedZone.fromLookup(this, "HostedZone", {
+      domainName: DOMAIN_NAME,
+    });
+
+    new StaticSite(this, "Storybook", {
+      source: "../storybook/.storybook",
+      distribution: {
+        domain: `${STORYBOOK_SUBDOMAIN}.${DOMAIN_NAME}`,
+        hostedZone,
+      },
+      deployment: {
+        memoryLimit: 256,
+      },
     });
   }
 }

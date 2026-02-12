@@ -24,7 +24,6 @@ import {
 } from "aws-cdk-lib/aws-cloudfront";
 import {
   ARecord,
-  HostedZone,
   IHostedZone,
   IRecordSet,
   RecordTarget,
@@ -32,63 +31,6 @@ import {
 import { CloudFrontTarget } from "aws-cdk-lib/aws-route53-targets";
 import { Secret } from "aws-cdk-lib/aws-secretsmanager";
 import { Construct } from "constructs";
-
-export interface SiteDistributionProps extends BehaviorProps {
-  /**
-   * The price class for the distribution. This will affect the number of edge
-   * locations used by the distribution.
-   *
-   * @default PriceClass.PRICE_CLASS_ALL
-   */
-  readonly priceClass?: PriceClass;
-
-  /**
-   * The domain of the distribution. You can provide a single domain or an array
-   * of domains. If you provide your own certificate, all domains need to be
-   * covered by the certificate.
-   */
-  readonly domain?: Domain | Domain[];
-
-  /**
-   * The hosted zone of the domain. If not provided, the hosted zone will be
-   * looked up using the provided domain. If multiple domains are provided, the
-   * first one will be used.
-   */
-  readonly hostedZone?: IHostedZone;
-
-  /**
-   * The certificate to use for the distribution. If not provided, a certificate
-   * will be created for the domain. If multiple domains are provided, the first
-   * will be used as the primary domain and the others as subject alternative
-   * names.
-   */
-  readonly certificate?: ICertificate;
-
-  /**
-   * Any additional behaviors to add to the distribution, keyed by the path
-   * pattern. These additional behaviors will inherit the properties of the
-   * distribution.
-   *
-   * @default {}
-   */
-  readonly behaviors?: Record<string, Partial<BehaviorProps>>;
-
-  /**
-   * Custom error responses to add to the distribution.
-   *
-   * @default []
-   */
-  readonly errorResponses?: ErrorResponse[];
-
-  /**
-   * Whether to invalidate the cache after deployment. If set to `true`, the
-   * entire cache will be invalidated. If set to an array of strings, only the
-   * specified paths will be invalidated.
-   *
-   * @default true
-   */
-  readonly invalidateCache?: boolean | string[];
-}
 
 export interface BehaviorProps {
   /**
@@ -133,9 +75,55 @@ export interface BehaviorProps {
   readonly originRequestPolicy?: IOriginRequestPolicy;
 }
 
-export interface Domain {
-  readonly name: string;
-  readonly subdomain?: string;
+export interface SiteDistributionProps extends BehaviorProps {
+  /**
+   * The price class for the distribution. This will affect the number of edge
+   * locations used by the distribution.
+   *
+   * @default PriceClass.PRICE_CLASS_ALL
+   */
+  readonly priceClass?: PriceClass;
+
+  /**
+   * Any additional behaviors to add to the distribution, keyed by the path
+   * pattern. These additional behaviors will inherit the properties of the
+   * distribution.
+   *
+   * @default {}
+   */
+  readonly behaviors?: Record<string, Partial<BehaviorProps>>;
+
+  /**
+   * Custom error responses to add to the distribution.
+   *
+   * @default []
+   */
+  readonly errorResponses?: ErrorResponse[];
+
+  /**
+   * Whether to invalidate the cache after deployment. If set to `true`, the
+   * entire cache will be invalidated. If set to an array of strings, only the
+   * specified paths will be invalidated.
+   *
+   * @default true
+   */
+  readonly invalidateCache?: boolean | string[];
+
+  /**
+   * The custom domain(s) for the distribution.
+   */
+  readonly domain?: string | string[];
+
+  /**
+   * The certificate to use for the distribution.
+   */
+  readonly certificate?: ICertificate;
+
+  /**
+   * The hosted zone for the distribution's A record(s) and certificate
+   * validation.
+   */
+  readonly hostedZone?: IHostedZone;
 }
 
 /**
@@ -168,9 +156,8 @@ export interface Domain {
  * authentication password.
  */
 export class SiteDistribution extends Construct {
-  public readonly domains?: string[];
-  public readonly zone?: IHostedZone;
-  public readonly certificate?: ICertificate;
+  public readonly domains: string[];
+  public readonly certificate: ICertificate | undefined;
   public readonly distribution: IDistribution;
   public readonly functions: IFunction[] = [];
   public readonly aliases?: IRecordSet[];
@@ -184,7 +171,6 @@ export class SiteDistribution extends Construct {
     super(scope, id);
 
     this.domains = this.determineDomains();
-    this.zone = this.findHostedZone();
     this.certificate = this.createCertificate();
     this.distribution = this.createDistribution();
     this.aliases = this.createAliases();
@@ -199,51 +185,13 @@ export class SiteDistribution extends Construct {
       return [];
     }
 
-    const domainsProps = Array.isArray(this.props.domain)
+    const domains = Array.isArray(this.props.domain)
       ? this.props.domain
       : [this.props.domain];
-
-    const domains = domainsProps.map(({ name, subdomain }) =>
-      [subdomain, name].filter(Boolean).join("."),
-    );
 
     new CfnOutput(this, "URL", { value: "https://" + domains[0] });
 
     return domains;
-  }
-
-  protected getPrimaryDomain(): Domain | undefined {
-    if (Array.isArray(this.props.domain)) {
-      return this.props.domain[0];
-    } else {
-      return this.props.domain;
-    }
-  }
-
-  protected getAlternateDomains(): Domain[] {
-    if (Array.isArray(this.props.domain)) {
-      return this.props.domain.slice(1);
-    } else {
-      return [];
-    }
-  }
-
-  protected findHostedZone() {
-    if (this.props.hostedZone) {
-      return this.props.hostedZone;
-    }
-
-    const primaryDomain = this.getPrimaryDomain();
-
-    return primaryDomain
-      ? HostedZone.fromLookup(this, "HostedZone", {
-          domainName: primaryDomain.name,
-        })
-      : undefined;
-  }
-
-  protected fqdn(domain: Domain) {
-    return [domain.subdomain, domain.name].filter(Boolean).join(".");
   }
 
   protected createCertificate() {
@@ -251,23 +199,27 @@ export class SiteDistribution extends Construct {
       return this.props.certificate;
     }
 
-    const primaryDomain = this.getPrimaryDomain();
-    const alternateDomains = this.getAlternateDomains();
+    const [primaryDomain, ...alternateDomains] = this.domains;
 
-    const certificate =
-      primaryDomain && this.zone
-        ? new Certificate(this, "Certificate", {
-            domainName: this.fqdn(primaryDomain),
-            subjectAlternativeNames: alternateDomains.map(this.fqdn),
-            validation: CertificateValidation.fromDns(this.zone),
-          })
-        : undefined;
-
-    if (certificate) {
-      new CfnOutput(this, "CertificateArn", {
-        value: certificate.certificateArn,
-      });
+    if (!primaryDomain) {
+      return;
     }
+
+    if (!this.props.hostedZone) {
+      throw new Error(
+        "A HostedZone is required when a domain is provided and no certificate is provided.",
+      );
+    }
+
+    const certificate = new Certificate(this, "Certificate", {
+      domainName: primaryDomain,
+      subjectAlternativeNames: alternateDomains,
+      validation: CertificateValidation.fromDns(this.props.hostedZone),
+    });
+
+    new CfnOutput(this, "CertificateArn", {
+      value: certificate.certificateArn,
+    });
 
     return certificate;
   }
@@ -519,10 +471,15 @@ export class SiteDistribution extends Construct {
 
   protected createAliases() {
     const domains = this.domains;
-    const zone = this.zone;
+    const zone = this.props.hostedZone;
 
-    if (!domains || !zone) {
-      return undefined;
+    if (domains.length === 0) {
+      return;
+    }
+
+    if (!zone) {
+      console.log("No hosted zone provided, skipping ARecord creation.");
+      return;
     }
 
     return domains.map(
