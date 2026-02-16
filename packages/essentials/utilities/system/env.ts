@@ -19,7 +19,7 @@ export function env<T extends string>(
   return value as T;
 }
 
-function string<T extends string>(key: string, fallback: T): string | T;
+function string<T extends string>(key: string, fallback: T): T;
 function string<T extends string>(key: string, fallback?: T): T | undefined;
 function string<T extends string>(key: string, fallback?: T): T | undefined {
   const value = process.env[key];
@@ -32,11 +32,8 @@ function string<T extends string>(key: string, fallback?: T): T | undefined {
 }
 env.string = string;
 
-function int<T extends number>(key: string, fallback: T): number | T;
-function int<T extends number>(
-  key: string,
-  fallback?: T,
-): number | T | undefined;
+function int<T extends number>(key: string, fallback: T): T;
+function int<T extends number>(key: string, fallback?: T): T | undefined;
 function int<T extends number>(key: string, fallback?: T): T | undefined {
   const value = process.env[key];
 
@@ -48,11 +45,8 @@ function int<T extends number>(key: string, fallback?: T): T | undefined {
 }
 env.int = int;
 
-function float<T extends number>(key: string, fallback: T): number | T;
-function float<T extends number>(
-  key: string,
-  fallback?: T,
-): number | T | undefined;
+function float<T extends number>(key: string, fallback: T): T;
+function float<T extends number>(key: string, fallback?: T): T | undefined;
 function float<T extends number>(key: string, fallback?: T): T | undefined {
   const value = process.env[key];
 
@@ -122,7 +116,7 @@ function strings<T extends string>(
 }
 env.strings = strings;
 
-function ints<T extends number>(key: string, fallback: T[]): number[] | T[];
+function ints<T extends number>(key: string, fallback: T[]): T[];
 function ints<T extends number>(key: string, fallback?: T[]): T[] | undefined;
 function ints<T extends number>(key: string, fallback?: T[]): T[] | undefined {
   const value = process.env[key];
@@ -135,7 +129,7 @@ function ints<T extends number>(key: string, fallback?: T[]): T[] | undefined {
 }
 env.ints = ints;
 
-function floats<T extends number>(key: string, fallback: T[]): number[] | T[];
+function floats<T extends number>(key: string, fallback: T[]): T[];
 function floats<T extends number>(key: string, fallback?: T[]): T[] | undefined;
 function floats<T extends number>(
   key: string,
