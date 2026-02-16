@@ -1,5 +1,11 @@
 # @codedazur/essentials
 
+## 1.13.1
+
+### Patch Changes
+
+- [`f1647da`](https://github.com/codedazur/toolkit/commit/f1647da892c5d9fa3dd741125ff04f025430001e) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The env helper's return types were corrected.
+
 ## 1.13.0
 
 ### Minor Changes
