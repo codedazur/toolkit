@@ -1,5 +1,11 @@
 # @codedazur/cdk-mailer
 
+## 0.3.0
+
+### Minor Changes
+
+- [`eef341f`](https://github.com/codedazur/toolkit/commit/eef341ff112f989235b5bf2b5184efb2eb6174ba) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Messages are now passed to SES in parallel to improve throughput.
+
 ## 0.2.3
 
 ### Patch Changes
