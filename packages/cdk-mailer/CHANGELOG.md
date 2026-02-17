@@ -1,5 +1,11 @@
 # @codedazur/cdk-mailer
 
+## 0.3.1
+
+### Patch Changes
+
+- [`b6cb048`](https://github.com/codedazur/toolkit/commit/b6cb048b5d2fa606d7d6eb6059de5702d53349d5) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The lambda source code is not included.
+
 ## 0.3.0
 
 ### Minor Changes
