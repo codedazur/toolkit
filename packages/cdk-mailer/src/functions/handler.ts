@@ -34,6 +34,8 @@ export const handler = async () => {
       MaxNumberOfMessages: Math.min(perSecondRateLimit - received, 10),
     });
 
+    console.log(`Received ${response.Messages?.length} messages.`);
+
     if (!response.Messages) {
       return;
     }
@@ -49,6 +51,8 @@ export const handler = async () => {
             QueueUrl: queueUrl,
             ReceiptHandle: message.ReceiptHandle!,
           });
+
+          console.log(`Processed message: ${message.MessageId}.`);
         } catch (error) {
           console.error(
             `Failed to process message ${message.MessageId}:`,

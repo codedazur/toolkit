@@ -11,8 +11,8 @@
   "license": "MIT",
   "sideEffects": false,
   "scripts": {
-    "develop": "tsup src/index.ts --clean --format esm --dts --watch",
-    "build": "tsup src/index.ts --clean --format esm --dts",
+    "develop": "tsup --watch",
+    "build": "tsup",
     "audit": "npm audit --omit dev --audit-level high",
     "lint": "eslint .",
     "types": "tsc --noEmit",
