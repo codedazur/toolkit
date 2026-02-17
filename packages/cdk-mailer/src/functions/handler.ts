@@ -40,14 +40,23 @@ export const handler = async () => {
 
     received += response.Messages.length;
 
-    for (const message of response.Messages) {
-      await handleMessage(message);
+    await Promise.all(
+      response.Messages.map(async (message) => {
+        try {
+          await handleMessage(message);
 
-      await sqs.deleteMessage({
-        QueueUrl: queueUrl,
-        ReceiptHandle: message.ReceiptHandle!,
-      });
-    }
+          await sqs.deleteMessage({
+            QueueUrl: queueUrl,
+            ReceiptHandle: message.ReceiptHandle!,
+          });
+        } catch (error) {
+          console.error(
+            `Failed to process message ${message.MessageId}:`,
+            error,
+          );
+        }
+      }),
+    );
   }
 };
 
