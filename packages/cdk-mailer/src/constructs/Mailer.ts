@@ -2,6 +2,7 @@ import { Duration } from "aws-cdk-lib";
 import { Rule, Schedule } from "aws-cdk-lib/aws-events";
 import { LambdaFunction } from "aws-cdk-lib/aws-events-targets";
 import { Policy, PolicyStatement } from "aws-cdk-lib/aws-iam";
+import { Runtime } from "aws-cdk-lib/aws-lambda";
 import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
 import { RetentionDays } from "aws-cdk-lib/aws-logs";
 import { Queue } from "aws-cdk-lib/aws-sqs";
@@ -55,6 +56,7 @@ export class Mailer extends Construct {
 
   protected createHandler() {
     const handler = new NodejsFunction(this, "Handler", {
+      runtime: Runtime.NODEJS_LATEST,
       entry: path.join(__dirname, "./functions/handler.ts"),
       timeout: Duration.minutes(1),
       memorySize: 128,
@@ -84,6 +86,7 @@ export class Mailer extends Construct {
 
   protected createSchedule(handler: NodejsFunction) {
     const schedule = new NodejsFunction(this, "Schedule", {
+      runtime: Runtime.NODEJS_LATEST,
       entry: path.join(__dirname, "./functions/schedule.ts"),
       timeout: Duration.minutes(2),
       memorySize: 128,

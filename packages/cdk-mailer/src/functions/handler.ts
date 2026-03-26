@@ -1,11 +1,13 @@
 import { SES } from "@aws-sdk/client-ses";
-import { SQS, Message } from "@aws-sdk/client-sqs";
+import { Message, SQS } from "@aws-sdk/client-sqs";
 import { env } from "@codedazur/essentials";
+import { EmailMessage } from "../types/EmailMessage";
+import { maskEmail } from "../utilities/maskEmail";
 
-const queueUrl = env.string("QUEUE_URL");
-const perSecondRateLimit = env.int("PER_SECOND_RATE_LIMIT");
-const fromAddress = env.string("FROM_ADDRESS");
-const replyToAddresses = env.strings("REPLY_TO_ADDRESSES");
+const QUEUE_URL = env.string("QUEUE_URL");
+const PER_SECOND_RATE_LIMIT = env.int("PER_SECOND_RATE_LIMIT");
+const FROM_ADDRESS = env.string("FROM_ADDRESS");
+const REPLY_TO_ADDRESSES = env.strings("REPLY_TO_ADDRESSES");
 
 const sqs = new SQS({});
 const ses = new SES({});
@@ -18,20 +20,20 @@ const ses = new SES({});
  * @see https://aws.amazon.com/blogs/messaging-and-targeting/prevent-email-throttling-concurrency-limit/
  */
 export const handler = async () => {
-  if (!queueUrl) {
+  if (!QUEUE_URL) {
     throw new Error("No QUEUE_URL configured.");
   }
 
-  if (!perSecondRateLimit) {
+  if (!PER_SECOND_RATE_LIMIT) {
     throw new Error("No PER_SECOND_RATE_LIMIT configured.");
   }
 
   let received = 0;
 
-  while (received < perSecondRateLimit) {
+  while (received < PER_SECOND_RATE_LIMIT) {
     const response = await sqs.receiveMessage({
-      QueueUrl: queueUrl,
-      MaxNumberOfMessages: Math.min(perSecondRateLimit - received, 10),
+      QueueUrl: QUEUE_URL,
+      MaxNumberOfMessages: Math.min(PER_SECOND_RATE_LIMIT - received, 10),
     });
 
     console.log(`Received ${response.Messages?.length} messages.`);
@@ -48,11 +50,9 @@ export const handler = async () => {
           await handleMessage(message);
 
           await sqs.deleteMessage({
-            QueueUrl: queueUrl,
+            QueueUrl: QUEUE_URL,
             ReceiptHandle: message.ReceiptHandle!,
           });
-
-          console.log(`Processed message: ${message.MessageId}.`);
         } catch (error) {
           console.error(
             `Failed to process message ${message.MessageId}:`,
@@ -64,14 +64,8 @@ export const handler = async () => {
   }
 };
 
-export interface EmailMessage {
-  recipient: string;
-  subject: string;
-  body: string;
-}
-
 async function handleMessage(message: Message) {
-  if (!fromAddress) {
+  if (!FROM_ADDRESS) {
     throw new Error("No FROM_ADDRESS configured.");
   }
 
@@ -86,8 +80,8 @@ async function handleMessage(message: Message) {
   }
 
   await ses.sendEmail({
-    Source: fromAddress,
-    ReplyToAddresses: replyToAddresses,
+    Source: FROM_ADDRESS,
+    ReplyToAddresses: REPLY_TO_ADDRESSES,
     Destination: {
       ToAddresses: [recipient],
     },
@@ -98,4 +92,6 @@ async function handleMessage(message: Message) {
       },
     },
   });
+
+  console.log(`Sent email to ${maskEmail(recipient)}.`);
 }
