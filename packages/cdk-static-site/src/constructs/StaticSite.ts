@@ -2,7 +2,7 @@ import {
   SiteDistribution,
   SiteDistributionProps,
 } from "@codedazur/cdk-site-distribution";
-import { CfnOutput, RemovalPolicy } from "aws-cdk-lib";
+import { CfnOutput, RemovalPolicy, Size } from "aws-cdk-lib";
 import {
   FunctionCode,
   OriginProtocolPolicy,
@@ -101,6 +101,7 @@ export interface StaticSiteProps {
    */
   readonly deployment?: {
     memoryLimit?: number;
+    ephemeralStorageSize?: Size;
     prefix?: string;
   };
 }
@@ -273,6 +274,7 @@ export class StaticSite extends Construct {
       destinationBucket: this.bucket,
       destinationKeyPrefix: this.props.deployment?.prefix,
       memoryLimit: this.props.deployment?.memoryLimit,
+      ephemeralStorageSize: this.props.deployment?.ephemeralStorageSize,
     });
   }
 }
