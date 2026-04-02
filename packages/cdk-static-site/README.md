@@ -12,6 +12,17 @@ new StaticSite({
 
 The `StaticSite` construct provides a few different rewrite modes to handle different use cases.
 
+### None
+
+This rewrite mode disables URI rewriting entirely. Requests are passed through to the bucket as-is.
+
+```ts
+new StaticSite({
+  source: "./path/to/build/output",
+  rewriteMode: RewriteMode.None,
+});
+```
+
 ### Index Pages (Default)
 
 This is the default rewrite mode. It assumes that ambiguous requests are directory paths and rewrites them to that directory's `index.html` file.
@@ -89,41 +100,35 @@ If your output directory contains files you don't want to include in the deploym
 new StaticSite({
   source: {
     directory: "./path/to/build/output",
-    excludes: ["foo/*"],
+    exclude: ["foo/*"],
   },
 });
 ```
 
 ## With Custom Domain Name
 
-If you provide a domain name and an optional subdomain, Route53 and Certificate Manager will be used to create the necessary resources.
+If we have ownership over the domain name, or if the client is happy to forward all traffic on the top-level domain to us using an NS record, you can configure a custom domain name together with a HostedZone. The StaticSite will create the necessary certificates and the A-records in the provided HostedZone. You can either create the HostedZone using CDK, or you can create it manually in the Route53 service and refer to it in CDK using `HostedZone.fromLookup()` or `HostedZone.fromHostedZoneId()`.
 
 ```ts
 new StaticSite(this, "StaticSite", {
   // ...
   distribution: {
-    domain: {
-      name: "example.com",
-      subdomain: "foo",
-    },
+    domain: "example.com",
+    hostedZone: new HostedZone(this, "HostedZone", {
+      zoneName: "example.com",
+    }),
   },
 });
 ```
 
-In the example above, a hosted zone will _NOT_ be created automatically, but will instead be looked up in the AWS account using the domain name. In other words, given the example above, a hosted zone for the domain "example.com" is expected to be present in the account.
-
-Alternatively, you can explicitly provide a reference to the hosted zone.
+If we do not own the domain name and the client wants to keep control over the domain's DNS configuration, you won't be able to use a HostedZone. Instead, you should create a certificate in Certificate Manager service and have it validated by the client's DNS, and then refer to that certificate in your StaticSite. The StaticSite won't be able to configure the DNS records either, so the client will also have to set up the CNAME or A record to point to your CloudFront distribution.
 
 ```ts
 new StaticSite(this, "StaticSite", {
   // ...
   distribution: {
-    domain: {
-      // ...
-      zone: new HostedZone(/* ... */),
-      // zone: HostedZone.fromLookup(/* ... */),
-      // zone: HostedZone.fromHostedZoneId(/* ... */),
-    },
+    domain: "example.com",
+    certificate: Certificate.fromCertificateArn(this, Certificate, "..."),
   },
 });
 ```
@@ -179,14 +184,16 @@ new StaticSite(this, "StaticSite", {
 
 ## With Explicit Cache Invalidation
 
-By default, all routes will be flushed from the cache upon deployment. This is performed asynchronously using a step function, so that the deployment procedure does not hold until the invalidation is completed.
+Cache invalidation is controlled through the `distribution` prop, which is forwarded to the underlying `SiteDistribution` construct. By default, all routes will be flushed from the cache upon deployment. This is performed asynchronously using a step function, so that the deployment procedure does not hold until the invalidation is completed.
 
 You can disable this behavior if you prefer an alternative means of invalidating the cache.
 
 ```ts
 new StaticSite(this, "StaticSite", {
   // ...
-  invalidateCache: false,
+  distribution: {
+    invalidateCache: false,
+  },
 });
 ```
 
@@ -195,17 +202,65 @@ Or, you can provide the specific routes that you want to flush.
 ```ts
 new StaticSite(this, "StaticSite", {
   // ...
-  invalidateCache: ["/foo/*", "/bar/baz"],
+  distribution: {
+    invalidateCache: ["/foo/*", "/bar/baz"],
+  },
+});
+```
+
+For the full set of distribution options, see the [`@codedazur/cdk-site-distribution`](../cdk-site-distribution/README.md) package.
+
+## With CORS
+
+If your site needs to handle cross-origin requests, you can configure CORS rules on the bucket.
+
+```ts
+new StaticSite(this, "StaticSite", {
+  // ...
+  bucket: {
+    cors: [
+      {
+        allowedMethods: [HttpMethods.GET, HttpMethods.HEAD],
+        allowedOrigins: ["https://example.com"],
+        allowedHeaders: ["*"],
+      },
+    ],
+  },
+});
+```
+
+## With Custom Deployment Settings
+
+You can configure the memory limit and ephemeral storage size for the Lambda function that deploys content to the bucket. This can be useful for large deployments that exceed the defaults.
+
+```ts
+new StaticSite(this, "StaticSite", {
+  // ...
+  deployment: {
+    memoryLimit: 1024,
+    ephemeralStorageSize: Size.mebibytes(1024),
+  },
+});
+```
+
+You can also deploy the content to a subdirectory of the bucket using the `prefix` option.
+
+```ts
+new StaticSite(this, "StaticSite", {
+  // ...
+  deployment: {
+    prefix: "v2",
+  },
 });
 ```
 
 ## With Custom Error Document
 
-By default, the `StaticSite` will load a `404.html` document when the requested path does not exist. If your application uses a different document, you can override it.
+By default, the `StaticSite` will load an `error.html` document when the requested path does not exist. If your application uses a different document, you can override it.
 
 ```ts
 new StaticSite(this, "StaticSite", {
   // ...
-  errorDocument: "error.html",
+  errorDocument: "404.html",
 });
 ```

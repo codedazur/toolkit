@@ -10,12 +10,19 @@ import {
 } from "aws-cdk-lib/aws-cloudfront";
 import { HttpOrigin } from "aws-cdk-lib/aws-cloudfront-origins";
 import { AnyPrincipal, Effect, PolicyStatement } from "aws-cdk-lib/aws-iam";
-import { BlockPublicAccess, Bucket, IBucket } from "aws-cdk-lib/aws-s3";
+import {
+  BlockPublicAccess,
+  Bucket,
+  CorsRule,
+  IBucket,
+} from "aws-cdk-lib/aws-s3";
 import { BucketDeployment, Source } from "aws-cdk-lib/aws-s3-deployment";
 import { ISecret, Secret } from "aws-cdk-lib/aws-secretsmanager";
 import { Construct } from "constructs";
 
 export enum RewriteMode {
+  None = "None",
+
   /**
    * Interpret ambiguous requests, as well as directory paths, as requests to
    * the root index.
@@ -67,6 +74,7 @@ export interface StaticSiteProps {
    */
   readonly bucket?: {
     accelerate?: boolean;
+    cors?: CorsRule[];
   };
 
   /**
@@ -160,6 +168,7 @@ export class StaticSite extends Construct {
       transferAcceleration: this.props.bucket?.accelerate,
       removalPolicy: RemovalPolicy.DESTROY,
       autoDeleteObjects: true,
+      cors: this.props.bucket?.cors,
     });
 
     bucket.addToResourcePolicy(
@@ -195,20 +204,22 @@ export class StaticSite extends Construct {
         viewerRequest: [
           this.getRewriteCode(),
           ...(this.props.distribution?.functions?.viewerRequest ?? []),
-        ],
+        ].filter((f) => f !== null),
         ...this.props.distribution?.functions,
       },
     });
   }
 
-  protected getRewriteCode(): FunctionCode {
+  protected getRewriteCode(): FunctionCode | null {
     switch (this.props.rewriteMode) {
+      default:
+      case RewriteMode.None:
+        return null;
       case RewriteMode.SinglePage:
         return this.getSinglePageRewriteCode();
       case RewriteMode.NamedPages:
         return this.getNamedPagesRewriteCode();
       case RewriteMode.IndexPages:
-      default:
         return this.getIndexPagesRewriteCode();
     }
   }
