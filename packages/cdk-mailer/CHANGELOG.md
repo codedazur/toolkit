@@ -1,5 +1,11 @@
 # @codedazur/cdk-mailer
 
+## 1.0.0
+
+### Major Changes
+
+- [`1db71c3`](https://github.com/codedazur/toolkit/commit/1db71c36e177f373d8737a1842a138477583edee) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Stable release. Using latest Lambda runtime and improved logging.
+
 ## 0.3.1
 
 ### Patch Changes

@@ -1,5 +1,15 @@
 # @codedazur/cdk-static-site
 
+## 4.1.0
+
+### Minor Changes
+
+- [`40e6769`](https://github.com/codedazur/toolkit/commit/40e6769a3afcac16ae171250b5fab7380b8bf289) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The bucket now supports CORS rules.
+
+- [`40e6769`](https://github.com/codedazur/toolkit/commit/40e6769a3afcac16ae171250b5fab7380b8bf289) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Added a RewriteMode.None which skips the CloudFront Function and just sends reqeusts to the bucket origin as-is.
+
+- [`604a2d6`](https://github.com/codedazur/toolkit/commit/604a2d675d5eaed185cbd521566ad828caf5a5c6) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The bucket deployment ephemeralStorage is now supported.
+
 ## 4.0.0
 
 ### Major Changes
