@@ -1,5 +1,11 @@
 # @codedazur/cdk-mailer
 
+## 1.0.1
+
+### Patch Changes
+
+- [`f7a8753`](https://github.com/codedazur/toolkit/commit/f7a875395d42fb2d8d8acbf0a8f8cb5834dec043) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Include missing utilities and types.
+
 ## 1.0.0
 
 ### Major Changes
