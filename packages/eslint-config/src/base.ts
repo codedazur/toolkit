@@ -8,7 +8,8 @@ export const base = defineConfig(
   eslint.configs.recommended,
   tseslint.configs.recommended,
   prettier,
-  turbo.configs["flat/recommended"],
+  // @ts-expect-error Incorrect typings in eslint-plugin-turbo.
+  turbo.configs?.["flat/recommended"],
   {
     rules: {
       "@typescript-eslint/no-empty-object-type": [

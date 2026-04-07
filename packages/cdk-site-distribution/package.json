@@ -24,12 +24,12 @@
   },
   "dependencies": {
     "@codedazur/cdk-cache-invalidator": "^1.2.3",
-    "@codedazur/essentials": "^1.13.0"
+    "@codedazur/essentials": "^1.13.1"
   },
   "devDependencies": {
-    "@types/node": "^25.0.9",
-    "aws-cdk-lib": "^2.235.1",
-    "constructs": "^10.4.5",
-    "esbuild": "^0.27.2"
+    "@types/node": "^25.5.2",
+    "aws-cdk-lib": "^2.248.0",
+    "constructs": "^10.6.0",
+    "esbuild": "^0.28.0"
   }
 }

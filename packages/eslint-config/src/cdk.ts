@@ -1,8 +1,8 @@
 import cdkPlugin from "eslint-plugin-awscdk";
-import { Config, defineConfig } from "eslint/config";
+import { defineConfig } from "eslint/config";
 
 export const cdk = defineConfig(
-  cdkPlugin.configs.recommended as Config[],
+  cdkPlugin.configs.recommended,
   {
     rules: {
       "awscdk/no-parent-name-construct-id-match": "off",

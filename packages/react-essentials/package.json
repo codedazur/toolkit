@@ -24,17 +24,17 @@
     "framer-motion": ">=10.0.0"
   },
   "dependencies": {
-    "@codedazur/essentials": "^1.13.0",
-    "bowser": "^2.13.1"
+    "@codedazur/essentials": "^1.13.1",
+    "bowser": "^2.14.1"
   },
   "devDependencies": {
     "@testing-library/dom": "10.4.1",
     "@testing-library/react": "^16.3.2",
     "@types/react-dom": "^19.2.3",
-    "@types/react": "^19.2.9",
+    "@types/react": "^19.2.14",
     "@vitejs/plugin-react": "^5.1.2",
-    "framer-motion": "^12.27.5",
-    "react-dom": "^19.2.3",
-    "react": "^19.2.3"
+    "framer-motion": "^12.38.0",
+    "react-dom": "^19.2.4",
+    "react": "^19.2.4"
   }
 }
