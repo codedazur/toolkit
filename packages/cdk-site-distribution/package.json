@@ -23,7 +23,7 @@
     "constructs": ">=10"
   },
   "dependencies": {
-    "@codedazur/cdk-cache-invalidator": "~1.2.3",
+    "@codedazur/cdk-cache-invalidator": "1.2.3",
     "@codedazur/essentials": "^1.13.1"
   },
   "devDependencies": {

@@ -35,8 +35,16 @@ export interface ClusterConfig {
 
 export interface DockerClusterProps {
   readonly source: string | SourceProps | ContainerImage;
+  /**
+   * Enable CloudWatch Container Insights for the ECS Cluster.
+   * @default false
+   */
+  readonly containerInsights?: boolean;
   readonly service?: ServiceProps;
   readonly distribution?: Omit<SiteDistributionProps, "origin">;
+  /**
+   * @deprecated Use top-level `containerInsights` instead.
+   */
   readonly cluster?: ClusterConfig;
 }
 
@@ -152,9 +160,12 @@ export class DockerCluster extends Construct {
         ? this.props.service?.tasks
         : this.props.service?.tasks?.minimum;
 
+    const containerInsights =
+      this.props.containerInsights ?? this.props.cluster?.containerInsights;
+
     const service = new ApplicationLoadBalancedFargateService(this, "Service", {
       cluster: new Cluster(this, "Cluster", {
-        containerInsights: this.props.cluster?.containerInsights,
+        containerInsights,
       }),
       cpu: this.props.service?.cpu,
       memoryLimitMiB: this.props.service?.memory,
