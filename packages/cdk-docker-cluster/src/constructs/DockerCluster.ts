@@ -22,12 +22,22 @@ import {
   ApplicationLoadBalancedFargateService,
   ApplicationLoadBalancedFargateServiceProps,
 } from "aws-cdk-lib/aws-ecs-patterns";
+import { HealthCheck } from "aws-cdk-lib/aws-elasticloadbalancingv2";
 import { Construct } from "constructs";
+
+export interface ClusterConfig {
+  /**
+   * Enable CloudWatch Container Insights for the ECS Cluster.
+   * @default false
+   */
+  readonly containerInsights?: boolean;
+}
 
 export interface DockerClusterProps {
   readonly source: string | SourceProps | ContainerImage;
   readonly service?: ServiceProps;
   readonly distribution?: Omit<SiteDistributionProps, "origin">;
+  readonly cluster?: ClusterConfig;
 }
 
 export interface ServiceProps {
@@ -37,6 +47,10 @@ export interface ServiceProps {
   readonly memory?: ApplicationLoadBalancedFargateServiceProps["memoryLimitMiB"];
   readonly environment?: Record<string, string>;
   readonly secrets?: Record<string, Secret>;
+  /**
+   * Health check configuration for the Application Load Balancer target group.
+   */
+  readonly healthCheck?: HealthCheck;
 }
 
 interface AutoScalingConfig {
@@ -139,7 +153,9 @@ export class DockerCluster extends Construct {
         : this.props.service?.tasks?.minimum;
 
     const service = new ApplicationLoadBalancedFargateService(this, "Service", {
-      cluster: new Cluster(this, "Cluster"),
+      cluster: new Cluster(this, "Cluster", {
+        containerInsights: this.props.cluster?.containerInsights,
+      }),
       cpu: this.props.service?.cpu,
       memoryLimitMiB: this.props.service?.memory,
       desiredCount: desiredTasks,
@@ -154,6 +170,10 @@ export class DockerCluster extends Construct {
         rollback: true,
       },
     });
+
+    if (this.props.service?.healthCheck) {
+      service.targetGroup.configureHealthCheck(this.props.service.healthCheck);
+    }
 
     return service;
   }
