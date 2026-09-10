@@ -1,5 +1,11 @@
 # @codedazur/cdk-docker-cluster
 
+## 2.1.0
+
+### Minor Changes
+
+- [`d1f5317`](https://github.com/codedazur/toolkit/commit/d1f5317a7c2e17dfe91441e9c2b88ffa87f811fe) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Add support for Container Insights on ECS clusters (`cluster.containerInsights`) and custom health checks on ALB target groups (`service.healthCheck`).
+
 ## 2.0.0
 
 ### Major Changes
