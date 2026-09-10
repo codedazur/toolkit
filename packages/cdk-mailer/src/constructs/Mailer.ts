@@ -5,7 +5,7 @@ import { Policy, PolicyStatement } from "aws-cdk-lib/aws-iam";
 import { Runtime } from "aws-cdk-lib/aws-lambda";
 import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
 import { RetentionDays } from "aws-cdk-lib/aws-logs";
-import { Queue } from "aws-cdk-lib/aws-sqs";
+import { IQueue, Queue } from "aws-cdk-lib/aws-sqs";
 import { Construct } from "constructs";
 import path from "path";
 
@@ -22,7 +22,7 @@ interface MailerProps {
  * the per-second rate limit has been reached.
  */
 export class Mailer extends Construct {
-  public readonly queue: Queue;
+  public readonly queue: IQueue;
 
   constructor(
     scope: Construct,

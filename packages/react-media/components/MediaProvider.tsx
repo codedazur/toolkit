@@ -273,6 +273,7 @@ export function MediaProvider({
    * if the element was already playing, or pausing the element when no track is
    * selected.
    */
+  // eslint-disable-next-line react-hooks/immutability
   useEffect(() => {
     if (!element) return;
 

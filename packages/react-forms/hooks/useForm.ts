@@ -95,6 +95,7 @@ export function useForm<T extends FieldTypes>({
   }, []);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setErrors(getErrors(values));
   }, [getErrors, values]);
 

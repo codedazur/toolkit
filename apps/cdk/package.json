@@ -17,14 +17,14 @@
     "@apps/storybook": "*",
     "@codedazur/cdk-static-site": "*",
     "@codedazur/essentials": "*",
-    "aws-cdk-lib": "^2.248.0",
-    "constructs": "^10.6.0"
+    "aws-cdk-lib": "^2.268.0",
+    "constructs": "^10.8.1"
   },
   "devDependencies": {
-    "aws-cdk": "^2.1117.0",
-    "dotenv": "^17.4.1",
-    "ts-jest": "^29.4.9",
-    "tsx": "^4.21.0",
+    "aws-cdk": "^2.1141.0",
+    "dotenv": "^17.4.2",
+    "ts-jest": "^29.4.12",
+    "tsx": "^4.23.13",
     "typescript": "^5.9.3"
   }
 }

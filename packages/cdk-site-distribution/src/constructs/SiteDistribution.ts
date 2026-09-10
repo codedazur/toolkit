@@ -351,7 +351,6 @@ export class SiteDistribution extends Construct {
       return undefined;
     }
 
-    // eslint-disable-next-line awscdk/no-variable-construct-id
     const func = new CloudFrontFunction(this, id, {
       code: this.getHandlerChainCode(handlers, "request"),
     });
@@ -376,7 +375,6 @@ export class SiteDistribution extends Construct {
       return undefined;
     }
 
-    // eslint-disable-next-line awscdk/no-variable-construct-id
     const func = new CloudFrontFunction(this, id, {
       code: this.getHandlerChainCode(handlers, "response"),
     });

@@ -3,7 +3,7 @@ import { Dispatch, ForwardedRef, SetStateAction, useCallback } from "react";
 type Ref<T> = Dispatch<SetStateAction<T>> | ForwardedRef<T>;
 
 export function useMergedRef<T = unknown>(...refs: Ref<T | null>[]) {
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  // eslint-disable-next-line react-hooks/use-memo, react-hooks/exhaustive-deps
   return useCallback(mergeRefs(...refs), refs);
 }
 
