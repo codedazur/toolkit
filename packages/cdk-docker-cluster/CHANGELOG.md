@@ -1,5 +1,11 @@
 # @codedazur/cdk-docker-cluster
 
+## 2.1.1
+
+### Patch Changes
+
+- [`788c34a`](https://github.com/codedazur/toolkit/commit/788c34a5c321fcc1d6ebf831365111f4d8fb5573) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Promote `containerInsights` prop to top level.
+
 ## 2.1.0
 
 ### Minor Changes
