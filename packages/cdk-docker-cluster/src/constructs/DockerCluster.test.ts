@@ -20,7 +20,28 @@ describe("DockerCluster", () => {
     });
   });
 
-  it("enables container insights when configured", () => {
+  it("enables container insights when configured at top level", () => {
+    const app = new App();
+    const stack = new Stack(app, "Test");
+
+    new DockerCluster(stack, "DockerCluster", {
+      source: ContainerImage.fromRegistry("nginx:alpine"),
+      containerInsights: true,
+    });
+
+    const template = Template.fromStack(stack);
+
+    template.hasResourceProperties("AWS::ECS::Cluster", {
+      ClusterSettings: [
+        {
+          Name: "containerInsights",
+          Value: "enabled",
+        },
+      ],
+    });
+  });
+
+  it("enables container insights when configured under cluster config (backwards compatibility)", () => {
     const app = new App();
     const stack = new Stack(app, "Test");
 

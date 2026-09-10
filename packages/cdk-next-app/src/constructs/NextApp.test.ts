@@ -5,15 +5,13 @@ import { describe, it } from "vitest";
 import { NextApp } from "./NextApp";
 
 describe("NextApp", () => {
-  it("forwards container insights configuration to the cluster", () => {
+  it("forwards top-level container insights configuration to the cluster", () => {
     const app = new App();
     const stack = new Stack(app, "Test");
 
     new NextApp(stack, "NextApp", {
       source: ContainerImage.fromRegistry("nginx:alpine"),
-      cluster: {
-        containerInsights: true,
-      },
+      containerInsights: true,
     });
 
     const template = Template.fromStack(stack);
