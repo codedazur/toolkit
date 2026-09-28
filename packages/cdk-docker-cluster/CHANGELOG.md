@@ -1,5 +1,11 @@
 # @codedazur/cdk-docker-cluster
 
+## 2.2.0
+
+### Minor Changes
+
+- [`046537d`](https://github.com/codedazur/toolkit/commit/046537dc2e7a6cb58703b2c058564a6eacef2008) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Add `logging` configuration option with `retention` to `ServiceProps`.
+
 ## 2.1.1
 
 ### Patch Changes
