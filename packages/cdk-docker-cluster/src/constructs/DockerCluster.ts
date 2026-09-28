@@ -15,6 +15,7 @@ import {
   AssetImageProps,
   Cluster,
   ContainerImage,
+  LogDriver,
   ScalableTaskCount,
   Secret,
 } from "aws-cdk-lib/aws-ecs";
@@ -23,6 +24,7 @@ import {
   ApplicationLoadBalancedFargateServiceProps,
 } from "aws-cdk-lib/aws-ecs-patterns";
 import { HealthCheck } from "aws-cdk-lib/aws-elasticloadbalancingv2";
+import { RetentionDays } from "aws-cdk-lib/aws-logs";
 import { Construct } from "constructs";
 
 export interface ClusterConfig {
@@ -48,6 +50,13 @@ export interface DockerClusterProps {
   readonly cluster?: ClusterConfig;
 }
 
+export interface LoggingConfig {
+  /**
+   * The number of days log events are kept in CloudWatch Logs.
+   */
+  readonly retention?: RetentionDays;
+}
+
 export interface ServiceProps {
   readonly port?: number;
   readonly tasks?: number | AutoScalingConfig;
@@ -59,6 +68,10 @@ export interface ServiceProps {
    * Health check configuration for the Application Load Balancer target group.
    */
   readonly healthCheck?: HealthCheck;
+  /**
+   * CloudWatch logging configuration for the container.
+   */
+  readonly logging?: LoggingConfig;
 }
 
 interface AutoScalingConfig {
@@ -163,6 +176,13 @@ export class DockerCluster extends Construct {
     const containerInsights =
       this.props.containerInsights ?? this.props.cluster?.containerInsights;
 
+    const logDriver = this.props.service?.logging?.retention
+      ? LogDriver.awsLogs({
+          streamPrefix: this.node.id,
+          logRetention: this.props.service.logging.retention,
+        })
+      : undefined;
+
     const service = new ApplicationLoadBalancedFargateService(this, "Service", {
       cluster: new Cluster(this, "Cluster", {
         containerInsights,
@@ -173,6 +193,7 @@ export class DockerCluster extends Construct {
       taskImageOptions: {
         image: this.image,
         containerPort: this.props.service?.port,
+        logDriver,
         environment: this.props.service?.environment,
         secrets: this.props.service?.secrets,
       },

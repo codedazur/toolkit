@@ -1,6 +1,7 @@
 import { App, Stack } from "aws-cdk-lib";
 import { Template } from "aws-cdk-lib/assertions";
 import { ContainerImage } from "aws-cdk-lib/aws-ecs";
+import { RetentionDays } from "aws-cdk-lib/aws-logs";
 import { describe, it } from "vitest";
 import { NextApp } from "./NextApp";
 
@@ -43,6 +44,26 @@ describe("NextApp", () => {
 
     template.hasResourceProperties("AWS::ElasticLoadBalancingV2::TargetGroup", {
       HealthCheckPath: "/api/health",
+    });
+  });
+
+  it("forwards log retention configuration to the log group", () => {
+    const app = new App();
+    const stack = new Stack(app, "Test");
+
+    new NextApp(stack, "NextApp", {
+      source: ContainerImage.fromRegistry("nginx:alpine"),
+      service: {
+        logging: {
+          retention: RetentionDays.ONE_WEEK,
+        },
+      },
+    });
+
+    const template = Template.fromStack(stack);
+
+    template.hasResourceProperties("AWS::Logs::LogGroup", {
+      RetentionInDays: 7,
     });
   });
 });
