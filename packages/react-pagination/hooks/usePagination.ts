@@ -32,8 +32,7 @@ export interface UsePaginationWithItemsProps<T> extends UsePaginationBaseProps {
 }
 
 export type UsePaginationProps<T> =
-  | UsePaginationWithPagesProps
-  | UsePaginationWithItemsProps<T>;
+  UsePaginationWithPagesProps | UsePaginationWithItemsProps<T>;
 
 function isWithCount<T>(
   props: UsePaginationProps<T>,
@@ -57,8 +56,7 @@ type UsePaginationWithPagesResponse = Omit<
 >;
 
 type usePaginationResponse<T> =
-  | UsePaginationWithItemsResponse<T>
-  | UsePaginationWithPagesResponse;
+  UsePaginationWithItemsResponse<T> | UsePaginationWithPagesResponse;
 
 export function usePagination(
   props: UsePaginationWithPagesProps,

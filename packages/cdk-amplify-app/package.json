@@ -24,11 +24,11 @@
   },
   "dependencies": {
     "@codedazur/essentials": "^1.13.1",
-    "yaml": "^2.9.0"
+    "yaml": "^2.9.1"
   },
   "devDependencies": {
-    "@types/node": "^25.9.1",
-    "aws-cdk-lib": "^2.268.0",
+    "@types/node": "^25.9.9",
+    "aws-cdk-lib": "^2.277.0",
     "constructs": "^10.8.1",
     "esbuild": "^0.28.2"
   }
