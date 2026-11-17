@@ -130,4 +130,27 @@ describe("DockerCluster", () => {
       },
     });
   });
+
+  it("exposes the load balancer publicly when configured", () => {
+    const app = new App();
+    const stack = new Stack(app, "Test");
+
+    new DockerCluster(stack, "DockerCluster", {
+      source: ContainerImage.fromRegistry("nginx:alpine"),
+      loadBalancer: {
+        public: true,
+      },
+    });
+
+    const template = Template.fromStack(stack);
+
+    template.hasResourceProperties(
+      "AWS::ElasticLoadBalancingV2::LoadBalancer",
+      {
+        Scheme: "internet-facing",
+      },
+    );
+
+    template.resourceCountIs("AWS::CloudFront::VpcOrigin", 0);
+  });
 });
