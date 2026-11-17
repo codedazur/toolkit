@@ -127,11 +127,14 @@ export interface SiteDistributionProps extends BehaviorProps {
   readonly hostedZone?: IHostedZone;
 
   /**
-   * The WAF firewall to protect the distribution with, created with the
-   * `Firewall` construct from `@codedazur/cdk-firewall`. Firewalls for
-   * CloudFront must be created in `us-east-1`, so if this stack is in another
-   * region, create the firewall in a separate `us-east-1` stack and enable
-   * `crossRegionReferences` on both stacks.
+   * The WAF firewall to protect the distribution with. Create one with the
+   * `Firewall` construct from `@codedazur/cdk-firewall` (or the
+   * `NextAppFirewall` from `@codedazur/cdk-next-app`), or import an existing
+   * web ACL with `Firewall.fromWebAclArn`.
+   *
+   * Firewalls for CloudFront must be created in `us-east-1`, so if this stack
+   * is in another region, create the firewall in a separate `us-east-1` stack
+   * and enable `crossRegionReferences` on both stacks.
    */
   readonly firewall?: IFirewall;
 }

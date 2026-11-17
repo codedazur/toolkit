@@ -13,6 +13,8 @@ new SiteDistribution(this, "SiteDistribution", {
 
 A firewall for CloudFront must be created in `us-east-1`. If your stack is in another region, see the [Firewall](https://github.com/codedazur/toolkit/tree/main/packages/cdk-firewall#regions) documentation for how to create it in a separate stack.
 
+To use an existing web ACL instead, import it with `Firewall.fromWebAclArn`. See [Existing Web ACLs](https://github.com/codedazur/toolkit/tree/main/packages/cdk-firewall#existing-web-acls).
+
 ## Migration Guide
 
 ### Migrating from `v0` to `v1`
