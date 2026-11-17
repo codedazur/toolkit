@@ -2,6 +2,8 @@
 
 This construct creates a load balanced Fargate service, for which it builds a Docker image from a local directory. A CloudFront distribution is connected to the load balancer.
 
+The load balancer is internal and connected to the distribution as a [VPC origin](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-vpc-origins.html), so it can only be reached through CloudFront. See [Load Balancer Access](#load-balancer-access) for details.
+
 ## Examples
 
 The minimum needed to get a DockerCluster up and running is a path to the source directory that contains a Dockerfile, relative to the CDK app, and the port on which your container needs to be accessible.
@@ -116,6 +118,22 @@ new DockerCluster(this, "DockerCluster", {
       minimum: 1,
       maximum: 5,
     },
+  },
+});
+```
+
+### Load Balancer Access
+
+By default, the load balancer is placed in the VPC's private subnets and connected to the CloudFront distribution as a VPC origin. Its security group only accepts HTTP traffic from the `com.amazonaws.global.cloudfront.origin-facing` managed prefix list, which is looked up at deploy time. This makes CloudFront the single point of entry, so its authentication, security headers, caching and firewall cannot be bypassed by sending requests to the load balancer directly.
+
+VPC origins are [not available in every region and availability zone](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-vpc-origins.html#vpc-origins-supported-regions), and do not support gRPC or Lambda@Edge origin request and origin response triggers. If you need any of those, you can opt out and use an internet-facing load balancer instead. Note that it then accepts HTTP traffic from anywhere, so requests sent to its DNS name bypass the distribution.
+
+```ts
+new DockerCluster(this, "DockerCluster", {
+  // ...
+  service: {
+    // ...
+    publicLoadBalancer: true,
   },
 });
 ```
