@@ -4,8 +4,6 @@ import path from "path";
 import {
   DockerCluster,
   DockerClusterProps,
-  FirewallProps,
-  FirewallRule,
 } from "@codedazur/cdk-docker-cluster";
 import { DockerBuildSecret } from "aws-cdk-lib";
 import { AllowedMethods, CachePolicy } from "aws-cdk-lib/aws-cloudfront";
@@ -23,45 +21,6 @@ export interface NextAppProps extends DockerClusterProps {}
  * @see https://nextjs.org/docs/app/guides/self-hosting#configuring-caching
  */
 export class NextApp extends DockerCluster {
-  /**
-   * Blocks requests that carry the internal `x-middleware-subrequest` header,
-   * which was used to bypass middleware (including authorization checks) in
-   * vulnerable Next.js versions. Next.js only sets this header internally, so
-   * it should never be sent by clients.
-   * @see https://nextjs.org/blog/cve-2025-29927
-   */
-  static readonly middlewareSubrequestRule: FirewallRule = {
-    name: "NextMiddlewareSubrequest",
-    action: { block: {} },
-    statement: {
-      sizeConstraintStatement: {
-        fieldToMatch: { singleHeader: { Name: "x-middleware-subrequest" } },
-        comparisonOperator: "GT",
-        size: 0,
-        textTransformations: [{ priority: 0, type: "NONE" }],
-      },
-    },
-  };
-
-  /**
-   * The default firewall for Next.js applications. In addition to the default
-   * managed rule groups, it blocks the `x-middleware-subrequest` header and
-   * excludes static assets and optimized images from the rate limit, because
-   * every page view requests many of those and CloudFront applies the
-   * firewall before its cache.
-   *
-   * If you provide your own `rules` or `rateLimit`, they replace these
-   * defaults, so spread them in if you want to keep them, e.g.
-   * `rules: [...NextApp.firewall.rules!, myRule]`.
-   */
-  static readonly firewall: FirewallProps = {
-    rules: [NextApp.middlewareSubrequestRule],
-    rateLimit: {
-      limit: 2000,
-      excludePaths: ["/_next/static/", "/_next/image"],
-    },
-  };
-
   constructor(
     scope: Construct,
     id: string,
@@ -132,10 +91,6 @@ export class NextApp extends DockerCluster {
         },
       },
     });
-  }
-
-  protected override defaultFirewall(): FirewallProps {
-    return NextApp.firewall;
   }
 
   protected static withNpmSecret(source: NextAppProps["source"]) {
