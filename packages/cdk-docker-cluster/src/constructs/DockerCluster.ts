@@ -270,14 +270,20 @@ export class DockerCluster extends Construct {
       originRequestPolicy:
         originRequestPolicy ?? this.createOriginRequestPolicy(),
       ...distribution,
-      origin: this.props.loadBalancer?.public
-        ? new LoadBalancerV2Origin(this.service.loadBalancer, {
-            protocolPolicy: OriginProtocolPolicy.HTTP_ONLY,
-          })
-        : VpcOrigin.withApplicationLoadBalancer(this.service.loadBalancer, {
-            protocolPolicy: OriginProtocolPolicy.HTTP_ONLY,
-          }),
+      origin: this.createOrigin(),
     });
+  }
+
+  /**
+   * A VPC origin for the internal load balancer, or a regular origin when the
+   * load balancer is public. The load balancer only has an HTTP listener.
+   */
+  protected createOrigin() {
+    const props = { protocolPolicy: OriginProtocolPolicy.HTTP_ONLY };
+
+    return this.props.loadBalancer?.public
+      ? new LoadBalancerV2Origin(this.service.loadBalancer, props)
+      : VpcOrigin.withApplicationLoadBalancer(this.service.loadBalancer, props);
   }
 
   /**
