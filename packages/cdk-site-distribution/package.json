@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "@codedazur/cdk-cache-invalidator": "workspace:*",
+    "@codedazur/cdk-firewall": "workspace:*",
     "@codedazur/essentials": "workspace:^"
   },
   "devDependencies": {

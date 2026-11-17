@@ -1,0 +1,31 @@
+{
+  "name": "@codedazur/cdk-firewall",
+  "version": "0.0.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": "./dist/index.js",
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT",
+  "sideEffects": false,
+  "scripts": {
+    "develop": "tsup src/index.ts --clean --format esm --dts --watch",
+    "build": "tsup src/index.ts --clean --format esm --dts",
+    "audit": "npm audit --omit dev --audit-level high",
+    "lint": "eslint .",
+    "types": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests"
+  },
+  "peerDependencies": {
+    "aws-cdk-lib": ">=2",
+    "constructs": ">=10"
+  },
+  "devDependencies": {
+    "@types/node": "^25.9.9",
+    "aws-cdk-lib": "^2.277.0",
+    "constructs": "^10.8.1",
+    "esbuild": "^0.28.2"
+  }
+}

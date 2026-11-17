@@ -1,5 +1,27 @@
 # @codedazur/cdk-site-distribution
 
+## Firewall
+
+The distribution can be protected by an AWS WAF web ACL, using the [Firewall](https://github.com/codedazur/toolkit/tree/main/packages/cdk-firewall) construct. This is opt-in.
+
+```ts
+new SiteDistribution(this, "SiteDistribution", {
+  // ...
+  firewall: true,
+});
+```
+
+Provide `FirewallProps` instead of `true` to configure the firewall. See the [Firewall](https://github.com/codedazur/toolkit/tree/main/packages/cdk-firewall) documentation for its defaults and options.
+
+A firewall for CloudFront must be created in `us-east-1`. If your stack is in another region, create the firewall in a separate `us-east-1` stack and attach it by its ARN. This is also useful to share a single web ACL between multiple distributions.
+
+```ts
+new SiteDistribution(this, "SiteDistribution", {
+  // ...
+  firewall: { webAclArn: "arn:aws:wafv2:us-east-1:..." },
+});
+```
+
 ## Migration Guide
 
 ### Migrating from `v0` to `v1`

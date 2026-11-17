@@ -119,3 +119,31 @@ new DockerCluster(this, "DockerCluster", {
   },
 });
 ```
+
+### Firewall
+
+The distribution of a `DockerCluster` has an AWS WAF firewall by default, with a per-IP rate limit and AWS managed rule groups against common exploits. See the [Firewall](https://github.com/codedazur/toolkit/tree/main/packages/cdk-firewall) documentation for the exact rules.
+
+Web ACLs for CloudFront must be created in `us-east-1`. If your stack is in another region, or has no explicit region, no firewall is created and synthesis shows a warning. In that case, deploy the stack to `us-east-1`, or create a web ACL in a separate `us-east-1` stack and attach it by its ARN.
+
+```ts
+new DockerCluster(this, "DockerCluster", {
+  // ...
+  distribution: {
+    firewall: { webAclArn: "arn:aws:wafv2:us-east-1:..." },
+  },
+});
+```
+
+Configuration that you provide is merged with the defaults. For example, to only count matching requests while you evaluate the rules:
+
+```ts
+new DockerCluster(this, "DockerCluster", {
+  // ...
+  distribution: {
+    firewall: { mode: "count" },
+  },
+});
+```
+
+To disable the firewall, set `firewall` to `false`.
