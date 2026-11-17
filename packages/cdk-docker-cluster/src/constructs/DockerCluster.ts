@@ -9,7 +9,10 @@ import {
   OriginProtocolPolicy,
   OriginRequestPolicy,
 } from "aws-cdk-lib/aws-cloudfront";
-import { VpcOrigin } from "aws-cdk-lib/aws-cloudfront-origins";
+import {
+  LoadBalancerV2Origin,
+  VpcOrigin,
+} from "aws-cdk-lib/aws-cloudfront-origins";
 import { Platform } from "aws-cdk-lib/aws-ecr-assets";
 import {
   AssetImageProps,
@@ -43,11 +46,24 @@ export interface DockerClusterProps {
    */
   readonly containerInsights?: boolean;
   readonly service?: ServiceProps;
+  readonly loadBalancer?: LoadBalancerProps;
   readonly distribution?: Omit<SiteDistributionProps, "origin">;
   /**
    * @deprecated Use top-level `containerInsights` instead.
    */
   readonly cluster?: ClusterConfig;
+}
+
+export interface LoadBalancerProps {
+  /**
+   * Whether the load balancer is internet-facing. By default, it is internal
+   * and can only be reached through the CloudFront distribution. Only make it
+   * public when the distribution needs a feature that VPC origins do not
+   * support, such as gRPC, since requests sent to a public load balancer
+   * directly bypass the distribution.
+   * @default false
+   */
+  readonly public?: boolean;
 }
 
 export interface LoggingConfig {
@@ -187,7 +203,7 @@ export class DockerCluster extends Construct {
       cluster: new Cluster(this, "Cluster", {
         containerInsights,
       }),
-      publicLoadBalancer: false,
+      publicLoadBalancer: this.props.loadBalancer?.public ?? false,
       cpu: this.props.service?.cpu,
       memoryLimitMiB: this.props.service?.memory,
       desiredCount: desiredTasks,
@@ -247,9 +263,13 @@ export class DockerCluster extends Construct {
       originRequestPolicy:
         originRequestPolicy ?? this.createOriginRequestPolicy(),
       ...distribution,
-      origin: VpcOrigin.withApplicationLoadBalancer(this.service.loadBalancer, {
-        protocolPolicy: OriginProtocolPolicy.HTTP_ONLY,
-      }),
+      origin: this.props.loadBalancer?.public
+        ? new LoadBalancerV2Origin(this.service.loadBalancer, {
+            protocolPolicy: OriginProtocolPolicy.HTTP_ONLY,
+          })
+        : VpcOrigin.withApplicationLoadBalancer(this.service.loadBalancer, {
+            protocolPolicy: OriginProtocolPolicy.HTTP_ONLY,
+          }),
     });
   }
 
