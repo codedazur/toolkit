@@ -177,4 +177,18 @@ describe("Firewall", () => {
       /must be created in us-east-1/,
     );
   });
+
+  it("imports an existing web ACL by its ARN", () => {
+    const stack = new Stack(new App(), "Test", {
+      env: { account: "123456789012", region: "eu-central-1" },
+    });
+
+    const webAclArn =
+      "arn:aws:wafv2:us-east-1:123456789012:global/webacl/shared/abc";
+
+    const firewall = Firewall.fromWebAclArn(stack, "Firewall", webAclArn);
+
+    expect(firewall.webAclArn).toBe(webAclArn);
+    Template.fromStack(stack).resourceCountIs("AWS::WAFv2::WebACL", 0);
+  });
 });

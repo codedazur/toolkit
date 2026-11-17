@@ -1,5 +1,5 @@
 import { CacheInvalidator } from "@codedazur/cdk-cache-invalidator";
-import { Firewall, FirewallProps } from "@codedazur/cdk-firewall";
+import { IFirewall } from "@codedazur/cdk-firewall";
 import { revalueObject } from "@codedazur/essentials";
 import { CfnOutput } from "aws-cdk-lib";
 import {
@@ -127,24 +127,13 @@ export interface SiteDistributionProps extends BehaviorProps {
   readonly hostedZone?: IHostedZone;
 
   /**
-   * A WAF firewall for the distribution. Set to `true` to create one with the
-   * default rules, provide @see FirewallProps to configure it, or provide the
-   * ARN of an existing web ACL, for example one that is shared between
-   * distributions or created in a separate `us-east-1` stack.
-   *
-   * A firewall that is created by this construct requires the stack to be
-   * deployed to `us-east-1`.
-   *
-   * @default false
+   * The WAF firewall to protect the distribution with, created with the
+   * `Firewall` construct from `@codedazur/cdk-firewall`. Firewalls for
+   * CloudFront must be created in `us-east-1`, so if this stack is in another
+   * region, create the firewall in a separate `us-east-1` stack and enable
+   * `crossRegionReferences` on both stacks.
    */
-  readonly firewall?: boolean | FirewallProps | ExistingFirewallProps;
-}
-
-export interface ExistingFirewallProps {
-  /**
-   * The ARN of an existing WAF web ACL with the `CLOUDFRONT` scope.
-   */
-  readonly webAclArn: string;
+  readonly firewall?: IFirewall;
 }
 
 /**
@@ -179,8 +168,6 @@ export interface ExistingFirewallProps {
 export class SiteDistribution extends Construct {
   public readonly domains: string[];
   public readonly certificate: ICertificate | undefined;
-  public readonly firewall?: Firewall;
-  public readonly webAclArn?: string;
   public readonly distribution: IDistribution;
   public readonly functions: IFunction[] = [];
   public readonly aliases?: IRecordSet[];
@@ -195,8 +182,6 @@ export class SiteDistribution extends Construct {
 
     this.domains = this.determineDomains();
     this.certificate = this.createCertificate();
-    this.firewall = this.createFirewall();
-    this.webAclArn = this.determineWebAclArn();
     this.distribution = this.createDistribution();
     this.aliases = this.createAliases();
 
@@ -249,29 +234,6 @@ export class SiteDistribution extends Construct {
     return certificate;
   }
 
-  protected createFirewall() {
-    const firewall = this.props.firewall;
-
-    if (
-      !firewall ||
-      (typeof firewall === "object" && "webAclArn" in firewall)
-    ) {
-      return;
-    }
-
-    return new Firewall(this, "Firewall", firewall === true ? {} : firewall);
-  }
-
-  protected determineWebAclArn() {
-    const firewall = this.props.firewall;
-
-    if (typeof firewall === "object" && "webAclArn" in firewall) {
-      return firewall.webAclArn;
-    }
-
-    return this.firewall?.webAclArn;
-  }
-
   protected createPasswordSecret() {
     return new Secret(this, "PasswordSecret", {
       generateSecretString: { excludePunctuation: true },
@@ -282,7 +244,7 @@ export class SiteDistribution extends Construct {
     const distribution = new Distribution(this, "Distribution", {
       priceClass: this.props.priceClass,
       certificate: this.certificate,
-      webAclId: this.webAclArn,
+      webAclId: this.props.firewall?.webAclArn,
       domainNames:
         this.domains && this.domains.length > 0 ? this.domains : undefined,
       defaultBehavior: this.behavior(),

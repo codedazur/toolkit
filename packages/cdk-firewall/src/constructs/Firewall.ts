@@ -8,7 +8,7 @@ import {
 } from "aws-cdk-lib";
 import { ILogGroup, LogGroup, RetentionDays } from "aws-cdk-lib/aws-logs";
 import { CfnLoggingConfiguration, CfnWebACL } from "aws-cdk-lib/aws-wafv2";
-import { Construct } from "constructs";
+import { Construct, IConstruct } from "constructs";
 
 /**
  * Whether matching rules block requests or only count them. Counting is
@@ -119,10 +119,23 @@ export interface FirewallProps {
 }
 
 /**
+ * A WAF web ACL for CloudFront distributions.
+ */
+export interface IFirewall extends IConstruct {
+  /**
+   * The ARN of the web ACL.
+   */
+  readonly webAclArn: string;
+}
+
+/**
  * A WAF web ACL for use with a CloudFront distribution.
  *
  * Web ACLs for CloudFront must be created in `us-east-1`, so the stack that
- * contains this construct must be deployed to that region.
+ * contains this construct must be deployed to that region. If your application
+ * is deployed to another region, create the firewall in a separate `us-east-1`
+ * stack and pass it to the stack of your application. Both stacks need
+ * `crossRegionReferences: true`.
  *
  * By default, it applies a rate limit per IP address and the following AWS
  * managed rule groups:
@@ -135,8 +148,22 @@ export interface FirewallProps {
  * - `AWSManagedRulesKnownBadInputsRuleSet` blocks request patterns that are
  *   known to exploit specific vulnerabilities.
  */
-export class Firewall extends Construct {
+export class Firewall extends Construct implements IFirewall {
   static readonly region = "us-east-1";
+
+  /**
+   * Imports an existing web ACL, for example one that was created outside of
+   * CDK, by its ARN.
+   */
+  static fromWebAclArn(
+    scope: Construct,
+    id: string,
+    webAclArn: string,
+  ): IFirewall {
+    // Static import methods create the construct in the caller's scope.
+    // eslint-disable-next-line awscdk/require-passing-this
+    return new ImportedFirewall(scope, id, { webAclArn });
+  }
 
   static readonly defaultRateLimit: RateLimitProps = {
     limit: 3000,
@@ -181,7 +208,7 @@ export class Firewall extends Construct {
 
     if (!Token.isUnresolved(region) && region !== Firewall.region) {
       throw new Error(
-        `A firewall for a CloudFront distribution must be created in ${Firewall.region}, but this stack is in ${region}. Deploy the stack to ${Firewall.region}, or create the web ACL in a separate stack and provide its ARN.`,
+        `A firewall for a CloudFront distribution must be created in ${Firewall.region}, but this stack is in ${region}. Create the firewall in a separate ${Firewall.region} stack instead, and enable \`crossRegionReferences\` on both stacks.`,
       );
     }
   }
@@ -361,5 +388,18 @@ export class Firewall extends Construct {
     configuration.node.addDependency(logGroup);
 
     return logGroup;
+  }
+}
+
+/**
+ * A firewall that was created elsewhere, imported by its ARN.
+ */
+class ImportedFirewall extends Construct implements IFirewall {
+  public readonly webAclArn: string;
+
+  constructor(scope: Construct, id: string, props: { webAclArn: string }) {
+    super(scope, id);
+
+    this.webAclArn = props.webAclArn;
   }
 }

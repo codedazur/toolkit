@@ -101,20 +101,20 @@ new NextApp(this, "NextApp", {
 
 ### Firewall
 
-The NextApp is based on the [DockerCluster](https://github.com/codedazur/toolkit/tree/main/packages/cdk-docker-cluster) construct and has a firewall by default when deployed to `us-east-1`. The firewall is tailored to Next.js:
+The distribution can be protected by an AWS WAF web ACL. The `NextAppFirewall` is a [Firewall](https://github.com/codedazur/toolkit/tree/main/packages/cdk-firewall) with additional rules for Next.js:
 
 - Requests that carry the internal `x-middleware-subrequest` header are blocked. This header was used to bypass middleware, including authorization checks, in vulnerable Next.js versions ([CVE-2025-29927](https://nextjs.org/blog/cve-2025-29927)).
 - Static assets (`/_next/static/`) and optimized images (`/_next/image`) don't count towards the rate limit of 2000 requests per IP address per 5 minutes, because every page view requests many of them.
-
-Configuration that you provide is merged with these defaults. If you provide your own `rules` or `rateLimit`, they replace the defaults, so spread them in if you want to keep them.
 
 ```ts
 new NextApp(this, "NextApp", {
   // ...
   distribution: {
-    firewall: {
-      rules: [...NextApp.firewall.rules!, myRule],
-    },
+    firewall: new NextAppFirewall(this, "Firewall"),
   },
 });
 ```
+
+It accepts the same options as the `Firewall`. Custom `rules` are evaluated after the Next.js rules, and a custom `rateLimit` replaces the Next.js rate limit.
+
+A firewall for CloudFront must be created in `us-east-1`. If your stack is in another region, see the [Firewall](https://github.com/codedazur/toolkit/tree/main/packages/cdk-firewall#regions) documentation for how to create it in a separate stack.

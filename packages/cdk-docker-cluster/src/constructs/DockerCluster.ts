@@ -1,10 +1,8 @@
 import {
-  Firewall,
-  FirewallProps,
   SiteDistribution,
   SiteDistributionProps,
 } from "@codedazur/cdk-site-distribution";
-import { Annotations, App, Duration, Stack, Token } from "aws-cdk-lib";
+import { App, Duration } from "aws-cdk-lib";
 import {
   AllowedMethods,
   CachePolicy,
@@ -45,16 +43,6 @@ export interface DockerClusterProps {
    */
   readonly containerInsights?: boolean;
   readonly service?: ServiceProps;
-  /**
-   * Configuration of the CloudFront distribution.
-   *
-   * Unlike the @see SiteDistribution itself, the distribution of a
-   * DockerCluster has a firewall by default if the stack is deployed to
-   * `us-east-1`, which is required for firewalls on CloudFront distributions.
-   * In other regions, or if the region is unknown at synth time, no firewall is
-   * created unless `firewall` is set explicitly. Set `firewall` to `false` to
-   * disable it, or provide @see FirewallProps to extend the defaults.
-   */
   readonly distribution?: Omit<SiteDistributionProps, "origin">;
   /**
    * @deprecated Use top-level `containerInsights` instead.
@@ -266,53 +254,10 @@ export class DockerCluster extends Construct {
       originRequestPolicy:
         originRequestPolicy ?? this.createOriginRequestPolicy(),
       ...distribution,
-      firewall: this.determineFirewall(),
       origin: VpcOrigin.withApplicationLoadBalancer(this.service.loadBalancer, {
         protocolPolicy: OriginProtocolPolicy.HTTP_ONLY,
       }),
     });
-  }
-
-  /**
-   * Determines the firewall configuration for the distribution. A firewall is
-   * enabled by default when the stack is known to be in `us-east-1`. Explicit
-   * firewall configuration is merged with @see DockerCluster.defaultFirewall.
-   */
-  protected determineFirewall(): SiteDistributionProps["firewall"] {
-    const firewall = this.props.distribution?.firewall;
-
-    if (firewall === undefined) {
-      const region = Stack.of(this).region;
-
-      if (Token.isUnresolved(region) || region !== Firewall.region) {
-        Annotations.of(this).addWarningV2(
-          "@codedazur/cdk-docker-cluster:firewallDisabled",
-          `No firewall was created for the distribution, because the stack ${Token.isUnresolved(region) ? "has no explicit region" : `is in ${region}`}. Firewalls for CloudFront distributions must be created in ${Firewall.region}. Set \`distribution.firewall\` explicitly to enable or disable it.`,
-        );
-
-        return false;
-      }
-
-      return this.defaultFirewall();
-    }
-
-    if (firewall === true) {
-      return this.defaultFirewall();
-    }
-
-    if (firewall === false || "webAclArn" in firewall) {
-      return firewall;
-    }
-
-    return { ...this.defaultFirewall(), ...firewall };
-  }
-
-  /**
-   * The default firewall configuration, which subclasses can override to
-   * tailor the firewall to a specific type of application.
-   */
-  protected defaultFirewall(): FirewallProps {
-    return {};
   }
 
   /**
