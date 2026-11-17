@@ -2,18 +2,14 @@ import {
   SiteDistribution,
   SiteDistributionProps,
 } from "@codedazur/cdk-site-distribution";
-import { App, Duration, Stack } from "aws-cdk-lib";
+import { App, Duration } from "aws-cdk-lib";
 import {
   AllowedMethods,
   CachePolicy,
   OriginProtocolPolicy,
   OriginRequestPolicy,
 } from "aws-cdk-lib/aws-cloudfront";
-import {
-  LoadBalancerV2Origin,
-  VpcOrigin,
-} from "aws-cdk-lib/aws-cloudfront-origins";
-import { Peer, Port } from "aws-cdk-lib/aws-ec2";
+import { VpcOrigin } from "aws-cdk-lib/aws-cloudfront-origins";
 import { Platform } from "aws-cdk-lib/aws-ecr-assets";
 import {
   AssetImageProps,
@@ -27,16 +23,8 @@ import {
   ApplicationLoadBalancedFargateService,
   ApplicationLoadBalancedFargateServiceProps,
 } from "aws-cdk-lib/aws-ecs-patterns";
-import {
-  ApplicationLoadBalancer,
-  HealthCheck,
-} from "aws-cdk-lib/aws-elasticloadbalancingv2";
+import { HealthCheck } from "aws-cdk-lib/aws-elasticloadbalancingv2";
 import { RetentionDays } from "aws-cdk-lib/aws-logs";
-import {
-  AwsCustomResource,
-  AwsCustomResourcePolicy,
-  PhysicalResourceId,
-} from "aws-cdk-lib/custom-resources";
 import { Construct } from "constructs";
 
 export interface ClusterConfig {
@@ -84,23 +72,6 @@ export interface ServiceProps {
    * CloudWatch logging configuration for the container.
    */
   readonly logging?: LoggingConfig;
-  /**
-   * Whether the Application Load Balancer is internet-facing.
-   *
-   * By default, the load balancer is internal (placed in private subnets) and
-   * connected to the CloudFront distribution as a VPC origin. Its security
-   * group only accepts traffic from the CloudFront origin-facing managed
-   * prefix list, so the service can only be reached through the distribution,
-   * which enforces its authentication, security headers, caching, and
-   * firewall.
-   *
-   * Setting this to `true` restores the previous behavior: an internet-facing
-   * load balancer that accepts HTTP traffic from anywhere, which means requests
-   * sent to its DNS name directly bypass the CloudFront distribution.
-   *
-   * @default false
-   */
-  readonly publicLoadBalancer?: boolean;
 }
 
 interface AutoScalingConfig {
@@ -212,31 +183,11 @@ export class DockerCluster extends Construct {
         })
       : undefined;
 
-    const cluster = new Cluster(this, "Cluster", {
-      containerInsights,
-    });
-
-    const publicLoadBalancer = this.props.service?.publicLoadBalancer ?? false;
-
-    /**
-     * The private load balancer gets its own construct ID, rather than the one
-     * ApplicationLoadBalancedFargateService would create, so that its listener
-     * and target group get new logical IDs as well. A target group can only be
-     * associated with one load balancer, so reusing the existing target group
-     * would make an in-place update from a public load balancer fail.
-     */
-    const loadBalancer = publicLoadBalancer
-      ? undefined
-      : new ApplicationLoadBalancer(this, "PrivateLoadBalancer", {
-          vpc: cluster.vpc,
-          internetFacing: false,
-        });
-
     const service = new ApplicationLoadBalancedFargateService(this, "Service", {
-      cluster,
-      loadBalancer,
-      publicLoadBalancer,
-      openListener: publicLoadBalancer,
+      cluster: new Cluster(this, "Cluster", {
+        containerInsights,
+      }),
+      publicLoadBalancer: false,
       cpu: this.props.service?.cpu,
       memoryLimitMiB: this.props.service?.memory,
       desiredCount: desiredTasks,
@@ -257,56 +208,7 @@ export class DockerCluster extends Construct {
       service.targetGroup.configureHealthCheck(this.props.service.healthCheck);
     }
 
-    if (!publicLoadBalancer) {
-      service.loadBalancer.connections.allowFrom(
-        Peer.prefixList(this.getCloudFrontOriginFacingPrefixListId()),
-        Port.HTTP,
-        "Allow HTTP from CloudFront VPC origins",
-      );
-    }
-
     return service;
-  }
-
-  /**
-   * Looks up the ID of the CloudFront origin-facing managed prefix list, which
-   * differs per region. This is done at deploy time using a custom resource,
-   * rather than with a context lookup, so that the construct can still be used
-   * in environment-agnostic stacks.
-   * @see https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-vpc-origins.html#security-group-configuration
-   */
-  protected getCloudFrontOriginFacingPrefixListId() {
-    const sdkCall = {
-      service: "EC2",
-      action: "describeManagedPrefixLists",
-      parameters: {
-        Filters: [
-          {
-            Name: "prefix-list-name",
-            Values: ["com.amazonaws.global.cloudfront.origin-facing"],
-          },
-        ],
-      },
-      physicalResourceId: PhysicalResourceId.of(
-        `cloudfront-origin-facing-${Stack.of(this).region}`,
-      ),
-      outputPaths: ["PrefixLists.0.PrefixListId"],
-    };
-
-    const lookup = new AwsCustomResource(
-      this,
-      "CloudFrontOriginFacingPrefixList",
-      {
-        onCreate: sdkCall,
-        onUpdate: sdkCall,
-        policy: AwsCustomResourcePolicy.fromSdkCalls({
-          resources: AwsCustomResourcePolicy.ANY_RESOURCE,
-        }),
-        installLatestAwsSdk: false,
-      },
-    );
-
-    return lookup.getResponseField("PrefixLists.0.PrefixListId");
   }
 
   protected createAutoScaling(service: ApplicationLoadBalancedFargateService) {
@@ -345,19 +247,9 @@ export class DockerCluster extends Construct {
       originRequestPolicy:
         originRequestPolicy ?? this.createOriginRequestPolicy(),
       ...distribution,
-      origin: this.createOrigin(),
-    });
-  }
-
-  protected createOrigin() {
-    if (this.props.service?.publicLoadBalancer) {
-      return new LoadBalancerV2Origin(this.service.loadBalancer, {
+      origin: VpcOrigin.withApplicationLoadBalancer(this.service.loadBalancer, {
         protocolPolicy: OriginProtocolPolicy.HTTP_ONLY,
-      });
-    }
-
-    return VpcOrigin.withApplicationLoadBalancer(this.service.loadBalancer, {
-      protocolPolicy: OriginProtocolPolicy.HTTP_ONLY,
+      }),
     });
   }
 
