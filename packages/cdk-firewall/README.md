@@ -54,14 +54,21 @@ Deploying the stack of your application deploys the `us-east-1` stack first. The
 
 Cross-region references prevent the `us-east-1` stack from deleting a resource that the other stack still uses. Replacing the firewall or certificate, rather than updating it, therefore takes two deployments. Changes to the rules of a firewall are updates, so they are not affected.
 
-A firewall that was created outside of CDK can be imported by its ARN.
+## Existing Web ACLs
+
+If you already have a web ACL, for example one that was created in the AWS console or by another CDK app, import it by its ARN instead of creating a new firewall. Nothing is created, so this works from a stack in any region.
 
 ```ts
-const firewall = Firewall.fromWebAclArn(
-  this,
-  "Firewall",
-  "arn:aws:wafv2:us-east-1:...",
-);
+new DockerCluster(this, "DockerCluster", {
+  // ...
+  distribution: {
+    firewall: Firewall.fromWebAclArn(
+      this,
+      "Firewall",
+      "arn:aws:wafv2:us-east-1:...",
+    ),
+  },
+});
 ```
 
 ## Defaults
