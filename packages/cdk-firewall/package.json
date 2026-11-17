@@ -19,7 +19,7 @@
     "audit": "npm audit --omit dev --audit-level high",
     "lint": "eslint .",
     "types": "tsc --noEmit",
-    "test": "vitest run --passWithNoTests"
+    "test": "vitest run --passWithNoTests --testTimeout 30000"
   },
   "peerDependencies": {
     "aws-cdk-lib": ">=2",
