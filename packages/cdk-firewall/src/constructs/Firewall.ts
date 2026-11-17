@@ -79,10 +79,11 @@ export type FirewallRule = Omit<
 
 export interface FirewallLoggingProps {
   /**
-   * How long the firewall logs are retained.
-   * @default RetentionDays.ONE_MONTH
+   * How long the firewall logs are retained. Logs contain the IP addresses of
+   * visitors, which are personal data, so choose the shortest retention that
+   * suits your needs.
    */
-  readonly retention?: RetentionDays;
+  readonly retention: RetentionDays;
 }
 
 export interface FirewallProps {
@@ -112,10 +113,11 @@ export interface FirewallProps {
 
   /**
    * Logging of blocked and counted requests to CloudWatch Logs. Allowed
-   * requests are not logged, to limit cost. Set to `false` to disable.
-   * @default { retention: RetentionDays.ONE_MONTH }
+   * requests are not logged, to limit cost. The `authorization` and `cookie`
+   * headers are masked, but the logs do contain the IP addresses of visitors.
+   * @default - No logging.
    */
-  readonly logging?: FirewallLoggingProps | boolean;
+  readonly logging?: FirewallLoggingProps;
 }
 
 /**
@@ -147,6 +149,10 @@ export interface IFirewall extends IConstruct {
  *   set to count, because it breaks most uploads and larger form submissions.
  * - `AWSManagedRulesKnownBadInputsRuleSet` blocks request patterns that are
  *   known to exploit specific vulnerabilities.
+ *
+ * The `authorization` and `cookie` headers are always masked in the request
+ * data that WAF stores, which includes sampled requests and logs, because
+ * they typically contain session tokens.
  */
 export class Firewall extends Construct implements IFirewall {
   static readonly region = "us-east-1";
@@ -178,6 +184,11 @@ export class Firewall extends Construct implements IFirewall {
     },
     { name: "AWSManagedRulesKnownBadInputsRuleSet" },
   ];
+
+  /**
+   * Headers that are masked in sampled requests and logs.
+   */
+  static readonly maskedHeaders = ["authorization", "cookie"];
 
   public readonly webAcl: CfnWebACL;
   public readonly logGroup?: ILogGroup;
@@ -220,6 +231,17 @@ export class Firewall extends Construct implements IFirewall {
       scope: "CLOUDFRONT",
       defaultAction: { allow: {} },
       visibilityConfig: this.visibilityConfig(name),
+      dataProtectionConfig: {
+        dataProtections: [
+          {
+            field: {
+              fieldType: "SINGLE_HEADER",
+              fieldKeys: Firewall.maskedHeaders,
+            },
+            action: "SUBSTITUTION",
+          },
+        ],
+      },
       rules: this.createRules().map((rule, priority) => ({
         ...rule,
         priority,
@@ -334,14 +356,13 @@ export class Firewall extends Construct implements IFirewall {
   }
 
   protected createLogging() {
-    const logging = this.props.logging ?? true;
+    const logging = this.props.logging;
 
     if (!logging) {
       return;
     }
 
-    const { retention = RetentionDays.ONE_MONTH } =
-      logging === true ? {} : logging;
+    const { retention } = logging;
 
     const logGroupName = `aws-waf-logs-${Names.uniqueResourceName(this, {
       maxLength: 256,

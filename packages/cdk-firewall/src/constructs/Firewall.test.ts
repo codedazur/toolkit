@@ -1,5 +1,6 @@
 import { App, Stack } from "aws-cdk-lib";
 import { Match, Template } from "aws-cdk-lib/assertions";
+import { RetentionDays } from "aws-cdk-lib/aws-logs";
 import { describe, expect, it } from "vitest";
 import { Firewall, FirewallProps } from "./Firewall";
 
@@ -67,12 +68,37 @@ describe("Firewall", () => {
     });
   });
 
-  it("logs blocked and counted requests to a WAF log group", () => {
+  it("does not log by default", () => {
     const template = synthesize();
+
+    template.resourceCountIs("AWS::WAFv2::LoggingConfiguration", 0);
+    template.resourceCountIs("AWS::Logs::LogGroup", 0);
+  });
+
+  it("masks the authorization and cookie headers", () => {
+    synthesize().hasResourceProperties("AWS::WAFv2::WebACL", {
+      DataProtectionConfig: {
+        DataProtections: [
+          {
+            Field: {
+              FieldType: "SINGLE_HEADER",
+              FieldKeys: ["authorization", "cookie"],
+            },
+            Action: "SUBSTITUTION",
+          },
+        ],
+      },
+    });
+  });
+
+  it("logs blocked and counted requests to a WAF log group when enabled", () => {
+    const template = synthesize({
+      logging: { retention: RetentionDays.ONE_WEEK },
+    });
 
     template.hasResourceProperties("AWS::Logs::LogGroup", {
       LogGroupName: Match.stringLikeRegexp("^aws-waf-logs-"),
-      RetentionInDays: 30,
+      RetentionInDays: 7,
     });
 
     template.hasResourceProperties("AWS::WAFv2::LoggingConfiguration", {
@@ -102,10 +128,9 @@ describe("Firewall", () => {
     });
   });
 
-  it("can disable logging and the rate limit", () => {
-    const template = synthesize({ logging: false, rateLimit: false });
+  it("can disable the rate limit", () => {
+    const template = synthesize({ rateLimit: false });
 
-    template.resourceCountIs("AWS::WAFv2::LoggingConfiguration", 0);
     expect(ruleNames(template)).not.toContain("RateLimit");
   });
 
