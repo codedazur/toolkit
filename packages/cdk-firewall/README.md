@@ -77,11 +77,12 @@ The default firewall contains:
 
 - A rate limit of 3000 requests per IP address per 5 minutes. CloudFront applies the firewall before its cache, so cached responses count towards this limit too.
 - The AWS managed `AmazonIpReputationList`, `CommonRuleSet` and `KnownBadInputsRuleSet` rule groups. The `SizeRestrictions_BODY` rule of the common rule set, which blocks request bodies over 8 KB, is set to count, because it breaks most uploads.
-- Logging of blocked and counted requests to a CloudWatch log group in `us-east-1`, retained for one month. Allowed requests are not logged. Note that these logs contain the IP addresses of visitors.
+- Masking of the `authorization` and `cookie` headers in the request data that WAF stores, because they typically contain session tokens.
+- No logging. See [Logging and Personal Data](#logging-and-personal-data).
 
 ## Configuration
 
-Start in `count` mode to see which requests would be blocked, by looking at the logs and the metrics in the WAF console, before you switch to `block`.
+Start in `count` mode to see which requests would be blocked, by looking at the metrics and sampled requests in the WAF console, before you switch to `block`.
 
 ```ts
 new Firewall(this, "Firewall", {
@@ -102,10 +103,28 @@ new Firewall(this, "Firewall", {
       statement: { geoMatchStatement: { countryCodes: ["XX"] } },
     },
   ],
-  logging: { retention: RetentionDays.THREE_MONTHS },
 });
 ```
 
 Custom rules are evaluated first, then the rate limit, then the managed rule groups. Priorities and visibility configuration are assigned automatically.
 
-A firewall costs roughly $5 per month for the web ACL, $1 per month per rule or managed rule group, and $0.60 per million requests, plus the cost of the logs.
+A firewall costs roughly $5 per month for the web ACL, $1 per month per rule or managed rule group, and $0.60 per million requests, plus the cost of the logs if logging is enabled.
+
+## Logging and Personal Data
+
+WAF processes the IP address of every visitor to apply the rate limit and IP reputation rules, but by default, the only request data it stores are **sampled requests**: a sample of recent requests per rule, including their IP addresses and headers, which AWS keeps for 3 hours and shows in the WAF console. CloudWatch metrics per rule contain no personal data.
+
+Logging of blocked and counted requests to CloudWatch Logs is opt-in. Logs are useful to analyze attacks or false positives after the fact, but they contain personal data, so you must choose how long they are retained.
+
+```ts
+new Firewall(this, "Firewall", {
+  logging: { retention: RetentionDays.ONE_WEEK },
+});
+```
+
+Keep in mind that:
+
+- Logs are stored in `us-east-1`, the region of the firewall.
+- Logs contain the IP addresses of visitors, which are personal data. WAF can not mask IP addresses.
+- Logs contain all request headers and the full URL, including the query string. The `authorization` and `cookie` headers are always masked, both in logs and in sampled requests, but other headers and query parameters that contain personal data or secrets are not.
+- When a rule matches part of the request body, such as a form submission, that part is included in the log.
