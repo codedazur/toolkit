@@ -32,6 +32,9 @@
       "default": "./dist/storybook.js"
     }
   },
+  "files": [
+    "dist"
+  ],
   "sideEffects": false,
   "scripts": {
     "develop": "tsup --watch",
