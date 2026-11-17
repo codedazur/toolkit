@@ -2,7 +2,7 @@ import { App, Stack } from "aws-cdk-lib";
 import { Match, Template } from "aws-cdk-lib/assertions";
 import { ContainerImage } from "aws-cdk-lib/aws-ecs";
 import { RetentionDays } from "aws-cdk-lib/aws-logs";
-import { describe, it } from "vitest";
+import { describe, expect, it } from "vitest";
 import { DockerCluster } from "./DockerCluster";
 
 describe("DockerCluster", () => {
@@ -152,5 +152,22 @@ describe("DockerCluster", () => {
     );
 
     template.resourceCountIs("AWS::CloudFront::VpcOrigin", 0);
+  });
+
+  it("gives the private load balancer a new target group", () => {
+    const app = new App();
+    const stack = new Stack(app, "Test");
+
+    new DockerCluster(stack, "DockerCluster", {
+      source: ContainerImage.fromRegistry("nginx:alpine"),
+    });
+
+    const targetGroups = Template.fromStack(stack).findResources(
+      "AWS::ElasticLoadBalancingV2::TargetGroup",
+    );
+
+    expect(Object.keys(targetGroups)).toEqual([
+      expect.stringContaining("ECSPrivate"),
+    ]);
   });
 });

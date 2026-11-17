@@ -153,6 +153,13 @@ export class DockerCluster extends Construct {
   ) {
     super(scope, id);
 
+    /**
+     * Give the target group a new ID when the load balancer is private, so that
+     * upgrading from a public load balancer does not fail. A target group can
+     * only belong to one load balancer.
+     */
+    this.node.setContext("@aws-cdk/aws-ecs-patterns:uniqueTargetGroupId", true);
+
     this.image =
       this.props.source instanceof ContainerImage
         ? this.props.source
