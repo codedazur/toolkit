@@ -1,9 +1,9 @@
 import { App, Stack } from "aws-cdk-lib";
-import { Match, Template } from "aws-cdk-lib/assertions";
+import { Annotations, Match, Template } from "aws-cdk-lib/assertions";
 import { ContainerImage } from "aws-cdk-lib/aws-ecs";
 import { RetentionDays } from "aws-cdk-lib/aws-logs";
 import { describe, expect, it } from "vitest";
-import { DockerCluster } from "./DockerCluster";
+import { DockerCluster, DockerClusterProps } from "./DockerCluster";
 
 describe("DockerCluster", () => {
   it("creates a cluster without container insights by default", () => {
@@ -146,5 +146,89 @@ describe("DockerCluster", () => {
     expect(Object.keys(targetGroups)).toEqual([
       expect.stringContaining("ECSPrivate"),
     ]);
+  });
+
+  describe("firewall", () => {
+    function synthesize(
+      props: Partial<DockerClusterProps> = {},
+      region?: string,
+    ) {
+      const app = new App();
+      const stack = new Stack(app, "Test", {
+        env: region ? { account: "123456789012", region } : undefined,
+      });
+
+      new DockerCluster(stack, "DockerCluster", {
+        source: ContainerImage.fromRegistry("nginx:alpine"),
+        ...props,
+      });
+
+      return { stack, template: Template.fromStack(stack) };
+    }
+
+    it("creates a firewall by default in us-east-1", () => {
+      const { template } = synthesize({}, "us-east-1");
+
+      template.resourceCountIs("AWS::WAFv2::WebACL", 1);
+      template.hasResourceProperties("AWS::CloudFront::Distribution", {
+        DistributionConfig: Match.objectLike({ WebACLId: Match.anyValue() }),
+      });
+    });
+
+    it.each([
+      ["another region", "eu-west-1"],
+      ["an unknown region", undefined],
+    ])("warns and skips the firewall by default in %s", (_, region) => {
+      const { stack, template } = synthesize({}, region);
+
+      template.resourceCountIs("AWS::WAFv2::WebACL", 0);
+      Annotations.fromStack(stack).hasWarning(
+        "*",
+        Match.stringLikeRegexp("No firewall was created"),
+      );
+    });
+
+    it("can be disabled", () => {
+      const { template } = synthesize(
+        { distribution: { firewall: false } },
+        "us-east-1",
+      );
+
+      template.resourceCountIs("AWS::WAFv2::WebACL", 0);
+    });
+
+    it("can be enabled explicitly when the region is unknown", () => {
+      const { template } = synthesize({ distribution: { firewall: true } });
+
+      template.resourceCountIs("AWS::WAFv2::WebACL", 1);
+    });
+
+    it("accepts an existing web ACL in any region", () => {
+      const webAclArn =
+        "arn:aws:wafv2:us-east-1:123456789012:global/webacl/shared/abc";
+
+      const { template } = synthesize(
+        { distribution: { firewall: { webAclArn } } },
+        "eu-west-1",
+      );
+
+      template.resourceCountIs("AWS::WAFv2::WebACL", 0);
+      template.hasResourceProperties("AWS::CloudFront::Distribution", {
+        DistributionConfig: Match.objectLike({ WebACLId: webAclArn }),
+      });
+    });
+
+    it("passes firewall configuration through", () => {
+      const { template } = synthesize(
+        { distribution: { firewall: { mode: "count" } } },
+        "us-east-1",
+      );
+
+      template.hasResourceProperties("AWS::WAFv2::WebACL", {
+        Rules: Match.arrayWith([
+          Match.objectLike({ Name: "RateLimit", Action: { Count: {} } }),
+        ]),
+      });
+    });
   });
 });
