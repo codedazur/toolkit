@@ -9,10 +9,7 @@ import {
   OriginProtocolPolicy,
   OriginRequestPolicy,
 } from "aws-cdk-lib/aws-cloudfront";
-import {
-  LoadBalancerV2Origin,
-  VpcOrigin,
-} from "aws-cdk-lib/aws-cloudfront-origins";
+import { VpcOrigin } from "aws-cdk-lib/aws-cloudfront-origins";
 import { Platform } from "aws-cdk-lib/aws-ecr-assets";
 import {
   AssetImageProps,
@@ -46,24 +43,11 @@ export interface DockerClusterProps {
    */
   readonly containerInsights?: boolean;
   readonly service?: ServiceProps;
-  readonly loadBalancer?: LoadBalancerProps;
   readonly distribution?: Omit<SiteDistributionProps, "origin">;
   /**
    * @deprecated Use top-level `containerInsights` instead.
    */
   readonly cluster?: ClusterConfig;
-}
-
-export interface LoadBalancerProps {
-  /**
-   * Whether the load balancer is internet-facing. By default, it is internal
-   * and can only be reached through the CloudFront distribution. Only make it
-   * public when the distribution needs a feature that VPC origins do not
-   * support, such as gRPC, since requests sent to a public load balancer
-   * directly bypass the distribution.
-   * @default false
-   */
-  readonly public?: boolean;
 }
 
 export interface LoggingConfig {
@@ -154,7 +138,7 @@ export class DockerCluster extends Construct {
     super(scope, id);
 
     /**
-     * Give the target group a new ID when the load balancer is private, so that
+     * Give the target group of the private load balancer a new ID, so that
      * upgrading from a public load balancer does not fail. A target group can
      * only belong to one load balancer.
      */
@@ -210,7 +194,7 @@ export class DockerCluster extends Construct {
       cluster: new Cluster(this, "Cluster", {
         containerInsights,
       }),
-      publicLoadBalancer: this.props.loadBalancer?.public ?? false,
+      publicLoadBalancer: false,
       cpu: this.props.service?.cpu,
       memoryLimitMiB: this.props.service?.memory,
       desiredCount: desiredTasks,
@@ -270,20 +254,10 @@ export class DockerCluster extends Construct {
       originRequestPolicy:
         originRequestPolicy ?? this.createOriginRequestPolicy(),
       ...distribution,
-      origin: this.createOrigin(),
+      origin: VpcOrigin.withApplicationLoadBalancer(this.service.loadBalancer, {
+        protocolPolicy: OriginProtocolPolicy.HTTP_ONLY,
+      }),
     });
-  }
-
-  /**
-   * A VPC origin for the internal load balancer, or a regular origin when the
-   * load balancer is public. The load balancer only has an HTTP listener.
-   */
-  protected createOrigin() {
-    const props = { protocolPolicy: OriginProtocolPolicy.HTTP_ONLY };
-
-    return this.props.loadBalancer?.public
-      ? new LoadBalancerV2Origin(this.service.loadBalancer, props)
-      : VpcOrigin.withApplicationLoadBalancer(this.service.loadBalancer, props);
   }
 
   /**
