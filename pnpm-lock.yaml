@@ -255,7 +255,7 @@ importers:
     dependencies:
       '@codedazur/fusion-ui':
         specifier: ^1.4.0
-        version: 1.4.0(@types/react@19.3.0)(framer-motion@12.43.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react-dom@19.3.1(react@19.3.1))(react-is@19.3.1)(react@19.3.1)
+        version: 1.5.0(@types/react@19.3.0)(framer-motion@12.43.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react-dom@19.3.1(react@19.3.1))(react-is@19.3.1)(react@19.3.1)
       '@codedazur/react-dictionary':
         specifier: workspace:*
         version: link:../../packages/react-dictionary
@@ -334,7 +334,7 @@ importers:
         version: link:../../packages/essentials
       '@codedazur/fusion-ui':
         specifier: ^1.4.0
-        version: 1.4.0(@types/react@19.3.0)(framer-motion@12.43.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react-dom@19.3.1(react@19.3.1))(react-is@19.3.1)(react@19.3.1)
+        version: 1.5.0(@types/react@19.3.0)(framer-motion@12.43.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react-dom@19.3.1(react@19.3.1))(react-is@19.3.1)(react@19.3.1)
       '@codedazur/react-date-picker':
         specifier: workspace:*
         version: link:../../packages/react-date-picker
@@ -1826,8 +1826,8 @@ packages:
   '@changesets/write@0.4.0':
     resolution: {integrity: sha512-CdTLvIOPiCNuH71pyDu3rA+Q0n65cmAbXnwWH84rKGiFumFzkmHNT8KHTMEchcxN+Kl8I54xGUhJ7l3E7X396Q==}
 
-  '@codedazur/fusion-ui@1.4.0':
-    resolution: {integrity: sha512-rjthKqyksUQ1Ejh6TXVqnBenXBZwvw2xvLkTQUO31X9HHL1De7LOgYQU2mQ+XGRwR967ohonj7gRPNCRNIrbRw==}
+  '@codedazur/fusion-ui@1.5.0':
+    resolution: {integrity: sha512-3zUdTBZfU0QPp/SMydfsr03Ns0EJhS/zZcVlSmta0MuzzVwtveioxuZINv+JzaOZgZjeYRdsEd9hKRRAJiOvTA==}
     peerDependencies:
       framer-motion: '>=11.12.0'
       react: '>=18.2.0'
@@ -4930,10 +4930,6 @@ packages:
     resolution: {integrity: sha512-OkTL9umf+He2DZkUq8f8J9of7yL6RJKI24dVITBmNfZBmri9zYZQrKkuXiKhyfPSu8tUhnVBB1iKXevvnlR4Ww==}
     engines: {node: '>= 12'}
 
-  commander@9.5.0:
-    resolution: {integrity: sha512-KRs7WVDKg86PWiuAqhDrAQnTXZKraVcCc6vFdL14qrZ/DcWwuRo7VoiYXalXO7S5GKpqYiVEwCbgFDfxNHKJBQ==}
-    engines: {node: ^12.20.0 || >=14}
-
   common-path-prefix@3.0.0:
     resolution: {integrity: sha512-QE33hToZseCH3jS0qN96O/bSh3kaw/h+Tq7ngyY9eWDUnTlTNUyqfqvCXioLe5Na5jFsL78ra/wuBU4iuEgd4w==}
 
@@ -6847,6 +6843,11 @@ packages:
   make-error@1.3.6:
     resolution: {integrity: sha512-s8UhlNe7vPKomQhC1qFelMokr/Sc3AgNbso3n74mVPA5LTZwkB9NlXf4XPamLxJE8h0gh73rM94xvwRT2CVInw==}
 
+  marked@18.2.0:
+    resolution: {integrity: sha512-KaeL+tAbtvI930q7HE2PN5lYXYdT8EiSmxHlN6F3rsfb57wd5mp5W5TLazpdj4inTQBJdgjYwbs40W/0VUGU+Q==}
+    engines: {node: '>= 20'}
+    hasBin: true
+
   math-intrinsics@1.1.0:
     resolution: {integrity: sha512-/IXtbwEk5HTPyEwyKX6hGkYXxM9nbj64B+ilVJnC/R6B0pH5G4V3b0pVbL7DBj4tkhBAppbQUlf6F6Xl9LHu1g==}
     engines: {node: '>= 0.4'}
@@ -8025,10 +8026,6 @@ packages:
   shebang-regex@3.0.0:
     resolution: {integrity: sha512-7++dFhtcx3353uBaq8DDR4NuxBetBzC7ZQOhmTQInHEd6bSrXdiEyzCvG07Z44UYdLShWUyXt5M/yhz8ekcb1A==}
     engines: {node: '>=8'}
-
-  showdown@2.1.0:
-    resolution: {integrity: sha512-/6NVYu4U819R2pUIk79n67SYgJHWCce0a5xTP979WbNp0FL9MN1I1QK662IDU1b6JzKTvmhgI7T7JYIxBi3kMQ==}
-    hasBin: true
 
   side-channel-list@1.0.1:
     resolution: {integrity: sha512-mjn/0bi/oUURjc5Xl7IaWi/OJJJumuoJFQJfDDyO46+hBWsfaVM65TBHq2eoZBhzl9EchxOijpkbRC8SVBQU0w==}
@@ -10265,7 +10262,7 @@ snapshots:
       human-id: 4.2.2
       prettier: 2.8.8
 
-  '@codedazur/fusion-ui@1.4.0(@types/react@19.3.0)(framer-motion@12.43.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react-dom@19.3.1(react@19.3.1))(react-is@19.3.1)(react@19.3.1)':
+  '@codedazur/fusion-ui@1.5.0(@types/react@19.3.0)(framer-motion@12.43.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react-dom@19.3.1(react@19.3.1))(react-is@19.3.1)(react@19.3.1)':
     dependencies:
       '@codedazur/essentials': link:packages/essentials
       '@codedazur/react-dictionary': link:packages/react-dictionary
@@ -10284,11 +10281,11 @@ snapshots:
       framer-motion: 12.43.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       fuse.js: 7.5.0
       html-react-parser: 5.2.17(@types/react@19.3.0)(react@19.3.1)
+      marked: 18.2.0
       react: 19.3.1
       react-dom: 19.3.1(react@19.3.1)
       react-is: 19.3.1
       react-syntax-highlighter: 16.1.2(react@19.3.1)
-      showdown: 2.1.0
     transitivePeerDependencies:
       - '@types/react'
       - babel-plugin-macros
@@ -13380,8 +13377,6 @@ snapshots:
 
   commander@8.3.0: {}
 
-  commander@9.5.0: {}
-
   common-path-prefix@3.0.0: {}
 
   commondir@1.0.1: {}
@@ -15772,6 +15767,8 @@ snapshots:
 
   make-error@1.3.6: {}
 
+  marked@18.2.0: {}
+
   math-intrinsics@1.1.0: {}
 
   md5.js@1.3.5:
@@ -17283,10 +17280,6 @@ snapshots:
       shebang-regex: 3.0.0
 
   shebang-regex@3.0.0: {}
-
-  showdown@2.1.0:
-    dependencies:
-      commander: 9.5.0
 
   side-channel-list@1.0.1:
     dependencies:
