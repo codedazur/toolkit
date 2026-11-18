@@ -112,9 +112,20 @@ export interface FirewallProps {
   readonly managedRuleGroups?: ManagedRuleGroupProps[];
 
   /**
+   * Fields of the request that are masked in the request data that WAF
+   * stores, which includes sampled requests and logs. Use this to mask other
+   * headers, cookies, query parameters or the body, if they contain personal
+   * data or secrets. To keep the defaults, include
+   * `...Firewall.defaultDataProtections`.
+   * @default Firewall.defaultDataProtections
+   * @see https://docs.aws.amazon.com/waf/latest/developerguide/data-protection-masking.html
+   */
+  readonly dataProtections?: CfnWebACL.DataProtectProperty[];
+
+  /**
    * Logging of blocked and counted requests to CloudWatch Logs. Allowed
-   * requests are not logged, to limit cost. The `authorization` and `cookie`
-   * headers are masked, but the logs do contain the IP addresses of visitors.
+   * requests are not logged, to limit cost. The logs contain the IP addresses
+   * of visitors, which WAF can not mask.
    * @default - No logging.
    */
   readonly logging?: FirewallLoggingProps;
@@ -150,9 +161,9 @@ export interface IFirewall extends IConstruct {
  * - `AWSManagedRulesKnownBadInputsRuleSet` blocks request patterns that are
  *   known to exploit specific vulnerabilities.
  *
- * The `authorization` and `cookie` headers are always masked in the request
- * data that WAF stores, which includes sampled requests and logs, because
- * they typically contain session tokens.
+ * By default, the `authorization` and `cookie` headers are masked in the
+ * request data that WAF stores, which includes sampled requests and logs,
+ * because they typically contain session tokens.
  */
 export class Firewall extends Construct implements IFirewall {
   static readonly region = "us-east-1";
@@ -186,9 +197,18 @@ export class Firewall extends Construct implements IFirewall {
   ];
 
   /**
-   * Headers that are masked in sampled requests and logs.
+   * Masks the `authorization` and `cookie` headers, which typically contain
+   * session tokens.
    */
-  static readonly maskedHeaders = ["authorization", "cookie"];
+  static readonly defaultDataProtections: CfnWebACL.DataProtectProperty[] = [
+    {
+      field: {
+        fieldType: "SINGLE_HEADER",
+        fieldKeys: ["authorization", "cookie"],
+      },
+      action: "SUBSTITUTION",
+    },
+  ];
 
   public readonly webAcl: CfnWebACL;
   public readonly logGroup?: ILogGroup;
@@ -231,17 +251,7 @@ export class Firewall extends Construct implements IFirewall {
       scope: "CLOUDFRONT",
       defaultAction: { allow: {} },
       visibilityConfig: this.visibilityConfig(name),
-      dataProtectionConfig: {
-        dataProtections: [
-          {
-            field: {
-              fieldType: "SINGLE_HEADER",
-              fieldKeys: Firewall.maskedHeaders,
-            },
-            action: "SUBSTITUTION",
-          },
-        ],
-      },
+      dataProtectionConfig: this.createDataProtectionConfig(),
       rules: this.createRules().map((rule, priority) => ({
         ...rule,
         priority,
@@ -249,6 +259,14 @@ export class Firewall extends Construct implements IFirewall {
           rule.visibilityConfig ?? this.visibilityConfig(rule.name),
       })),
     });
+  }
+
+  protected createDataProtectionConfig():
+    CfnWebACL.DataProtectionConfigProperty | undefined {
+    const dataProtections =
+      this.props.dataProtections ?? Firewall.defaultDataProtections;
+
+    return dataProtections.length > 0 ? { dataProtections } : undefined;
   }
 
   protected createRules(): FirewallRule[] {

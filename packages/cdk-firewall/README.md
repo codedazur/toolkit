@@ -126,5 +126,23 @@ Keep in mind that:
 
 - Logs are stored in `us-east-1`, the region of the firewall.
 - Logs contain the IP addresses of visitors, which are personal data. WAF can not mask IP addresses.
-- Logs contain all request headers and the full URL, including the query string. The `authorization` and `cookie` headers are always masked, both in logs and in sampled requests, but other headers and query parameters that contain personal data or secrets are not.
+- Logs contain all request headers and the full URL, including the query string. Only the `authorization` and `cookie` headers are masked by default.
 - When a rule matches part of the request body, such as a form submission, that part is included in the log.
+
+### Masking
+
+Masking applies to both logs and sampled requests. If other headers, cookies, query parameters or the body of your application contain personal data or secrets, mask those as well. Include the defaults to keep masking the `authorization` and `cookie` headers.
+
+```ts
+new Firewall(this, "Firewall", {
+  dataProtections: [
+    ...Firewall.defaultDataProtections,
+    {
+      field: { fieldType: "SINGLE_QUERY_ARGUMENT", fieldKeys: ["email"] },
+      action: "HASH",
+    },
+  ],
+});
+```
+
+`SUBSTITUTION` replaces the value with `REDACTED`, while `HASH` replaces it with a hash, so you can still tell whether two requests contain the same value. See [Data protection](https://docs.aws.amazon.com/waf/latest/developerguide/data-protection-masking.html) for all options.
