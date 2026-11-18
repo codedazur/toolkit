@@ -1,5 +1,11 @@
 # @codedazur/cdk-mailer
 
+## 1.0.2
+
+### Patch Changes
+
+- [#329](https://github.com/codedazur/toolkit/pull/329) [`5a2fb9f`](https://github.com/codedazur/toolkit/commit/5a2fb9ffa77530781e03a4300c6cf72a56d47380) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Update dependencies to their latest minor and patch versions.
+
 ## 1.0.1
 
 ### Patch Changes

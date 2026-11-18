@@ -1,5 +1,13 @@
 # eslint-config-custom
 
+## 2.0.1
+
+### Patch Changes
+
+- [#331](https://github.com/codedazur/toolkit/pull/331) [`9cf7c3c`](https://github.com/codedazur/toolkit/commit/9cf7c3c2545e25a8533f76ce97ec7497f0374e10) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Depend on `typescript-eslint` directly, which the configs import, instead of on `@typescript-eslint/eslint-plugin` and `@typescript-eslint/parser`.
+
+- [#329](https://github.com/codedazur/toolkit/pull/329) [`5a2fb9f`](https://github.com/codedazur/toolkit/commit/5a2fb9ffa77530781e03a4300c6cf72a56d47380) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Update dependencies to their latest minor and patch versions.
+
 ## 2.0.0
 
 ### Major Changes
