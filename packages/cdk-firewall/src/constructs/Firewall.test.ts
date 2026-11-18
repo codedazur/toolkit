@@ -91,6 +91,37 @@ describe("Firewall", () => {
     });
   });
 
+  it("can mask additional fields", () => {
+    synthesize({
+      dataProtections: [
+        ...Firewall.defaultDataProtections,
+        {
+          field: { fieldType: "SINGLE_QUERY_ARGUMENT", fieldKeys: ["email"] },
+          action: "HASH",
+        },
+      ],
+    }).hasResourceProperties("AWS::WAFv2::WebACL", {
+      DataProtectionConfig: {
+        DataProtections: [
+          Match.objectLike({
+            Field: Match.objectLike({ FieldType: "SINGLE_HEADER" }),
+          }),
+          {
+            Field: { FieldType: "SINGLE_QUERY_ARGUMENT", FieldKeys: ["email"] },
+            Action: "HASH",
+          },
+        ],
+      },
+    });
+  });
+
+  it("can disable masking", () => {
+    synthesize({ dataProtections: [] }).hasResourceProperties(
+      "AWS::WAFv2::WebACL",
+      { DataProtectionConfig: Match.absent() },
+    );
+  });
+
   it("logs blocked and counted requests to a WAF log group when enabled", () => {
     const template = synthesize({
       logging: { retention: RetentionDays.ONE_WEEK },
