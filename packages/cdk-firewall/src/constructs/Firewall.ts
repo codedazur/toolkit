@@ -15,7 +15,17 @@ import { Construct, IConstruct } from "constructs";
  * useful to evaluate the effect of the firewall before enforcing it, by
  * inspecting the logs and metrics for requests that would have been blocked.
  */
-export type FirewallMode = "block" | "count";
+export enum FirewallMode {
+  /**
+   * Matching rules block requests.
+   */
+  BLOCK = "BLOCK",
+
+  /**
+   * Matching rules only count requests.
+   */
+  COUNT = "COUNT",
+}
 
 export interface ManagedRuleGroupProps {
   /**
@@ -91,38 +101,44 @@ export enum MaskingAction {
    * contain the same value, for example the same session cookie.
    */
   HASH = "HASH",
+
+  /**
+   * Does not mask the field. Use this to stop masking one of the defaults.
+   */
+  NONE = "NONE",
 }
 
 /**
  * Fields of the request to mask. These are merged with the defaults, so you
  * only need to specify the fields you want to add or change. Set a field to
- * `false` to stop masking it.
+ * `MaskingAction.NONE` to stop masking it.
  */
 export interface FirewallMaskingProps {
   /**
    * Headers by name. Names are case-insensitive.
    */
-  readonly headers?: Record<string, MaskingAction | false>;
+  readonly headers?: Record<string, MaskingAction>;
 
   /**
    * Cookies by name.
    */
-  readonly cookies?: Record<string, MaskingAction | false>;
+  readonly cookies?: Record<string, MaskingAction>;
 
   /**
-   * Query parameters by name.
+   * Query parameters by name. To mask all query parameters, use
+   * `queryString` instead.
    */
-  readonly queryArguments?: Record<string, MaskingAction | false>;
+  readonly queryParameters?: Record<string, MaskingAction>;
 
   /**
-   * The entire query string.
+   * The entire query string, which includes all query parameters.
    */
-  readonly queryString?: MaskingAction | false;
+  readonly queryString?: MaskingAction;
 
   /**
    * The request body.
    */
-  readonly body?: MaskingAction | false;
+  readonly body?: MaskingAction;
 }
 
 export interface FirewallLoggingProps {
@@ -137,7 +153,7 @@ export interface FirewallLoggingProps {
 export interface FirewallProps {
   /**
    * Whether matching rules block requests or only count them.
-   * @default "block"
+   * @default FirewallMode.BLOCK
    */
   readonly mode?: FirewallMode;
 
@@ -275,7 +291,7 @@ export class Firewall extends Construct implements IFirewall {
   }
 
   protected get mode(): FirewallMode {
-    return this.props.mode ?? "block";
+    return this.props.mode ?? FirewallMode.BLOCK;
   }
 
   protected assertRegion() {
@@ -320,8 +336,8 @@ export class Firewall extends Construct implements IFirewall {
         ...masking.cookies,
       }),
       ...this.createKeyedDataProtections("SINGLE_QUERY_ARGUMENT", {
-        ...defaults.queryArguments,
-        ...masking.queryArguments,
+        ...defaults.queryParameters,
+        ...masking.queryParameters,
       }),
       ...this.createDataProtection(
         "QUERY_STRING",
@@ -338,9 +354,13 @@ export class Firewall extends Construct implements IFirewall {
    */
   protected createKeyedDataProtections(
     fieldType: string,
-    fields: Record<string, MaskingAction | false>,
+    fields: Record<string, MaskingAction>,
   ): CfnWebACL.DataProtectProperty[] {
-    return Object.values(MaskingAction).flatMap((action) => {
+    const actions = Object.values(MaskingAction).filter(
+      (action) => action !== MaskingAction.NONE,
+    );
+
+    return actions.flatMap((action) => {
       const fieldKeys = Object.keys(fields).filter(
         (key) => fields[key] === action,
       );
@@ -353,9 +373,11 @@ export class Firewall extends Construct implements IFirewall {
 
   protected createDataProtection(
     fieldType: string,
-    action: MaskingAction | false | undefined,
+    action: MaskingAction | undefined,
   ): CfnWebACL.DataProtectProperty[] {
-    return action ? [{ field: { fieldType }, action }] : [];
+    return action && action !== MaskingAction.NONE
+      ? [{ field: { fieldType }, action }]
+      : [];
   }
 
   protected createRules(): FirewallRule[] {
@@ -367,7 +389,9 @@ export class Firewall extends Construct implements IFirewall {
       ...(
         this.props.managedRuleGroups ?? Firewall.defaultManagedRuleGroups
       ).map((group) => this.createManagedRuleGroupRule(group)),
-    ].map((rule) => (this.mode === "count" ? this.toCountRule(rule) : rule));
+    ].map((rule) =>
+      this.mode === FirewallMode.COUNT ? this.toCountRule(rule) : rule,
+    );
   }
 
   protected createRateLimitRule({
