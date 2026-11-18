@@ -82,11 +82,11 @@ The default firewall contains:
 
 ## Configuration
 
-Start in `count` mode to see which requests would be blocked, by looking at the metrics and sampled requests in the WAF console, before you switch to `block`.
+Use `FirewallMode.COUNT` to see which requests would be blocked, by looking at the metrics and sampled requests in the WAF console, without blocking them.
 
 ```ts
 new Firewall(this, "Firewall", {
-  mode: "count",
+  mode: FirewallMode.COUNT,
   rateLimit: {
     limit: 1000,
     window: Duration.minutes(5),
@@ -131,7 +131,7 @@ Keep in mind that:
 
 ### Masking
 
-Masking applies to both logs and sampled requests. If other headers, cookies, query parameters or the body of your application contain personal data or secrets, mask those as well. Your masking is merged with the defaults, so the `authorization` and `cookie` headers stay masked unless you set them to `false`.
+Masking applies to both logs and sampled requests. If other headers, cookies, query parameters or the body of your application contain personal data or secrets, mask those as well. Your masking is merged with the defaults, so the `authorization` and `cookie` headers stay masked unless you set them to `MaskingAction.NONE`.
 
 ```ts
 new Firewall(this, "Firewall", {
@@ -140,9 +140,9 @@ new Firewall(this, "Firewall", {
       authorization: MaskingAction.HASH,
       "x-api-key": MaskingAction.HASH,
     },
-    queryArguments: { email: MaskingAction.SUBSTITUTION },
+    queryParameters: { email: MaskingAction.SUBSTITUTION },
   },
 });
 ```
 
-`SUBSTITUTION` replaces the value with `REDACTED`, while `HASH` replaces it with a hash, so you can still tell whether requests contain the same value, such as the same session token. You can mask `headers`, `cookies` and `queryArguments` by name, as well as the entire `queryString` and `body`.
+`SUBSTITUTION` replaces the value with `REDACTED`, while `HASH` replaces it with a hash, so you can still tell whether requests contain the same value, such as the same session token. You can mask `headers`, `cookies` and `queryParameters` by name, or the entire `queryString`, which includes all query parameters, and the `body`.

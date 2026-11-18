@@ -2,7 +2,12 @@ import { App, Stack } from "aws-cdk-lib";
 import { Match, Template } from "aws-cdk-lib/assertions";
 import { RetentionDays } from "aws-cdk-lib/aws-logs";
 import { describe, expect, it } from "vitest";
-import { Firewall, FirewallProps, MaskingAction } from "./Firewall";
+import {
+  Firewall,
+  FirewallMode,
+  FirewallProps,
+  MaskingAction,
+} from "./Firewall";
 
 function synthesize(props: FirewallProps = {}, region = "us-east-1") {
   const app = new App();
@@ -99,7 +104,7 @@ describe("Firewall", () => {
           "x-api-key": MaskingAction.HASH,
         },
         cookies: { session: MaskingAction.HASH },
-        queryArguments: { email: MaskingAction.SUBSTITUTION },
+        queryParameters: { email: MaskingAction.SUBSTITUTION },
         body: MaskingAction.SUBSTITUTION,
       },
     }).hasResourceProperties("AWS::WAFv2::WebACL", {
@@ -132,7 +137,12 @@ describe("Firewall", () => {
 
   it("can explicitly stop masking a default field", () => {
     synthesize({
-      masking: { headers: { authorization: false, cookie: false } },
+      masking: {
+        headers: {
+          authorization: MaskingAction.NONE,
+          cookie: MaskingAction.NONE,
+        },
+      },
     }).hasResourceProperties("AWS::WAFv2::WebACL", {
       DataProtectionConfig: Match.absent(),
     });
@@ -183,7 +193,7 @@ describe("Firewall", () => {
 
   it("overrides all rule actions to count in count mode", () => {
     const template = synthesize({
-      mode: "count",
+      mode: FirewallMode.COUNT,
       rules: [
         {
           name: "Custom",
