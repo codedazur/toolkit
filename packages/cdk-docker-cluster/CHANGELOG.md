@@ -1,5 +1,16 @@
 # @codedazur/cdk-docker-cluster
 
+## 2.3.0
+
+### Minor Changes
+
+- [#328](https://github.com/codedazur/toolkit/pull/328) [`8dde938`](https://github.com/codedazur/toolkit/commit/8dde9384190eb135972548e596d32542ddd884b0) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - The load balancer is now internal and connected to the CloudFront distribution as a VPC origin, so it can only be reached through the distribution. Upgrading an existing deployment replaces the load balancer, its listener and its target group.
+
+### Patch Changes
+
+- Updated dependencies [[`fa5ce16`](https://github.com/codedazur/toolkit/commit/fa5ce16143f89b49cf7df53b9894212ccbb72c12)]:
+  - @codedazur/cdk-site-distribution@2.1.0
+
 ## 2.2.0
 
 ### Minor Changes

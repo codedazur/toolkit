@@ -1,5 +1,16 @@
 # @codedazur/cdk-site-distribution
 
+## 2.1.0
+
+### Minor Changes
+
+- [#327](https://github.com/codedazur/toolkit/pull/327) [`fa5ce16`](https://github.com/codedazur/toolkit/commit/fa5ce16143f89b49cf7df53b9894212ccbb72c12) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Add a `firewall` prop that accepts a `Firewall` from `@codedazur/cdk-firewall`. The firewall can be created in a separate `us-east-1` stack when the distribution is in another region. This prop is also available on the `distribution` of a `StaticSite`, `DockerCluster` and `NextApp`.
+
+### Patch Changes
+
+- Updated dependencies [[`fa5ce16`](https://github.com/codedazur/toolkit/commit/fa5ce16143f89b49cf7df53b9894212ccbb72c12)]:
+  - @codedazur/cdk-firewall@1.0.0
+
 ## 2.0.0
 
 ### Major Changes
