@@ -13,9 +13,12 @@
   "scripts": {
     "develop": "tsup index.ts --clean --format esm --dts --watch",
     "build": "tsup index.ts --clean --format esm --dts",
-    "audit": "npm audit --omit dev --audit-level high",
+    "audit": "pnpm audit --prod --audit-level high",
     "lint": "eslint .",
     "types": "tsc --noEmit",
     "test": "vitest run"
+  },
+  "devDependencies": {
+    "@types/node": "^25.9.9"
   }
 }

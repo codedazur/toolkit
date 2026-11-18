@@ -13,7 +13,7 @@
   "scripts": {
     "develop": "tsup index.ts --clean --format esm --dts --watch --external react",
     "build": "tsup index.ts --clean --format esm --dts",
-    "audit": "npm audit --omit dev --audit-level high",
+    "audit": "pnpm audit --prod --audit-level high",
     "lint": "eslint .",
     "types": "tsc --noEmit",
     "test": "vitest run"
@@ -23,8 +23,8 @@
     "react-dom": ">=16.8.0"
   },
   "dependencies": {
-    "@codedazur/essentials": "^1.13.1",
-    "@codedazur/react-essentials": "^2.1.0"
+    "@codedazur/essentials": "workspace:^",
+    "@codedazur/react-essentials": "workspace:^"
   },
   "devDependencies": {
     "@testing-library/dom": "10.4.2",

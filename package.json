@@ -3,41 +3,35 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "packageManager": "npm@11.15.0",
+  "packageManager": "pnpm@12.21.0",
   "engines": {
-    "node": ">=16.0.0",
-    "npm": ">=8.0.0",
-    "yarn": "Please use NPM!",
-    "pnpm": "Please use NPM!"
+    "node": ">=20.0.0",
+    "pnpm": ">=12.0.0"
   },
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
   "scripts": {
     "develop": "turbo run develop --parallel",
     "develop:packages": "turbo run develop --filter @codedazur/* --parallel",
-    "audit": "turbo run audit",
-    "update": "npx npm-check-updates@latest --interactive --format group --deep --upgrade --install never && npm install && npm audit fix",
+    "audit": "pnpm audit --prod --audit-level high",
+    "update": "pnpm dlx npm-check-updates@latest --interactive --format group --deep --upgrade --install never && pnpm install",
     "lint": "turbo run lint",
     "types": "turbo run types",
     "test": "turbo run test",
     "check": "turbo run audit lint types test",
-    "check:apps": "npm run check -- --filter=@apps/*",
-    "check:packages": "npm run check -- --filter=@codedazur/*",
+    "check:apps": "pnpm run check --filter=@apps/*",
+    "check:packages": "pnpm run check --filter=@codedazur/*",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "build": "turbo run build",
     "build:apps": "turbo run build --filter=@apps/*",
     "build:packages": "turbo run build --filter=@codedazur/*",
     "deploy": "turbo run deploy --filter=@apps/cdk",
     "destroy": "turbo run destroy --filter=@apps/cdk",
-    "publish": "npm run build:packages && changeset publish"
+    "publish": "pnpm run build:packages && changeset publish"
   },
   "devDependencies": {
     "@changesets/changelog-github": "0.7.0",
     "@changesets/cli": "^2.31.1",
-    "@codedazur/eslint-config": "*",
-    "@codedazur/tsconfig": "*",
+    "@codedazur/eslint-config": "workspace:*",
+    "@codedazur/tsconfig": "workspace:*",
     "@vitest/coverage-v8": "^4.1.12",
     "eslint": "^9.39.5",
     "jsdom": "^29.1.1",
@@ -46,10 +40,5 @@
     "turbo": "^2.11.11",
     "typescript": "^5.9.3",
     "vitest": "^4.1.12"
-  },
-  "overrides": {
-    "elliptic": "^6.6.1",
-    "fast-uri": "^3.1.9",
-    "form-data": "^4.0.6"
   }
 }

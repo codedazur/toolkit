@@ -13,6 +13,9 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -20,17 +23,19 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          npm config set //registry.npmjs.org/:_authToken ${{ secrets.NPM_TOKEN }}
-          npm ci
+          npm config set //registry.npmjs.org/:_authToken "$NPM_TOKEN"
+          pnpm install --frozen-lockfile --ignore-scripts
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Build Packages
         run: |
-          npm run build:packages
+          pnpm run build:packages
 
       - name: Publish Packages
         uses: changesets/action@v1
         with:
-          publish: npx changeset publish
+          publish: pnpm exec changeset publish
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

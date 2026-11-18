@@ -1,12 +1,16 @@
 FROM node:18-alpine AS base
 
+# Install pnpm. Its native binary comes from an optional dependency, so no
+# install scripts are needed.
+RUN npm install --global --ignore-scripts pnpm@12.21.0
+
 #####################
 ##### INSTALLER #####
 #####################
 # Installs dependencies only when needed.
 # @todo Currently doesn't leverage Docker's build caching, because the entire
 # project is copied over from the host. The installer should _only_ copy the
-# relevant `package.json` files and the `package-lock.json` file. However, this
+# relevant `package.json` files and the `pnpm-lock.yaml` file. However, this
 # causes issues in a monorepo that contains local dependencies.
 
 FROM base AS installer
@@ -15,7 +19,7 @@ WORKDIR /project
 # Install dependencies.
 # @see https://docs.npmjs.com/docker-and-private-modules
 COPY . .
-RUN --mount=type=secret,id=npmrc,required,target=/root/.npmrc npm ci
+RUN --mount=type=secret,id=npmrc,required,target=/root/.npmrc pnpm install --frozen-lockfile --ignore-scripts
 
 ###################
 ##### BUILDER #####
@@ -34,7 +38,7 @@ COPY --from=installer /project/. .
 
 # Build the source code.
 WORKDIR /project/apps/storybook
-RUN npm run build
+RUN pnpm run build
 
 ##################
 ##### RUNNER #####

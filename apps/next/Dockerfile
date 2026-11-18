@@ -3,6 +3,10 @@
 
 FROM node:20-alpine AS base
 
+# Install pnpm. Its native binary comes from an optional dependency, so no
+# install scripts are needed.
+RUN npm install --global --ignore-scripts pnpm@12.21.0
+
 #####################
 ##### INSTALLER #####
 #####################
@@ -14,7 +18,7 @@ WORKDIR /project
 # Install dependencies.
 # @see https://docs.npmjs.com/docker-and-private-modules
 COPY . .
-RUN --mount=type=secret,id=npmrc,required,target=/root/.npmrc npm install
+RUN --mount=type=secret,id=npmrc,required,target=/root/.npmrc pnpm install --frozen-lockfile --ignore-scripts
 
 ###################
 ##### BUILDER #####
@@ -33,7 +37,7 @@ COPY --from=installer /project/. .
 # Build the source code.
 WORKDIR /project/apps/next
 ENV NODE_OPTIONS="--max_old_space_size=4096"
-RUN npm run build
+RUN pnpm run build
 
 ##################
 ##### RUNNER #####

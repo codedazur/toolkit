@@ -4,6 +4,20 @@ This repository is a collection of all kinds of NPM packages that support web de
 
 In addition, it contains a storybook and a website to showcase these packages.
 
+## Getting Started
+
+This repository uses [pnpm](https://pnpm.io) workspaces. The pnpm version is pinned in the `packageManager` field of the root `package.json`, and the workspace settings live in `pnpm-workspace.yaml`.
+
+```bash
+pnpm install --ignore-scripts
+pnpm run check:packages
+```
+
+- Dependency install scripts are blocked. Only packages listed with `true` under `allowBuilds` in `pnpm-workspace.yaml` may run them.
+- New dependency versions are only installed once they are at least 3 days old (`minimumReleaseAge`).
+- Internal dependencies use the `workspace:` protocol. CDK packages depend on each other with `workspace:*`, which is published as the exact version; other packages use `workspace:^`, which is published as a `^` range.
+- Some apps depend on private packages, so installing them requires an npm token with access to the `@codedazur` scope.
+
 ## What's Inside?
 
 ### Apps

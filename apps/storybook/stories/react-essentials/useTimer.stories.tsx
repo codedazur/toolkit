@@ -1,5 +1,5 @@
-import { Bar } from "@apps/storybook/components/Bar";
-import { Icon } from "@apps/storybook/components/Icon";
+import { Bar } from "../../components/Bar";
+import { Icon } from "../../components/Icon";
 import {
   Column,
   IconButton,
