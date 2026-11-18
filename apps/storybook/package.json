@@ -43,6 +43,7 @@
     "yaml": "^2.9.1"
   },
   "devDependencies": {
+    "@apps/next": "workspace:*",
     "@faker-js/faker": "^10.6.0",
     "@storybook/addon-a11y": "^10.6.7",
     "@storybook/addon-docs": "^10.6.7",
