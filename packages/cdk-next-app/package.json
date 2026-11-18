@@ -26,8 +26,7 @@
     "constructs": ">=10"
   },
   "dependencies": {
-    "@codedazur/cdk-docker-cluster": "workspace:*",
-    "@codedazur/cdk-firewall": "workspace:*"
+    "@codedazur/cdk-docker-cluster": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^25.9.9",
