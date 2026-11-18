@@ -516,6 +516,21 @@ importers:
         specifier: ^0.28.2
         version: 0.28.2
 
+  packages/cdk-firewall:
+    devDependencies:
+      '@types/node':
+        specifier: ^25.9.9
+        version: 25.9.9
+      aws-cdk-lib:
+        specifier: ^2.277.0
+        version: 2.277.0(constructs@10.8.1)
+      constructs:
+        specifier: ^10.8.1
+        version: 10.8.1
+      esbuild:
+        specifier: ^0.28.2
+        version: 0.28.2
+
   packages/cdk-mailer:
     dependencies:
       '@aws-sdk/client-lambda':
@@ -583,6 +598,9 @@ importers:
       '@codedazur/cdk-cache-invalidator':
         specifier: workspace:*
         version: link:../cdk-cache-invalidator
+      '@codedazur/cdk-firewall':
+        specifier: workspace:*
+        version: link:../cdk-firewall
       '@codedazur/essentials':
         specifier: workspace:^
         version: link:../essentials
