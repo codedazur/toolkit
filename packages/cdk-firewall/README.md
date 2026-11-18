@@ -2,7 +2,7 @@
 
 An AWS WAF web ACL for CloudFront distributions, with sensible defaults. AWS CDK only offers the low-level `CfnWebACL` resources for WAF, so this construct takes care of rule priorities, metrics, count mode, rate limit exclusions and logging.
 
-Pass it to a [SiteDistribution](https://github.com/codedazur/toolkit/tree/main/packages/cdk-site-distribution), or to any construct that is based on it, such as a [StaticSite](https://github.com/codedazur/toolkit/tree/main/packages/cdk-static-site), [DockerCluster](https://github.com/codedazur/toolkit/tree/main/packages/cdk-docker-cluster) or [NextApp](https://github.com/codedazur/toolkit/tree/main/packages/cdk-next-app). For Next.js applications, use the `NextAppFirewall` from `@codedazur/cdk-next-app`, which adds rules that are specific to Next.js.
+Pass it to a [SiteDistribution](https://github.com/codedazur/toolkit/tree/main/packages/cdk-site-distribution), or to any construct that is based on it, such as a [StaticSite](https://github.com/codedazur/toolkit/tree/main/packages/cdk-static-site), [DockerCluster](https://github.com/codedazur/toolkit/tree/main/packages/cdk-docker-cluster) or [NextApp](https://github.com/codedazur/toolkit/tree/main/packages/cdk-next-app).
 
 ## Regions
 

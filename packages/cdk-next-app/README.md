@@ -101,21 +101,16 @@ new NextApp(this, "NextApp", {
 
 ### Firewall
 
-The distribution can be protected by an AWS WAF web ACL. The `NextAppFirewall` is a [Firewall](https://github.com/codedazur/toolkit/tree/main/packages/cdk-firewall) with additional rules for Next.js:
-
-- Requests that carry the internal `x-middleware-subrequest` header are blocked. This header was used to bypass middleware, including authorization checks, in vulnerable Next.js versions ([CVE-2025-29927](https://nextjs.org/blog/cve-2025-29927)).
-- Static assets (`/_next/static/`) and optimized images (`/_next/image`) don't count towards the rate limit of 2000 requests per IP address per 5 minutes, because every page view requests many of them.
+The distribution can be protected by an AWS WAF web ACL, created with the [Firewall](https://github.com/codedazur/toolkit/tree/main/packages/cdk-firewall) construct.
 
 ```ts
 new NextApp(this, "NextApp", {
   // ...
   distribution: {
-    firewall: new NextAppFirewall(this, "Firewall"),
+    firewall: new Firewall(this, "Firewall"),
   },
 });
 ```
-
-It accepts the same options as the `Firewall`. Custom `rules` are evaluated after the Next.js rules, and a custom `rateLimit` replaces the Next.js rate limit.
 
 A firewall for CloudFront must be created in `us-east-1`. If your stack is in another region, see the [Firewall](https://github.com/codedazur/toolkit/tree/main/packages/cdk-firewall#regions) documentation for how to create it in a separate stack.
 
