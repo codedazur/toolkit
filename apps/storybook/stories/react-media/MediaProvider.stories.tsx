@@ -1,7 +1,7 @@
-import { Bar } from "@apps/storybook/components/Bar";
-import { Icon } from "@apps/storybook/components/Icon";
-import { List } from "@apps/storybook/components/List";
-import { WithCenter } from "@apps/storybook/decorators/WithCenter";
+import { Bar } from "../../components/Bar";
+import { Icon } from "../../components/Icon";
+import { List } from "../../components/List";
+import { WithCenter } from "../../decorators/WithCenter";
 import { Origin, pick, timecode } from "@codedazur/essentials";
 import {
   Center,

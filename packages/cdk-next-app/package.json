@@ -13,7 +13,7 @@
   "scripts": {
     "develop": "tsup src/index.ts --clean --format esm --dts --watch",
     "build": "tsup src/index.ts --clean --format esm --dts",
-    "audit": "npm audit --omit dev --audit-level high",
+    "audit": "pnpm audit --prod --audit-level high",
     "lint": "eslint .",
     "types": "tsc --noEmit",
     "test": "vitest run --passWithNoTests"
@@ -23,7 +23,7 @@
     "constructs": ">=10"
   },
   "dependencies": {
-    "@codedazur/cdk-docker-cluster": "2.2.0"
+    "@codedazur/cdk-docker-cluster": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^25.9.9",

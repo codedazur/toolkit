@@ -7,18 +7,13 @@ Kick off your project with this code d'azur boilerplate. This starter ships with
 You can start the storybook by running the following command inside this module's directory.
 
 ```bash
-npm run storybook
+pnpm run develop
 ```
 
-If you want, you can add this command to the root workspace, so that you can run it from inside your project's root directory.
+You can also run it from the repository root.
 
-```json
-// package.json
-{
-  "scripts": {
-    "storybook": "npm run storybook --workspace=workspaces/storybook"
-  }
-}
+```bash
+pnpm --filter @apps/storybook run develop
 ```
 
 ## Deploy 💫

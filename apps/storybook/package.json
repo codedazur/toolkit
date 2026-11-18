@@ -9,14 +9,11 @@
     "url": "https://codedazur.com"
   },
   "engines": {
-    "node": ">=16",
-    "npm": ">=7.14",
-    "yarn": "Please use NPM!"
+    "node": ">=16"
   },
   "scripts": {
     "develop": "storybook dev -c . -p 6006 --no-open",
-    "audit": "npm audit --omit dev --audit-level high",
-    "audit:fix": "npm audit fix --omit dev",
+    "audit": "pnpm audit --prod --audit-level high",
     "lint": "eslint .",
     "style": "prettier --check .",
     "types": "tsc --noEmit",
@@ -26,21 +23,24 @@
     "build": "storybook build -c . -o .storybook"
   },
   "dependencies": {
-    "@codedazur/essentials": "*",
+    "@codedazur/essentials": "workspace:*",
     "@codedazur/fusion-ui": "^1.4.0",
-    "@codedazur/react-date-picker": "*",
-    "@codedazur/react-dictionary": "*",
-    "@codedazur/react-essentials": "*",
-    "@codedazur/react-forms": "*",
-    "@codedazur/react-media": "*",
-    "@codedazur/react-notifications": "*",
-    "@codedazur/react-pagination": "*",
-    "@codedazur/react-parallax": "*",
-    "@codedazur/react-preferences": "*",
-    "@codedazur/react-select": "*",
-    "@codedazur/react-tracking": "*",
+    "@codedazur/react-date-picker": "workspace:*",
+    "@codedazur/react-dictionary": "workspace:*",
+    "@codedazur/react-essentials": "workspace:*",
+    "@codedazur/react-forms": "workspace:*",
+    "@codedazur/react-media": "workspace:*",
+    "@codedazur/react-notifications": "workspace:*",
+    "@codedazur/react-pagination": "workspace:*",
+    "@codedazur/react-parallax": "workspace:*",
+    "@codedazur/react-preferences": "workspace:*",
+    "@codedazur/react-select": "workspace:*",
+    "@codedazur/react-tracking": "workspace:*",
     "@vanilla-extract/css": "^1.21.3",
-    "@vanilla-extract/recipes": "^0.5.7"
+    "@vanilla-extract/recipes": "^0.5.7",
+    "date-fns": "^4.4.0",
+    "framer-motion": "^12.43.0",
+    "yaml": "^2.9.1"
   },
   "devDependencies": {
     "@faker-js/faker": "^10.6.0",
@@ -51,6 +51,7 @@
     "@storybook/nextjs": "^10.6.7",
     "@storybook/react-webpack5": "^10.6.7",
     "@storybook/test-runner": "^0.24.5",
+    "@types/mdx": "^2.0.14",
     "@types/mini-css-extract-plugin": "^2.5.1",
     "@types/node": "^25.9.9",
     "@types/react": "^19.3.0",
@@ -59,6 +60,7 @@
     "css-loader": "^7.1.5",
     "mini-css-extract-plugin": "^2.10.2",
     "storybook": "^10.6.7",
-    "style-loader": "^4.0.0"
+    "style-loader": "^4.0.0",
+    "webpack": "^5.112.2"
   }
 }
