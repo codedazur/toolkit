@@ -2,7 +2,7 @@ import { App, Stack } from "aws-cdk-lib";
 import { Match, Template } from "aws-cdk-lib/assertions";
 import { RetentionDays } from "aws-cdk-lib/aws-logs";
 import { describe, expect, it } from "vitest";
-import { Firewall, FirewallProps } from "./Firewall";
+import { Firewall, FirewallProps, MaskingAction } from "./Firewall";
 
 function synthesize(props: FirewallProps = {}, region = "us-east-1") {
   const app = new App();
@@ -91,35 +91,51 @@ describe("Firewall", () => {
     });
   });
 
-  it("can mask additional fields", () => {
+  it("merges custom masking with the defaults", () => {
     synthesize({
-      dataProtections: [
-        ...Firewall.defaultDataProtections,
-        {
-          field: { fieldType: "SINGLE_QUERY_ARGUMENT", fieldKeys: ["email"] },
-          action: "HASH",
+      masking: {
+        headers: {
+          Authorization: MaskingAction.HASH,
+          "x-api-key": MaskingAction.HASH,
         },
-      ],
+        cookies: { session: MaskingAction.HASH },
+        queryArguments: { email: MaskingAction.SUBSTITUTION },
+        body: MaskingAction.SUBSTITUTION,
+      },
     }).hasResourceProperties("AWS::WAFv2::WebACL", {
       DataProtectionConfig: {
         DataProtections: [
-          Match.objectLike({
-            Field: Match.objectLike({ FieldType: "SINGLE_HEADER" }),
-          }),
           {
-            Field: { FieldType: "SINGLE_QUERY_ARGUMENT", FieldKeys: ["email"] },
+            Field: { FieldType: "SINGLE_HEADER", FieldKeys: ["cookie"] },
+            Action: "SUBSTITUTION",
+          },
+          {
+            Field: {
+              FieldType: "SINGLE_HEADER",
+              FieldKeys: ["authorization", "x-api-key"],
+            },
             Action: "HASH",
           },
+          {
+            Field: { FieldType: "SINGLE_COOKIE", FieldKeys: ["session"] },
+            Action: "HASH",
+          },
+          {
+            Field: { FieldType: "SINGLE_QUERY_ARGUMENT", FieldKeys: ["email"] },
+            Action: "SUBSTITUTION",
+          },
+          { Field: { FieldType: "BODY" }, Action: "SUBSTITUTION" },
         ],
       },
     });
   });
 
-  it("can disable masking", () => {
-    synthesize({ dataProtections: [] }).hasResourceProperties(
-      "AWS::WAFv2::WebACL",
-      { DataProtectionConfig: Match.absent() },
-    );
+  it("can explicitly stop masking a default field", () => {
+    synthesize({
+      masking: { headers: { authorization: false, cookie: false } },
+    }).hasResourceProperties("AWS::WAFv2::WebACL", {
+      DataProtectionConfig: Match.absent(),
+    });
   });
 
   it("logs blocked and counted requests to a WAF log group when enabled", () => {

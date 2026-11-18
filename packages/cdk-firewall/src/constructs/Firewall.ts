@@ -77,6 +77,54 @@ export type FirewallRule = Omit<
   readonly visibilityConfig?: CfnWebACL.VisibilityConfigProperty;
 };
 
+/**
+ * How a masked field is stored in sampled requests and logs.
+ */
+export enum MaskingAction {
+  /**
+   * Replaces the value with `REDACTED`.
+   */
+  SUBSTITUTION = "SUBSTITUTION",
+
+  /**
+   * Replaces the value with a hash, so you can still tell whether requests
+   * contain the same value, for example the same session cookie.
+   */
+  HASH = "HASH",
+}
+
+/**
+ * Fields of the request to mask. These are merged with the defaults, so you
+ * only need to specify the fields you want to add or change. Set a field to
+ * `false` to stop masking it.
+ */
+export interface FirewallMaskingProps {
+  /**
+   * Headers by name. Names are case-insensitive.
+   */
+  readonly headers?: Record<string, MaskingAction | false>;
+
+  /**
+   * Cookies by name.
+   */
+  readonly cookies?: Record<string, MaskingAction | false>;
+
+  /**
+   * Query parameters by name.
+   */
+  readonly queryArguments?: Record<string, MaskingAction | false>;
+
+  /**
+   * The entire query string.
+   */
+  readonly queryString?: MaskingAction | false;
+
+  /**
+   * The request body.
+   */
+  readonly body?: MaskingAction | false;
+}
+
 export interface FirewallLoggingProps {
   /**
    * How long the firewall logs are retained. Logs contain the IP addresses of
@@ -114,13 +162,12 @@ export interface FirewallProps {
   /**
    * Fields of the request that are masked in the request data that WAF
    * stores, which includes sampled requests and logs. Use this to mask other
-   * headers, cookies, query parameters or the body, if they contain personal
-   * data or secrets. To keep the defaults, include
-   * `...Firewall.defaultDataProtections`.
-   * @default Firewall.defaultDataProtections
+   * fields that contain personal data or secrets. These are merged with
+   * `Firewall.defaultMasking`, which masks the `authorization` and `cookie`
+   * headers.
    * @see https://docs.aws.amazon.com/waf/latest/developerguide/data-protection-masking.html
    */
-  readonly dataProtections?: CfnWebACL.DataProtectProperty[];
+  readonly masking?: FirewallMaskingProps;
 
   /**
    * Logging of blocked and counted requests to CloudWatch Logs. Allowed
@@ -200,15 +247,12 @@ export class Firewall extends Construct implements IFirewall {
    * Masks the `authorization` and `cookie` headers, which typically contain
    * session tokens.
    */
-  static readonly defaultDataProtections: CfnWebACL.DataProtectProperty[] = [
-    {
-      field: {
-        fieldType: "SINGLE_HEADER",
-        fieldKeys: ["authorization", "cookie"],
-      },
-      action: "SUBSTITUTION",
+  static readonly defaultMasking: FirewallMaskingProps = {
+    headers: {
+      authorization: MaskingAction.SUBSTITUTION,
+      cookie: MaskingAction.SUBSTITUTION,
     },
-  ];
+  };
 
   public readonly webAcl: CfnWebACL;
   public readonly logGroup?: ILogGroup;
@@ -263,10 +307,55 @@ export class Firewall extends Construct implements IFirewall {
 
   protected createDataProtectionConfig():
     CfnWebACL.DataProtectionConfigProperty | undefined {
-    const dataProtections =
-      this.props.dataProtections ?? Firewall.defaultDataProtections;
+    const defaults = Firewall.defaultMasking;
+    const masking = this.props.masking ?? {};
+
+    const dataProtections = [
+      ...this.createKeyedDataProtections("SINGLE_HEADER", {
+        ...lowerCaseKeys(defaults.headers),
+        ...lowerCaseKeys(masking.headers),
+      }),
+      ...this.createKeyedDataProtections("SINGLE_COOKIE", {
+        ...defaults.cookies,
+        ...masking.cookies,
+      }),
+      ...this.createKeyedDataProtections("SINGLE_QUERY_ARGUMENT", {
+        ...defaults.queryArguments,
+        ...masking.queryArguments,
+      }),
+      ...this.createDataProtection(
+        "QUERY_STRING",
+        masking.queryString ?? defaults.queryString,
+      ),
+      ...this.createDataProtection("BODY", masking.body ?? defaults.body),
+    ];
 
     return dataProtections.length > 0 ? { dataProtections } : undefined;
+  }
+
+  /**
+   * Creates one data protection per action, for the fields that use it.
+   */
+  protected createKeyedDataProtections(
+    fieldType: string,
+    fields: Record<string, MaskingAction | false>,
+  ): CfnWebACL.DataProtectProperty[] {
+    return Object.values(MaskingAction).flatMap((action) => {
+      const fieldKeys = Object.keys(fields).filter(
+        (key) => fields[key] === action,
+      );
+
+      return fieldKeys.length > 0
+        ? [{ field: { fieldType, fieldKeys }, action }]
+        : [];
+    });
+  }
+
+  protected createDataProtection(
+    fieldType: string,
+    action: MaskingAction | false | undefined,
+  ): CfnWebACL.DataProtectProperty[] {
+    return action ? [{ field: { fieldType }, action }] : [];
   }
 
   protected createRules(): FirewallRule[] {
@@ -428,6 +517,12 @@ export class Firewall extends Construct implements IFirewall {
 
     return logGroup;
   }
+}
+
+function lowerCaseKeys<T>(record: Record<string, T> = {}): Record<string, T> {
+  return Object.fromEntries(
+    Object.entries(record).map(([key, value]) => [key.toLowerCase(), value]),
+  );
 }
 
 /**

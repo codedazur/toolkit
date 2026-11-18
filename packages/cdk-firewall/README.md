@@ -131,18 +131,18 @@ Keep in mind that:
 
 ### Masking
 
-Masking applies to both logs and sampled requests. If other headers, cookies, query parameters or the body of your application contain personal data or secrets, mask those as well. Include the defaults to keep masking the `authorization` and `cookie` headers.
+Masking applies to both logs and sampled requests. If other headers, cookies, query parameters or the body of your application contain personal data or secrets, mask those as well. Your masking is merged with the defaults, so the `authorization` and `cookie` headers stay masked unless you set them to `false`.
 
 ```ts
 new Firewall(this, "Firewall", {
-  dataProtections: [
-    ...Firewall.defaultDataProtections,
-    {
-      field: { fieldType: "SINGLE_QUERY_ARGUMENT", fieldKeys: ["email"] },
-      action: "HASH",
+  masking: {
+    headers: {
+      authorization: MaskingAction.HASH,
+      "x-api-key": MaskingAction.HASH,
     },
-  ],
+    queryArguments: { email: MaskingAction.SUBSTITUTION },
+  },
 });
 ```
 
-`SUBSTITUTION` replaces the value with `REDACTED`, while `HASH` replaces it with a hash, so you can still tell whether two requests contain the same value. See [Data protection](https://docs.aws.amazon.com/waf/latest/developerguide/data-protection-masking.html) for all options.
+`SUBSTITUTION` replaces the value with `REDACTED`, while `HASH` replaces it with a hash, so you can still tell whether requests contain the same value, such as the same session token. You can mask `headers`, `cookies` and `queryArguments` by name, as well as the entire `queryString` and `body`.
