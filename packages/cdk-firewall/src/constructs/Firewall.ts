@@ -7,6 +7,7 @@ import {
   Token,
 } from "aws-cdk-lib";
 import { ILogGroup, LogGroup, RetentionDays } from "aws-cdk-lib/aws-logs";
+import { IBucket } from "aws-cdk-lib/aws-s3";
 import { CfnLoggingConfiguration, CfnWebACL } from "aws-cdk-lib/aws-wafv2";
 import { Construct, IConstruct } from "constructs";
 
@@ -141,14 +142,31 @@ export interface FirewallMaskingProps {
   readonly body?: MaskingAction;
 }
 
-export interface FirewallLoggingProps {
+export interface FirewallBucketLoggingProps {
   /**
-   * How long the firewall logs are retained. Logs contain the IP addresses of
-   * visitors, which are personal data, so choose the shortest retention that
-   * suits your needs.
+   * The S3 bucket to deliver the logs to, which can be in any region. Its name
+   * must start with `aws-waf-logs-` and its policy must allow log delivery,
+   * which a `FirewallLogBucket` takes care of.
+   */
+  readonly bucket: IBucket;
+}
+
+export interface FirewallLogGroupLoggingProps {
+  /**
+   * How long the logs are retained in a CloudWatch log group, which is
+   * created in `us-east-1`, the region of the firewall. Logs contain the IP
+   * addresses of visitors, which are personal data, so choose the shortest
+   * retention that suits your needs.
    */
   readonly retention: RetentionDays;
 }
+
+/**
+ * Where the firewall logs are delivered: an S3 bucket in any region, or a
+ * CloudWatch log group in `us-east-1`.
+ */
+export type FirewallLoggingProps =
+  FirewallBucketLoggingProps | FirewallLogGroupLoggingProps;
 
 export interface FirewallProps {
   /**
@@ -164,10 +182,12 @@ export interface FirewallProps {
   readonly rules?: FirewallRule[];
 
   /**
-   * Rate limiting per IP address. Set to `false` to disable.
-   * @default { limit: 3000, window: Duration.minutes(5) }
+   * Rate limiting per IP address. Visitors behind a shared IP address, such
+   * as an office or campus network, count towards the same limit, so choose a
+   * limit that accommodates them.
+   * @default - No rate limit.
    */
-  readonly rateLimit?: RateLimitProps | false;
+  readonly rateLimit?: RateLimitProps;
 
   /**
    * The managed rule groups to apply, in order of evaluation.
@@ -186,9 +206,9 @@ export interface FirewallProps {
   readonly masking?: FirewallMaskingProps;
 
   /**
-   * Logging of blocked and counted requests to CloudWatch Logs. Allowed
-   * requests are not logged, to limit cost. The logs contain the IP addresses
-   * of visitors, which WAF can not mask.
+   * Logging of blocked and counted requests, to an S3 bucket or a CloudWatch
+   * log group. Allowed requests are not logged, to limit cost. The logs
+   * contain the IP addresses of visitors, which WAF can not mask.
    * @default - No logging.
    */
   readonly logging?: FirewallLoggingProps;
@@ -213,8 +233,7 @@ export interface IFirewall extends IConstruct {
  * stack and pass it to the stack of your application. Both stacks need
  * `crossRegionReferences: true`.
  *
- * By default, it applies a rate limit per IP address and the following AWS
- * managed rule groups:
+ * By default, it applies the following AWS managed rule groups:
  * - `AWSManagedRulesAmazonIpReputationList` blocks IP addresses that are known
  *   to be associated with bots and other threats.
  * - `AWSManagedRulesCommonRuleSet` blocks common exploits such as cross-site
@@ -223,6 +242,10 @@ export interface IFirewall extends IConstruct {
  *   set to count, because it breaks most uploads and larger form submissions.
  * - `AWSManagedRulesKnownBadInputsRuleSet` blocks request patterns that are
  *   known to exploit specific vulnerabilities.
+ * - `AWSManagedRulesLinuxRuleSet` blocks attempts to access Linux system
+ *   files, such as `/etc/passwd`.
+ * - `AWSManagedRulesUnixRuleSet` blocks command injection on POSIX operating
+ *   systems.
  *
  * By default, the `authorization` and `cookie` headers are masked in the
  * request data that WAF stores, which includes sampled requests and logs,
@@ -245,11 +268,6 @@ export class Firewall extends Construct implements IFirewall {
     return new ImportedFirewall(scope, id, { webAclArn });
   }
 
-  static readonly defaultRateLimit: RateLimitProps = {
-    limit: 3000,
-    window: Duration.minutes(5),
-  };
-
   static readonly defaultManagedRuleGroups: ManagedRuleGroupProps[] = [
     { name: "AWSManagedRulesAmazonIpReputationList" },
     {
@@ -257,6 +275,8 @@ export class Firewall extends Construct implements IFirewall {
       countRules: ["SizeRestrictions_BODY"],
     },
     { name: "AWSManagedRulesKnownBadInputsRuleSet" },
+    { name: "AWSManagedRulesLinuxRuleSet" },
+    { name: "AWSManagedRulesUnixRuleSet" },
   ];
 
   /**
@@ -381,7 +401,7 @@ export class Firewall extends Construct implements IFirewall {
   }
 
   protected createRules(): FirewallRule[] {
-    const rateLimit = this.props.rateLimit ?? Firewall.defaultRateLimit;
+    const rateLimit = this.props.rateLimit;
 
     return [
       ...(this.props.rules ?? []),
@@ -493,7 +513,10 @@ export class Firewall extends Construct implements IFirewall {
       return;
     }
 
-    const { retention } = logging;
+    if ("bucket" in logging) {
+      this.createLoggingConfiguration(logging.bucket.bucketArn, logging.bucket);
+      return;
+    }
 
     const logGroupName = `aws-waf-logs-${Names.uniqueResourceName(this, {
       maxLength: 256,
@@ -501,27 +524,37 @@ export class Firewall extends Construct implements IFirewall {
 
     const logGroup = new LogGroup(this, "LogGroup", {
       logGroupName,
-      retention,
+      retention: logging.retention,
       removalPolicy: RemovalPolicy.DESTROY,
     });
 
+    /**
+     * WAF requires the log group ARN without the `:*` suffix that the
+     * `LogGroup.logGroupArn` attribute includes.
+     */
+    this.createLoggingConfiguration(
+      Stack.of(this).formatArn({
+        service: "logs",
+        resource: "log-group",
+        resourceName: logGroupName,
+        arnFormat: ArnFormat.COLON_RESOURCE_NAME,
+      }),
+      logGroup,
+    );
+
+    return logGroup;
+  }
+
+  protected createLoggingConfiguration(
+    destinationArn: string,
+    destination: IConstruct,
+  ) {
     const configuration = new CfnLoggingConfiguration(
       this,
       "LoggingConfiguration",
       {
         resourceArn: this.webAcl.attrArn,
-        /**
-         * WAF requires the log group ARN without the `:*` suffix that the
-         * `LogGroup.logGroupArn` attribute includes.
-         */
-        logDestinationConfigs: [
-          Stack.of(this).formatArn({
-            service: "logs",
-            resource: "log-group",
-            resourceName: logGroupName,
-            arnFormat: ArnFormat.COLON_RESOURCE_NAME,
-          }),
-        ],
+        logDestinationConfigs: [destinationArn],
         loggingFilter: {
           DefaultBehavior: "DROP",
           Filters: [
@@ -537,9 +570,11 @@ export class Firewall extends Construct implements IFirewall {
       },
     );
 
-    configuration.node.addDependency(logGroup);
-
-    return logGroup;
+    /**
+     * Ensures that the destination, including the policy of a bucket, exists
+     * before WAF starts delivering logs to it.
+     */
+    configuration.node.addDependency(destination);
   }
 }
 

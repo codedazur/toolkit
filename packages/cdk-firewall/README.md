@@ -75,8 +75,8 @@ new DockerCluster(this, "DockerCluster", {
 
 The default firewall contains:
 
-- A rate limit of 3000 requests per IP address per 5 minutes. CloudFront applies the firewall before its cache, so cached responses count towards this limit too.
-- The AWS managed `AmazonIpReputationList`, `CommonRuleSet` and `KnownBadInputsRuleSet` rule groups. The `SizeRestrictions_BODY` rule of the common rule set, which blocks request bodies over 8 KB, is set to count, because it breaks most uploads.
+- The AWS managed `AmazonIpReputationList`, `CommonRuleSet`, `KnownBadInputsRuleSet`, `LinuxRuleSet` and `UnixRuleSet` rule groups. The `SizeRestrictions_BODY` rule of the common rule set, which blocks request bodies over 8 KB, is set to count, because it breaks most uploads.
+- No rate limit. See [Rate Limiting](#rate-limiting).
 - Masking of the `authorization` and `cookie` headers in the request data that WAF stores, because they typically contain session tokens.
 - No logging. See [Logging and Personal Data](#logging-and-personal-data).
 
@@ -87,11 +87,6 @@ Use `FirewallMode.COUNT` to see which requests would be blocked, by looking at t
 ```ts
 new Firewall(this, "Firewall", {
   mode: FirewallMode.COUNT,
-  rateLimit: {
-    limit: 1000,
-    window: Duration.minutes(5),
-    excludePaths: ["/assets/"],
-  },
   managedRuleGroups: [
     ...Firewall.defaultManagedRuleGroups,
     { name: "AWSManagedRulesAnonymousIpList" },
@@ -108,13 +103,56 @@ new Firewall(this, "Firewall", {
 
 Custom rules are evaluated first, then the rate limit, then the managed rule groups. Priorities and visibility configuration are assigned automatically.
 
-A firewall costs roughly $5 per month for the web ACL, $1 per month per rule or managed rule group, and $0.60 per million requests, plus the cost of the logs if logging is enabled.
+A firewall costs roughly $5 per month for the web ACL, $1 per month per rule or managed rule group, and $0.60 per million requests, plus the cost of the logs if logging is enabled. The default firewall costs roughly $10 per month plus requests.
+
+A firewall can be shared by multiple distributions, for example several static sites that need the same protection.
+
+## Rate Limiting
+
+Rate limiting per IP address is opt-in, because visitors behind a shared IP address, such as an office building or a campus, count towards the same limit, which causes false positives. CloudFront applies the firewall before its cache, so cached responses count towards the limit too. Exclude paths that every page view requests in large numbers, such as static assets.
+
+```ts
+new Firewall(this, "Firewall", {
+  rateLimit: {
+    limit: 3000,
+    window: Duration.minutes(5),
+    excludePaths: ["/_next/static/"],
+  },
+});
+```
 
 ## Logging and Personal Data
 
-WAF processes the IP address of every visitor to apply the rate limit and IP reputation rules, but by default, the only request data it stores are **sampled requests**: a sample of recent requests per rule, including their IP addresses and headers, which AWS keeps for 3 hours and shows in the WAF console. CloudWatch metrics per rule contain no personal data.
+WAF processes the IP address of every visitor to apply its rules, but by default, the only request data it stores are **sampled requests**: a sample of recent requests per rule, including their IP addresses and headers, which AWS keeps for 3 hours and shows in the WAF console. CloudWatch metrics per rule contain no personal data.
 
-Logging of blocked and counted requests to CloudWatch Logs is opt-in. Logs are useful to analyze attacks or false positives after the fact, but they contain personal data, so you must choose how long they are retained.
+Logging of blocked and counted requests is opt-in. Logs are useful to analyze attacks or false positives after the fact, but they contain personal data, so you must choose how long they are kept, and where.
+
+### S3
+
+A `FirewallLogBucket` can be in any region, for example to keep logs in the EU. Logs are delivered every 5 minutes as compressed files, which you can query with Athena. Firewalls in multiple stacks can share one bucket.
+
+```ts
+const logs = new Stack(app, "Logs", {
+  env: { account, region: "eu-central-1" },
+  crossRegionReferences: true,
+});
+
+const bucket = new FirewallLogBucket(logs, "FirewallLogs", {
+  expiration: Duration.days(7),
+});
+
+const firewall = new Firewall(edge, "Firewall", {
+  logging: { bucket },
+});
+```
+
+The bucket can not be in the stack of your application if that stack uses the firewall, because the firewall stack would then depend on the application stack and vice versa. Deploying the stack of your application deploys the `Logs` and `Edge` stacks first.
+
+The bucket is retained when its stack is deleted, but its logs still expire.
+
+### CloudWatch Logs
+
+A CloudWatch log group must be in the region of the firewall, which is `us-east-1`. It is the simplest option if that is acceptable, and lets you query the logs with CloudWatch Logs Insights.
 
 ```ts
 new Firewall(this, "Firewall", {
@@ -122,9 +160,10 @@ new Firewall(this, "Firewall", {
 });
 ```
 
+### Personal Data
+
 Keep in mind that:
 
-- Logs are stored in `us-east-1`, the region of the firewall.
 - Logs contain the IP addresses of visitors, which are personal data. WAF can not mask IP addresses.
 - Logs contain all request headers and the full URL, including the query string. Only the `authorization` and `cookie` headers are masked by default.
 - When a rule matches part of the request body, such as a form submission, that part is included in the log.
