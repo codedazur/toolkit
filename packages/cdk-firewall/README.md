@@ -142,7 +142,7 @@ const bucket = new FirewallLogBucket(logs, "FirewallLogs", {
 });
 
 const firewall = new Firewall(edge, "Firewall", {
-  logging: { bucket },
+  logging: FirewallLogging.toBucket(bucket),
 });
 ```
 
@@ -156,7 +156,7 @@ A CloudWatch log group must be in the region of the firewall, which is `us-east-
 
 ```ts
 new Firewall(this, "Firewall", {
-  logging: { retention: RetentionDays.ONE_WEEK },
+  logging: FirewallLogging.toLogGroup({ retention: RetentionDays.ONE_WEEK }),
 });
 ```
 

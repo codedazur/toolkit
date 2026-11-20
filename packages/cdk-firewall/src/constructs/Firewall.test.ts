@@ -9,6 +9,7 @@ import {
   MaskingAction,
 } from "./Firewall";
 import { FirewallLogBucket } from "./FirewallLogBucket";
+import { FirewallLogging } from "./FirewallLogging";
 
 function synthesize(props: FirewallProps = {}, region = "us-east-1") {
   const app = new App();
@@ -156,7 +157,9 @@ describe("Firewall", () => {
       expiration: Duration.days(7),
     });
 
-    new Firewall(edge, "Firewall", { logging: { bucket } });
+    new Firewall(edge, "Firewall", {
+      logging: FirewallLogging.toBucket(bucket),
+    });
 
     const logsTemplate = Template.fromStack(logs);
 
@@ -200,7 +203,9 @@ describe("Firewall", () => {
 
   it("logs blocked and counted requests to a WAF log group when enabled", () => {
     const template = synthesize({
-      logging: { retention: RetentionDays.ONE_WEEK },
+      logging: FirewallLogging.toLogGroup({
+        retention: RetentionDays.ONE_WEEK,
+      }),
     });
 
     template.hasResourceProperties("AWS::Logs::LogGroup", {
