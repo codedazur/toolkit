@@ -1,15 +1,7 @@
-import {
-  ArnFormat,
-  Duration,
-  Names,
-  RemovalPolicy,
-  Stack,
-  Token,
-} from "aws-cdk-lib";
-import { ILogGroup, LogGroup, RetentionDays } from "aws-cdk-lib/aws-logs";
-import { IBucket } from "aws-cdk-lib/aws-s3";
+import { Duration, Names, Stack, Token } from "aws-cdk-lib";
 import { CfnLoggingConfiguration, CfnWebACL } from "aws-cdk-lib/aws-wafv2";
 import { Construct, IConstruct } from "constructs";
+import { FirewallLogging } from "./FirewallLogging";
 
 /**
  * Whether matching rules block requests or only count them. Counting is
@@ -142,32 +134,6 @@ export interface FirewallMaskingProps {
   readonly body?: MaskingAction;
 }
 
-export interface FirewallBucketLoggingProps {
-  /**
-   * The S3 bucket to deliver the logs to, which can be in any region. Its name
-   * must start with `aws-waf-logs-` and its policy must allow log delivery,
-   * which a `FirewallLogBucket` takes care of.
-   */
-  readonly bucket: IBucket;
-}
-
-export interface FirewallLogGroupLoggingProps {
-  /**
-   * How long the logs are retained in a CloudWatch log group, which is
-   * created in `us-east-1`, the region of the firewall. Logs contain the IP
-   * addresses of visitors, which are personal data, so choose the shortest
-   * retention that suits your needs.
-   */
-  readonly retention: RetentionDays;
-}
-
-/**
- * Where the firewall logs are delivered: an S3 bucket in any region, or a
- * CloudWatch log group in `us-east-1`.
- */
-export type FirewallLoggingProps =
-  FirewallBucketLoggingProps | FirewallLogGroupLoggingProps;
-
 export interface FirewallProps {
   /**
    * Whether matching rules block requests or only count them.
@@ -206,12 +172,13 @@ export interface FirewallProps {
   readonly masking?: FirewallMaskingProps;
 
   /**
-   * Logging of blocked and counted requests, to an S3 bucket or a CloudWatch
-   * log group. Allowed requests are not logged, to limit cost. The logs
-   * contain the IP addresses of visitors, which WAF can not mask.
+   * Logging of blocked and counted requests, for example with
+   * `FirewallLogging.toBucket()` or `FirewallLogging.toLogGroup()`. Allowed
+   * requests are not logged, to limit cost. The logs contain the IP addresses
+   * of visitors, which WAF can not mask.
    * @default - No logging.
    */
-  readonly logging?: FirewallLoggingProps;
+  readonly logging?: FirewallLogging;
 }
 
 /**
@@ -291,7 +258,7 @@ export class Firewall extends Construct implements IFirewall {
   };
 
   public readonly webAcl: CfnWebACL;
-  public readonly logGroup?: ILogGroup;
+  public readonly loggingConfiguration?: CfnLoggingConfiguration;
 
   constructor(
     scope: Construct,
@@ -303,7 +270,7 @@ export class Firewall extends Construct implements IFirewall {
     this.assertRegion();
 
     this.webAcl = this.createWebAcl();
-    this.logGroup = this.createLogging();
+    this.loggingConfiguration = this.createLogging();
   }
 
   public get webAclArn(): string {
@@ -507,42 +474,13 @@ export class Firewall extends Construct implements IFirewall {
   }
 
   protected createLogging() {
-    const logging = this.props.logging;
-
-    if (!logging) {
+    if (!this.props.logging) {
       return;
     }
 
-    if (isBucketLogging(logging)) {
-      this.createLoggingConfiguration(logging.bucket.bucketArn, logging.bucket);
-      return;
-    }
+    const { destinationArn, destination } = this.props.logging.bind(this);
 
-    const logGroupName = `aws-waf-logs-${Names.uniqueResourceName(this, {
-      maxLength: 256,
-    })}`;
-
-    const logGroup = new LogGroup(this, "LogGroup", {
-      logGroupName,
-      retention: logging.retention,
-      removalPolicy: RemovalPolicy.DESTROY,
-    });
-
-    /**
-     * WAF requires the log group ARN without the `:*` suffix that the
-     * `LogGroup.logGroupArn` attribute includes.
-     */
-    this.createLoggingConfiguration(
-      Stack.of(this).formatArn({
-        service: "logs",
-        resource: "log-group",
-        resourceName: logGroupName,
-        arnFormat: ArnFormat.COLON_RESOURCE_NAME,
-      }),
-      logGroup,
-    );
-
-    return logGroup;
+    return this.createLoggingConfiguration(destinationArn, destination);
   }
 
   protected createLoggingConfiguration(
@@ -575,13 +513,9 @@ export class Firewall extends Construct implements IFirewall {
      * before WAF starts delivering logs to it.
      */
     configuration.node.addDependency(destination);
-  }
-}
 
-function isBucketLogging(
-  logging: FirewallLoggingProps,
-): logging is FirewallBucketLoggingProps {
-  return "bucket" in logging;
+    return configuration;
+  }
 }
 
 function lowerCaseKeys<T>(record: Record<string, T> = {}): Record<string, T> {
