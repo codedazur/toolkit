@@ -1,5 +1,19 @@
 # @codedazur/cdk-firewall
 
+## 2.0.0
+
+### Major Changes
+
+- [#332](https://github.com/codedazur/toolkit/pull/332) [`328ea8d`](https://github.com/codedazur/toolkit/commit/328ea8deef3937080e164132ab215ab035e9b743) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Add the AWS `AWSManagedRulesLinuxRuleSet` and `AWSManagedRulesUnixRuleSet` managed rule groups to the defaults. They block attempts to access Linux system files and command injection.
+
+- [#332](https://github.com/codedazur/toolkit/pull/332) [`a145996`](https://github.com/codedazur/toolkit/commit/a145996e35dd574dd1b5263dc8e476a68d943c37) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Configure logging with `FirewallLogging`. Replace `logging: { retention }` with `logging: FirewallLogging.toLogGroup({ retention })`. The `logGroup` property of `Firewall` is replaced by `loggingConfiguration`.
+
+- [#332](https://github.com/codedazur/toolkit/pull/332) [`328ea8d`](https://github.com/codedazur/toolkit/commit/328ea8deef3937080e164132ab215ab035e9b743) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Rate limiting is now opt-in, because offices and campuses that share an IP address cause false positives. Pass `rateLimit: { limit: 3000 }` to keep the previous behavior. Remove `rateLimit: false`, which is no longer needed and no longer accepted.
+
+### Minor Changes
+
+- [#332](https://github.com/codedazur/toolkit/pull/332) [`328ea8d`](https://github.com/codedazur/toolkit/commit/328ea8deef3937080e164132ab215ab035e9b743) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Add `FirewallLogBucket`, an S3 bucket for firewall logs with an explicit expiration, which can be in any region, for example to keep logs in the EU. Pass it to a firewall with `logging: FirewallLogging.toBucket(bucket)`.
+
 ## 1.0.0
 
 ### Major Changes
