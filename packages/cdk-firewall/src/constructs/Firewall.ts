@@ -513,7 +513,7 @@ export class Firewall extends Construct implements IFirewall {
       return;
     }
 
-    if ("bucket" in logging) {
+    if (isBucketLogging(logging)) {
       this.createLoggingConfiguration(logging.bucket.bucketArn, logging.bucket);
       return;
     }
@@ -576,6 +576,12 @@ export class Firewall extends Construct implements IFirewall {
      */
     configuration.node.addDependency(destination);
   }
+}
+
+function isBucketLogging(
+  logging: FirewallLoggingProps,
+): logging is FirewallBucketLoggingProps {
+  return "bucket" in logging;
 }
 
 function lowerCaseKeys<T>(record: Record<string, T> = {}): Record<string, T> {
