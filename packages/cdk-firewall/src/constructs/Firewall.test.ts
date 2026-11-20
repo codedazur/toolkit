@@ -1,4 +1,4 @@
-import { App, Stack } from "aws-cdk-lib";
+import { App, Duration, Stack } from "aws-cdk-lib";
 import { Match, Template } from "aws-cdk-lib/assertions";
 import { RetentionDays } from "aws-cdk-lib/aws-logs";
 import { describe, expect, it } from "vitest";
@@ -8,6 +8,7 @@ import {
   FirewallProps,
   MaskingAction,
 } from "./Firewall";
+import { FirewallLogBucket } from "./FirewallLogBucket";
 
 function synthesize(props: FirewallProps = {}, region = "us-east-1") {
   const app = new App();
@@ -38,26 +39,15 @@ describe("Firewall", () => {
     });
 
     expect(ruleNames(template)).toEqual([
-      "RateLimit",
       "AWS-AWSManagedRulesAmazonIpReputationList",
       "AWS-AWSManagedRulesCommonRuleSet",
       "AWS-AWSManagedRulesKnownBadInputsRuleSet",
+      "AWS-AWSManagedRulesLinuxRuleSet",
+      "AWS-AWSManagedRulesUnixRuleSet",
     ]);
 
     template.hasResourceProperties("AWS::WAFv2::WebACL", {
       Rules: Match.arrayWith([
-        Match.objectLike({
-          Name: "RateLimit",
-          Priority: 0,
-          Action: { Block: {} },
-          Statement: {
-            RateBasedStatement: {
-              Limit: 3000,
-              EvaluationWindowSec: 300,
-              AggregateKeyType: "IP",
-            },
-          },
-        }),
         Match.objectLike({
           Name: "AWS-AWSManagedRulesCommonRuleSet",
           OverrideAction: { None: {} },
@@ -148,6 +138,66 @@ describe("Firewall", () => {
     });
   });
 
+  it("logs blocked and counted requests to a bucket in another region", () => {
+    const app = new App();
+    const account = "123456789012";
+
+    const logs = new Stack(app, "Logs", {
+      env: { account, region: "eu-central-1" },
+      crossRegionReferences: true,
+    });
+
+    const edge = new Stack(app, "Edge", {
+      env: { account, region: "us-east-1" },
+      crossRegionReferences: true,
+    });
+
+    const bucket = new FirewallLogBucket(logs, "FirewallLogs", {
+      expiration: Duration.days(7),
+    });
+
+    new Firewall(edge, "Firewall", { logging: { bucket } });
+
+    const logsTemplate = Template.fromStack(logs);
+
+    logsTemplate.hasResourceProperties("AWS::S3::Bucket", {
+      BucketName: Match.stringLikeRegexp(
+        "^aws-waf-logs-123456789012-eu-central-1-",
+      ),
+      LifecycleConfiguration: {
+        Rules: [Match.objectLike({ ExpirationInDays: 7, Status: "Enabled" })],
+      },
+    });
+
+    logsTemplate.hasResourceProperties("AWS::S3::BucketPolicy", {
+      PolicyDocument: {
+        Statement: Match.arrayWith([
+          Match.objectLike({
+            Sid: "AWSLogDeliveryWrite",
+            Principal: { Service: "delivery.logs.amazonaws.com" },
+            Action: "s3:PutObject",
+            Condition: {
+              StringEquals: {
+                "aws:SourceAccount": account,
+                "s3:x-amz-acl": "bucket-owner-full-control",
+              },
+              ArnLike: { "aws:SourceArn": `arn:aws:logs:*:${account}:*` },
+            },
+          }),
+          Match.objectLike({ Sid: "AWSLogDeliveryAclCheck" }),
+        ]),
+      },
+    });
+
+    const edgeTemplate = Template.fromStack(edge);
+
+    edgeTemplate.resourceCountIs("AWS::Logs::LogGroup", 0);
+    edgeTemplate.hasResourceProperties("AWS::WAFv2::LoggingConfiguration", {
+      LogDestinationConfigs: [Match.anyValue()],
+      LoggingFilter: Match.objectLike({ DefaultBehavior: "DROP" }),
+    });
+  });
+
   it("logs blocked and counted requests to a WAF log group when enabled", () => {
     const template = synthesize({
       logging: { retention: RetentionDays.ONE_WEEK },
@@ -185,15 +235,34 @@ describe("Firewall", () => {
     });
   });
 
-  it("can disable the rate limit", () => {
-    const template = synthesize({ rateLimit: false });
+  it("applies a rate limit when enabled", () => {
+    expect(ruleNames(synthesize())).not.toContain("RateLimit");
 
-    expect(ruleNames(template)).not.toContain("RateLimit");
+    synthesize({ rateLimit: { limit: 3000 } }).hasResourceProperties(
+      "AWS::WAFv2::WebACL",
+      {
+        Rules: Match.arrayWith([
+          Match.objectLike({
+            Name: "RateLimit",
+            Priority: 0,
+            Action: { Block: {} },
+            Statement: {
+              RateBasedStatement: {
+                Limit: 3000,
+                EvaluationWindowSec: 300,
+                AggregateKeyType: "IP",
+              },
+            },
+          }),
+        ]),
+      },
+    );
   });
 
   it("overrides all rule actions to count in count mode", () => {
     const template = synthesize({
       mode: FirewallMode.COUNT,
+      rateLimit: { limit: 3000 },
       rules: [
         {
           name: "Custom",
@@ -207,9 +276,9 @@ describe("Firewall", () => {
       Rules: [
         Match.objectLike({ Name: "Custom", Action: { Count: {} } }),
         Match.objectLike({ Name: "RateLimit", Action: { Count: {} } }),
-        Match.objectLike({ OverrideAction: { Count: {} } }),
-        Match.objectLike({ OverrideAction: { Count: {} } }),
-        Match.objectLike({ OverrideAction: { Count: {} } }),
+        ...Firewall.defaultManagedRuleGroups.map(() =>
+          Match.objectLike({ OverrideAction: { Count: {} } }),
+        ),
       ],
     });
   });
