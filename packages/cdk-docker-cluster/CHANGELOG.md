@@ -1,5 +1,12 @@
 # @codedazur/cdk-docker-cluster
 
+## 2.3.1
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @codedazur/cdk-site-distribution@2.1.1
+
 ## 2.3.0
 
 ### Minor Changes

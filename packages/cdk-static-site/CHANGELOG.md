@@ -1,5 +1,12 @@
 # @codedazur/cdk-static-site
 
+## 4.1.2
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @codedazur/cdk-site-distribution@2.1.1
+
 ## 4.1.1
 
 ### Patch Changes
