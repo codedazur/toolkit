@@ -55,12 +55,10 @@ describe("SiteDistribution", () => {
 
       const edge = new Stack(app, "Edge", {
         env: { account, region: "us-east-1" },
-        crossRegionReferences: true,
       });
 
       const stack = new Stack(app, "Site", {
         env: { account, region: "eu-central-1" },
-        crossRegionReferences: true,
       });
 
       new SiteDistribution(stack, "SiteDistribution", {
@@ -69,17 +67,22 @@ describe("SiteDistribution", () => {
         firewall: new Firewall(edge, "Firewall"),
       });
 
-      Template.fromStack(edge).resourceCountIs("AWS::WAFv2::WebACL", 1);
+      const edgeTemplate = Template.fromStack(edge);
+
+      edgeTemplate.resourceCountIs("AWS::WAFv2::WebACL", 1);
+      edgeTemplate.resourceCountIs("AWS::SSM::Parameter", 1);
+      edgeTemplate.resourceCountIs("AWS::Lambda::Function", 0);
 
       const site = Template.fromStack(stack);
 
       site.resourceCountIs("AWS::WAFv2::WebACL", 0);
+      site.resourceCountIs("Custom::AWS", 1);
       site.hasResourceProperties("AWS::CloudFront::Distribution", {
         DistributionConfig: Match.objectLike({
           WebACLId: {
             "Fn::GetAtt": [
-              Match.stringLikeRegexp("ExportsReader"),
-              Match.anyValue(),
+              Match.stringLikeRegexp("WebAclArn"),
+              "Parameter.Value",
             ],
           },
         }),

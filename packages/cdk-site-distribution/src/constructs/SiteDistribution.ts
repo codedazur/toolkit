@@ -132,8 +132,9 @@ export interface SiteDistributionProps extends BehaviorProps {
    * existing web ACL with `Firewall.fromWebAclArn`.
    *
    * Firewalls for CloudFront must be created in `us-east-1`, so if this stack
-   * is in another region, create the firewall in a separate `us-east-1` stack
-   * and enable `crossRegionReferences` on both stacks.
+   * is in another region, create the firewall in a separate `us-east-1` stack.
+   * The distribution then imports it with `importInto`, which reads its ARN
+   * from an SSM parameter with a custom resource in this stack.
    */
   readonly firewall?: IFirewall;
 }
@@ -246,7 +247,7 @@ export class SiteDistribution extends Construct {
     const distribution = new Distribution(this, "Distribution", {
       priceClass: this.props.priceClass,
       certificate: this.certificate,
-      webAclId: this.props.firewall?.webAclArn,
+      webAclId: this.props.firewall?.importInto(this).webAclArn,
       domainNames:
         this.domains && this.domains.length > 0 ? this.domains : undefined,
       defaultBehavior: this.behavior(),

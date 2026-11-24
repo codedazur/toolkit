@@ -6,9 +6,7 @@ Pass it to a [SiteDistribution](https://github.com/codedazur/toolkit/tree/main/p
 
 ## Regions
 
-A firewall for CloudFront must be created in `us-east-1`. Synthesis fails if the stack that contains the firewall has another region.
-
-If your application is deployed to `us-east-1`, create the firewall in the same stack.
+A firewall for CloudFront must be created in `us-east-1`. If your application is deployed to `us-east-1`, create the firewall in the same stack.
 
 ```ts
 new DockerCluster(this, "DockerCluster", {
@@ -19,40 +17,30 @@ new DockerCluster(this, "DockerCluster", {
 });
 ```
 
-If your application is deployed to another region, create the firewall in a separate `us-east-1` stack and pass it to the stack of your application. Both stacks need `crossRegionReferences` enabled. CloudFront certificates have the same requirement, so this is also a good place to create those.
+If your application is deployed to another region, create the firewall in a separate `us-east-1` stack and pass it to the stack of your application.
 
 ```ts
 const edge = new Stack(app, "Edge", {
   env: { account, region: "us-east-1" },
-  crossRegionReferences: true,
 });
 
 const firewall = new Firewall(edge, "Firewall");
 
-const certificate = new Certificate(edge, "Certificate", {
-  domainName: "example.com",
-  validation: CertificateValidation.fromDns(hostedZone),
-});
-
 const site = new Stack(app, "Site", {
   env: { account, region: "eu-central-1" },
-  crossRegionReferences: true,
 });
 
 new DockerCluster(site, "DockerCluster", {
   // ...
-  distribution: {
-    domain: "example.com",
-    hostedZone,
-    certificate,
-    firewall,
-  },
+  distribution: { firewall },
 });
 ```
 
-Deploying the stack of your application deploys the `us-east-1` stack first. The account must be [bootstrapped](https://docs.aws.amazon.com/cdk/v2/guide/bootstrapping.html) in `us-east-1` as well.
+The distribution imports the firewall into its own region with `firewall.importInto(this)`. The firewall then stores its ARN in an SSM parameter in `us-east-1`, which a custom resource in the stack of your application reads on every deploy. The stack of your application depends on the `us-east-1` stack, so deploying it deploys the firewall first. The account must be [bootstrapped](https://docs.aws.amazon.com/cdk/v2/guide/bootstrapping.html) in `us-east-1` as well.
 
-Cross-region references prevent the `us-east-1` stack from deleting a resource that the other stack still uses. Replacing the firewall or certificate, rather than updating it, therefore takes two deployments. Changes to the rules of a firewall are updates, so they are not affected.
+Call `importInto` yourself to use the firewall with a distribution that isn't a `SiteDistribution`. If the scope is in the same region as the firewall, it returns the firewall itself.
+
+Unlike CDK's `crossRegionReferences`, this deploys no Lambda functions in `us-east-1`, which some organizations' policies don't allow. CloudFront certificates must also be in `us-east-1`, but passing one to another region still needs `crossRegionReferences` on both stacks.
 
 ## Existing Web ACLs
 
@@ -131,28 +119,13 @@ Logging of blocked and counted requests is opt-in. Logs are useful to analyze at
 
 A `FirewallLogBucket` can be in any region, for example to keep logs in the EU. Logs are delivered every 5 minutes as compressed files, which you can query with Athena. Firewalls in multiple stacks can share one bucket.
 
+Give the bucket a fixed name, so the `us-east-1` stack can import it by that name. The name must start with `aws-waf-logs-` and be globally unique.
+
 ```ts
 const logs = new Stack(app, "Logs", {
   env: { account, region: "eu-central-1" },
-  crossRegionReferences: true,
 });
 
-const bucket = new FirewallLogBucket(logs, "FirewallLogs", {
-  expiration: Duration.days(7),
-});
-
-const firewall = new Firewall(edge, "Firewall", {
-  logging: FirewallLogging.toBucket(bucket),
-});
-```
-
-The bucket can not be in the stack of your application if that stack uses the firewall, because the firewall stack would then depend on the application stack and vice versa. Deploying the stack of your application deploys the `Logs` and `Edge` stacks first.
-
-The bucket is retained when its stack is deleted, but its logs still expire.
-
-`crossRegionReferences` deploys Lambda functions in both regions. If your organization doesn't allow those, give the bucket a fixed name and import it by that name instead. The name must start with `aws-waf-logs-` and be globally unique.
-
-```ts
 const bucketName = `aws-waf-logs-${account}-website`;
 
 new FirewallLogBucket(logs, "FirewallLogs", {
@@ -168,6 +141,10 @@ const firewall = new Firewall(edge, "Firewall", {
 
 edge.addDependency(logs);
 ```
+
+The bucket can not be in the stack of your application if that stack uses the firewall, because the firewall stack would then depend on the application stack and vice versa. Deploying the stack of your application deploys the `Logs` and `Edge` stacks first.
+
+The bucket is retained when its stack is deleted, but its logs still expire.
 
 ### CloudWatch Logs
 
