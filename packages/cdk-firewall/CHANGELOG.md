@@ -1,5 +1,13 @@
 # @codedazur/cdk-firewall
 
+## 2.2.0
+
+### Minor Changes
+
+- [#336](https://github.com/codedazur/toolkit/pull/336) [`134aeed`](https://github.com/codedazur/toolkit/commit/134aeed356f526cc5fc012184c80ec9e8accc62d) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Add `importInto(scope)` to `IFirewall`, which returns the firewall for use in another region without `crossRegionReferences`. The firewall stores its ARN in an SSM parameter, and a custom resource in the importing stack reads it on every deploy, so no Lambda functions are deployed in `us-east-1`. In the same region, it returns the firewall itself.
+
+- [#336](https://github.com/codedazur/toolkit/pull/336) [`134aeed`](https://github.com/codedazur/toolkit/commit/134aeed356f526cc5fc012184c80ec9e8accc62d) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Remove the synth-time check that a `Firewall` is in `us-east-1`. A firewall in another region now fails at deploy with AWS's own error.
+
 ## 2.1.0
 
 ### Minor Changes

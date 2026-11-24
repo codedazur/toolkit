@@ -1,5 +1,16 @@
 # @codedazur/cdk-site-distribution
 
+## 2.2.0
+
+### Minor Changes
+
+- [#336](https://github.com/codedazur/toolkit/pull/336) [`134aeed`](https://github.com/codedazur/toolkit/commit/134aeed356f526cc5fc012184c80ec9e8accc62d) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Import the `firewall` into the distribution's region with `importInto`, so a firewall in a `us-east-1` stack works without `crossRegionReferences`.
+
+### Patch Changes
+
+- Updated dependencies [[`134aeed`](https://github.com/codedazur/toolkit/commit/134aeed356f526cc5fc012184c80ec9e8accc62d), [`134aeed`](https://github.com/codedazur/toolkit/commit/134aeed356f526cc5fc012184c80ec9e8accc62d)]:
+  - @codedazur/cdk-firewall@2.2.0
+
 ## 2.1.2
 
 ### Patch Changes
