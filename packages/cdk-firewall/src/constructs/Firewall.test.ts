@@ -1,6 +1,7 @@
 import { App, Duration, Stack } from "aws-cdk-lib";
 import { Match, Template } from "aws-cdk-lib/assertions";
 import { RetentionDays } from "aws-cdk-lib/aws-logs";
+import { Bucket } from "aws-cdk-lib/aws-s3";
 import { describe, expect, it } from "vitest";
 import {
   Firewall,
@@ -326,6 +327,58 @@ describe("Firewall", () => {
         }),
       ]),
     });
+  });
+
+  it("logs to a bucket with a fixed name that another region imports", () => {
+    const app = new App();
+    const account = "123456789012";
+    const bucketName = "aws-waf-logs-123456789012-website";
+
+    const logs = new Stack(app, "Logs", {
+      env: { account, region: "eu-central-1" },
+    });
+
+    const edge = new Stack(app, "Edge", {
+      env: { account, region: "us-east-1" },
+    });
+
+    new FirewallLogBucket(logs, "FirewallLogs", {
+      expiration: Duration.days(7),
+      bucketName,
+    });
+
+    new Firewall(edge, "Firewall", {
+      logging: FirewallLogging.toBucket(
+        Bucket.fromBucketName(edge, "FirewallLogs", bucketName),
+      ),
+    });
+
+    Template.fromStack(logs).hasResourceProperties("AWS::S3::Bucket", {
+      BucketName: bucketName,
+    });
+
+    Template.fromStack(edge).hasResourceProperties(
+      "AWS::WAFv2::LoggingConfiguration",
+      {
+        LogDestinationConfigs: [
+          {
+            "Fn::Join": ["", Match.arrayWith([`:s3:::${bucketName}`])],
+          },
+        ],
+      },
+    );
+  });
+
+  it("throws for a log bucket name without the WAF prefix", () => {
+    const stack = new Stack(new App(), "Logs");
+
+    expect(
+      () =>
+        new FirewallLogBucket(stack, "FirewallLogs", {
+          expiration: Duration.days(7),
+          bucketName: "website-logs",
+        }),
+    ).toThrow(/must start with "aws-waf-logs-"/);
   });
 
   it("throws outside us-east-1", () => {
