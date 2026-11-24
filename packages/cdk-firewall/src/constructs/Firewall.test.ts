@@ -2,6 +2,7 @@ import { App, Duration, Stack } from "aws-cdk-lib";
 import { Match, Template } from "aws-cdk-lib/assertions";
 import { RetentionDays } from "aws-cdk-lib/aws-logs";
 import { Bucket } from "aws-cdk-lib/aws-s3";
+import { Construct } from "constructs";
 import { describe, expect, it } from "vitest";
 import {
   Firewall,
@@ -381,10 +382,83 @@ describe("Firewall", () => {
     ).toThrow(/must start with "aws-waf-logs-"/);
   });
 
-  it("throws outside us-east-1", () => {
-    expect(() => synthesize({}, "eu-west-1")).toThrow(
-      /must be created in us-east-1/,
-    );
+  describe("importInto", () => {
+    const account = "123456789012";
+
+    function stacks(siteRegion: string) {
+      const app = new App();
+      const edge = new Stack(app, "Edge", {
+        env: { account, region: "us-east-1" },
+      });
+      const site = new Stack(app, "Site", {
+        env: { account, region: siteRegion },
+      });
+
+      return { edge, site, firewall: new Firewall(edge, "Firewall") };
+    }
+
+    it("returns the firewall itself in the same region", () => {
+      const { site, firewall } = stacks("us-east-1");
+
+      expect(firewall.importInto(site)).toBe(firewall);
+      Template.fromStack(site).resourceCountIs("Custom::AWS", 0);
+    });
+
+    it("reads the ARN from an SSM parameter in another region", () => {
+      const { edge, site, firewall } = stacks("eu-central-1");
+
+      const imported = firewall.importInto(site);
+
+      const edgeTemplate = Template.fromStack(edge);
+      edgeTemplate.resourceCountIs("AWS::Lambda::Function", 0);
+      edgeTemplate.hasResourceProperties("AWS::SSM::Parameter", {
+        Name: Match.stringLikeRegexp("^/cdk-firewall/.+/web-acl-arn$"),
+        Value: { "Fn::GetAtt": [Match.stringLikeRegexp("WebAcl"), "Arn"] },
+      });
+
+      const siteTemplate = Template.fromStack(site);
+      siteTemplate.resourceCountIs("Custom::AWS", 1);
+      siteTemplate.hasResourceProperties("Custom::AWS", {
+        Create: Match.serializedJson(
+          Match.objectLike({
+            service: "SSM",
+            action: "getParameter",
+            region: "us-east-1",
+          }),
+        ),
+      });
+
+      expect(imported).not.toBe(firewall);
+      expect(site.dependencies).toContain(edge);
+    });
+
+    it("imports once per stack", () => {
+      const { edge, site, firewall } = stacks("eu-central-1");
+
+      const first = firewall.importInto(site);
+      const second = firewall.importInto(new Construct(site, "Other"));
+
+      expect(second).toBe(first);
+      Template.fromStack(site).resourceCountIs("Custom::AWS", 1);
+      Template.fromStack(edge).resourceCountIs("AWS::SSM::Parameter", 1);
+    });
+
+    it("creates no SSM parameter if nothing imports the firewall", () => {
+      const { edge } = stacks("eu-central-1");
+
+      Template.fromStack(edge).resourceCountIs("AWS::SSM::Parameter", 0);
+    });
+
+    it("returns an imported firewall itself", () => {
+      const { site } = stacks("eu-central-1");
+      const firewall = Firewall.fromWebAclArn(
+        site,
+        "Imported",
+        "arn:aws:wafv2:us-east-1:123456789012:global/webacl/shared/abc",
+      );
+
+      expect(firewall.importInto(site)).toBe(firewall);
+    });
   });
 
   it("imports an existing web ACL by its ARN", () => {

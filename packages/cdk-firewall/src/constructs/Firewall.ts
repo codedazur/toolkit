@@ -1,5 +1,11 @@
 import { Duration, Names, Stack, Token } from "aws-cdk-lib";
+import { StringParameter } from "aws-cdk-lib/aws-ssm";
 import { CfnLoggingConfiguration, CfnWebACL } from "aws-cdk-lib/aws-wafv2";
+import {
+  AwsCustomResource,
+  AwsCustomResourcePolicy,
+  PhysicalResourceId,
+} from "aws-cdk-lib/custom-resources";
 import { Construct, IConstruct } from "constructs";
 import { FirewallLogging } from "./FirewallLogging";
 
@@ -189,6 +195,13 @@ export interface IFirewall extends IConstruct {
    * The ARN of the web ACL.
    */
   readonly webAclArn: string;
+
+  /**
+   * Returns the firewall for use in the stack of the given scope, which may be
+   * in another region than the firewall. If it is in the same region, this
+   * returns the firewall itself.
+   */
+  importInto(scope: Construct): IFirewall;
 }
 
 /**
@@ -197,8 +210,8 @@ export interface IFirewall extends IConstruct {
  * Web ACLs for CloudFront must be created in `us-east-1`, so the stack that
  * contains this construct must be deployed to that region. If your application
  * is deployed to another region, create the firewall in a separate `us-east-1`
- * stack and pass it to the stack of your application. Both stacks need
- * `crossRegionReferences: true`.
+ * stack and pass it to the stack of your application. A `SiteDistribution`
+ * imports it into its own region with `importInto`.
  *
  * By default, it applies the following AWS managed rule groups:
  * - `AWSManagedRulesAmazonIpReputationList` blocks IP addresses that are known
@@ -267,8 +280,6 @@ export class Firewall extends Construct implements IFirewall {
   ) {
     super(scope, id);
 
-    this.assertRegion();
-
     this.webAcl = this.createWebAcl();
     this.loggingConfiguration = this.createLogging();
   }
@@ -277,18 +288,88 @@ export class Firewall extends Construct implements IFirewall {
     return this.webAcl.attrArn;
   }
 
-  protected get mode(): FirewallMode {
-    return this.props.mode ?? FirewallMode.BLOCK;
+  /**
+   * Returns the firewall for use in the stack of the given scope. If that
+   * stack is in another region, it reads the ARN of the web ACL from an SSM
+   * parameter next to the firewall, with a custom resource in the stack of the
+   * given scope. That stack then depends on the stack of the firewall.
+   *
+   * Unlike `crossRegionReferences`, this doesn't deploy Lambda functions in
+   * `us-east-1`, which some organizations' policies don't allow.
+   */
+  public importInto(scope: Construct): IFirewall {
+    const stack = Stack.of(scope);
+    const firewallStack = Stack.of(this);
+
+    if (
+      Token.isUnresolved(stack.region) ||
+      Token.isUnresolved(firewallStack.region) ||
+      stack.region === firewallStack.region
+    ) {
+      return this;
+    }
+
+    const id = `${Names.uniqueId(this)}Import`;
+    const existing = stack.node.tryFindChild(id);
+
+    if (existing) {
+      return (existing as Construct).node.findChild("Firewall") as IFirewall;
+    }
+
+    stack.addDependency(firewallStack);
+
+    // The import belongs to the importing stack, once per firewall.
+    const container = new Construct(stack, id);
+    const parameterName = this.webAclArnParameter.parameterName;
+
+    const webAclArn = new AwsCustomResource(container, "WebAclArn", {
+      onUpdate: {
+        service: "SSM",
+        action: "getParameter",
+        parameters: { Name: parameterName },
+        region: firewallStack.region,
+        /**
+         * A new ID on every deploy makes CloudFormation read the parameter
+         * again, so the stack picks up a new ARN if the web ACL is replaced.
+         */
+        physicalResourceId: PhysicalResourceId.of(Date.now().toString()),
+      },
+      installLatestAwsSdk: false,
+      policy: AwsCustomResourcePolicy.fromSdkCalls({
+        resources: [
+          firewallStack.formatArn({
+            service: "ssm",
+            resource: "parameter",
+            resourceName: parameterName.slice(1),
+          }),
+        ],
+      }),
+    }).getResponseField("Parameter.Value");
+
+    return Firewall.fromWebAclArn(container, "Firewall", webAclArn);
   }
 
-  protected assertRegion() {
-    const region = Stack.of(this).region;
+  private _webAclArnParameter?: StringParameter;
 
-    if (!Token.isUnresolved(region) && region !== Firewall.region) {
-      throw new Error(
-        `A firewall for a CloudFront distribution must be created in ${Firewall.region}, but this stack is in ${region}. Create the firewall in a separate ${Firewall.region} stack instead, and enable \`crossRegionReferences\` on both stacks.`,
-      );
-    }
+  /**
+   * The SSM parameter that other regions read the ARN of the web ACL from. It
+   * is only created once a stack in another region imports the firewall.
+   */
+  protected get webAclArnParameter(): StringParameter {
+    this._webAclArnParameter ??= new StringParameter(
+      this,
+      "WebAclArnParameter",
+      {
+        parameterName: `/cdk-firewall/${Names.uniqueId(this)}/web-acl-arn`,
+        stringValue: this.webAclArn,
+      },
+    );
+
+    return this._webAclArnParameter;
+  }
+
+  protected get mode(): FirewallMode {
+    return this.props.mode ?? FirewallMode.BLOCK;
   }
 
   protected createWebAcl() {
@@ -534,5 +615,12 @@ class ImportedFirewall extends Construct implements IFirewall {
     super(scope, id);
 
     this.webAclArn = props.webAclArn;
+  }
+
+  /**
+   * The ARN is known, so the firewall can be used in any region as is.
+   */
+  public importInto(): IFirewall {
+    return this;
   }
 }
