@@ -1,5 +1,12 @@
 # @codedazur/cdk-site-distribution
 
+## 2.1.2
+
+### Patch Changes
+
+- Updated dependencies [[`67b4d13`](https://github.com/codedazur/toolkit/commit/67b4d138d2c4544634cbc5d28ef27d1cfbd1b445)]:
+  - @codedazur/cdk-firewall@2.1.0
+
 ## 2.1.1
 
 ### Patch Changes

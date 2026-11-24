@@ -1,5 +1,11 @@
 # @codedazur/cdk-firewall
 
+## 2.1.0
+
+### Minor Changes
+
+- [#334](https://github.com/codedazur/toolkit/pull/334) [`67b4d13`](https://github.com/codedazur/toolkit/commit/67b4d138d2c4544634cbc5d28ef27d1cfbd1b445) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Add a `bucketName` prop to `FirewallLogBucket`, so a stack in another region can import the bucket by its name without `crossRegionReferences`. The name must start with `aws-waf-logs-`.
+
 ## 2.0.0
 
 ### Major Changes
