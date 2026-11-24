@@ -1,4 +1,4 @@
-import { Duration, Lazy, Names, Stack } from "aws-cdk-lib";
+import { Duration, Lazy, Names, Stack, Token } from "aws-cdk-lib";
 import { PolicyStatement, ServicePrincipal } from "aws-cdk-lib/aws-iam";
 import {
   BlockPublicAccess,
@@ -14,7 +14,19 @@ export interface FirewallLogBucketProps {
    * expiration that suits your needs.
    */
   readonly expiration: Duration;
+
+  /**
+   * The name of the bucket, which WAF requires to start with `aws-waf-logs-`.
+   * Set it when a stack in another region needs to import the bucket by its
+   * name, for example with `Bucket.fromBucketName()`.
+   *
+   * @default - `aws-waf-logs-` followed by the account, the region and a
+   * unique ID.
+   */
+  readonly bucketName?: string;
 }
+
+const BUCKET_NAME_PREFIX = "aws-waf-logs-";
 
 /**
  * An S3 bucket that firewalls can deliver their logs to. Unlike a CloudWatch
@@ -27,18 +39,19 @@ export class FirewallLogBucket extends Bucket {
   constructor(scope: Construct, id: string, props: FirewallLogBucketProps) {
     super(scope, id, {
       /**
-       * WAF requires the name of the bucket to start with `aws-waf-logs-`.
-       * The account and region make it globally unique.
+       * The account and region make the default name globally unique.
        */
-      bucketName: Lazy.string({
-        produce: () =>
-          [
-            "aws-waf-logs",
-            Stack.of(this).account,
-            Stack.of(this).region,
-            Names.uniqueResourceName(this, { maxLength: 16 }).toLowerCase(),
-          ].join("-"),
-      }),
+      bucketName: props.bucketName
+        ? validateBucketName(props.bucketName)
+        : Lazy.string({
+            produce: () =>
+              BUCKET_NAME_PREFIX +
+              [
+                Stack.of(this).account,
+                Stack.of(this).region,
+                Names.uniqueResourceName(this, { maxLength: 16 }).toLowerCase(),
+              ].join("-"),
+          }),
       blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
       encryption: BucketEncryption.S3_MANAGED,
       enforceSSL: true,
@@ -88,4 +101,21 @@ export class FirewallLogBucket extends Bucket {
       }),
     );
   }
+}
+
+/**
+ * Throws if the name doesn't start with `aws-waf-logs-`, because WAF would
+ * only reject the bucket at deploy time. A token can't be checked until then.
+ */
+function validateBucketName(bucketName: string): string {
+  if (
+    !Token.isUnresolved(bucketName) &&
+    !bucketName.startsWith(BUCKET_NAME_PREFIX)
+  ) {
+    throw new Error(
+      `The name of a firewall log bucket must start with "${BUCKET_NAME_PREFIX}", but got "${bucketName}".`,
+    );
+  }
+
+  return bucketName;
 }

@@ -150,6 +150,25 @@ The bucket can not be in the stack of your application if that stack uses the fi
 
 The bucket is retained when its stack is deleted, but its logs still expire.
 
+`crossRegionReferences` deploys Lambda functions in both regions. If your organization doesn't allow those, give the bucket a fixed name and import it by that name instead. The name must start with `aws-waf-logs-` and be globally unique.
+
+```ts
+const bucketName = `aws-waf-logs-${account}-website`;
+
+new FirewallLogBucket(logs, "FirewallLogs", {
+  expiration: Duration.days(7),
+  bucketName,
+});
+
+const firewall = new Firewall(edge, "Firewall", {
+  logging: FirewallLogging.toBucket(
+    Bucket.fromBucketName(edge, "FirewallLogs", bucketName),
+  ),
+});
+
+edge.addDependency(logs);
+```
+
 ### CloudWatch Logs
 
 A CloudWatch log group must be in the region of the firewall, which is `us-east-1`. It is the simplest option if that is acceptable, and lets you query the logs with CloudWatch Logs Insights.
