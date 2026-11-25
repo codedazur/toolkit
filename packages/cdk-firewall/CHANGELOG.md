@@ -1,5 +1,11 @@
 # @codedazur/cdk-firewall
 
+## 2.2.1
+
+### Patch Changes
+
+- [#338](https://github.com/codedazur/toolkit/pull/338) [`a95516c`](https://github.com/codedazur/toolkit/commit/a95516c7f304bee295611c89440459078470bbd1) Thanks [@thijsdaniels](https://github.com/thijsdaniels)! - Fix the IAM policy of `importInto`, which named an invalid SSM parameter ARN, so reading the parameter from another region was denied.
+
 ## 2.2.0
 
 ### Minor Changes

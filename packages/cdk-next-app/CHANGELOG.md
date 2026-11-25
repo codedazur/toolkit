@@ -1,5 +1,12 @@
 # @codedazur/cdk-next-app
 
+## 2.1.4
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @codedazur/cdk-docker-cluster@2.3.4
+
 ## 2.1.3
 
 ### Patch Changes
