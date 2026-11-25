@@ -320,7 +320,13 @@ export class Firewall extends Construct implements IFirewall {
 
     // The import belongs to the importing stack, once per firewall.
     const container = new Construct(stack, id);
-    const parameterName = this.webAclArnParameter.parameterName;
+    this.createWebAclArnParameter();
+
+    /**
+     * The name is used as a plain string rather than through the parameter,
+     * whose name is a token that can't be sliced for the ARN.
+     */
+    const parameterName = this.webAclArnParameterName;
 
     const webAclArn = new AwsCustomResource(container, "WebAclArn", {
       onUpdate: {
@@ -349,23 +355,27 @@ export class Firewall extends Construct implements IFirewall {
     return Firewall.fromWebAclArn(container, "Firewall", webAclArn);
   }
 
-  private _webAclArnParameter?: StringParameter;
+  /**
+   * The name of the SSM parameter that other regions read the ARN of the web
+   * ACL from.
+   */
+  protected get webAclArnParameterName(): string {
+    return `/cdk-firewall/${Names.uniqueId(this)}/web-acl-arn`;
+  }
 
   /**
-   * The SSM parameter that other regions read the ARN of the web ACL from. It
-   * is only created once a stack in another region imports the firewall.
+   * Creates the SSM parameter that other regions read the ARN of the web ACL
+   * from, once a stack in another region imports the firewall.
    */
-  protected get webAclArnParameter(): StringParameter {
-    this._webAclArnParameter ??= new StringParameter(
-      this,
-      "WebAclArnParameter",
-      {
-        parameterName: `/cdk-firewall/${Names.uniqueId(this)}/web-acl-arn`,
-        stringValue: this.webAclArn,
-      },
-    );
+  protected createWebAclArnParameter(): void {
+    if (this.node.tryFindChild("WebAclArnParameter")) {
+      return;
+    }
 
-    return this._webAclArnParameter;
+    new StringParameter(this, "WebAclArnParameter", {
+      parameterName: this.webAclArnParameterName,
+      stringValue: this.webAclArn,
+    });
   }
 
   protected get mode(): FirewallMode {
