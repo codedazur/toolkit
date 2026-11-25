@@ -428,6 +428,30 @@ describe("Firewall", () => {
         ),
       });
 
+      const parameters = edgeTemplate.findResources("AWS::SSM::Parameter");
+      const parameterName = Object.values(parameters)[0].Properties.Name;
+
+      siteTemplate.hasResourceProperties("AWS::IAM::Policy", {
+        PolicyDocument: {
+          Statement: [
+            {
+              Action: "ssm:GetParameter",
+              Effect: "Allow",
+              Resource: {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    { Ref: "AWS::Partition" },
+                    `:ssm:us-east-1:${account}:parameter${parameterName}`,
+                  ],
+                ],
+              },
+            },
+          ],
+        },
+      });
+
       expect(imported).not.toBe(firewall);
       expect(site.dependencies).toContain(edge);
     });
